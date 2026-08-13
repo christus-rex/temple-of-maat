@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5-2026-08-13';
+const VERSION = 'temple-maat-pwa-v5.1-2026-08-13-r2';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -11,14 +11,38 @@ const CORE_ASSETS = [
   './apple-touch-icon.png',
   './chambers.json',
   './offline.html',
-  './version.json'
+  './version.json',
+  './scripts/v5.1-asset-manifest.json'
 ];
+
+async function cacheInBatches(cache, assets, batchSize = 12) {
+  for (let index = 0; index < assets.length; index += batchSize) {
+    await Promise.allSettled(assets.slice(index, index + batchSize).map((asset) => cache.add(asset)));
+  }
+}
+
+async function releaseDisplayAssets() {
+  try {
+    const response = await fetch('./scripts/v5.1-asset-manifest.json', { cache: 'no-store' });
+    if (!response.ok) return [];
+    const manifest = await response.json();
+    const assets = Array.isArray(manifest.assets) ? manifest.assets : [];
+    return assets.flatMap((asset) => {
+      if (asset.category === 'support' && asset.path) return [`./${asset.path}`];
+      if ((asset.category === 'hero' || asset.category === 'seal') && asset.display?.path) return [`./${asset.display.path}`];
+      return [];
+    });
+  } catch {
+    return [];
+  }
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
     // Cache independently so one missing optional asset cannot abort installation.
-    await Promise.allSettled(CORE_ASSETS.map((asset) => cache.add(asset)));
+    await cacheInBatches(cache, CORE_ASSETS);
+    await cacheInBatches(cache, await releaseDisplayAssets());
   })());
 });
 
