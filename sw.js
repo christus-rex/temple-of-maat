@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.1-2026-08-13-r2';
+const VERSION = 'temple-maat-pwa-v5.1-2026-08-13-r3';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -12,6 +12,7 @@ const CORE_ASSETS = [
   './chambers.json',
   './offline.html',
   './version.json',
+  './scripts/persistent-data.js',
   './scripts/v5.1-asset-manifest.json'
 ];
 
