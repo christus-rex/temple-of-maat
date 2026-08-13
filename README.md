@@ -1,4 +1,4 @@
-# Temple of Ma'at — GitHub Pages PWA v6.1
+# Temple of Ma'at — GitHub Pages PWA v6.1.1
 
 Published target: `https://christus-rex.github.io/temple-of-maat/`
 
@@ -32,4 +32,9 @@ Publish from `main` → `/(root)` with HTTPS enabled. The manifest and service w
 
 
 ## Visible version identity
-The running app displays `Temple v6.1.0` in a persistent badge. Tap it to inspect the build identifier and source. The same version is also shown in the Temple Entrance, Archive Console, and site-admin footer.
+The running app displays `Temple v6.1.1` in a persistent badge. Tap it to inspect the build identifier and source. The same version is also shown in the Temple Entrance, Archive Console, and site-admin footer.
+
+
+## Ritual audio pause fix (v6.1.1)
+
+The Play/Pause Ritual control now suspends the full Web Audio context on pause for immediate silence and resumes the existing ritual graph without creating a second drone. Scheduled harp/flute/water timers are cleared while paused and restarted on resume.

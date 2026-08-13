@@ -17,5 +17,7 @@
 - [ ] Master 72-seal ZIP downloads from the Temple Entrance
 - [ ] `node scripts/validate-pwa.mjs` passes
 
-- [ ] Visible Temple version badge shows `v6.1.0`
+- [ ] Visible Temple version badge shows `v6.1.1`
 - [ ] Tapping the version badge reveals the expected build identifier
+
+- [ ] Play Ritual produces audio, Pause Ritual immediately silences it, and Play/Resume continues without a duplicate bass drone
