@@ -667,7 +667,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     return y+lines.length*lineHeight;
   }
   async function buildCollectiblePngBlob(info){
-    const W=1200,H=1800;
+    const W=1200,H=2420;
     const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
     const ctx=canvas.getContext('2d',{alpha:false});
     const fire=info.meta?.fireColor || '#d4af37';
@@ -703,13 +703,27 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     ctx.fillStyle=fire; ctx.fillText(`FIRE: ${info.meta?.fireName || '—'}`,sx+390,sy+252);
     ctx.fillStyle='#4c473d'; wrapCanvasText(ctx,info.office||'',sx+390,sy+300,535,27,3);
 
-    const tx=110,ty=1370,tw=980,th=300;
+    const parental=window.TEMPLE_PARENTAL_POWERS?.[info.num];
+    const px=110,py=1370,pw=980,ph=550;
+    ctx.fillStyle='#0c151a'; roundRectPath(ctx,px,py,pw,ph,28); ctx.fill();
+    if(parental){
+      try{
+        const parentalImage=await loadCanvasImage(parental.masterPath);
+        ctx.save(); roundRectPath(ctx,px,py,pw,ph,28); ctx.clip(); drawImageContain(ctx,parentalImage,px,py,pw,ph); ctx.restore();
+      }catch(err){ console.warn(err); }
+    }
+    const parentalShade=ctx.createLinearGradient(0,py+ph-180,0,py+ph); parentalShade.addColorStop(0,'rgba(7,13,18,0)'); parentalShade.addColorStop(1,'rgba(7,13,18,.94)'); ctx.fillStyle=parentalShade; ctx.fillRect(px,py+ph-190,pw,190);
+    ctx.textAlign='left'; ctx.fillStyle='#40e0d0'; ctx.font='700 18px ui-monospace, monospace'; ctx.fillText('PARENTAL POWERS',px+34,py+ph-115);
+    ctx.fillStyle='#fff7df'; ctx.font='700 29px Cinzel, serif'; ctx.fillText(parental?`${parental.angel}  ↔  ${parental.daemon}`:(info.pairing||''),px+34,py+ph-72);
+    ctx.fillStyle='#d9bf73'; ctx.font='18px ui-monospace, monospace'; ctx.fillText(parental?`THIRD NAME: ${parental.thirdName}`:`CHAMBER ${info.num}`,px+34,py+ph-34);
+
+    const tx=110,ty=1970,tw=980,th=300;
     ctx.fillStyle='#fff7e6'; roundRectPath(ctx,tx,ty,tw,th,28); ctx.fill(); ctx.strokeStyle='#cbb07a'; ctx.lineWidth=2; ctx.stroke();
     ctx.fillStyle=pillar; ctx.font='700 20px ui-monospace, monospace'; ctx.fillText('OFFICE',tx+34,ty+48);
     ctx.fillStyle='#2f2417'; ctx.font='21px ui-monospace, monospace'; let yy=wrapCanvasText(ctx,info.office||'',tx+34,ty+88,tw-68,30,3);
     ctx.fillStyle=fire; ctx.font='700 20px ui-monospace, monospace'; ctx.fillText('LAW',tx+34,yy+32);
     ctx.fillStyle='#2f2417'; ctx.font='21px ui-monospace, monospace'; wrapCanvasText(ctx,info.law||info.meta?.law||'',tx+34,yy+70,tw-68,30,3);
-    ctx.textAlign='center'; ctx.fillStyle='#665f52'; ctx.font='18px ui-monospace, monospace'; ctx.fillText("Egypto-Solomonic Chamber Collectable • Temple of Ma'at",W/2,1740);
+    ctx.textAlign='center'; ctx.fillStyle='#665f52'; ctx.font='18px ui-monospace, monospace'; ctx.fillText("Egypto-Solomonic Chamber Collectable • Temple of Ma'at",W/2,2360);
 
     return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Collectible PNG encoder returned an empty file.')),'image/png',1));
   }
@@ -1337,6 +1351,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 })();
 </script>
 
+<script src="./scripts/parental-powers.js"></script>
 <style id="temple-second-transform-styles">
   .tm2-artifact-backdrop{position:fixed;inset:0;z-index:160;background:rgba(3,7,10,.88);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:12px}
   .tm2-artifact-backdrop.open{display:flex}
@@ -1371,6 +1386,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .tm2-btn.secondary{background:rgba(64,224,208,.07);border-color:rgba(64,224,208,.3);color:#e6fbff}
   .tm2-btn.full{grid-column:1/-1}
   .tm2-archive-note{font:10px/1.55 ui-monospace,monospace;color:#91aeb2;padding:2px 2px 0}
+  .tm2-parental-section{margin:0 18px 18px;border-radius:20px;border:1px solid rgba(217,191,115,.24);background:rgba(255,255,255,.025);overflow:hidden}
+  .tm2-parental-visual{position:relative;aspect-ratio:16/9;background:#0a1118;overflow:hidden}
+  .tm2-parental-visual>img{width:100%;height:100%;object-fit:cover;display:block}
+  .tm2-parental-gradient{position:absolute;inset:35% 0 0;background:linear-gradient(0deg,rgba(4,8,12,.96),rgba(4,8,12,0))}
+  .tm2-parental-caption{position:absolute;left:22px;right:22px;bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+  .tm2-parental-kicker{font:700 10px/1.2 ui-monospace,monospace;letter-spacing:.2em;color:#40e0d0}
+  .tm2-parental-title{font:700 clamp(20px,3vw,34px)/1.1 Cinzel,serif;color:#fff4d1;margin-top:6px}
+  .tm2-parental-third{font:11px/1.4 ui-monospace,monospace;color:#d9bf73;margin-top:6px}
+  .tm2-parental-copy{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:14px 16px}
+  .tm2-parental-copy p{font:11px/1.6 ui-monospace,monospace;color:#c9d5d7;margin:0}
+  .tm2-parental-download{white-space:nowrap}
   .tm2-pack-status{font:10px/1.4 ui-monospace,monospace;color:#d6e2e3;grid-column:1/-1;display:none}
   .tm2-pack-status.show{display:block}
   .tm2-deeplink{font:10px ui-monospace,monospace;color:#78dcd2;overflow-wrap:anywhere}
@@ -1382,6 +1408,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   @media(max-width:560px){
     .tm2-data-grid,.tm2-actions{grid-template-columns:1fr}.tm2-seal-dock{grid-template-columns:1fr}.tm2-seal-dock .seal{width:150px;height:150px;justify-self:center}
     .tm2-portrait-caption .name{font-size:23px}.tm2-btn.full{grid-column:auto}
+    .tm2-parental-section{margin:0 12px 12px}.tm2-parental-caption{left:14px;right:14px;bottom:12px}.tm2-parental-copy{grid-template-columns:1fr}.tm2-parental-download{width:100%}
   }
 </style>
 <script>
@@ -1423,7 +1450,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const seal=body.querySelector('.egsol-seal-art img');
     const sealBtn=Array.from(card.querySelectorAll('button')).find(b=>/Seal/i.test(b.textContent||''));
     const plateBtn=Array.from(card.querySelectorAll('button')).find(b=>/Collectable|Collectible|Plate/i.test(b.textContent||''));
-    return {num,name,pairing,office,law,isRecurrence,isTetrad,pillar,fire,imgSrc:image?.src||'',sealSrc:seal?.src||'',sealBtn,plateBtn,card,focal:FOCALS[num]||{x:50,y:25}};
+    return {num,name,pairing,office,law,isRecurrence,isTetrad,pillar,fire,imgSrc:image?.src||'',sealSrc:seal?.src||'',sealBtn,plateBtn,card,focal:FOCALS[num]||{x:50,y:25},parental:window.TEMPLE_PARENTAL_POWERS?.[num]||null};
   }
   function chambers(){return Array.from(document.querySelectorAll('.masonry-item')).map(cardInfo).filter(Boolean).sort((a,b)=>Number(a.num)-Number(b.num));}
   function applyFocals(){
@@ -1433,7 +1460,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   }
   function manifest(){
     const set=collectedSet();
-    return {title:"Temple of Ma'at — 72 Chamber Archive",version:VERSION,generated:new Date().toISOString(),chamberCount:72,chambers:chambers().map(i=>({number:i.num,name:i.name,pairing:i.pairing,office:i.office,law:i.law,pillar:i.pillar,fire:i.fire,tier:tier(i),recurrence:i.isRecurrence,tetrad:i.isTetrad,collected:set.has(i.num),faceFocal:i.focal}))};
+    return {title:"Temple of Ma'at — 72 Chamber Archive",version:VERSION,generated:new Date().toISOString(),chamberCount:72,chambers:chambers().map(i=>({number:i.num,name:i.name,pairing:i.pairing,office:i.office,law:i.law,pillar:i.pillar,fire:i.fire,tier:tier(i),recurrence:i.isRecurrence,tetrad:i.isTetrad,collected:set.has(i.num),faceFocal:i.focal,parentalPowers:i.parental?{angel:i.parental.angel,daemon:i.parental.daemon,thirdName:i.parental.thirdName,masterPath:i.parental.masterPath,displayPath:i.parental.displayPath}:null}))};
   }
   function saveBlob(blob,name){
     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
@@ -1501,6 +1528,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('Wallpaper PNG encoder failed.')),'image/png',1));
   }
   async function downloadWallpaper(info,btn){const o=btn.textContent;btn.disabled=true;btn.textContent='Rendering 1440×2560…';try{saveBlob(await wallpaperBlob(info),`chamber-${info.num}-${info.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-wallpaper.png`);}catch(e){alert('Wallpaper export failed: '+(e?.message||e));}finally{btn.disabled=false;btn.textContent=o;}}
+  async function parentalWallpaperBlob(info){
+    if(!info.parental)throw new Error('Parental Powers artwork is unavailable for this chamber.');
+    const W=3840,H=2160,c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d');
+    ctx.fillStyle='#071018';ctx.fillRect(0,0,W,H);
+    const artwork=await loadImage(info.parental.masterPath);drawCoverFocal(ctx,artwork,0,0,W,H,{x:50,y:50},.50);
+    const grad=ctx.createLinearGradient(0,H*.58,0,H);grad.addColorStop(0,'rgba(4,8,12,0)');grad.addColorStop(1,'rgba(4,8,12,.92)');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(64,224,208,.62)';ctx.lineWidth=8;ctx.strokeRect(48,48,W-96,H-96);ctx.strokeStyle='rgba(217,191,115,.52)';ctx.lineWidth=3;ctx.strokeRect(72,72,W-144,H-144);
+    ctx.textAlign='left';ctx.fillStyle='#40e0d0';ctx.font='700 38px ui-monospace,monospace';ctx.fillText(`CHAMBER ${info.num} • PARENTAL POWERS`,126,H-330);
+    ctx.fillStyle='#fff4d1';ctx.font='700 84px Cinzel,serif';ctx.fillText(`${info.parental.angel}  ↔  ${info.parental.daemon}`,126,H-224);
+    ctx.fillStyle='#d9bf73';ctx.font='700 30px ui-monospace,monospace';ctx.fillText(`THIRD NAME: ${info.parental.thirdName}`,126,H-154);
+    ctx.textAlign='right';ctx.fillStyle='#d7e2e3';ctx.font='28px ui-monospace,monospace';ctx.fillText(info.law||'',W-126,H-154);
+    return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('4K wallpaper PNG encoder failed.')),'image/png',1));
+  }
+  async function downloadParentalWallpaper(info,btn){const o=btn.textContent;btn.disabled=true;btn.textContent='Rendering 4K…';try{saveBlob(await parentalWallpaperBlob(info),`chamber-${info.num}-${info.parental.thirdName.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-parental-powers-4k.png`);}catch(e){alert('Parental Powers export failed: '+(e?.message||e));}finally{btn.disabled=false;btn.textContent=o;}}
   function ensureArtifactShell(){
     if(document.getElementById('tm2-artifact'))return;
     const el=document.createElement('div');el.id='tm2-artifact';el.className='tm2-artifact-backdrop';el.innerHTML='<div class="tm2-artifact-page"></div>';document.body.appendChild(el);
@@ -1534,12 +1575,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
           </div>
           <div class="tm2-archive-note">Deep link: <span class="tm2-deeplink">#chamber-${esc(info.num)}</span><br>Artifact schema v${VERSION}. Hero image and transparent seal remain separate assets.</div>
         </div>
-      </div>`;
+      </div>
+      ${info.parental?`<section class="tm2-parental-section" aria-labelledby="tm2-parental-title-${esc(info.num)}">
+        <div class="tm2-parental-visual"><img src="${esc(info.parental.displayPath)}" alt="Parental Powers of ${esc(info.parental.angel)} and ${esc(info.parental.daemon)} for Chamber ${esc(info.num)}" loading="lazy"><div class="tm2-parental-gradient"></div><div class="tm2-parental-caption"><div><div class="tm2-parental-kicker">NEW CHAMBER PLATE • PARENTAL POWERS</div><div class="tm2-parental-title" id="tm2-parental-title-${esc(info.num)}">${esc(info.parental.angel)} ↔ ${esc(info.parental.daemon)}</div><div class="tm2-parental-third">THIRD NAME • ${esc(info.parental.thirdName)}</div></div></div></div>
+        <div class="tm2-parental-copy"><p>The angelic and daemonic parents are rendered as complementary powers of ${esc(info.parental.office)}, interpreted through the ${esc(info.parental.fire.name)} and the law “${esc(info.parental.law)}.”</p><button type="button" class="tm2-btn tm2-parental-download">Download 4K Wallpaper</button></div>
+      </section>`:''}`;
     page.querySelector('.tm2-close').onclick=closeArtifact;
     page.querySelector('.tm2-hero').style.objectPosition=`${info.focal.x}% ${info.focal.y}%`;
     page.querySelector('.tm2-seal-download').onclick=()=>info.sealBtn?.click();
     page.querySelector('.tm2-plate-download').onclick=()=>info.plateBtn?.click();
     page.querySelector('.tm2-wallpaper').onclick=ev=>downloadWallpaper(info,ev.currentTarget);
+    const parentalButton=page.querySelector('.tm2-parental-download');if(parentalButton)parentalButton.onclick=ev=>downloadParentalWallpaper(info,ev.currentTarget);
     page.querySelector('.tm2-collect').onclick=ev=>{const next=!collectedSet().has(info.num);setCollected(info.num,next);ev.currentTarget.textContent=next?'★ Collected':'☆ Collect Chamber';};
     page.querySelector('.tm2-copy-link').onclick=async ev=>{const url=location.href.split('#')[0]+'#chamber-'+info.num;try{await navigator.clipboard.writeText(url);ev.currentTarget.textContent='Link copied';setTimeout(()=>ev.currentTarget.textContent='Copy Chamber Link',1200);}catch(e){prompt('Copy chamber link:',url);}};
     root.classList.add('open');

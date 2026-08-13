@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.1-2026-08-13-r3';
+const VERSION = 'temple-maat-pwa-v5.2-2026-08-13-r1';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -13,6 +13,8 @@ const CORE_ASSETS = [
   './offline.html',
   './version.json',
   './scripts/persistent-data.js',
+  './scripts/parental-powers.js',
+  './scripts/parental-powers-assets.json',
   './scripts/v5.1-asset-manifest.json'
 ];
 
@@ -38,12 +40,25 @@ async function releaseDisplayAssets() {
   }
 }
 
+async function parentalDisplayAssets() {
+  try {
+    const response = await fetch('./scripts/parental-powers-assets.json', { cache: 'no-store' });
+    if (!response.ok) return [];
+    const manifest = await response.json();
+    const records = Array.isArray(manifest.records) ? manifest.records : [];
+    return records.flatMap((record) => record.display?.path ? [`./${record.display.path}`] : []);
+  } catch {
+    return [];
+  }
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
     // Cache independently so one missing optional asset cannot abort installation.
     await cacheInBatches(cache, CORE_ASSETS);
     await cacheInBatches(cache, await releaseDisplayAssets());
+    await cacheInBatches(cache, await parentalDisplayAssets());
   })());
 });
 
