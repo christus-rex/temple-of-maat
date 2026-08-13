@@ -1,657 +1,515 @@
 {
-  "title": "Temple of Ma'at — 72 Egypto-Solomonic Seals",
-  "version": "6.0.0",
-  "copyright": "Copyright © 2026 Alberto Ramirez. All rights reserved.",
+  "title": "Temple of Ma\u2019at \u2014 Simplified Human-Origin Seal Archive",
+  "version": "6.1.2",
+  "style": "Simplified Human-Origin Egypto-Solomonic",
+  "count": 72,
+  "copyright": "Copyright \u00a9 2026 Alberto Ramirez. All rights reserved.",
   "siteAdministrator": "Alberto Ramirez",
   "contact": "christus.kalki888@gmail.com",
   "seals": [
     {
       "id": "01",
       "name": "Bifruiah",
-      "angel": "Vehuiah",
-      "daemon": "Bifrons",
       "pillar": "Jachin",
       "fire": "Fire of Remembering",
-      "file": "seal-01-bifruiah-transparent.png"
+      "file": "seals/01-bifruiah.png"
     },
     {
       "id": "02",
       "name": "Orialiel",
-      "angel": "Jeliel",
-      "daemon": "Orias",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-02-orialiel-transparent.png"
+      "file": "seals/02-orialiel.png"
     },
     {
       "id": "03",
       "name": "Andritael",
-      "angel": "Sitael",
-      "daemon": "Andras",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-03-andritael-transparent.png"
+      "file": "seals/03-andritael.png"
     },
     {
       "id": "04",
       "name": "Berelmiah",
-      "angel": "Elemiah",
-      "daemon": "Berith",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-04-berelmiah-transparent.png"
+      "file": "seals/04-berelmiah.png"
     },
     {
       "id": "05",
       "name": "Gamiasiah",
-      "angel": "Mahasiah",
-      "daemon": "Gamigin",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-05-gamiasiah-transparent.png"
+      "file": "seals/05-gamiasiah.png"
     },
     {
       "id": "06",
       "name": "Vapulahel",
-      "angel": "Lelahel",
-      "daemon": "Vapula",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-06-vapulahel-transparent.png"
+      "file": "seals/06-vapulahel.png"
     },
     {
       "id": "07",
       "name": "Allochiah",
-      "angel": "Achaiah",
-      "daemon": "Alloces",
       "pillar": "Jachin",
       "fire": "Fire of Concord",
-      "file": "seal-07-allochiah-transparent.png"
+      "file": "seals/07-allochiah.png"
     },
     {
       "id": "08",
       "name": "Bathietel",
-      "angel": "Cahetel",
-      "daemon": "Bathin",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-08-bathietel-transparent.png"
+      "file": "seals/08-bathietel.png"
     },
     {
       "id": "09",
       "name": "Belehaziel",
-      "angel": "Haziel",
-      "daemon": "Beleth",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-09-belehaziel-transparent.png"
+      "file": "seals/09-belehaziel.png"
     },
     {
       "id": "10",
       "name": "Bathiadiah",
-      "angel": "Aladiah",
-      "daemon": "Bathin",
       "pillar": "Middle",
       "fire": "Fire of Return",
-      "file": "seal-10-bathiadiah-transparent.png"
+      "file": "seals/10-bathiadiah.png"
     },
     {
       "id": "11",
       "name": "Valelauviah",
-      "angel": "Lauviah",
-      "daemon": "Valefar",
       "pillar": "Middle",
       "fire": "Fire of Return",
-      "file": "seal-11-valelauviah-transparent.png"
+      "file": "seals/11-valelauviah.png"
     },
     {
       "id": "12",
       "name": "Dantahaiah",
-      "angel": "Hahaiah",
-      "daemon": "Dantalion",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-12-dantahaiah-transparent.png"
+      "file": "seals/12-dantahaiah.png"
     },
     {
       "id": "13",
       "name": "Focazalel",
-      "angel": "Iezalel",
-      "daemon": "Focalor",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-13-focazalel-transparent.png"
+      "file": "seals/13-focazalel.png"
     },
     {
       "id": "14",
       "name": "Vapubahel",
-      "angel": "Mebahel",
-      "daemon": "Vapula",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-14-vapubahel-transparent.png"
+      "file": "seals/14-vapubahel.png"
     },
     {
       "id": "15",
       "name": "Berihariel",
-      "angel": "Hariel",
-      "daemon": "Berith",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-15-berihariel-transparent.png"
+      "file": "seals/15-berihariel.png"
     },
     {
       "id": "16",
       "name": "Haagakamiah",
-      "angel": "Hekamiah",
-      "daemon": "Haagenti",
       "pillar": "Middle",
       "fire": "Fire of Severance",
-      "file": "seal-16-haagakamiah-transparent.png"
+      "file": "seals/16-haagakamiah.png"
     },
     {
       "id": "17",
       "name": "Valelauviah II",
-      "angel": "Lauviah II",
-      "daemon": "Valefar",
       "pillar": "Middle",
       "fire": "Fire of Return",
-      "file": "seal-17-valelauviah-ii-transparent.png"
+      "file": "seals/17-valelauviah-ii.png"
     },
     {
       "id": "18",
       "name": "Agacaliel",
-      "angel": "Caliel",
-      "daemon": "Agares",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-18-agacaliel-transparent.png"
+      "file": "seals/18-agacaliel.png"
     },
     {
       "id": "19",
       "name": "Asmoleuviah",
-      "angel": "Leuviah",
-      "daemon": "Asmoday",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-19-asmoleuviah-transparent.png"
+      "file": "seals/19-asmoleuviah.png"
     },
     {
       "id": "20",
       "name": "Haagpahaliah",
-      "angel": "Pahaliah",
-      "daemon": "Haagenti",
       "pillar": "Jachin",
       "fire": "Fire of Remembering",
-      "file": "seal-20-haagpahaliah-transparent.png"
+      "file": "seals/20-haagpahaliah.png"
     },
     {
       "id": "21",
       "name": "Paimelkhael",
-      "angel": "Nelkhael",
-      "daemon": "Paimon",
       "pillar": "Jachin",
       "fire": "Fire of Remembering",
-      "file": "seal-21-paimelkhael-transparent.png"
+      "file": "seals/21-paimelkhael.png"
     },
     {
       "id": "22",
       "name": "Vapuyeiayel",
-      "angel": "Yeiayel",
-      "daemon": "Vapula",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-22-vapuyeiayel-transparent.png"
+      "file": "seals/22-vapuyeiayel.png"
     },
     {
       "id": "23",
       "name": "Halmelahel",
-      "angel": "Melahel",
-      "daemon": "Halphas",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-23-halmelahel-transparent.png"
+      "file": "seals/23-halmelahel.png"
     },
     {
       "id": "24",
       "name": "Halhahuiah",
-      "angel": "Hahuiah",
-      "daemon": "Halphas",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-24-halhahuiah-transparent.png"
+      "file": "seals/24-halhahuiah.png"
     },
     {
       "id": "25",
       "name": "Focanithaiah",
-      "angel": "Nithaiah",
-      "daemon": "Focalor",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-25-focanithaiah-transparent.png"
+      "file": "seals/25-focanithaiah.png"
     },
     {
       "id": "26",
       "name": "Vapuhaaiah",
-      "angel": "Haaiah",
-      "daemon": "Vapula",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-26-vapuhaaiah-transparent.png"
+      "file": "seals/26-vapuhaaiah.png"
     },
     {
       "id": "27",
       "name": "Alloyerathel",
-      "angel": "Yerathel",
-      "daemon": "Alloces",
       "pillar": "Jachin",
       "fire": "Fire of Remembering",
-      "file": "seal-27-alloyerathel-transparent.png"
+      "file": "seals/27-alloyerathel.png"
     },
     {
       "id": "28",
       "name": "Vapuseheiah",
-      "angel": "Seheiah",
-      "daemon": "Vapula",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-28-vapuseheiah-transparent.png"
+      "file": "seals/28-vapuseheiah.png"
     },
     {
       "id": "29",
       "name": "Gremoreyiel",
-      "angel": "Reyiel",
-      "daemon": "Gremory",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-29-gremoreyiel-transparent.png"
+      "file": "seals/29-gremoreyiel.png"
     },
     {
       "id": "30",
       "name": "Buromael",
-      "angel": "Omael",
-      "daemon": "Buer",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-30-buromael-transparent.png"
+      "file": "seals/30-buromael.png"
     },
     {
       "id": "31",
       "name": "Allolecabel",
-      "angel": "Lecabel",
-      "daemon": "Alloces",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-31-allolecabel-transparent.png"
+      "file": "seals/31-allolecabel.png"
     },
     {
       "id": "32",
       "name": "Focavasariah",
-      "angel": "Vasariah",
-      "daemon": "Focalor",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-32-focavasariah-transparent.png"
+      "file": "seals/32-focavasariah.png"
     },
     {
       "id": "33",
       "name": "Paiyehuiah",
-      "angel": "Yehuiah",
-      "daemon": "Paimon",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-33-paiyehuiah-transparent.png"
+      "file": "seals/33-paiyehuiah.png"
     },
     {
       "id": "34",
       "name": "Marcholehahiah",
-      "angel": "Lehahiah",
-      "daemon": "Marchosias",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-34-marcholehahiah-transparent.png"
+      "file": "seals/34-marcholehahiah.png"
     },
     {
       "id": "35",
       "name": "Glasyavakiah",
-      "angel": "Chavakiah",
-      "daemon": "Glasya Labolas",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-35-glasyavakiah-transparent.png"
+      "file": "seals/35-glasyavakiah.png"
     },
     {
       "id": "36",
       "name": "Bathimenadel",
-      "angel": "Menadel",
-      "daemon": "Bathin",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-36-bathimenadel-transparent.png"
+      "file": "seals/36-bathimenadel.png"
     },
     {
       "id": "37",
       "name": "Camianiel",
-      "angel": "Aniel",
-      "daemon": "Camio",
       "pillar": "Jachin",
       "fire": "Fire of Remembering",
-      "file": "seal-37-camianiel-transparent.png"
+      "file": "seals/37-camianiel.png"
     },
     {
       "id": "38",
       "name": "Belhaamiah",
-      "angel": "Haamiah",
-      "daemon": "Belial",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-38-belhaamiah-transparent.png"
+      "file": "seals/38-belhaamiah.png"
     },
     {
       "id": "39",
       "name": "Gusorehael",
-      "angel": "Rehael",
-      "daemon": "Gusoin",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-39-gusorehael-transparent.png"
+      "file": "seals/39-gusorehael.png"
     },
     {
       "id": "40",
       "name": "Bifroyeiazel",
-      "angel": "Yeiazel",
-      "daemon": "Bifrons",
       "pillar": "Middle",
       "fire": "Fire of Return",
-      "file": "seal-40-bifroyeiazel-transparent.png"
+      "file": "seals/40-bifroyeiazel.png"
     },
     {
       "id": "41",
       "name": "Belehahahel",
-      "angel": "Hahahel",
-      "daemon": "Beleth",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-41-belehahahel-transparent.png"
+      "file": "seals/41-belehahahel.png"
     },
     {
       "id": "42",
       "name": "Agamikael",
-      "angel": "Mikael",
-      "daemon": "Agares",
       "pillar": "Jachin",
       "fire": "Fire of Concord",
-      "file": "seal-42-agamikael-transparent.png"
+      "file": "seals/42-agamikael.png"
     },
     {
       "id": "43",
       "name": "Asmoveuliah",
-      "angel": "Veuliah",
-      "daemon": "Asmoday",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-43-asmoveuliah-transparent.png"
+      "file": "seals/43-asmoveuliah.png"
     },
     {
       "id": "44",
       "name": "Gamiyelahiah",
-      "angel": "Yelahiah",
-      "daemon": "Gamigin",
       "pillar": "Jachin",
       "fire": "Fire of Remembering",
-      "file": "seal-44-gamiyelahiah-transparent.png"
+      "file": "seals/44-gamiyelahiah.png"
     },
     {
       "id": "45",
       "name": "Cimisehaliah",
-      "angel": "Sehaliah",
-      "daemon": "Cimeies",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-45-cimisehaliah-transparent.png"
+      "file": "seals/45-cimisehaliah.png"
     },
     {
       "id": "46",
       "name": "Hauariel",
-      "angel": "Ariel",
-      "daemon": "Haures",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-46-hauariel-transparent.png"
+      "file": "seals/46-hauariel.png"
     },
     {
       "id": "47",
       "name": "Agaresaliah",
-      "angel": "Asaliah",
-      "daemon": "Agares",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-47-agaresaliah-transparent.png"
+      "file": "seals/47-agaresaliah.png"
     },
     {
       "id": "48",
       "name": "Leramihael",
-      "angel": "Mihael",
-      "daemon": "Leraye",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-48-leramihael-transparent.png"
+      "file": "seals/48-leramihael.png"
     },
     {
       "id": "49",
       "name": "Vapuvehuel",
-      "angel": "Vehuel",
-      "daemon": "Vapula",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-49-vapuvehuel-transparent.png"
+      "file": "seals/49-vapuvehuel.png"
     },
     {
       "id": "50",
       "name": "Bathidaniel",
-      "angel": "Daniel",
-      "daemon": "Bathin",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-50-bathidaniel-transparent.png"
+      "file": "seals/50-bathidaniel.png"
     },
     {
       "id": "51",
       "name": "Glasyahasiah",
-      "angel": "Hahasiah",
-      "daemon": "Glasya Labolas",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-51-glasyahasiah-transparent.png"
+      "file": "seals/51-glasyahasiah.png"
     },
     {
       "id": "52",
       "name": "Cimimamiah",
-      "angel": "Imamiah",
-      "daemon": "Cimeies",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-52-cimimamiah-transparent.png"
+      "file": "seals/52-cimimamiah.png"
     },
     {
       "id": "53",
       "name": "Botinanael",
-      "angel": "Nanael",
-      "daemon": "Botis",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-53-botinanael-transparent.png"
+      "file": "seals/53-botinanael.png"
     },
     {
       "id": "54",
       "name": "Procnithael",
-      "angel": "Nithael",
-      "daemon": "Procel",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-54-procnithael-transparent.png"
+      "file": "seals/54-procnithael.png"
     },
     {
       "id": "55",
       "name": "Haagmebahiah",
-      "angel": "Mebahiah",
-      "daemon": "Haagenti",
       "pillar": "Middle",
       "fire": "Fire of Severance",
-      "file": "seal-55-haagmebahiah-transparent.png"
+      "file": "seals/55-haagmebahiah.png"
     },
     {
       "id": "56",
       "name": "Buropoyel",
-      "angel": "Poyel",
-      "daemon": "Buer",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-56-buropoyel-transparent.png"
+      "file": "seals/56-buropoyel.png"
     },
     {
       "id": "57",
       "name": "Glasnemamiah",
-      "angel": "Nemamiah",
-      "daemon": "Glasya Labolas",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-57-glasnemamiah-transparent.png"
+      "file": "seals/57-glasnemamiah.png"
     },
     {
       "id": "58",
       "name": "Procyeialel",
-      "angel": "Yeialel",
-      "daemon": "Procel",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-58-procyeialel-transparent.png"
+      "file": "seals/58-procyeialel.png"
     },
     {
       "id": "59",
       "name": "Beriharahel",
-      "angel": "Harahel",
-      "daemon": "Berith",
       "pillar": "Jachin",
       "fire": "Fire of Remembering",
-      "file": "seal-59-beriharahel-transparent.png"
+      "file": "seals/59-beriharahel.png"
     },
     {
       "id": "60",
       "name": "Murmitzrael",
-      "angel": "Mitzrael",
-      "daemon": "Murmur",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-60-murmitzrael-transparent.png"
+      "file": "seals/60-murmitzrael.png"
     },
     {
       "id": "61",
       "name": "Marbumabel",
-      "angel": "Umabel",
-      "daemon": "Marbas",
       "pillar": "Middle",
       "fire": "Fire of Craft",
-      "file": "seal-61-marbumabel-transparent.png"
+      "file": "seals/61-marbumabel.png"
     },
     {
       "id": "62",
       "name": "Fociahhel",
-      "angel": "Iahhel",
-      "daemon": "Focalor",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-62-fociahhel-transparent.png"
+      "file": "seals/62-fociahhel.png"
     },
     {
       "id": "63",
       "name": "Marbanauel",
-      "angel": "Anauel",
-      "daemon": "Marbas",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-63-marbanauel-transparent.png"
+      "file": "seals/63-marbanauel.png"
     },
     {
       "id": "64",
       "name": "Belemehiel",
-      "angel": "Mehiel",
-      "daemon": "Beleth",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-64-belemehiel-transparent.png"
+      "file": "seals/64-belemehiel.png"
     },
     {
       "id": "65",
       "name": "Astadamabiah",
-      "angel": "Damabiah",
-      "daemon": "Astaroth",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-65-astadamabiah-transparent.png"
+      "file": "seals/65-astadamabiah.png"
     },
     {
       "id": "66",
       "name": "Andramanakel",
-      "angel": "Manakel",
-      "daemon": "Andras",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-66-andramanakel-transparent.png"
+      "file": "seals/66-andramanakel.png"
     },
     {
       "id": "67",
       "name": "Andraeyael",
-      "angel": "Eyael",
-      "daemon": "Andras",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-67-andraeyael-transparent.png"
+      "file": "seals/67-andraeyael.png"
     },
     {
       "id": "68",
       "name": "Allohabuhiah",
-      "angel": "Habuhiah",
-      "daemon": "Alloces",
       "pillar": "Jachin",
       "fire": "Fire of Healing",
-      "file": "seal-68-allohabuhiah-transparent.png"
+      "file": "seals/68-allohabuhiah.png"
     },
     {
       "id": "69",
       "name": "Belerochel",
-      "angel": "Rochel",
-      "daemon": "Beleth",
       "pillar": "Boaz",
       "fire": "Fire of Severance",
-      "file": "seal-69-belerochel-transparent.png"
+      "file": "seals/69-belerochel.png"
     },
     {
       "id": "70",
       "name": "Dantajabamiah",
-      "angel": "Jabamiah",
-      "daemon": "Dantalion",
       "pillar": "Boaz",
       "fire": "Fire of Depth",
-      "file": "seal-70-dantajabamiah-transparent.png"
+      "file": "seals/70-dantajabamiah.png"
     },
     {
       "id": "71",
       "name": "Cimihaiaiel",
-      "angel": "Haiaiel",
-      "daemon": "Cimeies",
       "pillar": "Middle",
       "fire": "Fire of Concord",
-      "file": "seal-71-cimihaiaiel-transparent.png"
+      "file": "seals/71-cimihaiaiel.png"
     },
     {
       "id": "72",
       "name": "Halmumiah",
-      "angel": "Mumiah",
-      "daemon": "Halphas",
       "pillar": "Middle",
       "fire": "Fire of Return",
-      "file": "seal-72-halmumiah-transparent.png"
+      "file": "seals/72-halmumiah.png"
     }
   ]
 }
