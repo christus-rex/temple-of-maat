@@ -1,0 +1,1859 @@
+{
+  "schema": "temple-of-maat/chambers-v3",
+  "version": "3.0.0-transformative",
+  "title": "Temple of Ma'at — 72 Chamber Archive",
+  "chamberCount": 72,
+  "fires": [
+    {
+      "id": 1,
+      "name": "Fire of Remembering",
+      "color": "#2563eb",
+      "pillar": "Jachin",
+      "description": "Initiatory memory"
+    },
+    {
+      "id": 2,
+      "name": "Fire of Concord",
+      "color": "#40e0d0",
+      "pillar": "Middle",
+      "description": "Bridging polarity"
+    },
+    {
+      "id": 3,
+      "name": "Fire of Severance",
+      "color": "#ef4444",
+      "pillar": "Boaz",
+      "description": "Necessary ending"
+    },
+    {
+      "id": 4,
+      "name": "Fire of Healing",
+      "color": "#10b981",
+      "pillar": "Jachin",
+      "description": "Revalued direction"
+    },
+    {
+      "id": 5,
+      "name": "Fire of Craft",
+      "color": "#d4af37",
+      "pillar": "Middle",
+      "description": "Right work"
+    },
+    {
+      "id": 6,
+      "name": "Fire of Depth",
+      "color": "#7c3aed",
+      "pillar": "Boaz",
+      "description": "Covenant keeper"
+    },
+    {
+      "id": 7,
+      "name": "Fire of Return",
+      "color": "#f5f1e8",
+      "pillar": "Middle",
+      "description": "Second path"
+    }
+  ],
+  "chambers": [
+    {
+      "number": 1,
+      "id": "01",
+      "thirdName": "Bifruiah",
+      "angel": "Vehuiah",
+      "daemon": "Bifrons",
+      "office": "Keeper of Remembered Beginnings",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "law": "INITIATE WITHOUT ERASURE",
+      "thresholdSealName": "First Stone",
+      "recurrence": false,
+      "tetrad": true,
+      "tetradValues": "Tetrad canonical preserved",
+      "faceFocal": {
+        "x": 50,
+        "y": 34.5
+      }
+    },
+    {
+      "number": 2,
+      "id": "02",
+      "thirdName": "Orialiel",
+      "angel": "Jeliel",
+      "daemon": "Orias",
+      "office": "Steward of Concordant Authority",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "AUTHORITY SERVES HARMONY",
+      "thresholdSealName": "Second Binding",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24
+      }
+    },
+    {
+      "number": 3,
+      "id": "03",
+      "thirdName": "Andritael",
+      "angel": "Sitael",
+      "daemon": "Andras",
+      "office": "Warden of Necessary Endings",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "END WHAT DEVOURS LIFE",
+      "thresholdSealName": "Third Severance",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 28
+      }
+    },
+    {
+      "number": 4,
+      "id": "04",
+      "thirdName": "Berelmiah",
+      "angel": "Elemiah",
+      "daemon": "Berith",
+      "office": "Keeper of Revalued Direction",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "POWER BOWS TO RIGHT ORDER",
+      "thresholdSealName": "Fourth Compass",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 20.4
+      }
+    },
+    {
+      "number": 5,
+      "id": "05",
+      "thirdName": "Gamiasiah",
+      "angel": "Mahasiah",
+      "daemon": "Gamigin",
+      "office": "Curator of Healing Memory",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "MEMORY HEALS WHEN WITNESSED",
+      "thresholdSealName": "Fifth Archive",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 21.5
+      }
+    },
+    {
+      "number": 6,
+      "id": "06",
+      "thirdName": "Vapulahel",
+      "angel": "Lelahel",
+      "daemon": "Vapula",
+      "office": "Artificer of Beneficent Craft",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "CRAFT WITHOUT DOMINION",
+      "thresholdSealName": "Sixth Hammer",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 19.0
+      }
+    },
+    {
+      "number": 7,
+      "id": "07",
+      "thirdName": "Allochiah",
+      "angel": "Achaiah",
+      "daemon": "Alloces",
+      "office": "Keeper of Patient Understanding",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Jachin",
+      "law": "UNDERSTAND BEFORE NAMING",
+      "thresholdSealName": "Seventh Lens",
+      "recurrence": false,
+      "tetrad": true,
+      "tetradValues": "Canonical tetrad chamber",
+      "faceFocal": {
+        "x": 50,
+        "y": 29.7
+      }
+    },
+    {
+      "number": 8,
+      "id": "08",
+      "thirdName": "Bathietel",
+      "angel": "Cahetel",
+      "daemon": "Bathin",
+      "office": "Blesser of Sacred Work",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "WORK AS OFFERING",
+      "thresholdSealName": "Eighth Field",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 18
+      }
+    },
+    {
+      "number": 9,
+      "id": "09",
+      "thirdName": "Belehaziel",
+      "angel": "Haziel",
+      "daemon": "Beleth",
+      "office": "Sovereign of Merciful Intensity",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "INTENSITY TEMPERED BY MERCY",
+      "thresholdSealName": "Ninth Crown",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 18.7
+      }
+    },
+    {
+      "number": 10,
+      "id": "10",
+      "thirdName": "Bathiadiah",
+      "angel": "Aladiah",
+      "daemon": "Bathin",
+      "office": "Restorer of Second Paths",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "law": "SECOND PATH IS NOT FAILURE",
+      "thresholdSealName": "Tenth Return",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 21.1
+      }
+    },
+    {
+      "number": 11,
+      "id": "11",
+      "thirdName": "Valelauviah",
+      "angel": "Lauviah",
+      "daemon": "Valefar",
+      "office": "Guide of Cunning to Wisdom",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "law": "CUNNING TRANSMUTED",
+      "thresholdSealName": "Recurrence Gate Alpha",
+      "recurrence": true,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24.0
+      }
+    },
+    {
+      "number": 12,
+      "id": "12",
+      "thirdName": "Dantahaiah",
+      "angel": "Hahaiah",
+      "daemon": "Dantalion",
+      "office": "Sanctuary of True Thoughts",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "THOUGHT WITHOUT ENSLAVEMENT",
+      "thresholdSealName": "Twelfth Mind",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 28
+      }
+    },
+    {
+      "number": 13,
+      "id": "13",
+      "thirdName": "Focazalel",
+      "angel": "Iezalel",
+      "daemon": "Focalor",
+      "office": "Keeper of Deep Covenants",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "DEPTH KEEPS ITS WORD",
+      "thresholdSealName": "Abyssal Covenant",
+      "recurrence": false,
+      "tetrad": true,
+      "tetradValues": "70/34/119/38",
+      "faceFocal": {
+        "x": 50,
+        "y": 22.7
+      }
+    },
+    {
+      "number": 14,
+      "id": "14",
+      "thirdName": "Vapubahel",
+      "angel": "Mebahel",
+      "daemon": "Vapula",
+      "office": "Liberator Through Truthful Craft",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "TRUTH LIBERATES CRAFT",
+      "thresholdSealName": "Fourteenth Key",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.2
+      }
+    },
+    {
+      "number": 15,
+      "id": "15",
+      "thirdName": "Berihariel",
+      "angel": "Hariel",
+      "daemon": "Berith",
+      "office": "Purifier of Worth",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "WORTH BEYOND PRICE",
+      "thresholdSealName": "Fifteenth Purge",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24.8
+      }
+    },
+    {
+      "number": 16,
+      "id": "16",
+      "thirdName": "Haagakamiah",
+      "angel": "Hekamiah",
+      "daemon": "Haagenti",
+      "office": "Noble Transmuter",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Middle",
+      "law": "TRANSMUTE WITHOUT DENIAL",
+      "thresholdSealName": "Sixteenth Crucible",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24
+      }
+    },
+    {
+      "number": 17,
+      "id": "17",
+      "thirdName": "Valelauviah II",
+      "angel": "Lauviah II",
+      "daemon": "Valefar",
+      "office": "Recurrence Doorway",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "law": "RETURN IS NOT REPETITION",
+      "thresholdSealName": "Recurrence Gate Omega",
+      "recurrence": true,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 26
+      }
+    },
+    {
+      "number": 18,
+      "id": "18",
+      "thirdName": "Agacaliel",
+      "angel": "Caliel",
+      "daemon": "Agares",
+      "office": "Swift Justice",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "JUSTICE WITHOUT VENGEANCE",
+      "thresholdSealName": "Eighteenth Sword",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 57,
+        "y": 28
+      }
+    },
+    {
+      "number": 19,
+      "id": "19",
+      "thirdName": "Asmoleuviah",
+      "angel": "Leuviah",
+      "daemon": "Asmoday",
+      "office": "Keeper of Expansive Craft",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "EXPAND WITHOUT CONSUMING",
+      "thresholdSealName": "Nineteenth Loom",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 18
+      }
+    },
+    {
+      "number": 20,
+      "id": "20",
+      "thirdName": "Haagpahaliah",
+      "angel": "Pahaliah",
+      "daemon": "Haagenti",
+      "office": "Redeemer of Sacred Purpose",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "law": "PURPOSE REDEEMED",
+      "thresholdSealName": "Twentieth Vow",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 19.0
+      }
+    },
+    {
+      "number": 21,
+      "id": "21",
+      "thirdName": "Paimelkhael",
+      "angel": "Nelkhael",
+      "daemon": "Paimon",
+      "office": "Teacher of Unyielding Learning",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "law": "LEARNING AS DEVOTION",
+      "thresholdSealName": "Twenty-first Scroll",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 35
+      }
+    },
+    {
+      "number": 22,
+      "id": "22",
+      "thirdName": "Vapuyeiayel",
+      "angel": "Yeiayel",
+      "daemon": "Vapula",
+      "office": "Crafter of Right Renown",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "RENOWN WITHOUT INFLATION",
+      "thresholdSealName": "Twenty-second Name",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 28.4
+      }
+    },
+    {
+      "number": 23,
+      "id": "23",
+      "thirdName": "Halmelahel",
+      "angel": "Melahel",
+      "daemon": "Halphas",
+      "office": "Fortified Healer",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "HEALING NEEDS BOUNDARY",
+      "thresholdSealName": "Twenty-third Wall",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.4
+      }
+    },
+    {
+      "number": 24,
+      "id": "24",
+      "thirdName": "Halhahuiah",
+      "angel": "Hahuiah",
+      "daemon": "Halphas",
+      "office": "Hidden Refuge Fortress",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "REFUGE WITHOUT ISOLATION",
+      "thresholdSealName": "Twenty-fourth Shelter",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24.2
+      }
+    },
+    {
+      "number": 25,
+      "id": "25",
+      "thirdName": "Focanithaiah",
+      "angel": "Nithaiah",
+      "daemon": "Focalor",
+      "office": "Depth Keeper",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "DEPTH GUARDS THE LIVING",
+      "thresholdSealName": "Twenty-fifth Deep",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 18
+      }
+    },
+    {
+      "number": 26,
+      "id": "26",
+      "thirdName": "Vapuhaaiah",
+      "angel": "Haaiah",
+      "daemon": "Vapula",
+      "office": "Artisan of Just Governance",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "GOVERNANCE AS CRAFT",
+      "thresholdSealName": "Twenty-sixth Scepter",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 25
+      }
+    },
+    {
+      "number": 27,
+      "id": "27",
+      "thirdName": "Alloyerathel",
+      "angel": "Yerathel",
+      "daemon": "Alloces",
+      "office": "Sower of Light",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "law": "LIGHT SOWN, NOT IMPOSED",
+      "thresholdSealName": "Twenty-seventh Seed",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 20.0
+      }
+    },
+    {
+      "number": 28,
+      "id": "28",
+      "thirdName": "Vapuseheiah",
+      "angel": "Seheiah",
+      "daemon": "Vapula",
+      "office": "Weaver of Longevity",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "LONGEVITY THROUGH BALANCE",
+      "thresholdSealName": "Twenty-eighth Thread",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.5
+      }
+    },
+    {
+      "number": 29,
+      "id": "29",
+      "thirdName": "Gremoreyiel",
+      "angel": "Reyiel",
+      "daemon": "Gremory",
+      "office": "Liberator of Treasure",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "TREASURE FREED, NOT HOARDED",
+      "thresholdSealName": "Twenty-ninth Vault",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 30.4
+      }
+    },
+    {
+      "number": 30,
+      "id": "30",
+      "thirdName": "Buromael",
+      "angel": "Omael",
+      "daemon": "Buer",
+      "office": "Healer of Gestation",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "GESTATION REQUIRES SAFETY",
+      "thresholdSealName": "Thirtieth Womb",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 31,
+      "id": "31",
+      "thirdName": "Allolecabel",
+      "angel": "Lecabel",
+      "daemon": "Alloces",
+      "office": "Brilliance Tempered",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "BRILLIANCE SERVES WHOLESOMENESS",
+      "thresholdSealName": "Thirty-first Temper",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.2
+      }
+    },
+    {
+      "number": 32,
+      "id": "32",
+      "thirdName": "Focavasariah",
+      "angel": "Vasariah",
+      "daemon": "Focalor",
+      "office": "Clemency in Depths",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "CLEMENCY EVEN IN ABYSS",
+      "thresholdSealName": "Thirty-second Tide",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 35
+      }
+    },
+    {
+      "number": 33,
+      "id": "33",
+      "thirdName": "Paiyehuiah",
+      "angel": "Yehuiah",
+      "daemon": "Paimon",
+      "office": "Right Order Voice",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "VOICE ALIGNS ORDER",
+      "thresholdSealName": "Thirty-third Word",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 25.0
+      }
+    },
+    {
+      "number": 34,
+      "id": "34",
+      "thirdName": "Marcholehahiah",
+      "angel": "Lehahiah",
+      "daemon": "Marchosias",
+      "office": "Disciplined Courage",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "COURAGE WITH DISCIPLINE",
+      "thresholdSealName": "Thirty-fourth Fang",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.4
+      }
+    },
+    {
+      "number": 35,
+      "id": "35",
+      "thirdName": "Glasyavakiah",
+      "angel": "Chavakiah",
+      "daemon": "Glasya Labolas",
+      "office": "Reconciler After Bloodshed",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "AFTER BLOOD, RECONCILE",
+      "thresholdSealName": "Thirty-fifth Truce",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 36,
+      "id": "36",
+      "thirdName": "Bathimenadel",
+      "angel": "Menadel",
+      "daemon": "Bathin",
+      "office": "Pilgrim of Sacred Labor",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "LABOR AS PILGRIMAGE",
+      "thresholdSealName": "Thirty-sixth Road",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 26.7
+      }
+    },
+    {
+      "number": 37,
+      "id": "37",
+      "thirdName": "Camianiel",
+      "angel": "Aniel",
+      "daemon": "Camio",
+      "office": "Keeper of Living Signal",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "law": "SIGNAL REMAINS LIVING",
+      "thresholdSealName": "Living Signal",
+      "recurrence": false,
+      "tetrad": true,
+      "tetradValues": "41/23/94/31",
+      "faceFocal": {
+        "x": 50,
+        "y": 20.4
+      }
+    },
+    {
+      "number": 38,
+      "id": "38",
+      "thirdName": "Belhaamiah",
+      "angel": "Haamiah",
+      "daemon": "Belial",
+      "office": "Sovereign Ritual",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "RITUAL WITHOUT COERCION",
+      "thresholdSealName": "Thirty-eighth Rite",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 26.6
+      }
+    },
+    {
+      "number": 39,
+      "id": "39",
+      "thirdName": "Gusorehael",
+      "angel": "Rehael",
+      "daemon": "Gusoin",
+      "office": "Healer of Lineage",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "LINEAGE HEALED FORWARD",
+      "thresholdSealName": "Thirty-ninth Root",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 25.3
+      }
+    },
+    {
+      "number": 40,
+      "id": "40",
+      "thirdName": "Bifroyeiazel",
+      "angel": "Yeiazel",
+      "daemon": "Bifrons",
+      "office": "Consoler at Threshold",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "law": "THRESHOLD HELD WITH CARE",
+      "thresholdSealName": "Fortieth Threshold",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27.4
+      }
+    },
+    {
+      "number": 41,
+      "id": "41",
+      "thirdName": "Belehahahel",
+      "angel": "Hahahel",
+      "daemon": "Beleth",
+      "office": "Mission of Fierce Calling",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "FIERCENESS IN SERVICE",
+      "thresholdSealName": "Forty-first Flame",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 25
+      }
+    },
+    {
+      "number": 42,
+      "id": "42",
+      "thirdName": "Agamikael",
+      "angel": "Mikael",
+      "daemon": "Agares",
+      "office": "Marshal of Right Movement",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Jachin",
+      "law": "MOVEMENT WITHOUT INVASION",
+      "thresholdSealName": "Right March",
+      "recurrence": false,
+      "tetrad": true,
+      "tetradValues": "51/24/111/39",
+      "faceFocal": {
+        "x": 50,
+        "y": 24.9
+      }
+    },
+    {
+      "number": 43,
+      "id": "43",
+      "thirdName": "Asmoveuliah",
+      "angel": "Veuliah",
+      "daemon": "Asmoday",
+      "office": "Abundance Through Hidden Craft",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "ABUNDANCE THROUGH SUBTLETY",
+      "thresholdSealName": "Forty-third Hidden",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 29.5
+      }
+    },
+    {
+      "number": 44,
+      "id": "44",
+      "thirdName": "Gamiyelahiah",
+      "angel": "Yelahiah",
+      "daemon": "Gamigin",
+      "office": "Karmic Memory Warrior",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "law": "KARMA REMEMBERED, NOT REPEATED",
+      "thresholdSealName": "Forty-fourth Karma",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 45,
+      "id": "45",
+      "thirdName": "Cimisehaliah",
+      "angel": "Sehaliah",
+      "daemon": "Cimeies",
+      "office": "Purifier Through Rhetoric",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "RHETORIC PURIFIES, NOT MANIPULATES",
+      "thresholdSealName": "Forty-fifth Logic",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 19.7
+      }
+    },
+    {
+      "number": 46,
+      "id": "46",
+      "thirdName": "Hauariel",
+      "angel": "Ariel",
+      "daemon": "Haures",
+      "office": "Revealer Through Fire",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "FIRE REVEALS, DOES NOT CONSUME WHOLESOME",
+      "thresholdSealName": "Forty-sixth Ember",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24.7
+      }
+    },
+    {
+      "number": 47,
+      "id": "47",
+      "thirdName": "Agaresaliah",
+      "angel": "Asaliah",
+      "daemon": "Agares",
+      "office": "Contemplative Movement",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "MOVE CONTEMPLATIVELY",
+      "thresholdSealName": "Forty-seventh Step",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24.3
+      }
+    },
+    {
+      "number": 48,
+      "id": "48",
+      "thirdName": "Leramihael",
+      "angel": "Mihael",
+      "daemon": "Leraye",
+      "office": "Peaceful Arrow",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "ARROW WITHOUT WAR",
+      "thresholdSealName": "Forty-eighth Bow",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 49,
+      "id": "49",
+      "thirdName": "Vapuvehuel",
+      "angel": "Vehuel",
+      "daemon": "Vapula",
+      "office": "Elevated Craft",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "CRAFT ELEVATED, NOT ELEVATING EGO",
+      "thresholdSealName": "Forty-ninth Elevation",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.5
+      }
+    },
+    {
+      "number": 50,
+      "id": "50",
+      "thirdName": "Bathidaniel",
+      "angel": "Daniel",
+      "daemon": "Bathin",
+      "office": "Eloquent Traveler",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "TRAVEL WITH ELOQUENCE",
+      "thresholdSealName": "Fiftieth Journey",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 26.0
+      }
+    },
+    {
+      "number": 51,
+      "id": "51",
+      "thirdName": "Glasyahasiah",
+      "angel": "Hahasiah",
+      "daemon": "Glasya Labolas",
+      "office": "Alchemist of Hidden Mysteries",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "MYSTERY KEPT, NOT WITHHELD",
+      "thresholdSealName": "Fifty-first Veil",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 31.0
+      }
+    },
+    {
+      "number": 52,
+      "id": "52",
+      "thirdName": "Cimimamiah",
+      "angel": "Imamiah",
+      "daemon": "Cimeies",
+      "office": "Atonement Through Logic",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "LOGIC ATONES",
+      "thresholdSealName": "Fifty-second Balance",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 26.0
+      }
+    },
+    {
+      "number": 53,
+      "id": "53",
+      "thirdName": "Botinanael",
+      "angel": "Nanael",
+      "daemon": "Botis",
+      "office": "Reconciler of Friends and Foes",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "RECONCILE WITHOUT FALSE PEACE",
+      "thresholdSealName": "Fifty-third Bridge",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 25
+      }
+    },
+    {
+      "number": 54,
+      "id": "54",
+      "thirdName": "Procnithael",
+      "angel": "Nithael",
+      "daemon": "Procel",
+      "office": "Youthful Storm Keeper",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "STORM KEPT YOUNG, NOT SUPPRESSED",
+      "thresholdSealName": "Fifty-fourth Storm",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 55,
+      "id": "55",
+      "thirdName": "Haagmebahiah",
+      "angel": "Mebahiah",
+      "daemon": "Haagenti",
+      "office": "Lucid Transmuter",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Middle",
+      "law": "LUCID TRANSMUTATION",
+      "thresholdSealName": "Fifty-fifth Lucid",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 24.1
+      }
+    },
+    {
+      "number": 56,
+      "id": "56",
+      "thirdName": "Buropoyel",
+      "angel": "Poyel",
+      "daemon": "Buer",
+      "office": "Fortune Through Healing",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "FORTUNE FOLLOWS HEALING",
+      "thresholdSealName": "Fifty-sixth Fortune",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 28
+      }
+    },
+    {
+      "number": 57,
+      "id": "57",
+      "thirdName": "Glasnemamiah",
+      "angel": "Nemamiah",
+      "daemon": "Glasya Labolas",
+      "office": "Discerner in Battle",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "DISCERN IN CONFLICT",
+      "thresholdSealName": "Fifty-seventh Discernment",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.7
+      }
+    },
+    {
+      "number": 58,
+      "id": "58",
+      "thirdName": "Procyeialel",
+      "angel": "Yeialel",
+      "daemon": "Procel",
+      "office": "Healer of Mental Storm",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "MIND STORM CALMED",
+      "thresholdSealName": "Fifty-eighth Calm",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 25.3
+      }
+    },
+    {
+      "number": 59,
+      "id": "59",
+      "thirdName": "Beriharahel",
+      "angel": "Harahel",
+      "daemon": "Berith",
+      "office": "Wealth of Intellect",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "law": "INTELLECT WEALTH SHARED",
+      "thresholdSealName": "Fifty-ninth Mind-Wealth",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 23.1
+      }
+    },
+    {
+      "number": 60,
+      "id": "60",
+      "thirdName": "Murmitzrael",
+      "angel": "Mitzrael",
+      "daemon": "Murmur",
+      "office": "Reparative Music",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "MUSIC REPAIRS",
+      "thresholdSealName": "Sixtieth Resonance",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 20.2
+      }
+    },
+    {
+      "number": 61,
+      "id": "61",
+      "thirdName": "Marbumabel",
+      "angel": "Umabel",
+      "daemon": "Marbas",
+      "office": "Friend of Hidden Mechanisms",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "law": "MECHANISM FRIEND, NOT MASTER",
+      "thresholdSealName": "Sixty-first Gear",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 62,
+      "id": "62",
+      "thirdName": "Fociahhel",
+      "angel": "Iahhel",
+      "daemon": "Focalor",
+      "office": "Seeker in Depths",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "SEEK WITHOUT DROWNING",
+      "thresholdSealName": "Sixty-second Dive",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 23.1
+      }
+    },
+    {
+      "number": 63,
+      "id": "63",
+      "thirdName": "Marbanauel",
+      "angel": "Anauel",
+      "daemon": "Marbas",
+      "office": "Connector of Unity",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "UNITY THROUGH CONNECTION",
+      "thresholdSealName": "Sixty-third Link",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 25.2
+      }
+    },
+    {
+      "number": 64,
+      "id": "64",
+      "thirdName": "Belemehiel",
+      "angel": "Mehiel",
+      "daemon": "Beleth",
+      "office": "Vivifier of Intense Love",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "LOVE INTENSE, NOT POSSESSIVE",
+      "thresholdSealName": "Sixty-fourth Vivify",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 35
+      }
+    },
+    {
+      "number": 65,
+      "id": "65",
+      "thirdName": "Astadamabiah",
+      "angel": "Damabiah",
+      "daemon": "Astaroth",
+      "office": "Treasurer of Sea Wisdom",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "SEA WISDOM TREASURED",
+      "thresholdSealName": "Sixty-fifth Abyssal Treasury",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 21.8
+      }
+    },
+    {
+      "number": 66,
+      "id": "66",
+      "thirdName": "Andramanakel",
+      "angel": "Manakel",
+      "daemon": "Andras",
+      "office": "Healer of Necessary Severance",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "SEVER TO HEAL",
+      "thresholdSealName": "Sixty-sixth Cut",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 28
+      }
+    },
+    {
+      "number": 67,
+      "id": "67",
+      "thirdName": "Andraeyael",
+      "angel": "Eyael",
+      "daemon": "Andras",
+      "office": "Alchemist of Ending",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "ENDING AS ALCHEMY",
+      "thresholdSealName": "Sixty-seventh Ash",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 22.5
+      }
+    },
+    {
+      "number": 68,
+      "id": "68",
+      "thirdName": "Allohabuhiah",
+      "angel": "Habuhiah",
+      "daemon": "Alloces",
+      "office": "Preserver Through Expertise",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "law": "EXPERTISE PRESERVES LIFE",
+      "thresholdSealName": "Sixty-eighth Preserve",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 23.7
+      }
+    },
+    {
+      "number": 69,
+      "id": "69",
+      "thirdName": "Belerochel",
+      "angel": "Rochel",
+      "daemon": "Beleth",
+      "office": "Restitution Through Intensity",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "law": "RESTITUTION THROUGH FIERCE TRUTH",
+      "thresholdSealName": "Sixty-ninth Restitution",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 35
+      }
+    },
+    {
+      "number": 70,
+      "id": "70",
+      "thirdName": "Dantajabamiah",
+      "angel": "Jabamiah",
+      "daemon": "Dantalion",
+      "office": "Alchemist of Thoughts",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "law": "THOUGHT ALCHEMIZED",
+      "thresholdSealName": "Seventieth Thought",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 71,
+      "id": "71",
+      "thirdName": "Cimihaiaiel",
+      "angel": "Haiaiel",
+      "daemon": "Cimeies",
+      "office": "Divine Warrior of Rhetoric",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "law": "WARRIOR OF RIGHT SPEECH",
+      "thresholdSealName": "Seventy-first Rhetoric",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 27
+      }
+    },
+    {
+      "number": 72,
+      "id": "72",
+      "thirdName": "Halmumiah",
+      "angel": "Mumiah",
+      "daemon": "Halphas",
+      "office": "Final Fortress of Rebirth",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "law": "REBIRTH FORTIFIED",
+      "thresholdSealName": "Seventy-second Rebirth",
+      "recurrence": false,
+      "tetrad": false,
+      "tetradValues": null,
+      "faceFocal": {
+        "x": 50,
+        "y": 31.2
+      }
+    }
+  ]
+}
