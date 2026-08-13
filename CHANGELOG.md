@@ -1,10 +1,10 @@
 # Changelog
 
-## v6.1.1 — Ritual audio pause/resume fix
+## v6.1.3 — Simplified seals with human-origin motif
 - Fixed the Play/Pause Ritual control so Pause suspends the entire `AudioContext` immediately instead of resuming first and only fading the bass drone.
 - Clears scheduled harp, flute, and water timers while paused so they cannot accumulate in the background.
 - Resume reuses the existing ritual audio graph and restarts the ambient schedulers without creating a duplicate bass drone.
-- Bumped the service-worker cache namespace to v6.1.1.
+- Bumped the service-worker cache namespace to v6.1.3.
 
 ## v6.1.0 — Visible Temple version
 - Added a persistent `Temple v6.1.0` badge across the application.
