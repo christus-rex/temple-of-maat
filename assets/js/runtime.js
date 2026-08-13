@@ -698,6 +698,7 @@
       const art=block.querySelector('.egsol-seal-art,.egsol-seal-feature-art'); if(!art) return;
       let img=art.querySelector('img.prebuilt-seal-png');
       if(!img){ art.innerHTML=''; img=document.createElement('img'); img.className='prebuilt-seal-png'; img.alt='Transparent human-origin seal PNG'; img.style.cssText='display:block;width:100%;height:100%;object-fit:contain;'; art.appendChild(img); }
+      img.loading='lazy'; img.decoding='async'; img.fetchPriority='low';
       if(img.getAttribute('src')!==data) img.src=data;
       art.dataset.pngSrc=data; art.dataset.pngReady='1';
     });
@@ -825,7 +826,7 @@
   function ensureCardEnhancements(){
     collectCards();
     state.cards.forEach(info => {
-      const card = info.card; const body = card.querySelector('.p-4'); const tags = body.querySelector('.mt-2'); if(!body) return;
+      const card = info.card; const body = card.querySelector('.p-4'); if(!body) return; const tags = body.querySelector('.mt-2');
       card.classList.toggle('tm-card-collected', isCollected(info.num));
       let badge = body.querySelector('.tm-card-collectbar');
       if(!badge){
@@ -837,17 +838,21 @@
       const status = badge.querySelector('.tm-card-status');
       const btn = badge.querySelector('.tm-collect-toggle');
       const collected = isCollected(info.num);
-      status.innerHTML = collected ? 'Collected in your archive' : 'Not yet collected';
-      btn.textContent = collected ? '★ Collected' : '☆ Collect';
-      btn.dataset.collected = String(collected);
+      const nextStatus = collected ? 'Collected in your archive' : 'Not yet collected';
+      const nextButton = collected ? '★ Collected' : '☆ Collect';
+      if(status.textContent !== nextStatus) status.textContent = nextStatus;
+      if(btn.textContent !== nextButton) btn.textContent = nextButton;
+      if(btn.dataset.collected !== String(collected)) btn.dataset.collected = String(collected);
       btn.onclick = (ev) => { ev.stopPropagation(); ev.preventDefault(); toggleCollected(info.num); };
-      if(tags && !tags.querySelector('.tm-tier-chip')){
+      const tierChip = tags && tags.querySelector('.tm-tier-chip');
+      if(tags && !tierChip){
         const tier = document.createElement('span');
         tier.className = 'tm-chip tier tm-tier-chip';
         tier.textContent = tierFor(info);
         tags.appendChild(tier);
-      } else if(tags && tags.querySelector('.tm-tier-chip')) {
-        tags.querySelector('.tm-tier-chip').textContent = tierFor(info);
+      } else if(tierChip) {
+        const nextTier = tierFor(info);
+        if(tierChip.textContent !== nextTier) tierChip.textContent = nextTier;
       }
     });
   }
@@ -863,12 +868,19 @@
     const info = state.cards.find(c => c.num === num) || collectCards().find(c => c.num === num);
     if(!info) return;
     const existing = content.querySelector('.tm-artifact-sheet');
+    if(existing && existing.dataset.chamber === info.num){
+      const collect = existing.querySelector('.tm-artifact-collect');
+      const nextLabel = isCollected(info.num) ? 'Uncollect Chamber' : 'Collect Chamber';
+      if(collect && collect.textContent !== nextLabel) collect.textContent = nextLabel;
+      return;
+    }
     if(existing) existing.remove();
     const card = info.card;
     const sealBtn = card ? findButtonByText(card, /Seal/i) : null;
     const plateBtn = card ? findButtonByText(card, /Collect/i) : null;
     const sheet = document.createElement('div');
     sheet.className = 'tm-artifact-sheet';
+    sheet.dataset.chamber = info.num;
     sheet.innerHTML = `
       <div class="tm-kicker">artifact page</div>
       <div class="tm-title">Chamber ${escapeHtml(info.num)} • ${escapeHtml(info.name)}</div>
@@ -979,23 +991,29 @@
     const pct = total ? Math.round((collected/total)*100) : 0;
     const deck = document.getElementById('tm-commit-deck');
     if(deck){
-      deck.querySelector('.tm-progress-text').textContent = `${collected} / ${total} chambers collected`;
-      deck.querySelector('.tm-progress-chip').textContent = `${pct}%`;
+      const progressText = deck.querySelector('.tm-progress-text');
+      const progressChip = deck.querySelector('.tm-progress-chip');
+      const nextProgress = `${collected} / ${total} chambers collected`;
+      const nextPct = `${pct}%`;
+      if(progressText.textContent !== nextProgress) progressText.textContent = nextProgress;
+      if(progressChip.textContent !== nextPct) progressChip.textContent = nextPct;
       deck.querySelector('.tm-progress-meter > span').style.width = pct + '%';
     }
     const codex = document.getElementById('tm-codex-panel');
     const seals = document.getElementById('tm-seal-panel');
     if(codex) codex.classList.toggle('open', !!state.codexOpen);
     if(seals) seals.classList.toggle('open', !!state.sealsOpen);
-    if(codex){
+    if(codex && state.codexOpen){
       const grid = codex.querySelector('.tm-grid');
       const list = cards.filter(matchesFilter);
-      codex.querySelector('.tm-count-chip').textContent = `${list.length} item${list.length===1?'':'s'}`;
+      const countChip = codex.querySelector('.tm-count-chip');
+      const nextCount = `${list.length} item${list.length===1?'':'s'}`;
+      if(countChip.textContent !== nextCount) countChip.textContent = nextCount;
       grid.innerHTML = list.length ? list.map(info => `
         <div class="tm-codex-item">
           <div class="tm-codex-thumb">
-            <img src="${escapeHtml(info.imgSrc)}" alt="${escapeHtml(info.name)}" />
-            ${info.sealSrc ? `<div class="tm-codex-seal"><img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" /></div>` : ''}
+            <img src="${escapeHtml(info.imgSrc)}" alt="${escapeHtml(info.name)}" loading="lazy" decoding="async" />
+            ${info.sealSrc ? `<div class="tm-codex-seal"><img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" loading="lazy" decoding="async" /></div>` : ''}
           </div>
           <div class="tm-codex-body">
             <div class="tm-codex-title">${escapeHtml(info.num)} • ${escapeHtml(info.name)}</div>
@@ -1020,12 +1038,15 @@
       grid.querySelectorAll('[data-toggle-collect]').forEach(btn => btn.onclick = () => toggleCollected(btn.dataset.toggleCollect));
       grid.querySelectorAll('[data-download-seal]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.downloadSeal); const sourceBtn = info && findButtonByText(info.card, /Seal/i); sourceBtn && sourceBtn.click(); });
       grid.querySelectorAll('[data-download-plate]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.downloadPlate); const sourceBtn = info && findButtonByText(info.card, /Collect/i); sourceBtn && sourceBtn.click(); });
+    } else if(codex) {
+      const grid = codex.querySelector('.tm-grid');
+      if(grid.childElementCount) grid.replaceChildren();
     }
-    if(seals){
+    if(seals && state.sealsOpen){
       const grid = seals.querySelector('.tm-seal-grid');
       grid.innerHTML = cards.length ? cards.map(info => `
         <div class="tm-seal-item">
-          <div class="tm-seal-art">${info.sealSrc ? `<img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" />` : '<div class="tm-empty" style="padding:0">Seal unavailable</div>'}</div>
+          <div class="tm-seal-art">${info.sealSrc ? `<img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" loading="lazy" decoding="async" />` : '<div class="tm-empty" style="padding:0">Seal unavailable</div>'}</div>
           <div class="tm-seal-name">${escapeHtml(info.num)} • ${escapeHtml(info.name)}</div>
           <div class="tm-seal-copy">${escapeHtml(info.pillar || '—')} • ${escapeHtml(info.fire || '—')}</div>
           <div class="tm-codex-actions">
@@ -1035,6 +1056,9 @@
         </div>`).join('') : '<div class="tm-empty">Seal library will populate once the chamber cards are ready.</div>';
       grid.querySelectorAll('[data-library-download-seal]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.libraryDownloadSeal); const sourceBtn = info && findButtonByText(info.card, /Seal/i); sourceBtn && sourceBtn.click(); });
       grid.querySelectorAll('[data-library-open]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.libraryOpen); state.sealsOpen = false; renderPanels(); openCard(info); setTimeout(renderAll, 250); });
+    } else if(seals) {
+      const grid = seals.querySelector('.tm-seal-grid');
+      if(grid.childElementCount) grid.replaceChildren();
     }
   }
   function renderAll(){
@@ -1043,13 +1067,27 @@
     ensureArtifactSheet();
     renderPanels();
   }
+  const observedRoot = document.getElementById('root') || document.body;
   let scheduled = false;
-  function schedule(){ if(scheduled) return; scheduled = true; requestAnimationFrame(() => { scheduled = false; renderAll(); }); }
+  let rendering = false;
+  let obs = null;
+  function observeRoot(){ obs.observe(observedRoot, {childList:true, subtree:true}); }
+  function schedule(){
+    if(scheduled || rendering) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      rendering = true;
+      obs?.disconnect();
+      try { renderAll(); }
+      finally { rendering = false; observeRoot(); }
+    });
+  }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule); else schedule();
   window.addEventListener('load', schedule);
   window.addEventListener('resize', schedule);
-  const obs = new MutationObserver(() => schedule());
-  obs.observe(document.getElementById('root') || document.body, {childList:true, subtree:true});
+  obs = new MutationObserver(() => schedule());
+  observeRoot();
   setTimeout(schedule, 700); setTimeout(schedule, 1800); setTimeout(schedule, 3500);
 })();
 

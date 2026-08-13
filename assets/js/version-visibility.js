@@ -1,5 +1,5 @@
 (function(){
-  const FALLBACK={version:'6.1.3',build:'2026-08-13-pwa-v6.1.3-human-origin-seals',source:'Temple-of-Maat-PWA-GitHub-Pages-v6.1.3/index.html'};
+  const FALLBACK={version:'6.1.4',build:'2026-08-13-pwa-v6.1.4-renderer-crash-hotfix',source:'Temple-of-Maat-PWA-GitHub-Pages-v6.1.4/index.html'};
   let info=FALLBACK;
   function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   async function loadVersion(){
