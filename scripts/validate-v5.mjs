@@ -117,7 +117,7 @@ if (releaseBaseline) {
 }
 
 let externalAssetSummary = '';
-if (version.version === '5.1.0') {
+if (/^5\.1\./.test(version.version)) {
   const assetManifestPath = 'scripts/v5.1-asset-manifest.json';
   if (!fs.existsSync(filePath(assetManifestPath))) fail('Missing v5.1 asset manifest');
   const assetManifest = JSON.parse(fs.readFileSync(filePath(assetManifestPath), 'utf8'));
@@ -176,6 +176,15 @@ if (version.version === '5.1.0') {
   if (!html.includes('const url=PREBUILT_SEAL_PNGS[num]')) fail('Seal downloads are not using full-resolution source assets');
   if (!html.includes('const data=PREBUILT_SEAL_DISPLAY_PNGS[num]')) fail('Visible seal plates are not using display renditions');
   if (!html.includes('window.TEMPLE_FULL_HERO_IMAGES?.[info.num] || info.imgSrc')) fail('Collectible exports are not using full-resolution hero assets');
+  if (!html.includes('<script src="./scripts/persistent-data.js"></script>')) fail('Revision-proof dynamic data storage is not loaded');
+  if (!html.includes('<script type="module">window.__templeDataReady.then(()=>{')) fail('The app does not wait for dynamic data hydration before rendering');
+  const persistentData = fs.readFileSync(filePath('scripts/persistent-data.js'), 'utf8');
+  for (const key of ['temple_sigs', 'temple_total', 'temple_unique_count', 'temple_unique_flag']) {
+    if (!persistentData.includes(`'${key}'`)) fail(`Persistent dynamic data does not protect ${key}`);
+  }
+  if (!persistentData.includes("window.indexedDB.open(DB_NAME, 1)")) fail('Persistent dynamic data does not use IndexedDB backup storage');
+  if (!persistentData.includes('mergeSignatures(local.signatures')) fail('Persistent ledger records are not merged during hydration');
+  if (!persistentData.includes("storage.setItem('temple_persistence_reset', '1')")) fail('Persistent dynamic data does not preserve explicit reset semantics');
   if (!serviceWorker.includes('temple-maat-pwa-v5.1')) fail('Service worker cache namespace is not v5.1');
   if (!serviceWorker.includes("fetch('./scripts/v5.1-asset-manifest.json'")) fail('Service worker does not load the v5.1 display-asset manifest for offline caching');
   if (!serviceWorker.includes("asset.category === 'support'") || !serviceWorker.includes("asset.display?.path")) fail('Service worker does not preserve complete offline display imagery');
