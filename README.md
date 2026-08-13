@@ -1,4 +1,4 @@
-# Temple of Ma'at — GitHub Pages PWA v6.1.3
+# Temple of Ma'at — GitHub Pages PWA v6.1.4
 
 Published target: `https://christus-rex.github.io/temple-of-maat/`
 
@@ -32,7 +32,12 @@ Publish from `main` → `/(root)` with HTTPS enabled. The manifest and service w
 
 
 ## Visible version identity
-The running app displays `Temple v6.1.3` in a persistent badge. Tap it to inspect the build identifier and source. The same version is also shown in the Temple Entrance, Archive Console, and site-admin footer.
+The running app displays `Temple v6.1.4` in a persistent badge. Tap it to inspect the build identifier and source. The same version is also shown in the Temple Entrance, Archive Console, and site-admin footer.
+
+
+## Renderer crash hotfix (v6.1.4)
+
+Runtime rendering now ignores its own DOM updates, avoids rewriting unchanged card text, and builds the Codex and Seal Library only while those panels are open. Large seal images are marked for lazy asynchronous decoding before their sources are assigned.
 
 
 ## Ritual audio pause fix (v6.1.3)
