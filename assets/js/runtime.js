@@ -54,78 +54,53 @@
     return d;
   }
   function buildEgyptoSolomonicSealSVG(label, num, meta, size){
-    const dim = Math.max(72, size || 220);
-    const cx = dim/2, cy = dim/2;
-    const fireColor = meta?.fireColor || '#d4af37';
-    const pillar = meta?.pillar || 'Middle';
-    const pillarColor = pillar === 'Jachin' ? '#2563eb' : pillar === 'Boaz' ? '#10b981' : '#40e0d0';
-    const ink = '#261a12';
-    const warm = '#8c3a2b';
-    const outer = dim*0.40, inner = dim*0.33;
-    const tickCount = 12;
-    let ticks = '';
-    for(let i=0;i<tickCount;i++){
-      const a=-Math.PI/2+i*(Math.PI*2/tickCount);
-      const r1=outer*0.94, r2=outer*(i%3===0?1.04:0.99);
-      const x1=(cx+r1*Math.cos(a)).toFixed(2), y1=(cy+r1*Math.sin(a)).toFixed(2);
-      const x2=(cx+r2*Math.cos(a)).toFixed(2), y2=(cy+r2*Math.sin(a)).toFixed(2);
-      ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${i%2===0?fireColor:pillarColor}" stroke-width="${(dim*0.003).toFixed(2)}" />`;
+    const seed = hashString(label + '|' + num + '|' + (meta.fireName || ''));
+    const rand = rngFactory(seed);
+    const dim = size || 180, cx = dim/2, cy = dim/2;
+    const outer = dim*0.36, middle = dim*0.28, inner = dim*0.18;
+    const fireColor = meta.fireColor || FIRE_FALLBACK;
+    const pillarColor = meta.pillarColor || '#40e0d0';
+    const ink = '#2f2417', parchment = '#f5ead0', parchment2 = '#e8d7b2', redInk = '#8c3a2b';
+    const uid = 'egsseal'+seed.toString(16)+dim;
+    const glyphs = ['𓂀','𓆣','𓇯','𓋹','𓅓','𓏏','𓎛','𓆃'];
+    let orbit = '';
+    for(let i=0;i<8;i++){
+      const p=polar(cx,cy,outer*1.18,i*45 + rand()*20);
+      orbit += `<text x="${p[0].toFixed(2)}" y="${(p[1]+4).toFixed(2)}" text-anchor="middle" font-size="${Math.max(10,dim*0.06).toFixed(1)}" fill="${i%2===0?fireColor:pillarColor}" opacity="0.9">${glyphs[i%glyphs.length]}</text>`;
     }
-    const title = esc(String(label||'SEAL').toUpperCase());
-    const subtitle = esc(`${String(meta?.pillar || pillar).toUpperCase()} • ${String(meta?.fireName || 'FIRE').toUpperCase()}`);
+    let rays='';
+    for(let i=0;i<12;i++){
+      const p1=polar(cx,cy,inner*1.05,i*30), p2=polar(cx,cy,middle*1.08,i*30);
+      rays += `<line x1="${p1[0].toFixed(2)}" y1="${p1[1].toFixed(2)}" x2="${p2[0].toFixed(2)}" y2="${p2[1].toFixed(2)}" stroke="${pillarColor}" stroke-width="0.9" opacity="0.45"/>`;
+    }
+    let petals='';
+    for(let i=0;i<8;i++){
+      const p=polar(cx,cy,outer*0.72,i*45);
+      petals += `<ellipse cx="${p[0].toFixed(2)}" cy="${p[1].toFixed(2)}" rx="${(dim*0.032).toFixed(2)}" ry="${(dim*0.08).toFixed(2)}" transform="rotate(${i*45} ${p[0].toFixed(2)} ${p[1].toFixed(2)})" fill="none" stroke="${fireColor}" stroke-width="0.9" opacity="0.62"/>`;
+    }
+    const ringText = `${String(num).padStart(2,'0')} • ${(label||'SEAL').toUpperCase().replace(/[^A-Z0-9 ]/g,'').slice(0,22)} •`;
     return `
     <svg viewBox="0 0 ${dim} ${dim}" width="${dim}" height="${dim}" class="egsol-seal-svg" aria-label="Seal of ${esc(label)}">
-      <circle cx="${cx}" cy="${cy}" r="${outer.toFixed(2)}" fill="none" stroke="${ink}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-      <circle cx="${cx}" cy="${cy}" r="${inner.toFixed(2)}" fill="none" stroke="${pillarColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-      <circle cx="${cx}" cy="${cy}" r="${(outer*0.91).toFixed(2)}" fill="none" stroke="${warm}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-      ${ticks}
-      <g stroke-linecap="round" stroke-linejoin="round">
-        <line x1="${(cx-outer*0.60).toFixed(2)}" y1="${(cy+outer*0.07).toFixed(2)}" x2="${(cx-outer*0.60).toFixed(2)}" y2="${(cy+outer*0.37).toFixed(2)}" stroke="${pillarColor}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${(cx-outer*0.635).toFixed(2)}" y1="${(cy+outer*0.07).toFixed(2)}" x2="${(cx-outer*0.565).toFixed(2)}" y2="${(cy+outer*0.07).toFixed(2)}" stroke="${pillarColor}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${(cx-outer*0.635).toFixed(2)}" y1="${(cy+outer*0.37).toFixed(2)}" x2="${(cx-outer*0.565).toFixed(2)}" y2="${(cy+outer*0.37).toFixed(2)}" stroke="${pillarColor}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${(cx+outer*0.60).toFixed(2)}" y1="${(cy+outer*0.07).toFixed(2)}" x2="${(cx+outer*0.60).toFixed(2)}" y2="${(cy+outer*0.37).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${(cx+outer*0.565).toFixed(2)}" y1="${(cy+outer*0.07).toFixed(2)}" x2="${(cx+outer*0.635).toFixed(2)}" y2="${(cy+outer*0.07).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${(cx+outer*0.565).toFixed(2)}" y1="${(cy+outer*0.37).toFixed(2)}" x2="${(cx+outer*0.635).toFixed(2)}" y2="${(cy+outer*0.37).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-      </g>
-      <g>
-        <circle cx="${cx}" cy="${(cy-outer*0.55).toFixed(2)}" r="${(dim*0.06).toFixed(2)}" fill="none" stroke="${fireColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <circle cx="${cx}" cy="${(cy-outer*0.55).toFixed(2)}" r="${(dim*0.021).toFixed(2)}" fill="${fireColor}"/>
-        <line x1="${cx}" y1="${(cy-outer*0.66).toFixed(2)}" x2="${cx}" y2="${(cy-outer*0.72).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy-outer*0.44).toFixed(2)}" x2="${cx}" y2="${(cy-outer*0.38).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <line x1="${(cx-dim*0.11).toFixed(2)}" y1="${(cy-outer*0.55).toFixed(2)}" x2="${(cx-dim*0.17).toFixed(2)}" y2="${(cy-outer*0.55).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <line x1="${(cx+dim*0.11).toFixed(2)}" y1="${(cy-outer*0.55).toFixed(2)}" x2="${(cx+dim*0.17).toFixed(2)}" y2="${(cy-outer*0.55).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-      </g>
-      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <ellipse cx="${cx}" cy="${(cy+dim*0.02).toFixed(2)}" rx="${(dim*0.19).toFixed(2)}" ry="${(dim*0.26).toFixed(2)}" stroke="${pillarColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <ellipse cx="${(cx-dim*0.13).toFixed(2)}" cy="${(cy+dim*0.11).toFixed(2)}" rx="${(dim*0.15).toFixed(2)}" ry="${(dim*0.18).toFixed(2)}" stroke="${pillarColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <ellipse cx="${(cx+dim*0.13).toFixed(2)}" cy="${(cy+dim*0.11).toFixed(2)}" rx="${(dim*0.15).toFixed(2)}" ry="${(dim*0.18).toFixed(2)}" stroke="${pillarColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <circle cx="${cx}" cy="${(cy-dim*0.10).toFixed(2)}" r="${(dim*0.04).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy-dim*0.06).toFixed(2)}" x2="${cx}" y2="${(cy+dim*0.08).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy-dim*0.02).toFixed(2)}" x2="${(cx-dim*0.19).toFixed(2)}" y2="${(cy+dim*0.03).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy-dim*0.02).toFixed(2)}" x2="${(cx+dim*0.19).toFixed(2)}" y2="${(cy+dim*0.03).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${(cx-dim*0.19).toFixed(2)}" y1="${(cy+dim*0.03).toFixed(2)}" x2="${(cx-dim*0.11).toFixed(2)}" y2="${(cy-dim*0.11).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.005).toFixed(2)}"/>
-        <line x1="${(cx+dim*0.19).toFixed(2)}" y1="${(cy+dim*0.03).toFixed(2)}" x2="${(cx+dim*0.11).toFixed(2)}" y2="${(cy-dim*0.11).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.005).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+dim*0.08).toFixed(2)}" x2="${(cx-dim*0.12).toFixed(2)}" y2="${(cy+dim*0.28).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+dim*0.08).toFixed(2)}" x2="${(cx+dim*0.12).toFixed(2)}" y2="${(cy+dim*0.28).toFixed(2)}" stroke="${ink}" stroke-width="${(dim*0.0065).toFixed(2)}"/>
-        <path d="M ${(cx-dim*0.30).toFixed(2)} ${(cy+dim*0.19).toFixed(2)} Q ${cx} ${(cy+dim*0.04).toFixed(2)} ${(cx+dim*0.30).toFixed(2)} ${(cy+dim*0.19).toFixed(2)}" stroke="${fireColor}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-      </g>
-      <circle cx="${cx}" cy="${(cy-dim*0.03).toFixed(2)}" r="${(dim*0.022).toFixed(2)}" fill="${fireColor}"/>
-      <g fill="none" stroke="${warm}" stroke-linecap="round">
-        <line x1="${cx}" y1="${(cy+outer*0.42).toFixed(2)}" x2="${cx}" y2="${(cy+outer*0.74).toFixed(2)}" stroke-width="${(dim*0.003).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.46).toFixed(2)}" x2="${(cx-dim*0.07).toFixed(2)}" y2="${(cy+outer*0.43).toFixed(2)}" stroke-width="${(dim*0.0024).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.50).toFixed(2)}" x2="${(cx-dim*0.08).toFixed(2)}" y2="${(cy+outer*0.48).toFixed(2)}" stroke-width="${(dim*0.0024).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.54).toFixed(2)}" x2="${(cx-dim*0.085).toFixed(2)}" y2="${(cy+outer*0.53).toFixed(2)}" stroke-width="${(dim*0.0024).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.58).toFixed(2)}" x2="${(cx-dim*0.09).toFixed(2)}" y2="${(cy+outer*0.59).toFixed(2)}" stroke-width="${(dim*0.0024).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.62).toFixed(2)}" x2="${(cx-dim*0.08).toFixed(2)}" y2="${(cy+outer*0.65).toFixed(2)}" stroke-width="${(dim*0.0024).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.46).toFixed(2)}" x2="${(cx+dim*0.045).toFixed(2)}" y2="${(cy+outer*0.44).toFixed(2)}" stroke-width="${(dim*0.0022).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.50).toFixed(2)}" x2="${(cx+dim*0.055).toFixed(2)}" y2="${(cy+outer*0.49).toFixed(2)}" stroke-width="${(dim*0.0022).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.54).toFixed(2)}" x2="${(cx+dim*0.06).toFixed(2)}" y2="${(cy+outer*0.55).toFixed(2)}" stroke-width="${(dim*0.0022).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.58).toFixed(2)}" x2="${(cx+dim*0.055).toFixed(2)}" y2="${(cy+outer*0.61).toFixed(2)}" stroke-width="${(dim*0.0022).toFixed(2)}"/>
-        <line x1="${cx}" y1="${(cy+outer*0.62).toFixed(2)}" x2="${(cx+dim*0.05).toFixed(2)}" y2="${(cy+outer*0.66).toFixed(2)}" stroke-width="${(dim*0.0022).toFixed(2)}"/>
-      </g>
-      <text x="${cx}" y="${(cy-outer*0.80).toFixed(2)}" text-anchor="middle" font-family="Cinzel,serif" font-size="${(dim*0.08).toFixed(1)}" fill="${ink}">${esc(String(num||'').padStart(2,'0'))}</text>
-      <text x="${cx}" y="${(cy+outer*0.78).toFixed(2)}" text-anchor="middle" font-family="ui-monospace,monospace" font-size="${(dim*0.04).toFixed(1)}" font-weight="700" fill="${ink}">${title}</text>
-      <text x="${cx}" y="${(cy+outer*0.88).toFixed(2)}" text-anchor="middle" font-family="ui-monospace,monospace" font-size="${(dim*0.026).toFixed(1)}" font-weight="700" fill="${pillarColor}">${subtitle}</text>
+      <defs>
+        <radialGradient id="g${uid}" cx="50%" cy="42%" r="62%"><stop offset="0%" stop-color="${parchment}"/><stop offset="100%" stop-color="${parchment2}"/></radialGradient>
+        <path id="${uid}" d="M ${cx} ${cy} m -${(outer*1.07).toFixed(2)},0 a ${(outer*1.07).toFixed(2)},${(outer*1.07).toFixed(2)} 0 1,1 ${(outer*2.14).toFixed(2)},0 a ${(outer*1.07).toFixed(2)},${(outer*1.07).toFixed(2)} 0 1,1 -${(outer*2.14).toFixed(2)},0" />
+      </defs>
+      <rect x="4" y="4" width="${dim-8}" height="${dim-8}" rx="16" fill="url(#g${uid})" stroke="${pillarColor}" stroke-width="1.35"/>
+      <rect x="10" y="10" width="${dim-20}" height="${dim-20}" rx="12" fill="none" stroke="${redInk}" stroke-width="0.8" opacity="0.45"/>
+      <path d="M ${cx-outer*1.2} ${cy-outer*1.22} q 18 -10 36 0 M ${cx+outer*1.2} ${cy-outer*1.22} q -18 -10 -36 0 M ${cx-outer*0.34} ${cy-outer*1.28} q ${outer*0.34} -${outer*0.18} ${outer*0.68} 0" fill="none" stroke="${fireColor}" stroke-width="1.3" opacity="0.85"/>
+      <circle cx="${cx}" cy="${cy-outer*1.18}" r="${(dim*0.038).toFixed(2)}" fill="none" stroke="${fireColor}" stroke-width="1.25"/>
+      <circle cx="${cx}" cy="${cy-outer*1.18}" r="${(dim*0.01).toFixed(2)}" fill="${fireColor}"/>
+      ${orbit}
+      <circle cx="${cx}" cy="${cy}" r="${outer.toFixed(2)}" fill="none" stroke="${ink}" stroke-width="1.7"/>
+      <circle cx="${cx}" cy="${cy}" r="${(outer*0.89).toFixed(2)}" fill="none" stroke="${pillarColor}" stroke-width="1" stroke-dasharray="2.4 3.2" opacity="0.88"/>
+      <circle cx="${cx}" cy="${cy}" r="${middle.toFixed(2)}" fill="none" stroke="${ink}" stroke-width="1.1"/>
+      ${petals}
+      <polygon points="${polygonPoints(cx,cy,middle*0.96,[5,6,7,8][Math.floor(rand()*4)],rand()*360)}" fill="none" stroke="${fireColor}" stroke-width="1.05" opacity="0.7"/>
+      <polygon points="${polygonPoints(cx,cy,inner*1.18,[3,4,5,6][Math.floor(rand()*4)],rand()*360)}" fill="none" stroke="${pillarColor}" stroke-width="1.05" opacity="0.7"/>
+      ${rays}
+      <path d="${sigilPath(label+'-'+num,cx,cy,inner)}" fill="none" stroke="${ink}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M ${cx} ${cy+outer*0.82} l 0 ${dim*0.08} m -${dim*0.025} -${dim*0.045} l ${dim*0.05} 0 m -${dim*0.025} -${dim*0.04} a ${dim*0.025} ${dim*0.025} 0 1 1 0.1 0" fill="none" stroke="${redInk}" stroke-width="1.2" opacity="0.88"/>
+      <text font-size="${Math.max(7,dim*0.04).toFixed(1)}" fill="${ink}" letter-spacing="1.6" opacity="0.95"><textPath href="#${uid}" startOffset="50%" text-anchor="middle">${ringText}</textPath></text>
     </svg>`;
   }
 
@@ -163,13 +138,13 @@
     const wrap = document.createElement('div');
     wrap.className = compact ? 'egsol-seal-block compact' : 'egsol-seal-block';
     wrap.innerHTML = `
-      <div class="egsol-seal-kicker">HUMAN-ORIGIN SEAL</div>
+      <div class="egsol-seal-kicker">EGYPTO-SOLOMONIC SEAL</div>
       <div class="egsol-seal-inner">
         <div class="egsol-seal-art">${buildEgyptoSolomonicSealSVG(info.name, info.num, info.meta || {}, compact ? 108 : 180)}</div>
         <div class="egsol-seal-copy">
           <div class="egsol-seal-title">Seal of ${esc(info.name)}</div>
           <div class="egsol-seal-meta"><span>Pillar:</span> ${esc(info.meta?.pillar || '—')} &nbsp;•&nbsp; <span>Fire:</span> ${esc(info.meta?.fireName || '—')}</div>
-          <div class="egsol-seal-desc">Separate ritual seal plate — simplified, human-origin, and tuned to Chamber ${esc(info.num)}.</div>
+          <div class="egsol-seal-desc">Separate ritual seal plate — Egypto-Solomonic in style, tuned to Chamber ${esc(info.num)}.</div>
         </div>
       </div>`;
     return wrap;
@@ -214,7 +189,7 @@
       <text x="118" y="1120" font-family="monospace" font-size="18" fill="#2f2417">${office}</text>
       <text x="118" y="1170" font-family="monospace" font-size="18" fill="${fire}">LAW</text>
       <foreignObject x="118" y="1184" width="660" height="70"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:monospace;font-size:18px;color:#2f2417;line-height:1.3;">${law}</div></foreignObject>
-      <text x="${w/2}" y="1335" text-anchor="middle" font-family="monospace" font-size="15" fill="#5c5548">Human-Origin Chamber Collectable • Temple of Ma'at</text>
+      <text x="${w/2}" y="1335" text-anchor="middle" font-family="monospace" font-size="15" fill="#5c5548">Egypto-Solomonic Chamber Collectable • Temple of Ma'at</text>
     </svg>`;
   }
   function triggerDownload(filename, content){
@@ -324,76 +299,83 @@
   function drawEgyptoSolomonicSealCanvas(ctx,info,x,y,size){
     const meta=info.meta||{};
     const fire=meta.fireColor||'#d4af37';
-    const pillarName=meta.pillar||'Middle';
-    const pillar=pillarName==='Jachin' ? '#2563eb' : pillarName==='Boaz' ? '#10b981' : '#40e0d0';
-    const ink='#261a12';
-    const warm='#8c3a2b';
+    const pillar=meta.pillarColor||'#40e0d0';
+    const ink='#2f2417';
+    const red='#8c3a2b';
+    const seed=hashString((info.name||'')+'|'+(info.num||'')+'|'+(meta.fireName||''));
+    const rand=rngFactory(seed);
     const cx=x+size/2, cy=y+size/2;
-    const outer=size*0.40, inner=size*0.33;
-    const mainW=Math.max(2,size*0.0065), thin=Math.max(1.5,size*0.003);
+    const outer=size*0.39, ring2=size*0.34, ring3=size*0.26, inner=size*0.17;
     ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
 
-    ctx.strokeStyle=ink; ctx.lineWidth=mainW; ctx.beginPath(); ctx.arc(cx,cy,outer,0,Math.PI*2); ctx.stroke();
-    ctx.strokeStyle=pillar; ctx.lineWidth=thin; ctx.beginPath(); ctx.arc(cx,cy,inner,0,Math.PI*2); ctx.stroke();
-    ctx.strokeStyle=warm; ctx.lineWidth=thin; ctx.beginPath(); ctx.arc(cx,cy,outer*0.91,0,Math.PI*2); ctx.stroke();
+    // Outer ceremonial rings.
+    ctx.strokeStyle=ink; ctx.lineWidth=Math.max(2,size*0.009); ctx.beginPath(); ctx.arc(cx,cy,outer,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle=pillar; ctx.lineWidth=Math.max(1.5,size*0.005); ctx.setLineDash([size*0.012,size*0.014]); ctx.beginPath(); ctx.arc(cx,cy,ring2,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle=red; ctx.globalAlpha=.65; ctx.lineWidth=Math.max(1.3,size*0.004); ctx.beginPath(); ctx.arc(cx,cy,outer*0.91,0,Math.PI*2); ctx.stroke(); ctx.globalAlpha=1;
 
-    for(let i=0;i<12;i++){
-      const a=-Math.PI/2+i*(Math.PI*2/12), r1=outer*0.94, r2=outer*(i%3===0?1.04:0.99);
-      ctx.strokeStyle=i%2===0?fire:pillar; ctx.lineWidth=thin;
+    // Alternating temple ticks around the circumference.
+    for(let i=0;i<24;i++){
+      const a=i*Math.PI*2/24-Math.PI/2;
+      const r1=outer*0.94, r2=outer*(i%3===0?1.04:1.0);
+      ctx.strokeStyle=i%2===0?fire:pillar; ctx.globalAlpha=i%3===0?.9:.58; ctx.lineWidth=Math.max(1.2,size*0.004);
       ctx.beginPath(); ctx.moveTo(cx+r1*Math.cos(a),cy+r1*Math.sin(a)); ctx.lineTo(cx+r2*Math.cos(a),cy+r2*Math.sin(a)); ctx.stroke();
     }
+    ctx.globalAlpha=1;
 
-    const cap=size*0.035;
-    [[cx-outer*0.60,pillar],[cx+outer*0.60,fire]].forEach(([px,col])=>{
-      const top=cy+outer*0.07, bottom=cy+outer*0.37;
-      ctx.strokeStyle=col; ctx.lineWidth=mainW;
-      ctx.beginPath(); ctx.moveTo(px,top); ctx.lineTo(px,bottom); ctx.moveTo(px-cap/2,top); ctx.lineTo(px+cap/2,top); ctx.moveTo(px-cap/2,bottom); ctx.lineTo(px+cap/2,bottom); ctx.stroke();
-    });
+    // Solar disc / Eye of Horus crown.
+    ctx.strokeStyle=fire; ctx.lineWidth=Math.max(1.5,size*0.005); ctx.beginPath(); ctx.arc(cx,cy-outer*1.07,size*0.04,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle=fire; ctx.beginPath(); ctx.arc(cx,cy-outer*1.07,size*0.012,0,Math.PI*2); ctx.fill();
+    drawEyeOfHorusCanvas(ctx,cx,cy-outer*0.78,size*0.19,fire,.92);
 
-    // sun
-    const sr=size*0.06, sy=cy-outer*0.55;
-    ctx.strokeStyle=fire; ctx.lineWidth=thin; ctx.beginPath(); ctx.arc(cx,sy,sr,0,Math.PI*2); ctx.stroke();
-    ctx.fillStyle=fire; ctx.beginPath(); ctx.arc(cx,sy,sr*0.35,0,Math.PI*2); ctx.fill();
-    [[0,-1],[0,1],[-1,0],[1,0]].forEach(([dx,dy])=>{ctx.beginPath();ctx.moveTo(cx+dx*sr*1.25,sy+dy*sr*1.25);ctx.lineTo(cx+dx*sr*1.8,sy+dy*sr*1.8);ctx.stroke();});
-    [[-0.7,-0.7],[0.7,-0.7],[-0.7,0.7],[0.7,0.7]].forEach(([dx,dy])=>{ctx.beginPath();ctx.moveTo(cx+dx*sr*1.15,sy+dy*sr*1.15);ctx.lineTo(cx+dx*sr*1.55,sy+dy*sr*1.55);ctx.stroke();});
-
-    // human origin field
-    ctx.strokeStyle=pillar; ctx.lineWidth=thin;
-    ctx.beginPath(); ctx.ellipse(cx,cy+size*0.02,size*0.19,size*0.26,0,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.ellipse(cx-size*0.13,cy+size*0.11,size*0.15,size*0.18,0,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.ellipse(cx+size*0.13,cy+size*0.11,size*0.15,size*0.18,0,0,Math.PI*2); ctx.stroke();
-
-    ctx.strokeStyle=ink; ctx.lineWidth=mainW;
-    ctx.beginPath(); ctx.arc(cx,cy-size*0.10,size*0.04,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(cx,cy-size*0.06); ctx.lineTo(cx,cy+size*0.08);
-    ctx.moveTo(cx,cy-size*0.02); ctx.lineTo(cx-size*0.19,cy+size*0.03);
-    ctx.moveTo(cx,cy-size*0.02); ctx.lineTo(cx+size*0.19,cy+size*0.03);
-    ctx.moveTo(cx-size*0.19,cy+size*0.03); ctx.lineTo(cx-size*0.11,cy-size*0.11);
-    ctx.moveTo(cx+size*0.19,cy+size*0.03); ctx.lineTo(cx+size*0.11,cy-size*0.11);
-    ctx.moveTo(cx,cy+size*0.08); ctx.lineTo(cx-size*0.12,cy+size*0.28);
-    ctx.moveTo(cx,cy+size*0.08); ctx.lineTo(cx+size*0.12,cy+size*0.28);
-    ctx.stroke();
-    ctx.strokeStyle=fire; ctx.lineWidth=thin; ctx.beginPath(); ctx.arc(cx,cy+size*0.19,size*0.30,Math.PI*1.08,Math.PI*1.92); ctx.stroke();
-    ctx.fillStyle=fire; ctx.beginPath(); ctx.arc(cx,cy-size*0.03,size*0.022,0,Math.PI*2); ctx.fill();
-
-    // feather
-    ctx.strokeStyle=warm; ctx.lineWidth=thin;
-    const ft=cy+outer*0.42, fb=cy+outer*0.74;
-    ctx.beginPath(); ctx.moveTo(cx,ft); ctx.lineTo(cx,fb); ctx.stroke();
-    for(let i=0;i<5;i++){
-      const yy=ft+(fb-ft)*(0.12+i*0.15);
-      ctx.beginPath(); ctx.moveTo(cx,yy); ctx.lineTo(cx-size*(0.07+0.005*i),yy-size*0.02*(1-i*0.05)); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx,yy); ctx.lineTo(cx+size*(0.045+0.004*i),yy-size*0.018*(1-i*0.05)); ctx.stroke();
+    // Lotus petals.
+    for(let i=0;i<8;i++){
+      const a=i*Math.PI/4;
+      const px=cx+ring3*0.83*Math.cos(a), py=cy+ring3*0.83*Math.sin(a);
+      ctx.save(); ctx.translate(px,py); ctx.rotate(a+Math.PI/2); ctx.strokeStyle=fire; ctx.globalAlpha=.58; ctx.lineWidth=Math.max(1.2,size*0.0038); ctx.beginPath(); ctx.ellipse(0,0,size*0.028,size*0.075,0,0,Math.PI*2); ctx.stroke(); ctx.restore();
     }
+    ctx.globalAlpha=1;
 
-    ctx.textAlign='center';
-    ctx.fillStyle=ink; ctx.font=`700 ${Math.max(12,size*0.08)}px Cinzel, serif`; ctx.fillText(String(info.num||'').padStart(2,'0'),cx,cy-outer*0.80);
-    ctx.font=`700 ${Math.max(10,size*0.04)}px ui-monospace, monospace`; ctx.fillText(String(info.name||'SEAL').toUpperCase(),cx,cy+outer*0.78);
-    ctx.fillStyle=pillar; ctx.font=`700 ${Math.max(9,size*0.026)}px ui-monospace, monospace`; ctx.fillText(`${String(meta.pillar||pillarName).toUpperCase()} • ${String(meta.fireName||'FIRE').toUpperCase()}`,cx,cy+outer*0.88);
+    // Solomonic polygons vary deterministically per chamber.
+    const sidesA=[5,6,7,8][Math.floor(rand()*4)];
+    const sidesB=[3,4,5,6][Math.floor(rand()*4)];
+    drawSealPolygon(ctx,cx,cy,ring3,sidesA,rand()*Math.PI*2,fire,Math.max(1.5,size*0.005),.78);
+    drawSealPolygon(ctx,cx,cy,inner*1.18,sidesB,rand()*Math.PI*2,pillar,Math.max(1.5,size*0.005),.78);
+
+    // Radial architecture.
+    const spokes=10+Math.floor(rand()*5);
+    for(let i=0;i<spokes;i++){
+      const a=i*Math.PI*2/spokes+rand()*0.08;
+      ctx.strokeStyle=i%2?pillar:fire; ctx.globalAlpha=.34; ctx.lineWidth=Math.max(1,size*0.003);
+      ctx.beginPath(); ctx.moveTo(cx+inner*1.02*Math.cos(a),cy+inner*1.02*Math.sin(a)); ctx.lineTo(cx+ring3*1.05*Math.cos(a),cy+ring3*1.05*Math.sin(a)); ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+
+    // Unique central sigil, drawn natively with cubic curves.
+    const points=[]; let angle=rand()*Math.PI*2; const pointCount=10+Math.floor(rand()*6);
+    for(let i=0;i<pointCount;i++){
+      angle += .55+rand()*1.1;
+      const rr=inner*(.25+rand()*.78);
+      points.push([cx+rr*Math.cos(angle),cy+rr*Math.sin(angle)]);
+    }
+    ctx.strokeStyle=ink; ctx.lineWidth=Math.max(2,size*0.008); ctx.globalAlpha=.98; ctx.beginPath();
+    if(points.length){ ctx.moveTo(points[0][0],points[0][1]);
+      for(let i=1;i<points.length;i++){
+        const p0=points[i-1], p1=points[i];
+        const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2;
+        ctx.quadraticCurveTo(mx,my,p1[0],p1[1]);
+        if(rand()>.7){ ctx.moveTo(p1[0]-size*.015,p1[1]); ctx.lineTo(p1[0]+size*.015,p1[1]); ctx.moveTo(p1[0],p1[1]-size*.015); ctx.lineTo(p1[0],p1[1]+size*.015); }
+      }
+    }
+    ctx.stroke(); ctx.globalAlpha=1;
+    ctx.fillStyle=fire; ctx.beginPath(); ctx.arc(cx,cy,size*0.015,0,Math.PI*2); ctx.fill();
+
+    // Ankh as lower key.
+    drawAnkhCanvas(ctx,cx,cy+outer*0.67,size*0.18,red,.9);
+
+    // Ring label — standard Latin text, no SVG textPath or special glyph dependency.
+    drawCircularTextCanvas(ctx,`${String(info.num||'').padStart(2,'0')} • ${(info.name||'SEAL').toUpperCase()} •`,cx,cy,outer*1.09,-Math.PI/2,ink,Math.max(12,size*0.034));
     ctx.restore();
   }
-
   function sealCanvasToPngBlob(info,pixelSize){
     return new Promise((resolve,reject)=>{
       try{
@@ -436,17 +418,9 @@
   }
   async function downloadSealPng(info, btn){
     try{
-      setButtonBusy(btn, true, 'Preparing seal…');
-      const asset = window.TempleSealAssets?.[String(info.num||'').padStart(2,'0')];
-      if(asset){
-        const response=await fetch(asset,{cache:'force-cache'});
-        if(!response.ok) throw new Error(`Seal asset request failed (${response.status}).`);
-        const blob=await response.blob();
-        saveBlob(blob, `seal-${info.num}-${safeFilePart(info.name)}-transparent.png`);
-      }else{
-        const blob = await sealCanvasToPngBlob(info, 2048);
-        saveBlob(blob, `seal-${info.num}-${safeFilePart(info.name)}-transparent.png`);
-      }
+      setButtonBusy(btn, true, 'Rendering seal…');
+      const blob = await sealCanvasToPngBlob(info, 2048);
+      saveBlob(blob, `seal-${info.num}-${safeFilePart(info.name)}-transparent.png`);
     }catch(err){
       console.error('Seal PNG download failed:', err);
       alert('Seal download failed: ' + (err?.message || err));
@@ -528,7 +502,7 @@
     ctx.fillStyle='#2f2417'; ctx.font='21px ui-monospace, monospace'; let yy=wrapCanvasText(ctx,info.office||'',tx+34,ty+88,tw-68,30,3);
     ctx.fillStyle=fire; ctx.font='700 20px ui-monospace, monospace'; ctx.fillText('LAW',tx+34,yy+32);
     ctx.fillStyle='#2f2417'; ctx.font='21px ui-monospace, monospace'; wrapCanvasText(ctx,info.law||info.meta?.law||'',tx+34,yy+70,tw-68,30,3);
-    ctx.textAlign='center'; ctx.fillStyle='#665f52'; ctx.font='18px ui-monospace, monospace'; ctx.fillText("Human-Origin Chamber Collectable • Temple of Ma'at",W/2,1740);
+    ctx.textAlign='center'; ctx.fillStyle='#665f52'; ctx.font='18px ui-monospace, monospace'; ctx.fillText("Egypto-Solomonic Chamber Collectable • Temple of Ma'at",W/2,1740);
 
     return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Collectible PNG encoder returned an empty file.')),'image/png',1));
   }
@@ -587,7 +561,7 @@
     feature.className = 'egsol-seal-feature';
     feature.innerHTML = `
       <div class="egsol-seal-feature-head">
-        <div class="egsol-seal-kicker">HUMAN-ORIGIN SEAL PLATE</div>
+        <div class="egsol-seal-kicker">EGYPTO-SOLOMONIC SEAL PLATE</div>
         <div class="egsol-seal-feature-title">Seal of ${esc(info.name)}</div>
         <div class="egsol-seal-feature-sub">Separate ritual object • transparent PNG export</div>
       </div>
@@ -667,8 +641,6 @@
 (function(){
   const PREBUILT_SEAL_PNGS = {"01":"./assets/seals/seal-01-bifruiah-transparent.png","02":"./assets/seals/seal-02-orialiel-transparent.png","03":"./assets/seals/seal-03-andritael-transparent.png","04":"./assets/seals/seal-04-berelmiah-transparent.png","05":"./assets/seals/seal-05-gamiasiah-transparent.png","06":"./assets/seals/seal-06-vapulahel-transparent.png","07":"./assets/seals/seal-07-allochiah-transparent.png","08":"./assets/seals/seal-08-bathietel-transparent.png","09":"./assets/seals/seal-09-belehaziel-transparent.png","10":"./assets/seals/seal-10-bathiadiah-transparent.png","11":"./assets/seals/seal-11-valelauviah-transparent.png","12":"./assets/seals/seal-12-dantahaiah-transparent.png","13":"./assets/seals/seal-13-focazalel-transparent.png","14":"./assets/seals/seal-14-vapubahel-transparent.png","15":"./assets/seals/seal-15-berihariel-transparent.png","16":"./assets/seals/seal-16-haagakamiah-transparent.png","17":"./assets/seals/seal-17-valelauviah-ii-transparent.png","18":"./assets/seals/seal-18-agacaliel-transparent.png","19":"./assets/seals/seal-19-asmoleuviah-transparent.png","20":"./assets/seals/seal-20-haagpahaliah-transparent.png","21":"./assets/seals/seal-21-paimelkhael-transparent.png","22":"./assets/seals/seal-22-vapuyeiayel-transparent.png","23":"./assets/seals/seal-23-halmelahel-transparent.png","24":"./assets/seals/seal-24-halhahuiah-transparent.png","25":"./assets/seals/seal-25-focanithaiah-transparent.png","26":"./assets/seals/seal-26-vapuhaaiah-transparent.png","27":"./assets/seals/seal-27-alloyerathel-transparent.png","28":"./assets/seals/seal-28-vapuseheiah-transparent.png","29":"./assets/seals/seal-29-gremoreyiel-transparent.png","30":"./assets/seals/seal-30-buromael-transparent.png","31":"./assets/seals/seal-31-allolecabel-transparent.png","32":"./assets/seals/seal-32-focavasariah-transparent.png","33":"./assets/seals/seal-33-paiyehuiah-transparent.png","34":"./assets/seals/seal-34-marcholehahiah-transparent.png","35":"./assets/seals/seal-35-glasyavakiah-transparent.png","36":"./assets/seals/seal-36-bathimenadel-transparent.png","37":"./assets/seals/seal-37-camianiel-transparent.png","38":"./assets/seals/seal-38-belhaamiah-transparent.png","39":"./assets/seals/seal-39-gusorehael-transparent.png","40":"./assets/seals/seal-40-bifroyeiazel-transparent.png","41":"./assets/seals/seal-41-belehahahel-transparent.png","42":"./assets/seals/seal-42-agamikael-transparent.png","43":"./assets/seals/seal-43-asmoveuliah-transparent.png","44":"./assets/seals/seal-44-gamiyelahiah-transparent.png","45":"./assets/seals/seal-45-cimisehaliah-transparent.png","46":"./assets/seals/seal-46-hauariel-transparent.png","47":"./assets/seals/seal-47-agaresaliah-transparent.png","48":"./assets/seals/seal-48-leramihael-transparent.png","49":"./assets/seals/seal-49-vapuvehuel-transparent.png","50":"./assets/seals/seal-50-bathidaniel-transparent.png","51":"./assets/seals/seal-51-glasyahasiah-transparent.png","52":"./assets/seals/seal-52-cimimamiah-transparent.png","53":"./assets/seals/seal-53-botinanael-transparent.png","54":"./assets/seals/seal-54-procnithael-transparent.png","55":"./assets/seals/seal-55-haagmebahiah-transparent.png","56":"./assets/seals/seal-56-buropoyel-transparent.png","57":"./assets/seals/seal-57-glasnemamiah-transparent.png","58":"./assets/seals/seal-58-procyeialel-transparent.png","59":"./assets/seals/seal-59-beriharahel-transparent.png","60":"./assets/seals/seal-60-murmitzrael-transparent.png","61":"./assets/seals/seal-61-marbumabel-transparent.png","62":"./assets/seals/seal-62-fociahhel-transparent.png","63":"./assets/seals/seal-63-marbanauel-transparent.png","64":"./assets/seals/seal-64-belemehiel-transparent.png","65":"./assets/seals/seal-65-astadamabiah-transparent.png","66":"./assets/seals/seal-66-andramanakel-transparent.png","67":"./assets/seals/seal-67-andraeyael-transparent.png","68":"./assets/seals/seal-68-allohabuhiah-transparent.png","69":"./assets/seals/seal-69-belerochel-transparent.png","70":"./assets/seals/seal-70-dantajabamiah-transparent.png","71":"./assets/seals/seal-71-cimihaiaiel-transparent.png","72":"./assets/seals/seal-72-halmumiah-transparent.png"};
   const HERO_NAMES = {"01":"Bifruiah","02":"Orialiel","03":"Andritael","04":"Berelmiah","05":"Gamiasiah","06":"Vapulahel","07":"Allochiah","08":"Bathietel","09":"Belehaziel","10":"Bathiadiah","11":"Valelauviah","12":"Dantahaiah","13":"Focazalel","14":"Vapubahel","15":"Berihariel","16":"Haagakamiah","17":"Valelauviah II","18":"Agacaliel","19":"Asmoleuviah","20":"Haagpahaliah","21":"Paimelkhael","22":"Vapuyeiayel","23":"Halmelahel","24":"Halhahuiah","25":"Focanithaiah","26":"Vapuhaaiah","27":"Alloyerathel","28":"Vapuseheiah","29":"Gremoreyiel","30":"Buromael","31":"Allolecabel","32":"Focavasariah","33":"Paiyehuiah","34":"Marcholehahiah","35":"Glasyavakiah","36":"Bathimenadel","37":"Camianiel","38":"Belhaamiah","39":"Gusorehael","40":"Bifroyeiazel","41":"Belehahahel","42":"Agamikael","43":"Asmoveuliah","44":"Gamiyelahiah","45":"Cimisehaliah","46":"Hauariel","47":"Agaresaliah","48":"Leramihael","49":"Vapuvehuel","50":"Bathidaniel","51":"Glasyahasiah","52":"Cimimamiah","53":"Botinanael","54":"Procnithael","55":"Haagmebahiah","56":"Buropoyel","57":"Glasnemamiah","58":"Procyeialel","59":"Beriharahel","60":"Murmitzrael","61":"Marbumabel","62":"Fociahhel","63":"Marbanauel","64":"Belemehiel","65":"Astadamabiah","66":"Andramanakel","67":"Andraeyael","68":"Allohabuhiah","69":"Belerochel","70":"Dantajabamiah","71":"Cimihaiaiel","72":"Halmumiah"};
-  window.TempleSealAssets = Object.freeze({...PREBUILT_SEAL_PNGS});
-  window.TempleSealNames = Object.freeze({...HERO_NAMES});
   function findNumFromContext(el){
     const card=el.closest('.masonry-item');
     if(card){ const badge=card.querySelector('.absolute.top-3.left-3'); const m=(badge?.textContent||'').match(/\d+/); if(m) return String(m[0]).padStart(2,'0'); }
@@ -697,8 +669,7 @@
       const num=findNumFromContext(block); const data=PREBUILT_SEAL_PNGS[num]; if(!data) return;
       const art=block.querySelector('.egsol-seal-art,.egsol-seal-feature-art'); if(!art) return;
       let img=art.querySelector('img.prebuilt-seal-png');
-      if(!img){ art.innerHTML=''; img=document.createElement('img'); img.className='prebuilt-seal-png'; img.alt='Transparent human-origin seal PNG'; img.style.cssText='display:block;width:100%;height:100%;object-fit:contain;'; art.appendChild(img); }
-      img.loading='lazy'; img.decoding='async'; img.fetchPriority='low';
+      if(!img){ art.innerHTML=''; img=document.createElement('img'); img.className='prebuilt-seal-png'; img.alt='Transparent Egypto-Solomonic seal PNG'; img.style.cssText='display:block;width:100%;height:100%;object-fit:contain;'; art.appendChild(img); }
       if(img.getAttribute('src')!==data) img.src=data;
       art.dataset.pngSrc=data; art.dataset.pngReady='1';
     });
@@ -826,7 +797,7 @@
   function ensureCardEnhancements(){
     collectCards();
     state.cards.forEach(info => {
-      const card = info.card; const body = card.querySelector('.p-4'); if(!body) return; const tags = body.querySelector('.mt-2');
+      const card = info.card; const body = card.querySelector('.p-4'); const tags = body.querySelector('.mt-2'); if(!body) return;
       card.classList.toggle('tm-card-collected', isCollected(info.num));
       let badge = body.querySelector('.tm-card-collectbar');
       if(!badge){
@@ -838,21 +809,17 @@
       const status = badge.querySelector('.tm-card-status');
       const btn = badge.querySelector('.tm-collect-toggle');
       const collected = isCollected(info.num);
-      const nextStatus = collected ? 'Collected in your archive' : 'Not yet collected';
-      const nextButton = collected ? '★ Collected' : '☆ Collect';
-      if(status.textContent !== nextStatus) status.textContent = nextStatus;
-      if(btn.textContent !== nextButton) btn.textContent = nextButton;
-      if(btn.dataset.collected !== String(collected)) btn.dataset.collected = String(collected);
+      status.innerHTML = collected ? 'Collected in your archive' : 'Not yet collected';
+      btn.textContent = collected ? '★ Collected' : '☆ Collect';
+      btn.dataset.collected = String(collected);
       btn.onclick = (ev) => { ev.stopPropagation(); ev.preventDefault(); toggleCollected(info.num); };
-      const tierChip = tags && tags.querySelector('.tm-tier-chip');
-      if(tags && !tierChip){
+      if(tags && !tags.querySelector('.tm-tier-chip')){
         const tier = document.createElement('span');
         tier.className = 'tm-chip tier tm-tier-chip';
         tier.textContent = tierFor(info);
         tags.appendChild(tier);
-      } else if(tierChip) {
-        const nextTier = tierFor(info);
-        if(tierChip.textContent !== nextTier) tierChip.textContent = nextTier;
+      } else if(tags && tags.querySelector('.tm-tier-chip')) {
+        tags.querySelector('.tm-tier-chip').textContent = tierFor(info);
       }
     });
   }
@@ -868,19 +835,12 @@
     const info = state.cards.find(c => c.num === num) || collectCards().find(c => c.num === num);
     if(!info) return;
     const existing = content.querySelector('.tm-artifact-sheet');
-    if(existing && existing.dataset.chamber === info.num){
-      const collect = existing.querySelector('.tm-artifact-collect');
-      const nextLabel = isCollected(info.num) ? 'Uncollect Chamber' : 'Collect Chamber';
-      if(collect && collect.textContent !== nextLabel) collect.textContent = nextLabel;
-      return;
-    }
     if(existing) existing.remove();
     const card = info.card;
     const sealBtn = card ? findButtonByText(card, /Seal/i) : null;
     const plateBtn = card ? findButtonByText(card, /Collect/i) : null;
     const sheet = document.createElement('div');
     sheet.className = 'tm-artifact-sheet';
-    sheet.dataset.chamber = info.num;
     sheet.innerHTML = `
       <div class="tm-kicker">artifact page</div>
       <div class="tm-title">Chamber ${escapeHtml(info.num)} • ${escapeHtml(info.name)}</div>
@@ -956,7 +916,7 @@
       backdrop.className = 'tm-panel-backdrop';
       backdrop.innerHTML = `
         <div class="tm-panel" role="dialog" aria-modal="true" aria-label="Seal Library">
-          <div class="tm-panel-head"><div><div class="tm-kicker">seal asset library</div><div class="tm-title">Human-Origin Seal Repository</div></div><button type="button" class="tm-panel-close">✕</button></div>
+          <div class="tm-panel-head"><div><div class="tm-kicker">seal asset library</div><div class="tm-title">Egypto-Solomonic Seal Repository</div></div><button type="button" class="tm-panel-close">✕</button></div>
           <div class="tm-panel-body"><div class="tm-seal-grid"></div></div>
         </div>`;
       document.body.appendChild(backdrop);
@@ -991,29 +951,23 @@
     const pct = total ? Math.round((collected/total)*100) : 0;
     const deck = document.getElementById('tm-commit-deck');
     if(deck){
-      const progressText = deck.querySelector('.tm-progress-text');
-      const progressChip = deck.querySelector('.tm-progress-chip');
-      const nextProgress = `${collected} / ${total} chambers collected`;
-      const nextPct = `${pct}%`;
-      if(progressText.textContent !== nextProgress) progressText.textContent = nextProgress;
-      if(progressChip.textContent !== nextPct) progressChip.textContent = nextPct;
+      deck.querySelector('.tm-progress-text').textContent = `${collected} / ${total} chambers collected`;
+      deck.querySelector('.tm-progress-chip').textContent = `${pct}%`;
       deck.querySelector('.tm-progress-meter > span').style.width = pct + '%';
     }
     const codex = document.getElementById('tm-codex-panel');
     const seals = document.getElementById('tm-seal-panel');
     if(codex) codex.classList.toggle('open', !!state.codexOpen);
     if(seals) seals.classList.toggle('open', !!state.sealsOpen);
-    if(codex && state.codexOpen){
+    if(codex){
       const grid = codex.querySelector('.tm-grid');
       const list = cards.filter(matchesFilter);
-      const countChip = codex.querySelector('.tm-count-chip');
-      const nextCount = `${list.length} item${list.length===1?'':'s'}`;
-      if(countChip.textContent !== nextCount) countChip.textContent = nextCount;
+      codex.querySelector('.tm-count-chip').textContent = `${list.length} item${list.length===1?'':'s'}`;
       grid.innerHTML = list.length ? list.map(info => `
         <div class="tm-codex-item">
           <div class="tm-codex-thumb">
-            <img src="${escapeHtml(info.imgSrc)}" alt="${escapeHtml(info.name)}" loading="lazy" decoding="async" />
-            ${info.sealSrc ? `<div class="tm-codex-seal"><img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" loading="lazy" decoding="async" /></div>` : ''}
+            <img src="${escapeHtml(info.imgSrc)}" alt="${escapeHtml(info.name)}" />
+            ${info.sealSrc ? `<div class="tm-codex-seal"><img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" /></div>` : ''}
           </div>
           <div class="tm-codex-body">
             <div class="tm-codex-title">${escapeHtml(info.num)} • ${escapeHtml(info.name)}</div>
@@ -1038,15 +992,12 @@
       grid.querySelectorAll('[data-toggle-collect]').forEach(btn => btn.onclick = () => toggleCollected(btn.dataset.toggleCollect));
       grid.querySelectorAll('[data-download-seal]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.downloadSeal); const sourceBtn = info && findButtonByText(info.card, /Seal/i); sourceBtn && sourceBtn.click(); });
       grid.querySelectorAll('[data-download-plate]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.downloadPlate); const sourceBtn = info && findButtonByText(info.card, /Collect/i); sourceBtn && sourceBtn.click(); });
-    } else if(codex) {
-      const grid = codex.querySelector('.tm-grid');
-      if(grid.childElementCount) grid.replaceChildren();
     }
-    if(seals && state.sealsOpen){
+    if(seals){
       const grid = seals.querySelector('.tm-seal-grid');
       grid.innerHTML = cards.length ? cards.map(info => `
         <div class="tm-seal-item">
-          <div class="tm-seal-art">${info.sealSrc ? `<img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" loading="lazy" decoding="async" />` : '<div class="tm-empty" style="padding:0">Seal unavailable</div>'}</div>
+          <div class="tm-seal-art">${info.sealSrc ? `<img src="${escapeHtml(info.sealSrc)}" alt="Seal of ${escapeHtml(info.name)}" />` : '<div class="tm-empty" style="padding:0">Seal unavailable</div>'}</div>
           <div class="tm-seal-name">${escapeHtml(info.num)} • ${escapeHtml(info.name)}</div>
           <div class="tm-seal-copy">${escapeHtml(info.pillar || '—')} • ${escapeHtml(info.fire || '—')}</div>
           <div class="tm-codex-actions">
@@ -1056,9 +1007,6 @@
         </div>`).join('') : '<div class="tm-empty">Seal library will populate once the chamber cards are ready.</div>';
       grid.querySelectorAll('[data-library-download-seal]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.libraryDownloadSeal); const sourceBtn = info && findButtonByText(info.card, /Seal/i); sourceBtn && sourceBtn.click(); });
       grid.querySelectorAll('[data-library-open]').forEach(btn => btn.onclick = () => { const info = cards.find(c => c.num === btn.dataset.libraryOpen); state.sealsOpen = false; renderPanels(); openCard(info); setTimeout(renderAll, 250); });
-    } else if(seals) {
-      const grid = seals.querySelector('.tm-seal-grid');
-      if(grid.childElementCount) grid.replaceChildren();
     }
   }
   function renderAll(){
@@ -1067,34 +1015,20 @@
     ensureArtifactSheet();
     renderPanels();
   }
-  const observedRoot = document.getElementById('root') || document.body;
   let scheduled = false;
-  let rendering = false;
-  let obs = null;
-  function observeRoot(){ obs.observe(observedRoot, {childList:true, subtree:true}); }
-  function schedule(){
-    if(scheduled || rendering) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      scheduled = false;
-      rendering = true;
-      obs?.disconnect();
-      try { renderAll(); }
-      finally { rendering = false; observeRoot(); }
-    });
-  }
+  function schedule(){ if(scheduled) return; scheduled = true; requestAnimationFrame(() => { scheduled = false; renderAll(); }); }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule); else schedule();
   window.addEventListener('load', schedule);
   window.addEventListener('resize', schedule);
-  obs = new MutationObserver(() => schedule());
-  observeRoot();
+  const obs = new MutationObserver(() => schedule());
+  obs.observe(document.getElementById('root') || document.body, {childList:true, subtree:true});
   setTimeout(schedule, 700); setTimeout(schedule, 1800); setTimeout(schedule, 3500);
 })();
 
 /* Runtime block 6 */
 (function(){
   const FOCALS = {"01":{"x":50,"y":34.5},"02":{"x":50,"y":24},"03":{"x":50,"y":28},"04":{"x":50,"y":20.4},"05":{"x":50,"y":21.5},"06":{"x":50,"y":19.0},"07":{"x":50,"y":29.7},"08":{"x":50,"y":18},"09":{"x":50,"y":18.7},"10":{"x":50,"y":21.1},"11":{"x":50,"y":24.0},"12":{"x":50,"y":28},"13":{"x":50,"y":22.7},"14":{"x":50,"y":22.2},"15":{"x":50,"y":24.8},"16":{"x":50,"y":24},"17":{"x":50,"y":26},"18":{"x":57,"y":28},"19":{"x":50,"y":18},"20":{"x":50,"y":19.0},"21":{"x":50,"y":35},"22":{"x":50,"y":28.4},"23":{"x":50,"y":22.4},"24":{"x":50,"y":24.2},"25":{"x":50,"y":18},"26":{"x":50,"y":25},"27":{"x":50,"y":20.0},"28":{"x":50,"y":22.5},"29":{"x":50,"y":30.4},"30":{"x":50,"y":27},"31":{"x":50,"y":22.2},"32":{"x":50,"y":35},"33":{"x":50,"y":25.0},"34":{"x":50,"y":22.4},"35":{"x":50,"y":27},"36":{"x":50,"y":26.7},"37":{"x":50,"y":20.4},"38":{"x":50,"y":26.6},"39":{"x":50,"y":25.3},"40":{"x":50,"y":27.4},"41":{"x":50,"y":25},"42":{"x":50,"y":24.9},"43":{"x":50,"y":29.5},"44":{"x":50,"y":27},"45":{"x":50,"y":19.7},"46":{"x":50,"y":24.7},"47":{"x":50,"y":24.3},"48":{"x":50,"y":27},"49":{"x":50,"y":22.5},"50":{"x":50,"y":26.0},"51":{"x":50,"y":31.0},"52":{"x":50,"y":26.0},"53":{"x":50,"y":25},"54":{"x":50,"y":27},"55":{"x":50,"y":24.1},"56":{"x":50,"y":28},"57":{"x":50,"y":22.7},"58":{"x":50,"y":25.3},"59":{"x":50,"y":23.1},"60":{"x":50,"y":20.2},"61":{"x":50,"y":27},"62":{"x":50,"y":23.1},"63":{"x":50,"y":25.2},"64":{"x":50,"y":35},"65":{"x":50,"y":21.8},"66":{"x":50,"y":28},"67":{"x":50,"y":22.5},"68":{"x":50,"y":23.7},"69":{"x":50,"y":35},"70":{"x":50,"y":27},"71":{"x":50,"y":27},"72":{"x":50,"y":31.2}};
-  const VERSION = '6.1.2-human-origin-seals';
+  const VERSION = '3.0.0-transformative';
   const TETRADS = new Set(['01','07','13','37','42']);
   let currentArtifact = null;
   let syncingHash = false;
@@ -1147,17 +1081,10 @@
   }
   function downloadManifest(){saveBlob(new Blob([JSON.stringify(manifest(),null,2)],{type:'application/json'}),'temple-of-maat-72-chamber-manifest.json');}
   function bytesFromDataUrl(url){
-    if(!url||!url.startsWith('data:'))throw new Error('Not a data URL.');
+    if(!url||!url.startsWith('data:'))throw new Error('Seal is not embedded as a data URL.');
     const comma=url.indexOf(',');const meta=url.slice(0,comma);const data=url.slice(comma+1);
     if(/;base64/i.test(meta)){const bin=atob(data);const out=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out;}
     return new TextEncoder().encode(decodeURIComponent(data));
-  }
-  async function bytesFromSealSource(url){
-    if(!url) throw new Error('Seal source is missing.');
-    if(url.startsWith('data:')) return bytesFromDataUrl(url);
-    const response=await fetch(url,{cache:'force-cache'});
-    if(!response.ok) throw new Error(`Seal asset request failed (${response.status}).`);
-    return new Uint8Array(await response.arrayBuffer());
   }
   const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?(0xedb88320^(c>>>1)):(c>>>1);t[n]=c>>>0;}return t;})();
   function crc32(bytes){let c=0xffffffff;for(const b of bytes)c=CRC_TABLE[(c^b)&255]^(c>>>8);return(c^0xffffffff)>>>0;}
@@ -1177,18 +1104,17 @@
     return new Blob([...locals,...centrals,end],{type:'application/zip'});
   }
   async function downloadSealPack(btn,status){
-    const original=btn.textContent;btn.disabled=true;btn.textContent='Packing 72 seals…';status.textContent='Preparing simplified transparent PNGs…';status.classList.add('show');
+    const original=btn.textContent;btn.disabled=true;btn.textContent='Packing 72 seals…';status.textContent='Preparing embedded transparent PNGs…';status.classList.add('show');
     try{
       const list=chambers();const files=[];
       for(let i=0;i<list.length;i++){
         const info=list[i];if(!info.sealSrc)continue;
         status.textContent=`Packing seal ${i+1} of ${list.length}: ${info.num} ${info.name}`;
-        const bytes=await bytesFromSealSource(info.sealSrc);
-        files.push({name:`seals/${info.num}-${info.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,data:bytes});
+        files.push({name:`seals/${info.num}-${info.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`,data:bytesFromDataUrl(info.sealSrc)});
         if(i%8===0)await new Promise(r=>setTimeout(r,0));
       }
       files.push({name:'temple-of-maat-manifest.json',data:new TextEncoder().encode(JSON.stringify(manifest(),null,2))});
-      if(!files.length)throw new Error('No seal PNG assets were found.');
+      if(!files.length)throw new Error('No embedded seal PNGs were found.');
       saveBlob(zipStore(files),'Temple-of-Maat-72-Egypto-Solomonic-Seals.zip');
       status.textContent=`Seal pack ready: ${files.length-1} PNG seals + manifest.`;
     }catch(err){console.error(err);status.textContent='Pack failed: '+(err?.message||err);}
@@ -1228,7 +1154,7 @@
       <div class="tm2-artifact-layout">
         <div class="tm2-portrait-card">
           <div class="tm2-portrait-stage"><img class="tm2-hero" src="${esc(info.imgSrc)}" alt="${esc(info.name)}"><div class="tm2-portrait-gradient"></div><div class="tm2-portrait-caption"><div class="num">CHAMBER ${esc(info.num)}</div><div class="name">${esc(info.name)}</div><div class="pair">${esc(info.pairing||'')}</div></div></div>
-          <div class="tm2-seal-dock"><div class="seal">${info.sealSrc?`<img src="${esc(info.sealSrc)}" alt="Seal of ${esc(info.name)}">`:''}</div><div class="tm2-seal-copy"><div class="kicker">HUMAN-ORIGIN SEAL</div><div class="title">Seal of ${esc(info.name)}</div><div class="copy">A separate transparent chamber seal asset with a simplified human-origin motif, preserved independently from the hero portrait.</div></div></div>
+          <div class="tm2-seal-dock"><div class="seal">${info.sealSrc?`<img src="${esc(info.sealSrc)}" alt="Seal of ${esc(info.name)}">`:''}</div><div class="tm2-seal-copy"><div class="kicker">EGYPTO-SOLOMONIC SEAL</div><div class="title">Seal of ${esc(info.name)}</div><div class="copy">A separate transparent chamber seal asset, color-coded by pillar and fire, preserved independently from the hero portrait.</div></div></div>
         </div>
         <div class="tm2-data-card">
           <div class="tm2-data-title">CANONICAL CHAMBER RECORD</div>

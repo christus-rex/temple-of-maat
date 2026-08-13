@@ -1,24 +1,5 @@
 # Changelog
 
-## v6.1.5 — Play/Pause Ritual rollback
-- Reverted the Play/Pause handler introduced in commit `265445c`.
-- Pause once again stops the active ritual graph and clears scheduled ambience without suspending the shared `AudioContext`.
-- The next Play creates a fresh ritual graph instead of resuming a retained graph and restarting schedulers against it.
-- Added a regression check and bumped the service-worker cache namespace to v6.1.5.
-
-## v6.1.4 — Renderer crash hotfix
-- Stopped the archive renderer from observing and rescheduling its own DOM changes.
-- Avoided rewriting unchanged card, progress, and artifact-sheet content.
-- Deferred Codex and Seal Library image construction until each panel is open, and released those grids when closed.
-- Marked large portrait and seal images for lazy loading and asynchronous decoding.
-- Added automated regression guards and bumped the service-worker cache namespace to v6.1.4.
-
-## v6.1.3 — Simplified seals with human-origin motif
-- Fixed the Play/Pause Ritual control so Pause suspends the entire `AudioContext` immediately instead of resuming first and only fading the bass drone.
-- Clears scheduled harp, flute, and water timers while paused so they cannot accumulate in the background.
-- Resume reuses the existing ritual audio graph and restarts the ambient schedulers without creating a duplicate bass drone.
-- Bumped the service-worker cache namespace to v6.1.3.
-
 ## v6.1.0 — Visible Temple version
 - Added a persistent `Temple v6.1.0` badge across the application.
 - Tapping the badge shows the full build identifier and source package.
