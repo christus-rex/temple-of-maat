@@ -12,17 +12,4 @@ for(const c of data.chambers){if(ids.has(c.id))throw new Error(`Duplicate chambe
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 if(/data:image\/(?:png|webp);base64,/i.test(html))throw new Error('Embedded image data URIs remain in index.html');
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');if(!sw.includes('temple-maat-pwa-v6'))throw new Error('Service worker version is not v6');
-const runtime=fs.readFileSync(path.join(root,'assets/js/runtime.js'),'utf8');
-if(runtime.includes('status.innerHTML ='))throw new Error('Card status still uses mutation-heavy innerHTML');
-for(const marker of [
-  'if(status.textContent !== nextStatus)',
-  'if(codex && state.codexOpen)',
-  'if(seals && state.sealsOpen)',
-  "img.loading='lazy'",
-  'obs?.disconnect()',
-  'finally { rendering = false; observeRoot(); }'
-]){if(!runtime.includes(marker))throw new Error(`Missing renderer crash regression guard: ${marker}`);}
-const bundle=fs.readFileSync(path.join(root,'assets/js/app.bundle.js'),'utf8');
-if(bundle.includes('if(d.state==="running")await d.suspend()'))throw new Error('Suspended AudioContext Play/Pause handler is still present');
-if(!bundle.includes('if(d.state!=="running")await d.resume();if(l){if(o(!1),Sc()'))throw new Error('Pre-change Play/Pause stop-and-recreate handler is missing');
-console.log(`Validated ${data.chambers.length} chambers, ${ids.size} unique IDs, modular assets, manifest, service worker, renderer crash guards, and Play/Pause rollback.`);
+console.log(`Validated ${data.chambers.length} chambers, ${ids.size} unique IDs, modular assets, manifest, and service worker.`);

@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v6.1.5-2026-08-13';
+const VERSION = 'temple-maat-pwa-v6.1-2026-08-13';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [

@@ -1,4 +1,4 @@
-# Temple of Ma'at — GitHub Pages PWA v6.1.5
+# Temple of Ma'at — GitHub Pages PWA v6.1
 
 Published target: `https://christus-rex.github.io/temple-of-maat/`
 
@@ -32,14 +32,4 @@ Publish from `main` → `/(root)` with HTTPS enabled. The manifest and service w
 
 
 ## Visible version identity
-The running app displays `Temple v6.1.5` in a persistent badge. Tap it to inspect the build identifier and source. The same version is also shown in the Temple Entrance, Archive Console, and site-admin footer.
-
-
-## Ritual audio control rollback (v6.1.5)
-
-Play/Pause Ritual once again stops the current ritual graph and scheduled ambience on Pause, then creates a fresh graph on the next Play. The control no longer suspends and resumes the shared `AudioContext`.
-
-
-## Renderer crash hotfix (v6.1.4)
-
-Runtime rendering now ignores its own DOM updates, avoids rewriting unchanged card text, and builds the Codex and Seal Library only while those panels are open. Large seal images are marked for lazy asynchronous decoding before their sources are assigned.
+The running app displays `Temple v6.1.0` in a persistent badge. Tap it to inspect the build identifier and source. The same version is also shown in the Temple Entrance, Archive Console, and site-admin footer.
