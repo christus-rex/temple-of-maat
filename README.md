@@ -1,52 +1,35 @@
-# Temple of Ma'at — GitHub Pages PWA v5
+# Temple of Ma'at — GitHub Pages PWA v6.1
 
-This folder is ready to publish from the root of a GitHub Pages repository.
+Published target: `https://christus-rex.github.io/temple-of-maat/`
 
-## Publish / update
+## Architecture
 
-1. Upload **all files in this folder** to the repository root.
-2. In GitHub: **Settings → Pages → Build and deployment**.
-3. Choose **Deploy from a branch**, select `main`, and choose `/(root)`.
-4. Enable **Enforce HTTPS** when available.
-5. Open the published site once while online. The service worker will cache the app shell for later offline use.
+The v6 build removes all embedded base64 artwork from `index.html`. The 72 chamber portraits and 72 seals are now real cacheable files under `assets/heroes/` and `assets/seals/`. Application/runtime code and CSS are split into `assets/js/` and `assets/css/`.
 
-The manifest and service worker deliberately use relative `./` URLs, so the PWA works at a GitHub Pages project URL such as:
+### Key additions
 
-`https://USERNAME.github.io/temple-of-maat/`
-
-## Install
-
-- Android / Chromium: use the in-app **Install Temple** control or the browser's Install app command.
-- iPhone / iPad: open the site in Safari → Share → Add to Home Screen.
-- Desktop Chromium: use the Install icon / browser menu or the in-app control when available.
-
-## PWA files
-
-- `index.html` — latest Temple build with hideable/minimizable Archive Console plus PWA runtime UI
-- `manifest.webmanifest` — install metadata, app icons, scope, shortcuts
-- `sw.js` — versioned offline cache + update lifecycle
-- `offline.html` — last-resort offline screen
-- `icon-192.png`, `icon-512.png` — standard app icons
-- `icon-maskable-512.png` — maskable icon for adaptive launchers
-- `apple-touch-icon.png` — iOS home-screen icon
-- `chambers.json` — canonical chamber data
-- `version.json` — build identifier
-- `.nojekyll` — prevents Jekyll processing on GitHub Pages
-- `COPYRIGHT.md` — copyright and third-party rights notice
-
-## Updating later
-
-When replacing `index.html`, also change the `VERSION` value near the top of `sw.js` (for example `v4-2026-08-20`). Browsers will then recognize a new service-worker build and the Temple's update prompt can activate it.
-
+- PWA-native Temple Entrance
+- Continue Last Chamber / Random Chamber
+- 72/72 completion state and PNG completion certificate
+- modular hero/seal asset library
+- complete 72-seal ZIP download (`downloads/Temple-of-Maat-72-Egypto-Solomonic-Seals.zip`)
+- service-worker v6 offline/runtime caching
+- search/social metadata and sitemap
+- GitHub Actions validation
 
 ## Site administration
 
 **Site Administrator:** Alberto Ramirez  
 **Contact:** christus.kalki888@gmail.com
 
-
 ## Copyright
 
-Copyright © 2026 Alberto Ramirez. All rights reserved.
+Copyright © 2026 Alberto Ramirez. All rights reserved. See `COPYRIGHT.md`.
 
-See `COPYRIGHT.md` for the full notice and third-party rights statement.
+## GitHub Pages
+
+Publish from `main` → `/(root)` with HTTPS enabled. The manifest and service worker use relative paths and remain compatible with the project path `/temple-of-maat/`.
+
+
+## Visible version identity
+The running app displays `Temple v6.1.0` in a persistent badge. Tap it to inspect the build identifier and source. The same version is also shown in the Temple Entrance, Archive Console, and site-admin footer.

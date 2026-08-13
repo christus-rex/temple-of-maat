@@ -1,6 +1,6 @@
 {
-  "schema": "temple-of-maat/chambers-v3",
-  "version": "3.0.0-transformative",
+  "schema": "temple-of-maat/chambers-v6",
+  "version": "6.0.0-modular",
   "title": "Temple of Ma'at — 72 Chamber Archive",
   "chamberCount": 72,
   "fires": [
@@ -78,7 +78,9 @@
       "faceFocal": {
         "x": 50,
         "y": 34.5
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-01-bifruiah.webp",
+      "sealImage": "./assets/seals/seal-01-bifruiah-transparent.png"
     },
     {
       "number": 2,
@@ -103,7 +105,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-02-orialiel.webp",
+      "sealImage": "./assets/seals/seal-02-orialiel-transparent.png"
     },
     {
       "number": 3,
@@ -128,7 +132,9 @@
       "faceFocal": {
         "x": 50,
         "y": 28
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-03-andritael.webp",
+      "sealImage": "./assets/seals/seal-03-andritael-transparent.png"
     },
     {
       "number": 4,
@@ -153,7 +159,9 @@
       "faceFocal": {
         "x": 50,
         "y": 20.4
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-04-berelmiah.webp",
+      "sealImage": "./assets/seals/seal-04-berelmiah-transparent.png"
     },
     {
       "number": 5,
@@ -178,7 +186,9 @@
       "faceFocal": {
         "x": 50,
         "y": 21.5
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-05-gamiasiah.webp",
+      "sealImage": "./assets/seals/seal-05-gamiasiah-transparent.png"
     },
     {
       "number": 6,
@@ -203,7 +213,9 @@
       "faceFocal": {
         "x": 50,
         "y": 19.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-06-vapulahel.webp",
+      "sealImage": "./assets/seals/seal-06-vapulahel-transparent.png"
     },
     {
       "number": 7,
@@ -228,7 +240,9 @@
       "faceFocal": {
         "x": 50,
         "y": 29.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-07-allochiah.webp",
+      "sealImage": "./assets/seals/seal-07-allochiah-transparent.png"
     },
     {
       "number": 8,
@@ -253,7 +267,9 @@
       "faceFocal": {
         "x": 50,
         "y": 18
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-08-bathietel.webp",
+      "sealImage": "./assets/seals/seal-08-bathietel-transparent.png"
     },
     {
       "number": 9,
@@ -278,7 +294,9 @@
       "faceFocal": {
         "x": 50,
         "y": 18.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-09-belehaziel.webp",
+      "sealImage": "./assets/seals/seal-09-belehaziel-transparent.png"
     },
     {
       "number": 10,
@@ -303,7 +321,9 @@
       "faceFocal": {
         "x": 50,
         "y": 21.1
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-10-bathiadiah.webp",
+      "sealImage": "./assets/seals/seal-10-bathiadiah-transparent.png"
     },
     {
       "number": 11,
@@ -328,7 +348,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-11-valelauviah.webp",
+      "sealImage": "./assets/seals/seal-11-valelauviah-transparent.png"
     },
     {
       "number": 12,
@@ -353,7 +375,9 @@
       "faceFocal": {
         "x": 50,
         "y": 28
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-12-dantahaiah.webp",
+      "sealImage": "./assets/seals/seal-12-dantahaiah-transparent.png"
     },
     {
       "number": 13,
@@ -378,7 +402,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-13-focazalel.webp",
+      "sealImage": "./assets/seals/seal-13-focazalel-transparent.png"
     },
     {
       "number": 14,
@@ -403,7 +429,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.2
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-14-vapubahel.webp",
+      "sealImage": "./assets/seals/seal-14-vapubahel-transparent.png"
     },
     {
       "number": 15,
@@ -428,7 +456,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24.8
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-15-berihariel.webp",
+      "sealImage": "./assets/seals/seal-15-berihariel-transparent.png"
     },
     {
       "number": 16,
@@ -453,7 +483,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-16-haagakamiah.webp",
+      "sealImage": "./assets/seals/seal-16-haagakamiah-transparent.png"
     },
     {
       "number": 17,
@@ -478,7 +510,9 @@
       "faceFocal": {
         "x": 50,
         "y": 26
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-17-valelauviah-ii.webp",
+      "sealImage": "./assets/seals/seal-17-valelauviah-ii-transparent.png"
     },
     {
       "number": 18,
@@ -503,7 +537,9 @@
       "faceFocal": {
         "x": 57,
         "y": 28
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-18-agacaliel.webp",
+      "sealImage": "./assets/seals/seal-18-agacaliel-transparent.png"
     },
     {
       "number": 19,
@@ -528,7 +564,9 @@
       "faceFocal": {
         "x": 50,
         "y": 18
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-19-asmoleuviah.webp",
+      "sealImage": "./assets/seals/seal-19-asmoleuviah-transparent.png"
     },
     {
       "number": 20,
@@ -553,7 +591,9 @@
       "faceFocal": {
         "x": 50,
         "y": 19.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-20-haagpahaliah.webp",
+      "sealImage": "./assets/seals/seal-20-haagpahaliah-transparent.png"
     },
     {
       "number": 21,
@@ -578,7 +618,9 @@
       "faceFocal": {
         "x": 50,
         "y": 35
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-21-paimelkhael.webp",
+      "sealImage": "./assets/seals/seal-21-paimelkhael-transparent.png"
     },
     {
       "number": 22,
@@ -603,7 +645,9 @@
       "faceFocal": {
         "x": 50,
         "y": 28.4
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-22-vapuyeiayel.webp",
+      "sealImage": "./assets/seals/seal-22-vapuyeiayel-transparent.png"
     },
     {
       "number": 23,
@@ -628,7 +672,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.4
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-23-halmelahel.webp",
+      "sealImage": "./assets/seals/seal-23-halmelahel-transparent.png"
     },
     {
       "number": 24,
@@ -653,7 +699,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24.2
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-24-halhahuiah.webp",
+      "sealImage": "./assets/seals/seal-24-halhahuiah-transparent.png"
     },
     {
       "number": 25,
@@ -678,7 +726,9 @@
       "faceFocal": {
         "x": 50,
         "y": 18
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-25-focanithaiah.webp",
+      "sealImage": "./assets/seals/seal-25-focanithaiah-transparent.png"
     },
     {
       "number": 26,
@@ -703,7 +753,9 @@
       "faceFocal": {
         "x": 50,
         "y": 25
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-26-vapuhaaiah.webp",
+      "sealImage": "./assets/seals/seal-26-vapuhaaiah-transparent.png"
     },
     {
       "number": 27,
@@ -728,7 +780,9 @@
       "faceFocal": {
         "x": 50,
         "y": 20.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-27-alloyerathel.webp",
+      "sealImage": "./assets/seals/seal-27-alloyerathel-transparent.png"
     },
     {
       "number": 28,
@@ -753,7 +807,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.5
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-28-vapuseheiah.webp",
+      "sealImage": "./assets/seals/seal-28-vapuseheiah-transparent.png"
     },
     {
       "number": 29,
@@ -778,7 +834,9 @@
       "faceFocal": {
         "x": 50,
         "y": 30.4
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-29-gremoreyiel.webp",
+      "sealImage": "./assets/seals/seal-29-gremoreyiel-transparent.png"
     },
     {
       "number": 30,
@@ -803,7 +861,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-30-buromael.webp",
+      "sealImage": "./assets/seals/seal-30-buromael-transparent.png"
     },
     {
       "number": 31,
@@ -828,7 +888,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.2
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-31-allolecabel.webp",
+      "sealImage": "./assets/seals/seal-31-allolecabel-transparent.png"
     },
     {
       "number": 32,
@@ -853,7 +915,9 @@
       "faceFocal": {
         "x": 50,
         "y": 35
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-32-focavasariah.webp",
+      "sealImage": "./assets/seals/seal-32-focavasariah-transparent.png"
     },
     {
       "number": 33,
@@ -878,7 +942,9 @@
       "faceFocal": {
         "x": 50,
         "y": 25.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-33-paiyehuiah.webp",
+      "sealImage": "./assets/seals/seal-33-paiyehuiah-transparent.png"
     },
     {
       "number": 34,
@@ -903,7 +969,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.4
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-34-marcholehahiah.webp",
+      "sealImage": "./assets/seals/seal-34-marcholehahiah-transparent.png"
     },
     {
       "number": 35,
@@ -928,7 +996,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-35-glasyavakiah.webp",
+      "sealImage": "./assets/seals/seal-35-glasyavakiah-transparent.png"
     },
     {
       "number": 36,
@@ -953,7 +1023,9 @@
       "faceFocal": {
         "x": 50,
         "y": 26.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-36-bathimenadel.webp",
+      "sealImage": "./assets/seals/seal-36-bathimenadel-transparent.png"
     },
     {
       "number": 37,
@@ -978,7 +1050,9 @@
       "faceFocal": {
         "x": 50,
         "y": 20.4
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-37-camianiel.webp",
+      "sealImage": "./assets/seals/seal-37-camianiel-transparent.png"
     },
     {
       "number": 38,
@@ -1003,7 +1077,9 @@
       "faceFocal": {
         "x": 50,
         "y": 26.6
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-38-belhaamiah.webp",
+      "sealImage": "./assets/seals/seal-38-belhaamiah-transparent.png"
     },
     {
       "number": 39,
@@ -1028,7 +1104,9 @@
       "faceFocal": {
         "x": 50,
         "y": 25.3
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-39-gusorehael.webp",
+      "sealImage": "./assets/seals/seal-39-gusorehael-transparent.png"
     },
     {
       "number": 40,
@@ -1053,7 +1131,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27.4
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-40-bifroyeiazel.webp",
+      "sealImage": "./assets/seals/seal-40-bifroyeiazel-transparent.png"
     },
     {
       "number": 41,
@@ -1078,7 +1158,9 @@
       "faceFocal": {
         "x": 50,
         "y": 25
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-41-belehahahel.webp",
+      "sealImage": "./assets/seals/seal-41-belehahahel-transparent.png"
     },
     {
       "number": 42,
@@ -1103,7 +1185,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24.9
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-42-agamikael.webp",
+      "sealImage": "./assets/seals/seal-42-agamikael-transparent.png"
     },
     {
       "number": 43,
@@ -1128,7 +1212,9 @@
       "faceFocal": {
         "x": 50,
         "y": 29.5
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-43-asmoveuliah.webp",
+      "sealImage": "./assets/seals/seal-43-asmoveuliah-transparent.png"
     },
     {
       "number": 44,
@@ -1153,7 +1239,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-44-gamiyelahiah.webp",
+      "sealImage": "./assets/seals/seal-44-gamiyelahiah-transparent.png"
     },
     {
       "number": 45,
@@ -1178,7 +1266,9 @@
       "faceFocal": {
         "x": 50,
         "y": 19.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-45-cimisehaliah.webp",
+      "sealImage": "./assets/seals/seal-45-cimisehaliah-transparent.png"
     },
     {
       "number": 46,
@@ -1203,7 +1293,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-46-hauariel.webp",
+      "sealImage": "./assets/seals/seal-46-hauariel-transparent.png"
     },
     {
       "number": 47,
@@ -1228,7 +1320,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24.3
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-47-agaresaliah.webp",
+      "sealImage": "./assets/seals/seal-47-agaresaliah-transparent.png"
     },
     {
       "number": 48,
@@ -1253,7 +1347,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-48-leramihael.webp",
+      "sealImage": "./assets/seals/seal-48-leramihael-transparent.png"
     },
     {
       "number": 49,
@@ -1278,7 +1374,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.5
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-49-vapuvehuel.webp",
+      "sealImage": "./assets/seals/seal-49-vapuvehuel-transparent.png"
     },
     {
       "number": 50,
@@ -1303,7 +1401,9 @@
       "faceFocal": {
         "x": 50,
         "y": 26.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-50-bathidaniel.webp",
+      "sealImage": "./assets/seals/seal-50-bathidaniel-transparent.png"
     },
     {
       "number": 51,
@@ -1328,7 +1428,9 @@
       "faceFocal": {
         "x": 50,
         "y": 31.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-51-glasyahasiah.webp",
+      "sealImage": "./assets/seals/seal-51-glasyahasiah-transparent.png"
     },
     {
       "number": 52,
@@ -1353,7 +1455,9 @@
       "faceFocal": {
         "x": 50,
         "y": 26.0
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-52-cimimamiah.webp",
+      "sealImage": "./assets/seals/seal-52-cimimamiah-transparent.png"
     },
     {
       "number": 53,
@@ -1378,7 +1482,9 @@
       "faceFocal": {
         "x": 50,
         "y": 25
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-53-botinanael.webp",
+      "sealImage": "./assets/seals/seal-53-botinanael-transparent.png"
     },
     {
       "number": 54,
@@ -1403,7 +1509,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-54-procnithael.webp",
+      "sealImage": "./assets/seals/seal-54-procnithael-transparent.png"
     },
     {
       "number": 55,
@@ -1428,7 +1536,9 @@
       "faceFocal": {
         "x": 50,
         "y": 24.1
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-55-haagmebahiah.webp",
+      "sealImage": "./assets/seals/seal-55-haagmebahiah-transparent.png"
     },
     {
       "number": 56,
@@ -1453,7 +1563,9 @@
       "faceFocal": {
         "x": 50,
         "y": 28
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-56-buropoyel.webp",
+      "sealImage": "./assets/seals/seal-56-buropoyel-transparent.png"
     },
     {
       "number": 57,
@@ -1478,7 +1590,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-57-glasnemamiah.webp",
+      "sealImage": "./assets/seals/seal-57-glasnemamiah-transparent.png"
     },
     {
       "number": 58,
@@ -1503,7 +1617,9 @@
       "faceFocal": {
         "x": 50,
         "y": 25.3
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-58-procyeialel.webp",
+      "sealImage": "./assets/seals/seal-58-procyeialel-transparent.png"
     },
     {
       "number": 59,
@@ -1528,7 +1644,9 @@
       "faceFocal": {
         "x": 50,
         "y": 23.1
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-59-beriharahel.webp",
+      "sealImage": "./assets/seals/seal-59-beriharahel-transparent.png"
     },
     {
       "number": 60,
@@ -1553,7 +1671,9 @@
       "faceFocal": {
         "x": 50,
         "y": 20.2
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-60-murmitzrael.webp",
+      "sealImage": "./assets/seals/seal-60-murmitzrael-transparent.png"
     },
     {
       "number": 61,
@@ -1578,7 +1698,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-61-marbumabel.webp",
+      "sealImage": "./assets/seals/seal-61-marbumabel-transparent.png"
     },
     {
       "number": 62,
@@ -1603,7 +1725,9 @@
       "faceFocal": {
         "x": 50,
         "y": 23.1
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-62-fociahhel.webp",
+      "sealImage": "./assets/seals/seal-62-fociahhel-transparent.png"
     },
     {
       "number": 63,
@@ -1628,7 +1752,9 @@
       "faceFocal": {
         "x": 50,
         "y": 25.2
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-63-marbanauel.webp",
+      "sealImage": "./assets/seals/seal-63-marbanauel-transparent.png"
     },
     {
       "number": 64,
@@ -1653,7 +1779,9 @@
       "faceFocal": {
         "x": 50,
         "y": 35
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-64-belemehiel.webp",
+      "sealImage": "./assets/seals/seal-64-belemehiel-transparent.png"
     },
     {
       "number": 65,
@@ -1678,7 +1806,9 @@
       "faceFocal": {
         "x": 50,
         "y": 21.8
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-65-astadamabiah.webp",
+      "sealImage": "./assets/seals/seal-65-astadamabiah-transparent.png"
     },
     {
       "number": 66,
@@ -1703,7 +1833,9 @@
       "faceFocal": {
         "x": 50,
         "y": 28
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-66-andramanakel.webp",
+      "sealImage": "./assets/seals/seal-66-andramanakel-transparent.png"
     },
     {
       "number": 67,
@@ -1728,7 +1860,9 @@
       "faceFocal": {
         "x": 50,
         "y": 22.5
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-67-andraeyael.webp",
+      "sealImage": "./assets/seals/seal-67-andraeyael-transparent.png"
     },
     {
       "number": 68,
@@ -1753,7 +1887,9 @@
       "faceFocal": {
         "x": 50,
         "y": 23.7
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-68-allohabuhiah.webp",
+      "sealImage": "./assets/seals/seal-68-allohabuhiah-transparent.png"
     },
     {
       "number": 69,
@@ -1778,7 +1914,9 @@
       "faceFocal": {
         "x": 50,
         "y": 35
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-69-belerochel.webp",
+      "sealImage": "./assets/seals/seal-69-belerochel-transparent.png"
     },
     {
       "number": 70,
@@ -1803,7 +1941,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-70-dantajabamiah.webp",
+      "sealImage": "./assets/seals/seal-70-dantajabamiah-transparent.png"
     },
     {
       "number": 71,
@@ -1828,7 +1968,9 @@
       "faceFocal": {
         "x": 50,
         "y": 27
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-71-cimihaiaiel.webp",
+      "sealImage": "./assets/seals/seal-71-cimihaiaiel-transparent.png"
     },
     {
       "number": 72,
@@ -1853,7 +1995,9 @@
       "faceFocal": {
         "x": 50,
         "y": 31.2
-      }
+      },
+      "heroImage": "./assets/heroes/chamber-72-halmumiah.webp",
+      "sealImage": "./assets/seals/seal-72-halmumiah-transparent.png"
     }
   ]
 }
