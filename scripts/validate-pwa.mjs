@@ -22,4 +22,7 @@ for(const marker of [
   'obs?.disconnect()',
   'finally { rendering = false; observeRoot(); }'
 ]){if(!runtime.includes(marker))throw new Error(`Missing renderer crash regression guard: ${marker}`);}
-console.log(`Validated ${data.chambers.length} chambers, ${ids.size} unique IDs, modular assets, manifest, service worker, and renderer crash guards.`);
+const bundle=fs.readFileSync(path.join(root,'assets/js/app.bundle.js'),'utf8');
+if(bundle.includes('if(d.state==="running")await d.suspend()'))throw new Error('Suspended AudioContext Play/Pause handler is still present');
+if(!bundle.includes('if(d.state!=="running")await d.resume();if(l){if(o(!1),Sc()'))throw new Error('Pre-change Play/Pause stop-and-recreate handler is missing');
+console.log(`Validated ${data.chambers.length} chambers, ${ids.size} unique IDs, modular assets, manifest, service worker, renderer crash guards, and Play/Pause rollback.`);

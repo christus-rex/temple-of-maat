@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.1.5 — Play/Pause Ritual rollback
+- Reverted the Play/Pause handler introduced in commit `265445c`.
+- Pause once again stops the active ritual graph and clears scheduled ambience without suspending the shared `AudioContext`.
+- The next Play creates a fresh ritual graph instead of resuming a retained graph and restarting schedulers against it.
+- Added a regression check and bumped the service-worker cache namespace to v6.1.5.
+
 ## v6.1.4 — Renderer crash hotfix
 - Stopped the archive renderer from observing and rescheduling its own DOM changes.
 - Avoided rewriting unchanged card, progress, and artifact-sheet content.

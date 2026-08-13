@@ -1,5 +1,5 @@
 (function(){
-  const FALLBACK={version:'6.1.4',build:'2026-08-13-pwa-v6.1.4-renderer-crash-hotfix',source:'Temple-of-Maat-PWA-GitHub-Pages-v6.1.4/index.html'};
+  const FALLBACK={version:'6.1.5',build:'2026-08-13-pwa-v6.1.5-play-pause-rollback',source:'Temple-of-Maat-PWA-GitHub-Pages-v6.1.5/index.html'};
   let info=FALLBACK;
   function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   async function loadVersion(){
