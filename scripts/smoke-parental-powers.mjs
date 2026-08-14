@@ -27,11 +27,12 @@ try {
   page.on("requestfailed", (request) => { if (request.url().startsWith(`http://127.0.0.1:${port}/`)) pageErrors.push(`${request.url()}: ${request.failure()?.errorText}`); });
   await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.locator('[data-temple-entry="guided"]').click();
-  await page.waitForSelector("#tm2-artifact.open .tm2-parental-section", { timeout: 30000 });
-  await page.locator("#tm2-artifact.open .tm2-parental-section").scrollIntoViewIfNeeded();
+  // Wait on current DOM state rather than holding a locator across React/artifact
+  // stabilization, which can legitimately replace the section node once after entry.
   await page.waitForFunction(() => {
-    const image = document.querySelector("#tm2-artifact.open .tm2-parental-section img");
-    return Boolean(image?.complete && image?.naturalWidth >= 900 && image?.naturalHeight >= 500);
+    const section = document.querySelector("#tm2-artifact.open .tm2-parental-section");
+    const image = section?.querySelector("img");
+    return Boolean(section && image?.complete && image?.naturalWidth >= 900 && image?.naturalHeight >= 500);
   }, { timeout: 30000 });
   const result = await page.evaluate(() => {
     const chamber = window.TempleArchive?.chambers?.().find((item) => item.num === "01");
@@ -61,7 +62,7 @@ try {
   const parentalWallpaperPath = path.join(root, "work", "parental-powers-wallpaper-smoke.png");
   const [parentalWallpaperDownload] = await Promise.all([
     page.waitForEvent("download", { timeout: 120000 }),
-    page.locator(".tm2-parental-download").click(),
+    page.locator("#tm2-artifact.open .tm2-parental-download").click(),
   ]);
   await parentalWallpaperDownload.saveAs(parentalWallpaperPath);
   const parentalWallpaperMetadata = await sharp(parentalWallpaperPath).metadata();
@@ -69,7 +70,7 @@ try {
   const platePath = path.join(root, "work", "parental-powers-plate-smoke.png");
   const [plateDownload] = await Promise.all([
     page.waitForEvent("download", { timeout: 120000 }),
-    page.locator(".tm2-plate-download").click(),
+    page.locator("#tm2-artifact.open .tm2-plate-download").click(),
   ]);
   await plateDownload.saveAs(platePath);
   const plateMetadata = await sharp(platePath).metadata();

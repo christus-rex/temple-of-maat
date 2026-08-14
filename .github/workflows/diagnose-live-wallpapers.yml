@@ -1,0 +1,33 @@
+name: Verify wallpaper downloads
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/v5.3-threshold.js'
+      - 'scripts/diagnose-live-wallpapers.mjs'
+      - '.github/workflows/diagnose-live-wallpapers.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wallpaper-interaction:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install browser dependencies
+        run: |
+          npm install --no-save playwright sharp
+          npx playwright install --with-deps chromium
+      - name: Exercise patched wallpaper exports on desktop and mobile
+        run: |
+          python3 -m http.server 41786 --bind 127.0.0.1 > /tmp/temple-wallpaper-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 1
+          TEMPLE_LIVE_URL=http://127.0.0.1:41786/ node scripts/diagnose-live-wallpapers.mjs

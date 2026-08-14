@@ -1,4 +1,4 @@
-/* Temple of Ma'at v5.2.5 — progressive enhancement and manual threshold gate */
+/* Temple of Ma'at v5.2.7 — progressive enhancement and manual threshold gate */
 (function () {
   'use strict';
 
@@ -6,6 +6,7 @@
   const statusPhrases = /^(offline mode|update available|update ready|install temple)$/i;
   let enhancementQueued = false;
   let hasEntered = false;
+  let artifactInteractionObserver = null;
 
   function loadEnhancement(src, key) {
     if (document.querySelector(`script[data-temple-enhancement="${key}"]`)) return;
@@ -22,6 +23,43 @@
     loadEnhancement('./scripts/v5.2.5-living-temple.js', 'living-temple');
     loadEnhancement('./scripts/v5.2.6-shem-dossiers.js', 'shem-dossiers');
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
+  }
+
+  function syncArtifactInteractionState() {
+    if (!document.body) return;
+    const isOpen = Boolean(document.querySelector('#tm2-artifact.open'));
+    const hasClass = document.body.classList.contains('temple-artifact-open');
+    if (isOpen !== hasClass) document.body.classList.toggle('temple-artifact-open', isOpen);
+  }
+
+  function installArtifactInteractionGuard() {
+    if (!document.querySelector('style[data-temple-artifact-guard]')) {
+      const style = document.createElement('style');
+      style.dataset.templeArtifactGuard = 'true';
+      style.textContent = `
+        /* The chamber artifact already contains its own Collect and download controls.
+           On narrow screens, suspend redundant global floating controls while that
+           artifact is open so they cannot cover or intercept artifact buttons. */
+        @media (max-width: 760px) {
+          body.temple-artifact-open .tm524-dock,
+          body.temple-artifact-open .tm524-chamber-tools,
+          body.temple-artifact-open .temple-shem-gateway {
+            display: none !important;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    syncArtifactInteractionState();
+    if (artifactInteractionObserver || !document.body) return;
+    artifactInteractionObserver = new MutationObserver(syncArtifactInteractionState);
+    artifactInteractionObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class']
+    });
   }
 
   function installShemGateway() {
@@ -196,6 +234,7 @@
     holdAtThreshold();
     noteApplicationMounted();
     enhanceControls(document);
+    installArtifactInteractionGuard();
     installShemGateway();
     cacheCurrentChamber();
 
