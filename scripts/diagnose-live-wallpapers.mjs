@@ -148,7 +148,7 @@ async function runProfile(browser, profile) {
   };
 
   result.ok =
-    version?.version === '5.2.7' &&
+    version?.version === '5.2.8' &&
     state.chamberWallpaperButton &&
     state.parentalWallpaperButton &&
     directChamber.dimensions === '1440x2560' &&
