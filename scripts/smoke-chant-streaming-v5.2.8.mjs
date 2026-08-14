@@ -30,7 +30,7 @@ try {
     await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TempleMediaVault?.version === '5.2.5', { timeout: 45000 });
 
     await page.locator('[data-temple-entry="journey"]').click();
-    await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 30000 });
+    await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && location.hash === '#chamber-01', { timeout: 30000 });
     await page.getByRole('button', { name: 'Chant' }).click();
     await page.waitForSelector('#tm524-chant:not([hidden])', { timeout: 30000 });
     await page.waitForFunction(() => {
