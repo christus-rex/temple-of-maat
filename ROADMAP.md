@@ -62,6 +62,18 @@ Before building the major visual interfaces, define one shared relationship mode
 
 Relationship types may include thematic parallel, comparative similarity, methodological parallel, source-derived relation, and explicit Temple/personal correspondence. A visual edge must never imply direct historical influence or metaphysical identity merely because two records are connected.
 
+Foundation status:
+
+- [x] Define `temple-of-maat/relationship-graph-v1` as a separate cross-system graph rather than mutating the stable v5.2.8 Library catalog.
+- [x] Define stable `chamber`, `codex`, `dossier`, and `library` endpoint namespaces.
+- [x] Mechanically fix `historicalIdentity=false` and `metaphysicalIdentity=false` on every graph edge.
+- [x] Define relation types, provenance layers, confidence, evidence basis, direction, and direct-historical-influence claim boundaries.
+- [x] Seed only evidence-backed source→study and same-ordinal Temple architecture edges; do not invent symbolic Library→Chamber links for visual richness.
+- [x] Keep the public canonical graph free of private Journey/reflection/Library-note state.
+- [x] Resolve graph endpoints against the real 72 Chambers, 72 Living Codex rows, 72 Dossier rows, and current Library record IDs in CI.
+- [x] Add negative validator guardrails for identity inflation, unresolved endpoints, private-state insertion, L4 omission, unsupported computational claims, and unsupported historical-influence claims.
+- [ ] Add the shared runtime resolver/query module after the data/schema foundation is merged.
+
 ### Comparative Reading / Research Workspace
 
 - [ ] Unified search across chamber metadata, Codex records, dossiers, Library records, bookmarks, and explicitly selected private notes.
