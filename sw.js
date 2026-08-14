@@ -1,9 +1,10 @@
-const VERSION = 'temple-maat-pwa-v5.2.5-living-temple-2026-08-14';
+const VERSION = 'temple-maat-pwa-v5.2.5-living-temple-shem-72-2026-08-14';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
   './',
   './index.html',
+  './shem-hamephorash-72.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
