@@ -16,6 +16,7 @@ const required = [
   'version.json',
   'sw.js',
   'scripts/v5.3-threshold.js',
+  'styles/v5.3-threshold.css',
   'scripts/v5.2.8-temple-library.js',
   'styles/v5.2.8-temple-library.css',
   'scripts/v5.2.8-journey-import.js',
@@ -34,6 +35,7 @@ for (const relative of required) {
 const version = JSON.parse(read('version.json'));
 const sw = read('sw.js');
 const threshold = read('scripts/v5.3-threshold.js');
+const thresholdCss = read('styles/v5.3-threshold.css');
 const readme = read('README.md');
 const roadmap = read('ROADMAP.md');
 const checklist = read('PWA-CHECKLIST.md');
@@ -96,6 +98,13 @@ for (const marker of [
   "loadEnhancement('./scripts/v5.2.8-offline-controls.js', 'offline-controls')"
 ]) {
   if (!threshold.includes(marker)) fail(`Manual threshold/progressive enhancement marker missing: ${marker}`);
+}
+for (const marker of [
+  'body:not(.temple-app-ready) #root',
+  'body:not(.temple-app-ready) #tm-commit-deck',
+  'pointer-events: none !important'
+]) {
+  if (!thresholdCss.includes(marker)) fail(`Threshold stylesheet body-level portal guard missing: ${marker}`);
 }
 
 for (const marker of [
@@ -170,12 +179,20 @@ for (const marker of [
 for (const marker of ['if: always()', 'actions/upload-artifact@v4', 'v5.2.8-release-hardening-screenshots']) {
   if (!hardeningWorkflow.includes(marker)) fail(`Hardening screenshot-evidence workflow marker missing: ${marker}`);
 }
-if (!/on:\s*\n\s*workflow_dispatch:/m.test(deployedWorkflow)) fail('Deployed verifier must remain manual workflow_dispatch to avoid pre-deploy races');
-for (const marker of ['actions/upload-artifact@v4', 'v5.2.8-deployed-origin-screenshots']) {
-  if (!deployedWorkflow.includes(marker)) fail(`Deployed verifier artifact marker missing: ${marker}`);
+for (const marker of [
+  'workflow_run:',
+  "'pages build and deployment'",
+  'github.event.workflow_run.conclusion',
+  'github.event.workflow_run.head_sha',
+  'workflow_dispatch:',
+  'actions/upload-artifact@v4',
+  'v5.2.8-deployed-origin-screenshots'
+]) {
+  if (!deployedWorkflow.includes(marker)) fail(`Deployed verifier exact-SHA automation marker missing: ${marker}`);
 }
+if (deployedWorkflow.includes('\n  pull_request:')) fail('Deployed-origin verifier must not run before Pages deployment on pull_request');
 
 if (!wallpaper.includes("version?.version === '5.2.8'")) fail('Wallpaper verifier is still locked to a historical release version');
 if (wallpaper.includes("version?.version === '5.2.7'")) fail('Wallpaper verifier contains stale v5.2.7 exact-version assertion');
 
-console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, v5.2.8 service-worker namespace and shell, manual threshold, Library/Journey/Offline enhancements, ritual-media cache boundary, update/deep-link/mobile hardening, deployed-origin runbook, and screenshot evidence contract.`);
+console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, v5.2.8 service-worker namespace and shell, manual threshold/body-level portal guards, Library/Journey/Offline enhancements, ritual-media cache boundary, update/deep-link/mobile hardening, exact-SHA post-Pages deployed verification, and screenshot evidence contract.`);
