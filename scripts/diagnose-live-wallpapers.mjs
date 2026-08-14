@@ -48,9 +48,6 @@ function attachDiagnostics(page, errors) {
     const url = request.url();
     const errorText = request.failure()?.errorText || '';
     if (url.includes('/assets/audio/maat-forty-two-declarations.mp3') && errorText.includes('ERR_ABORTED')) return;
-    // The diagnostic intentionally replaces its first page after service-worker
-    // activation. Chromium may report that deliberate top-level diagnostic request
-    // as aborted even though the replacement page is then fully controlled.
     if (url.includes('wallpaper_diag=') && errorText.includes('ERR_ABORTED') && request.isNavigationRequest()) return;
     errors.push(`requestfailed: ${url} :: ${errorText}`);
   });
@@ -58,6 +55,15 @@ function attachDiagnostics(page, errors) {
     errors.push(`dialog:${dialog.type()}: ${dialog.message()}`);
     await dialog.dismiss();
   });
+}
+
+async function warmPwa(context, profileName) {
+  const warmup = await context.newPage();
+  await warmup.goto(`${BASE_URL}?wallpaper_warmup=${profileName}-${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  if (await warmup.evaluate(() => 'serviceWorker' in navigator)) {
+    await warmup.evaluate(() => navigator.serviceWorker.ready.then(() => true));
+  }
+  await warmup.close();
 }
 
 async function enterAndOpenChamber(page) {
@@ -77,10 +83,14 @@ async function enterAndOpenChamber(page) {
 
 async function runProfile(browser, profile) {
   const context = await browser.newContext(profile);
-  let page = await context.newPage();
   const errors = [];
-  attachDiagnostics(page, errors);
 
+  // First-install controller takeover can replace the initial frame. Warm the PWA
+  // before asserting entry or exports, matching the stable collectible regression.
+  await warmPwa(context, profile.name);
+
+  const page = await context.newPage();
+  attachDiagnostics(page, errors);
   await enterAndOpenChamber(page);
 
   const version = await page.evaluate(async () => {
@@ -88,22 +98,8 @@ async function runProfile(browser, profile) {
     return response.ok ? response.json() : null;
   });
 
-  const swBefore = await page.evaluate(() => ({
+  const swState = await page.evaluate(() => ({
     supported: 'serviceWorker' in navigator,
-    controlled: Boolean(navigator.serviceWorker?.controller),
-  }));
-
-  if (swBefore.supported) {
-    await page.evaluate(() => navigator.serviceWorker.ready.then(() => true));
-    // A controllerchange can replace/abort the currently loaded frame on the deployed PWA.
-    // Open a fresh page in the same context instead of forcing page.reload().
-    await page.close();
-    page = await context.newPage();
-    attachDiagnostics(page, errors);
-    await enterAndOpenChamber(page);
-  }
-
-  const swAfter = await page.evaluate(() => ({
     controlled: Boolean(navigator.serviceWorker?.controller),
     controllerUrl: navigator.serviceWorker?.controller?.scriptURL || null,
   }));
@@ -142,8 +138,7 @@ async function runProfile(browser, profile) {
   const result = {
     profile: profile.name,
     version,
-    swBefore,
-    swAfter,
+    swState,
     state,
     directChamber,
     directParental,
