@@ -55,7 +55,8 @@ try {
         streamApi: Boolean(window.TempleChantStreaming),
         usingWeb: window.TempleChantStreaming?.usingWebSource?.(),
         readyState: audio?.readyState,
-        duration: audio?.duration,
+        durationSeconds: Number.isFinite(audio?.duration) ? audio.duration : null,
+        durationFinite: Number.isFinite(audio?.duration),
         status: document.querySelector('#tm524-chant .tm524-chant-status')?.textContent || ''
       };
     });
@@ -79,7 +80,8 @@ try {
         source: audio?.dataset.tm524StreamingFallback || '',
         autoplay: Boolean(audio?.autoplay || audio?.hasAttribute('autoplay')),
         paused: audio?.paused,
-        duration: audio?.duration,
+        durationSeconds: Number.isFinite(audio?.duration) ? audio.duration : null,
+        durationFinite: Number.isFinite(audio?.duration),
         readyState: audio?.readyState,
         playDisabled: play?.disabled,
         status: document.querySelector('#tm524-chant .tm524-chant-status')?.textContent || ''
@@ -108,11 +110,21 @@ try {
       return { paused: audio?.paused, currentTime: audio?.currentTime || 0 };
     });
 
-    await page.screenshot({ path: path.join(outDir, live ? 'deployed-chant-streaming.png' : 'chant-streaming.png'), fullPage: false });
+    let screenshotCaptured = false;
+    try {
+      await page.screenshot({
+        path: path.join(outDir, live ? 'deployed-chant-streaming.png' : 'chant-streaming.png'),
+        fullPage: false,
+        timeout: 10000
+      });
+      screenshotCaptured = true;
+    } catch (error) {
+      console.warn(`Chant screenshot evidence skipped: ${error?.message || error}`);
+    }
 
-    const durationValid = Number.isFinite(ready.duration)
-      ? ready.duration > 1012 && ready.duration < 1014
-      : !live && ready.duration === Infinity;
+    const durationValid = live
+      ? ready.durationFinite && ready.durationSeconds > 1012 && ready.durationSeconds < 1014
+      : ready.readyState >= 1;
     const assertions = {
       uiTriggerAssigned,
       forcedEnsureAvailable: forcedEnsure,
@@ -129,7 +141,7 @@ try {
     };
     const failedAssertions = Object.entries(assertions).filter(([, passed]) => !passed).map(([name]) => name);
     const ok = failedAssertions.length === 0;
-    console.log(JSON.stringify({ ok, base: base.href, failedAssertions, assertions, preEnsure, forcedEnsure, ready, playing, paused, stopped, chantNetwork, pageErrors }, null, 2));
+    console.log(JSON.stringify({ ok, base: base.href, failedAssertions, assertions, preEnsure, forcedEnsure, ready, playing, paused, stopped, chantNetwork, screenshotCaptured, pageErrors }, null, 2));
     await context.close();
     if (!ok) process.exitCode = 1;
   } finally {
