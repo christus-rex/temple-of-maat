@@ -524,31 +524,34 @@
     actions.appendChild(link);
   }
 
-  function injectChamberTools() {
+  function syncContextTools() {
     const artifact = document.querySelector('#tm2-artifact.open');
-    if (!artifact || artifact.querySelector('.tm524-chamber-tools')) return;
-    const host = artifact.firstElementChild || artifact;
-    const tools = el('div', 'tm524-chamber-tools');
+    let tools = document.getElementById('tm524-context-tools');
+    if (!artifact) {
+      tools?.remove();
+      return;
+    }
+    if (tools) return;
+    tools = el('div', 'tm524-chamber-tools');
+    tools.id = 'tm524-context-tools';
+    tools.setAttribute('aria-label', 'Current chamber Codex tools');
     tools.append(
       button('Open Codex Record', () => openCodex(currentNumber()), 'tm524-chamber-tool'),
       button('Collect', () => openVault(currentNumber()), 'tm524-chamber-tool')
     );
-    host.appendChild(tools);
+    // Keep Temple enhancements outside the React-owned artifact subtree.
+    document.body.appendChild(tools);
   }
 
   function onChamberChange() {
     const number = chamberFromHash();
     if (number) rememberChamber(number);
-    injectChamberTools();
+    syncContextTools();
   }
 
   function initObserver() {
     if (artifactObserver || !document.body) return;
-    artifactObserver = new MutationObserver(() => {
-      if (document.querySelector('#tm2-artifact.open')) {
-        onChamberChange();
-      }
-    });
+    artifactObserver = new MutationObserver(syncContextTools);
     artifactObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
   }
 
