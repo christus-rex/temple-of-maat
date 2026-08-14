@@ -1,4 +1,4 @@
-/* Temple of Ma'at v5.2.5 — progressive enhancement and manual threshold gate */
+/* Temple of Ma'at v5.2.7 — progressive enhancement and manual threshold gate */
 (function () {
   'use strict';
 
@@ -22,6 +22,19 @@
     loadEnhancement('./scripts/v5.2.5-living-temple.js', 'living-temple');
     loadEnhancement('./scripts/v5.2.6-shem-dossiers.js', 'shem-dossiers');
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
+  }
+
+  function installArtifactInteractionGuard() {
+    if (document.querySelector('style[data-temple-artifact-guard]')) return;
+    const style = document.createElement('style');
+    style.dataset.templeArtifactGuard = 'true';
+    style.textContent = `
+      /* Chamber artifacts are modal surfaces. Keep them above the global floating
+         Codex/Collect/Shem controls so artifact buttons remain tappable on mobile.
+         Dedicated Codex/Vault layers remain above this at z-index 9100. */
+      .tm2-artifact-backdrop { z-index: 8900 !important; }
+    `;
+    document.head.appendChild(style);
   }
 
   function installShemGateway() {
@@ -196,6 +209,7 @@
     holdAtThreshold();
     noteApplicationMounted();
     enhanceControls(document);
+    installArtifactInteractionGuard();
     installShemGateway();
     cacheCurrentChamber();
 
