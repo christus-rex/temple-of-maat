@@ -23,7 +23,7 @@ async function warmServiceWorker(context) {
 
 async function waitForRuntime(page) {
   await page.waitForFunction(() => window.TempleOfflineManager?.version === '1.0.0' && window.TemplePilgrimJourney?.state, { timeout: 30000 });
-  await page.waitForSelector('[data-temple-offline-open]', { timeout: 30000 });
+  await page.waitForSelector('[data-temple-offline-open]', { state: 'attached', timeout: 30000 });
 }
 
 async function enterTemple(page) {
