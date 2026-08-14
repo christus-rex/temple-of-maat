@@ -36,11 +36,15 @@ async function warmServiceWorker(context) {
   await page.close();
 }
 
+async function waitForJourneyRuntime(page) {
+  await page.waitForFunction(() => window.TemplePilgrimJourney?.state && window.TempleJourneyPortability?.version === '1.0.0', { timeout: 30000 });
+}
+
 async function enterTemple(page) {
   await page.waitForSelector('[data-temple-entry="journey"]', { timeout: 30000 });
   await page.locator('[data-temple-entry="journey"]').click();
   await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 30000 });
-  await page.waitForFunction(() => window.TemplePilgrimJourney?.state && window.TempleJourneyPortability?.version === '1.0.0', { timeout: 30000 });
+  await waitForJourneyRuntime(page);
 }
 
 async function openJourney(page) {
@@ -109,11 +113,24 @@ try {
   if (JSON.stringify(afterInvalid) !== JSON.stringify(beforeInvalid)) throw new Error('Rejected Journey import changed local state');
   await page.locator('#tm528j-import .tm528j-close').click();
 
-  // Clear state, then restore the exported archive using the destructive Replace preview.
-  await page.evaluate(() => window.TemplePilgrimJourney.reset());
-  const cleared = supportedState(await page.evaluate(() => window.TemplePilgrimJourney.state()));
-  if (cleared.visited.length || cleared.favorites.length || Object.keys(cleared.reflections).length || cleared.started) throw new Error('Journey reset did not clear local state before restore');
+  // Simulate transfer to a fresh device/profile: clear persisted Journey data and
+  // remove the stale chamber hash without firing the old Journey hash handler.
+  await page.evaluate(() => {
+    history.replaceState(null, '', `${location.pathname}${location.search}`);
+    localStorage.removeItem('temple_v525_pilgrim_journey');
+    localStorage.removeItem('temple_last_chamber');
+  });
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
+  await waitForJourneyRuntime(page);
+  const clearedPersisted = supportedState(await page.evaluate(() => window.TemplePilgrimJourney.state()));
+  if (clearedPersisted.visited.length || clearedPersisted.favorites.length || Object.keys(clearedPersisted.reflections).length || clearedPersisted.started) {
+    throw new Error(`Fresh-device persisted state was not empty before restore: ${JSON.stringify(clearedPersisted)}`);
+  }
+
+  // The real visitor path still requires the manual entrance before opening Journey.
+  await enterTemple(page);
   await openJourney(page);
+  const beforePreview = supportedState(await page.evaluate(() => window.TemplePilgrimJourney.state()));
   await page.locator('#tm528j-file').setInputFiles(exportPath);
   await page.waitForSelector('#tm528j-import:not([hidden])', { timeout: 10000 });
   await page.locator('#tm528j-strategy').selectOption('replace');
@@ -122,14 +139,14 @@ try {
   for (const marker of ['Current', 'Imported', 'Result', 'No local state changes have been applied yet.', 'Replace Journey & Reload']) {
     if (!previewText.includes(marker)) throw new Error(`Replace preview marker missing: ${marker}`);
   }
-  const stillCleared = supportedState(await page.evaluate(() => window.TemplePilgrimJourney.state()));
-  if (JSON.stringify(stillCleared) !== JSON.stringify(cleared)) throw new Error('Preview changed local Journey state before Apply');
+  const afterPreview = supportedState(await page.evaluate(() => window.TemplePilgrimJourney.state()));
+  if (JSON.stringify(afterPreview) !== JSON.stringify(beforePreview)) throw new Error('Preview changed local Journey state before Apply');
 
   await Promise.all([
     page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 120000 }),
     page.getByRole('button', { name: 'Replace Journey & Reload' }).click()
   ]);
-  await page.waitForFunction(() => window.TemplePilgrimJourney?.state && window.TempleJourneyPortability?.version === '1.0.0', { timeout: 30000 });
+  await waitForJourneyRuntime(page);
   const restoredBeforeEntry = supportedState(await page.evaluate(() => window.TemplePilgrimJourney.state()));
   if (JSON.stringify(restoredBeforeEntry) !== JSON.stringify(original)) {
     throw new Error(`Journey replace round-trip lost supported fields. Expected ${JSON.stringify(original)} got ${JSON.stringify(restoredBeforeEntry)}`);
@@ -156,6 +173,7 @@ try {
     visited: restoredBeforeEntry.visited,
     favorites: restoredBeforeEntry.favorites,
     reflectionCount: Object.keys(restoredBeforeEntry.reflections).length,
+    freshDeviceWasEmpty: !clearedPersisted.started && clearedPersisted.visited.length === 0 && clearedPersisted.favorites.length === 0 && Object.keys(clearedPersisted.reflections).length === 0,
     invalidRejectedWithoutMutation: JSON.stringify(afterInvalid) === JSON.stringify(beforeInvalid),
     replaceRoundTripExact: JSON.stringify(restoredBeforeEntry) === JSON.stringify(original),
     mergeConflictPreservedLocal: mergePlan.result.reflections['7'] === 'Newer local reflection must win merge conflict.',
