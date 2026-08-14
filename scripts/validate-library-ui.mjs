@@ -30,7 +30,7 @@ for (const marker of [
   "provenanceLayer: 'L4'",
   'Export Personal Library JSON',
   'Save Private Correspondence',
-  'stays on this device unless you explicitly export',
+  'stay on this device unless you explicitly export',
   'The 72-chamber Temple remains fully usable',
   'window.TempleLibrary = Object.freeze',
   "document.getElementById('tm524-dock')"
@@ -40,7 +40,9 @@ for (const marker of [
 
 if (!threshold.includes("loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library')")) fail('Threshold does not load the v5.2.8 Temple Library enhancement');
 if (/localStorage\.setItem\([^,]+catalog/i.test(js)) fail('Public Library catalog must not be written into personal local state');
-if (/fetch\([^)]*contentLocation[^)]*\).*loadCatalog/s.test(js)) fail('Library indexes must remain lazy rather than loading with the catalog');
+const loadCatalogBody = js.match(/async function loadCatalog\(\) \{([\s\S]*?)\n  \}\n\n  function recordSearchText/);
+if (!loadCatalogBody) fail('Could not inspect loadCatalog() for lazy-loading policy');
+if (loadCatalogBody[1].includes('contentLocation')) fail('Library indexes must remain lazy rather than loading with the catalog');
 
 for (const marker of ['.tm528-body','.tm528-reader','overflow-wrap:anywhere','@media(max-width:760px)','body.temple-library-open','body.temple-artifact-open .tm528-launcher']) {
   if (!css.includes(marker)) fail(`Library mobile/interaction CSS marker missing: ${marker}`);
