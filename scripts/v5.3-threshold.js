@@ -7,13 +7,18 @@
   let enhancementQueued = false;
   let hasEntered = false;
 
-  function loadLivingCodex() {
-    if (document.querySelector('script[data-temple-v524]')) return;
+  function loadEnhancement(src, key) {
+    if (document.querySelector(`script[data-temple-enhancement="${key}"]`)) return;
     const script = document.createElement('script');
-    script.src = './scripts/v5.2.4-living-codex.js';
+    script.src = src;
     script.async = false;
-    script.dataset.templeV524 = 'true';
+    script.dataset.templeEnhancement = key;
     document.head.appendChild(script);
+  }
+
+  function loadLivingCodex() {
+    loadEnhancement('./scripts/v5.2.4-living-codex.js', 'living-codex');
+    loadEnhancement('./scripts/v5.2.4-chant-fallback.js', 'chant-fallback');
   }
 
   function noteApplicationMounted() {
