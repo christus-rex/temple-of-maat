@@ -24,3 +24,4 @@ jobs:
       - run: node scripts/validate-library-ui.mjs
       - run: node scripts/validate-journey-import-v1.mjs
       - run: node scripts/validate-offline-controls-v1.mjs
+      - run: node scripts/validate-relationship-graph-v1.mjs

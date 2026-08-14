@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://christus-rex.github.io/temple-of-maat/research/relationship-graph.schema.json",
+  "title": "Temple of Ma'at Integrated Research Relationship Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "version", "updated", "privacy", "namespaces", "edges"],
+  "properties": {
+    "schema": { "const": "temple-of-maat/relationship-graph-v1" },
+    "version": { "const": "1.0.0" },
+    "updated": { "type": "string", "format": "date" },
+    "privacy": { "const": "public-canonical-only" },
+    "namespaces": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "$ref": "#/$defs/namespace" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+  "$defs": {
+    "layer": {
+      "type": "string",
+      "enum": ["L1", "L2", "L3", "L4"]
+    },
+    "namespace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "recordKind", "resolver", "key"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": ["chamber", "codex", "dossier", "library"]
+        },
+        "label": { "type": "string", "minLength": 1 },
+        "recordKind": { "type": "string", "minLength": 1 },
+        "resolver": { "type": "string", "minLength": 1 },
+        "key": { "type": "string", "minLength": 1 },
+        "recordIdPattern": { "type": "string", "minLength": 1 },
+        "expectedCount": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["namespace", "recordId"],
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "enum": ["chamber", "codex", "dossier", "library"]
+        },
+        "recordId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "sourceRefs"],
+      "properties": {
+        "basis": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "primary-source",
+              "scholarly-source",
+              "catalog-metadata",
+              "computational-result",
+              "comparative-analysis",
+              "temple-architecture",
+              "personal-symbolism"
+            ]
+          }
+        },
+        "sourceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "claimBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claimClass", "historicalIdentity", "metaphysicalIdentity", "directHistoricalInfluence"],
+      "properties": {
+        "claimClass": {
+          "type": "string",
+          "enum": ["structural", "historical", "textual", "comparative", "computational", "symbolic"]
+        },
+        "historicalIdentity": { "const": false },
+        "metaphysicalIdentity": { "const": false },
+        "directHistoricalInfluence": {
+          "type": "string",
+          "enum": ["not-claimed", "supported", "provisional"]
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "from",
+        "to",
+        "relationType",
+        "direction",
+        "provenanceLayers",
+        "confidence",
+        "status",
+        "evidence",
+        "claimBoundary",
+        "summary"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^edge\\.[a-z0-9][a-z0-9._-]*$"
+        },
+        "from": { "$ref": "#/$defs/endpoint" },
+        "to": { "$ref": "#/$defs/endpoint" },
+        "relationType": {
+          "type": "string",
+          "enum": [
+            "study-uses-source",
+            "record-layer-alignment",
+            "textual-relationship",
+            "historical-context",
+            "historical-influence",
+            "methodological-parallel",
+            "thematic-parallel",
+            "comparative-similarity",
+            "computational-correspondence",
+            "temple-correspondence"
+          ]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["directed", "undirected"]
+        },
+        "provenanceLayers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/layer" }
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["established", "supported", "provisional", "exploratory", "symbolic"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "reviewed", "archived"]
+        },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "claimBoundary": { "$ref": "#/$defs/claimBoundary" },
+        "summary": { "type": "string", "minLength": 1 },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,255 @@
+{
+  "schema": "temple-of-maat/relationship-graph-v1",
+  "version": "1.0.0",
+  "updated": "2026-08-14",
+  "privacy": "public-canonical-only",
+  "namespaces": [
+    {
+      "id": "chamber",
+      "label": "Temple Chambers",
+      "recordKind": "chamber",
+      "resolver": "chambers.json",
+      "key": "num",
+      "recordIdPattern": "^(0[1-9]|[1-6][0-9]|7[0-2])$",
+      "expectedCount": 72
+    },
+    {
+      "id": "codex",
+      "label": "Living Codex Records",
+      "recordKind": "codex-record",
+      "resolver": "scripts/v5.2.4-living-codex.js",
+      "key": "number",
+      "recordIdPattern": "^(0[1-9]|[1-6][0-9]|7[0-2])$",
+      "expectedCount": 72
+    },
+    {
+      "id": "dossier",
+      "label": "Shem Dossier Records",
+      "recordKind": "shem-dossier",
+      "resolver": "scripts/v5.2.6-shem-dossiers.js",
+      "key": "number",
+      "recordIdPattern": "^(0[1-9]|[1-6][0-9]|7[0-2])$",
+      "expectedCount": 72
+    },
+    {
+      "id": "library",
+      "label": "Temple Library Records",
+      "recordKind": "library-record",
+      "resolver": "library/catalog.json",
+      "key": "id",
+      "recordIdPattern": "^(tradition|source|study|discernment)\\.[a-z0-9][a-z0-9._-]*$"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge.quran-source_to_abjad-study",
+      "from": {
+        "namespace": "library",
+        "recordId": "source.quran-tanzil-pickthall-edition"
+      },
+      "to": {
+        "namespace": "library",
+        "recordId": "study.quran-abjad-gematria"
+      },
+      "relationType": "study-uses-source",
+      "direction": "directed",
+      "provenanceLayers": ["L1", "L2"],
+      "confidence": "established",
+      "status": "reviewed",
+      "evidence": {
+        "basis": ["primary-source", "catalog-metadata", "computational-result"],
+        "sourceRefs": [
+          "source.quran-tanzil-pickthall-edition",
+          "study.quran-abjad-gematria",
+          "library/sources/quran-tanzil-pickthall.index.json",
+          "library/studies/quran-abjad.index.json"
+        ],
+        "note": "The Abjad study explicitly identifies the 6,236-verse Tanzil/Pickthall edition as its source corpus and preserves normalization separately from the L1 source text."
+      },
+      "claimBoundary": {
+        "claimClass": "computational",
+        "historicalIdentity": false,
+        "metaphysicalIdentity": false,
+        "directHistoricalInfluence": "not-claimed"
+      },
+      "summary": "The Qur'an Abjad study is analytically derived from the declared Tanzil/Pickthall source edition; the study does not replace or silently normalize the source record.",
+      "limitations": [
+        "This edge records source dependency, not theological authority for numerical interpretation."
+      ],
+      "tags": ["quran", "abjad", "source-study", "reproducibility"]
+    },
+    {
+      "id": "edge.ferrara-source_to_verdad-hebrayca-study",
+      "from": {
+        "namespace": "library",
+        "recordId": "source.biblia-ferrara-amsterdam-1646-facsimile"
+      },
+      "to": {
+        "namespace": "library",
+        "recordId": "study.verdad-hebrayca-ferrara-gematria"
+      },
+      "relationType": "study-uses-source",
+      "direction": "directed",
+      "provenanceLayers": ["L1", "L2"],
+      "confidence": "established",
+      "status": "reviewed",
+      "evidence": {
+        "basis": ["primary-source", "catalog-metadata", "computational-result"],
+        "sourceRefs": [
+          "source.biblia-ferrara-amsterdam-1646-facsimile",
+          "study.verdad-hebrayca-ferrara-gematria",
+          "library/sources/biblia-ferrara-amsterdam-1646.index.json",
+          "library/studies/verdad-hebrayca-ferrara.index.json"
+        ],
+        "note": "The analytical study explicitly keeps the Amsterdam 5406/1646 consultation facsimile separate as an L1 source and applies normalization only in the study layer."
+      },
+      "claimBoundary": {
+        "claimClass": "computational",
+        "historicalIdentity": false,
+        "metaphysicalIdentity": false,
+        "directHistoricalInfluence": "not-claimed"
+      },
+      "summary": "The Ferrara gematria study uses the preserved facsimile tradition as source evidence while keeping its numerical and symbolic transformations in the analytical layer.",
+      "limitations": [
+        "Reproducible numerical structure in the modern study is not evidence that historical printers intentionally engineered those totals."
+      ],
+      "tags": ["ferrara", "sephardic", "gematria", "source-study"]
+    },
+    {
+      "id": "edge.dss-source_to_comprehensive-study",
+      "from": {
+        "namespace": "library",
+        "recordId": "source.dead-sea-scrolls-qumran-corpus"
+      },
+      "to": {
+        "namespace": "library",
+        "recordId": "study.dead-sea-scrolls-comprehensive-analysis"
+      },
+      "relationType": "study-uses-source",
+      "direction": "directed",
+      "provenanceLayers": ["L1", "L2", "L3", "L4"],
+      "confidence": "established",
+      "status": "reviewed",
+      "evidence": {
+        "basis": ["primary-source", "scholarly-source", "catalog-metadata", "comparative-analysis"],
+        "sourceRefs": [
+          "source.dead-sea-scrolls-qumran-corpus",
+          "study.dead-sea-scrolls-comprehensive-analysis",
+          "library/studies/dead-sea-scrolls-comprehensive.index.json"
+        ],
+        "note": "The study explicitly begins with artifact/date and literary/social context before comparative theology and personal symbolism."
+      },
+      "claimBoundary": {
+        "claimClass": "comparative",
+        "historicalIdentity": false,
+        "metaphysicalIdentity": false,
+        "directHistoricalInfluence": "not-claimed"
+      },
+      "summary": "The comprehensive Dead Sea Scrolls study is anchored to the Qumran/Judean Desert manuscript corpus and keeps historical evidence prior to comparison and personal symbolism.",
+      "limitations": [
+        "Later comparative or personal layers do not override the manuscript and archaeological layers."
+      ],
+      "tags": ["dead-sea-scrolls", "qumran", "source-study", "compare-without-collapsing"]
+    },
+    {
+      "id": "edge.dss-source_to_gematria-study",
+      "from": {
+        "namespace": "library",
+        "recordId": "source.dead-sea-scrolls-qumran-corpus"
+      },
+      "to": {
+        "namespace": "library",
+        "recordId": "study.dead-sea-scrolls-gematria-companion"
+      },
+      "relationType": "study-uses-source",
+      "direction": "directed",
+      "provenanceLayers": ["L1", "L2", "L4"],
+      "confidence": "established",
+      "status": "reviewed",
+      "evidence": {
+        "basis": ["primary-source", "catalog-metadata", "computational-result"],
+        "sourceRefs": [
+          "source.dead-sea-scrolls-qumran-corpus",
+          "study.dead-sea-scrolls-gematria-companion",
+          "library/studies/dead-sea-scrolls-gematria.index.json"
+        ],
+        "note": "The companion declares standard Hebrew gematria and modern English comparison ciphers as analytical tools rather than Qumran decoding methods."
+      },
+      "claimBoundary": {
+        "claimClass": "computational",
+        "historicalIdentity": false,
+        "metaphysicalIdentity": false,
+        "directHistoricalInfluence": "not-claimed"
+      },
+      "summary": "The Dead Sea Scrolls gematria companion is a modern analytical layer placed beside the source corpus; numerical equality is not treated as historical or supernatural identity.",
+      "limitations": [
+        "No surviving Qumran manuscript is claimed to use the companion's complete modern comparison method."
+      ],
+      "tags": ["dead-sea-scrolls", "gematria", "source-study", "interpretive-restraint"]
+    },
+    {
+      "id": "edge.chamber-01_to_codex-01",
+      "from": {
+        "namespace": "chamber",
+        "recordId": "01"
+      },
+      "to": {
+        "namespace": "codex",
+        "recordId": "01"
+      },
+      "relationType": "record-layer-alignment",
+      "direction": "undirected",
+      "provenanceLayers": ["L4"],
+      "confidence": "established",
+      "status": "reviewed",
+      "evidence": {
+        "basis": ["temple-architecture"],
+        "sourceRefs": ["chambers.json", "scripts/v5.2.4-living-codex.js"],
+        "note": "Both records intentionally occupy Temple ordinal 01. This is an application-architecture relationship, not a historical claim about ancient source identity."
+      },
+      "claimBoundary": {
+        "claimClass": "structural",
+        "historicalIdentity": false,
+        "metaphysicalIdentity": false,
+        "directHistoricalInfluence": "not-claimed"
+      },
+      "summary": "Temple Chamber 01 and Living Codex record 01 are structurally aligned by the Temple's stable chamber ordinal.",
+      "limitations": [
+        "The shared ordinal is a Temple implementation relationship and must not be rendered as independent historical evidence."
+      ],
+      "tags": ["chamber-01", "codex-01", "temple-architecture"]
+    },
+    {
+      "id": "edge.codex-01_to_dossier-01",
+      "from": {
+        "namespace": "codex",
+        "recordId": "01"
+      },
+      "to": {
+        "namespace": "dossier",
+        "recordId": "01"
+      },
+      "relationType": "record-layer-alignment",
+      "direction": "undirected",
+      "provenanceLayers": ["L4"],
+      "confidence": "established",
+      "status": "reviewed",
+      "evidence": {
+        "basis": ["temple-architecture"],
+        "sourceRefs": ["scripts/v5.2.4-living-codex.js", "scripts/v5.2.6-shem-dossiers.js"],
+        "note": "Both records intentionally describe Temple ordinal 01 through different presentation layers."
+      },
+      "claimBoundary": {
+        "claimClass": "structural",
+        "historicalIdentity": false,
+        "metaphysicalIdentity": false,
+        "directHistoricalInfluence": "not-claimed"
+      },
+      "summary": "Living Codex record 01 and Shem Dossier record 01 are structurally aligned as two Temple views of the same chamber ordinal.",
+      "limitations": [
+        "Presentation-layer alignment does not collapse their distinct source, analytical, and interpretive content."
+      ],
+      "tags": ["codex-01", "dossier-01", "temple-architecture"]
+    }
+  ]
+}
