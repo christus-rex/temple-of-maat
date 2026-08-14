@@ -28,6 +28,11 @@
     return audio.dataset.tm524StreamingFallback === 'web' || attr.endsWith('maat-forty-two-declarations.web.opus');
   }
 
+  function releaseLocalObjectUrl() {
+    if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+    localObjectUrl = null;
+  }
+
   function ensureWebSource(message = 'Loading the compact web chant rendition…') {
     const ui = player();
     if (!ui?.audio || localObjectUrl || canonicalInstalled(ui.audio)) return false;
@@ -56,11 +61,32 @@
   function watchSource(audio) {
     if (!audio || sourceObserver) return;
     sourceObserver = new MutationObserver(() => {
-      if (!localObjectUrl && !canonicalInstalled(audio) && !audio.getAttribute('src')) queueWebRepair();
+      if (canonicalInstalled(audio)) {
+        releaseLocalObjectUrl();
+        delete audio.dataset.tm524StreamingFallback;
+        return;
+      }
+      if (!localObjectUrl && !audio.getAttribute('src')) queueWebRepair();
     });
     sourceObserver.observe(audio, {
       attributes: true,
       attributeFilter: ['src', 'data-tm525-media-vault']
+    });
+  }
+
+  function bindStreamingEvents(ui) {
+    if (!ui?.audio || ui.audio.dataset.tm524StreamingBound === 'true') return;
+    ui.audio.dataset.tm524StreamingBound = 'true';
+
+    ui.audio.addEventListener('loadedmetadata', () => {
+      if (!isWebSource(ui.audio)) return;
+      if (ui.status) ui.status.textContent = 'Web chant ready. Awaiting Play.';
+      if (ui.play) ui.play.disabled = false;
+    });
+
+    ui.audio.addEventListener('error', () => {
+      if (!isWebSource(ui.audio)) return;
+      if (ui.status) ui.status.textContent = 'The web chant could not be reached. You can still choose the canonical MP3 from this device.';
     });
   }
 
@@ -89,7 +115,7 @@
           input.value = '';
           return;
         }
-        if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+        releaseLocalObjectUrl();
         localObjectUrl = URL.createObjectURL(file);
         ui.audio.pause();
         delete ui.audio.dataset.tm524StreamingFallback;
@@ -102,17 +128,7 @@
       ui.content.insertBefore(wrap, ui.audio);
     }
 
-    ui.audio.addEventListener('loadedmetadata', () => {
-      if (!isWebSource(ui.audio)) return;
-      if (ui.status) ui.status.textContent = 'Web chant ready. Awaiting Play.';
-      if (ui.play) ui.play.disabled = false;
-    });
-
-    ui.audio.addEventListener('error', () => {
-      if (!isWebSource(ui.audio)) return;
-      if (ui.status) ui.status.textContent = 'The web chant could not be reached. You can still choose the canonical MP3 from this device.';
-    });
-
+    bindStreamingEvents(ui);
     watchSource(ui.audio);
     ensureWebSource();
     return true;
@@ -134,6 +150,6 @@
   window.addEventListener('pagehide', () => {
     sourceObserver?.disconnect();
     sourceObserver = null;
-    if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+    releaseLocalObjectUrl();
   }, { once: true });
 })();
