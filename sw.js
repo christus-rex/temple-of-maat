@@ -1,4 +1,5 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14';
+// Shell refresh: recache the welcome threshold so the canonical portal version is visible on existing installs.
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [

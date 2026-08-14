@@ -1,4 +1,4 @@
-/* Temple of Ma'at v5.2.7 — progressive enhancement and manual threshold gate */
+/* Temple of Ma'at v5.2.8 — progressive enhancement and manual threshold gate */
 (function () {
   'use strict';
 
@@ -26,6 +26,36 @@
     loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library');
     loadEnhancement('./scripts/v5.2.8-journey-import.js', 'journey-import');
     loadEnhancement('./scripts/v5.2.8-offline-controls.js', 'offline-controls');
+  }
+
+  async function installPortalVersionBadge() {
+    const panel = document.querySelector('#temple-static-entry .temple-static-entry__panel');
+    if (!panel || panel.querySelector('[data-temple-portal-version]')) return;
+
+    const badge = document.createElement('div');
+    badge.className = 'temple-static-entry__version';
+    badge.dataset.templePortalVersion = 'pending';
+    badge.hidden = true;
+
+    const title = panel.querySelector('h1');
+    if (title) title.insertAdjacentElement('afterend', badge);
+    else panel.prepend(badge);
+
+    try {
+      const response = await fetch('./version.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Portal version request failed: ${response.status}`);
+      const release = await response.json();
+      const version = String(release?.version || '').trim();
+      if (!version) throw new Error('Portal version metadata is empty.');
+
+      badge.dataset.templePortalVersion = version;
+      badge.textContent = `PORTAL v${version}`;
+      badge.setAttribute('aria-label', `Temple portal version ${version}`);
+      if (release?.build) badge.title = `Build ${release.build}`;
+      badge.hidden = false;
+    } catch {
+      badge.remove();
+    }
   }
 
   function syncArtifactInteractionState() {
@@ -244,6 +274,7 @@
     holdAtThreshold();
     noteApplicationMounted();
     enhanceControls(document);
+    installPortalVersionBadge();
     installArtifactInteractionGuard();
     installShemGateway();
     cacheCurrentChamber();
