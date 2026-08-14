@@ -1,0 +1,30 @@
+name: Validate Relationship Graph v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/relationship-graph.json'
+      - 'research/relationship-graph.schema.json'
+      - 'docs/RELATIONSHIP_GRAPH.md'
+      - 'library/catalog.json'
+      - 'chambers.json'
+      - 'scripts/v5.2.4-living-codex.js'
+      - 'scripts/v5.2.6-shem-dossiers.js'
+      - 'scripts/validate-relationship-graph-v1.mjs'
+      - '.github/workflows/validate-relationship-graph-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-graph:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate endpoints, provenance, claim boundaries, and negative guardrails
+        run: node scripts/validate-relationship-graph-v1.mjs
