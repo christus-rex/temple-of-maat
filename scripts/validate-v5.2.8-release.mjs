@@ -25,10 +25,12 @@ const required = [
   'styles/v5.2.8-offline-controls.css',
   'scripts/smoke-release-hardening-v5.2.8.mjs',
   'scripts/smoke-chant-streaming-v5.2.8.mjs',
+  'scripts/smoke-mobile-dock-v5.2.8.mjs',
   'scripts/verify-deployed-v5.2.8.mjs',
   'scripts/wait-for-pages-deployment-v5.2.8.mjs',
   '.github/workflows/smoke-release-hardening-v5.2.8.yml',
   '.github/workflows/smoke-chant-streaming-v5.2.8.yml',
+  '.github/workflows/smoke-mobile-dock-v5.2.8.yml',
   '.github/workflows/verify-deployed-v5.2.8.yml'
 ];
 for (const relative of required) {
@@ -39,14 +41,17 @@ const version = JSON.parse(read('version.json'));
 const sw = read('sw.js');
 const threshold = read('scripts/v5.3-threshold.js');
 const thresholdCss = read('styles/v5.3-threshold.css');
+const libraryCss = read('styles/v5.2.8-temple-library.css');
 const readme = read('README.md');
 const roadmap = read('ROADMAP.md');
 const checklist = read('PWA-CHECKLIST.md');
 const runbook = read('docs/RELEASE_VERIFICATION.md');
 const hardening = read('scripts/smoke-release-hardening-v5.2.8.mjs');
+const mobileDockSmoke = read('scripts/smoke-mobile-dock-v5.2.8.mjs');
 const deployed = read('scripts/verify-deployed-v5.2.8.mjs');
 const waitForPages = read('scripts/wait-for-pages-deployment-v5.2.8.mjs');
 const hardeningWorkflow = read('.github/workflows/smoke-release-hardening-v5.2.8.yml');
+const mobileDockWorkflow = read('.github/workflows/smoke-mobile-dock-v5.2.8.yml');
 const deployedWorkflow = read('.github/workflows/verify-deployed-v5.2.8.yml');
 const wallpaper = read('scripts/diagnose-live-wallpapers.mjs');
 
@@ -66,8 +71,8 @@ for (const marker of ['provenance-aware Temple Library', 'portable local Pilgrim
   if (!String(version.source || '').includes(marker)) fail(`version.json source marker missing: ${marker}`);
 }
 
-const namespace = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r3';
-if (!sw.includes(`const VERSION = '${namespace}'`)) fail('Service-worker namespace does not match final v5.2.8 chant-streaming shell revision');
+const namespace = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
+if (!sw.includes(`const VERSION = '${namespace}'`)) fail('Service-worker namespace does not match final v5.2.8 mobile-dock shell revision');
 if (sw.includes("const VERSION = 'temple-maat-pwa-v5.2.7-wallpaper-hotfix-2026-08-14'")) fail('Historical v5.2.7 namespace is still current');
 
 for (const asset of [
@@ -115,6 +120,37 @@ for (const marker of [
   'pointer-events: none !important'
 ]) {
   if (!thresholdCss.includes(marker)) fail(`Threshold stylesheet body-level portal guard missing: ${marker}`);
+}
+
+for (const marker of [
+  'Shared narrow-screen dock alignment',
+  'flex-wrap:wrap!important',
+  'overflow-x:hidden!important',
+  'flex:1 1 calc(25% - 6px)',
+  '.tm524-chamber-tools{bottom:calc(max(8px,env(safe-area-inset-bottom)) + 116px)!important}'
+]) {
+  if (!libraryCss.includes(marker)) fail(`Mobile dock alignment marker missing: ${marker}`);
+}
+for (const marker of [
+  "const expected = ['Codex', 'Collect', 'Chant', 'Journey', 'Dossier', 'Library', 'Offline']",
+  'wrappedIntoTwoRows',
+  'noButtonOverlap',
+  'labelsNotClipped',
+  'noHorizontalDockScroll',
+  'noPageHorizontalOverflow',
+  'await inspect(page, 360)',
+  'await inspect(page, 412)'
+]) {
+  if (!mobileDockSmoke.includes(marker)) fail(`Mobile dock smoke marker missing: ${marker}`);
+}
+for (const marker of [
+  'name: Smoke Mobile Dock v5.2.8',
+  'Verify narrow-screen dock alignment',
+  'scripts/smoke-mobile-dock-v5.2.8.mjs',
+  'actions/upload-artifact@v4',
+  'mobile-dock-v5.2.8'
+]) {
+  if (!mobileDockWorkflow.includes(marker)) fail(`Mobile dock workflow marker missing: ${marker}`);
 }
 
 for (const marker of [
@@ -228,4 +264,4 @@ if (deployedWorkflow.includes('\n  pull_request:')) fail('Deployed-origin verifi
 if (!wallpaper.includes("version?.version === '5.2.8'")) fail('Wallpaper verifier is still locked to a historical release version');
 if (wallpaper.includes("version?.version === '5.2.7'")) fail('Wallpaper verifier contains stale v5.2.7 exact-version assertion');
 
-console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, atomic r3 service-worker shell, fresh release identity, manual threshold/body-level portal guards, Library/Journey/Offline enhancements, ritual-media cache boundary, update/deep-link/mobile hardening, exact-SHA Pages polling before deployed-origin verification, and screenshot evidence contract.`);
+console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, atomic r4 service-worker shell, fresh release identity, manual threshold/body-level portal guards, Library/Journey/Offline enhancements, balanced narrow-screen dock, ritual-media cache boundary, update/deep-link/mobile hardening, exact-SHA Pages polling before deployed-origin verification, and screenshot evidence contract.`);
