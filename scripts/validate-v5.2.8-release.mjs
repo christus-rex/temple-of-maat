@@ -25,6 +25,7 @@ const required = [
   'styles/v5.2.8-offline-controls.css',
   'scripts/smoke-release-hardening-v5.2.8.mjs',
   'scripts/verify-deployed-v5.2.8.mjs',
+  'scripts/wait-for-pages-deployment-v5.2.8.mjs',
   '.github/workflows/smoke-release-hardening-v5.2.8.yml',
   '.github/workflows/verify-deployed-v5.2.8.yml'
 ];
@@ -42,12 +43,13 @@ const checklist = read('PWA-CHECKLIST.md');
 const runbook = read('docs/RELEASE_VERIFICATION.md');
 const hardening = read('scripts/smoke-release-hardening-v5.2.8.mjs');
 const deployed = read('scripts/verify-deployed-v5.2.8.mjs');
+const waitForPages = read('scripts/wait-for-pages-deployment-v5.2.8.mjs');
 const hardeningWorkflow = read('.github/workflows/smoke-release-hardening-v5.2.8.yml');
 const deployedWorkflow = read('.github/workflows/verify-deployed-v5.2.8.yml');
 const wallpaper = read('scripts/diagnose-live-wallpapers.mjs');
 
-// These are classic scripts and can be parsed with vm.Script. The hardening and
-// deployed runners are ESM .mjs files; their actual CI execution is the syntax/runtime gate.
+// These are classic scripts and can be parsed with vm.Script. The release runners
+// are ESM .mjs files; their actual Node/CI execution is their syntax/runtime gate.
 for (const [name, source] of [
   ['Service Worker', sw],
   ['Threshold', threshold]
@@ -134,7 +136,8 @@ for (const marker of [
   '320 px, 360 px, and 412 px',
   'Physical Android phone',
   'Physical iPhone/iPad',
-  'Installed-PWA checks'
+  'Installed-PWA checks',
+  'exact-SHA Pages polling'
 ]) {
   if (!checklist.includes(marker)) fail(`PWA checklist hardening marker missing: ${marker}`);
 }
@@ -149,7 +152,8 @@ for (const marker of [
   'Smoke Release hardening v5.2.8',
   'Verify Deployed Temple v5.2.8',
   'iOS/iPadOS is available',
-  'Do not replace a failing assertion with a weaker assertion'
+  'Do not replace a failing assertion with a weaker assertion',
+  'waits for the Pages workflow for that exact commit SHA'
 ]) {
   if (!runbook.includes(marker)) fail(`Release verification runbook marker missing: ${marker}`);
 }
@@ -176,23 +180,41 @@ for (const marker of [
   if (!deployed.includes(marker)) fail(`Deployed verifier marker missing: ${marker}`);
 }
 
+for (const marker of [
+  'process.env.GITHUB_REPOSITORY',
+  'process.env.GITHUB_SHA',
+  'process.env.GITHUB_TOKEN',
+  "run.name === 'pages build and deployment'",
+  'run.head_sha === sha',
+  "run.conclusion !== 'success'",
+  'https://api.github.com/repos/${repository}/actions/runs?head_sha=${encodeURIComponent(sha)}&per_page=50',
+  'data.version === expectedVersion',
+  'data.build === expectedBuild'
+]) {
+  if (!waitForPages.includes(marker)) fail(`Exact-SHA Pages wait helper marker missing: ${marker}`);
+}
+
 for (const marker of ['if: always()', 'actions/upload-artifact@v4', 'v5.2.8-release-hardening-screenshots']) {
   if (!hardeningWorkflow.includes(marker)) fail(`Hardening screenshot-evidence workflow marker missing: ${marker}`);
 }
 for (const marker of [
-  'workflow_run:',
-  "'pages build and deployment'",
-  'github.event.workflow_run.conclusion',
-  'github.event.workflow_run.head_sha',
+  'push:',
+  '- main',
+  'actions: read',
+  'ref: ${{ github.sha }}',
+  'Wait for exact-SHA Pages deployment',
+  'GITHUB_TOKEN: ${{ github.token }}',
+  'scripts/wait-for-pages-deployment-v5.2.8.mjs',
   'workflow_dispatch:',
   'actions/upload-artifact@v4',
   'v5.2.8-deployed-origin-screenshots'
 ]) {
-  if (!deployedWorkflow.includes(marker)) fail(`Deployed verifier exact-SHA automation marker missing: ${marker}`);
+  if (!deployedWorkflow.includes(marker)) fail(`Deployed verifier exact-SHA Pages-poll marker missing: ${marker}`);
 }
+if (deployedWorkflow.includes('workflow_run:')) fail('Dynamic Pages workflow_run trigger is unreliable and must not be the production verification dependency');
 if (deployedWorkflow.includes('\n  pull_request:')) fail('Deployed-origin verifier must not run before Pages deployment on pull_request');
 
 if (!wallpaper.includes("version?.version === '5.2.8'")) fail('Wallpaper verifier is still locked to a historical release version');
 if (wallpaper.includes("version?.version === '5.2.7'")) fail('Wallpaper verifier contains stale v5.2.7 exact-version assertion');
 
-console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, v5.2.8 service-worker namespace and shell, manual threshold/body-level portal guards, Library/Journey/Offline enhancements, ritual-media cache boundary, update/deep-link/mobile hardening, exact-SHA post-Pages deployed verification, and screenshot evidence contract.`);
+console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, v5.2.8 service-worker namespace and shell, manual threshold/body-level portal guards, Library/Journey/Offline enhancements, ritual-media cache boundary, update/deep-link/mobile hardening, exact-SHA Pages polling before deployed-origin verification, and screenshot evidence contract.`);
