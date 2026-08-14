@@ -18,3 +18,4 @@ jobs:
       - run: node scripts/validate-v5.2.7.mjs
       - run: node scripts/validate-library-v1.mjs
       - run: node scripts/validate-library-buddha.mjs
+      - run: node scripts/validate-library-dead-sea-scrolls.mjs

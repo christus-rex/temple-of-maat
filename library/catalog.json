@@ -11,9 +11,45 @@
       "provenanceLayers": ["L2"],
       "languages": ["Pali", "Sanskrit", "Chinese", "Tibetan", "English"],
       "tags": ["buddhism", "dhamma", "awakening", "ethics", "meditation", "wisdom", "compassion"]
+    },
+    {
+      "id": "tradition.second-temple-judaism",
+      "type": "tradition",
+      "title": "Second Temple Judaism and the Judean Desert Manuscripts",
+      "summary": "A Library tradition for the diverse Jewish textual, legal, liturgical, apocalyptic, and communal worlds represented by the Dead Sea Scrolls and related Judean Desert manuscripts, without collapsing them into later religious identities.",
+      "status": "reviewed",
+      "provenanceLayers": ["L2"],
+      "languages": ["Hebrew", "Aramaic", "Greek", "English"],
+      "tags": ["dead-sea-scrolls", "qumran", "second-temple-judaism", "judean-desert", "manuscripts", "textual-history"]
     }
   ],
-  "sources": [],
+  "sources": [
+    {
+      "id": "source.dead-sea-scrolls-qumran-corpus",
+      "type": "source",
+      "title": "Dead Sea Scrolls / Qumran Manuscript Corpus",
+      "summary": "Ancient Jewish and related Judean Desert manuscript witnesses dating broadly from the third century BCE to the first century CE, represented here as a source-family record rather than a single authored text.",
+      "status": "reviewed",
+      "provenanceLayers": ["L1"],
+      "traditionIds": ["tradition.second-temple-judaism"],
+      "languages": ["Hebrew", "Aramaic", "Greek"],
+      "tags": ["dead-sea-scrolls", "qumran", "judean-desert", "manuscripts", "archaeology", "second-temple-judaism"],
+      "sourceMetadata": {
+        "sourceKind": "corpus",
+        "corpus": "Dead Sea Scrolls and Judean Desert manuscript corpus",
+        "dateLabel": "approximately 3rd century BCE to 1st century CE",
+        "repository": "Distributed custodial corpus; institutional anchors in the studies include the Israel Antiquities Authority, Israel Museum, Library of Congress, and other manuscript-holding collections"
+      },
+      "rights": {
+        "attribution": "Ancient manuscript corpus; manuscript images, editions, transcriptions, translations, and institutional reproductions have source-specific rights and attribution requirements.",
+        "publicExposure": "metadata-only",
+        "notes": "The Temple Library does not republish the source corpus. Consult the cited custodial and scholarly resources for images, editions, translations, and permissions."
+      },
+      "integrity": {
+        "integrityNote": "This is a source-family metadata record. The historical study describes roughly 900–950 manuscripts and many more fragments; no exact corpus file count is asserted here."
+      }
+    }
+  ],
   "studies": [
     {
       "id": "study.buddhas-path-of-awakening",
@@ -43,8 +79,72 @@
         "84000 — Translating the Words of the Buddha"
       ],
       "contentLocation": "library/studies/buddhas-path-of-awakening.index.json"
+    },
+    {
+      "id": "study.dead-sea-scrolls-comprehensive-analysis",
+      "type": "study",
+      "title": "The Dead Sea Scrolls — Comprehensive Analysis and Comparative Relevance",
+      "summary": "A research edition treating the scrolls first as ancient manuscripts and archaeological objects, then distinguishing literary/social context, comparative theology, and personal ethical symbolism under the rule compare without collapsing.",
+      "status": "reviewed",
+      "provenanceLayers": ["L2", "L3", "L4"],
+      "traditionIds": ["tradition.second-temple-judaism"],
+      "sourceIds": ["source.dead-sea-scrolls-qumran-corpus"],
+      "languages": ["English"],
+      "tags": ["dead-sea-scrolls", "qumran", "history", "archaeology", "textual-history", "comparative-theology", "discernment"],
+      "bibliography": [
+        "Israel Antiquities Authority — Leon Levy Dead Sea Scrolls Digital Library: Discovery and Publication, Discovery Sites, Languages and Scripts, Conservation, Digital Library",
+        "Library of Congress — Scrolls from the Dead Sea online exhibition: Introduction, Qumran Community, Qumran Library, Judaism and Christianity, Conclusion",
+        "Israel Museum — Digital Dead Sea Scrolls: Nature and Significance",
+        "Timothy H. Lim — The Dead Sea Scrolls: A Very Short Introduction, 2nd ed. (Oxford University Press, 2017)",
+        "Library of Congress — Judaism and Christianity and the Dead Sea Scrolls",
+        "Israel Antiquities Authority — Discovery Sites",
+        "Israel Antiquities Authority — Conservation",
+        "Library of Congress — The Qumran Community",
+        "Israel Antiquities Authority — Languages and Scripts",
+        "Israel Museum — Nature and Significance",
+        "Israel Museum — The Great Isaiah Scroll",
+        "Israel Museum — The Community Rule",
+        "Israel Museum — Commentary on Habakkuk",
+        "Israel Museum — The War Scroll",
+        "Israel Museum — The Temple Scroll",
+        "Israel Antiquities Authority — Leon Levy Digital Library technical help on visible and infrared imaging bands",
+        "S. Anava et al. — Illuminating Genetic Mysteries of the Dead Sea Scrolls, Cell 181 (2020): 1218–1231.e27"
+      ],
+      "contentLocation": "library/studies/dead-sea-scrolls-comprehensive.index.json"
+    },
+    {
+      "id": "study.dead-sea-scrolls-gematria-companion",
+      "type": "study",
+      "title": "The Dead Sea Scrolls — Gematria Discernment Companion",
+      "summary": "A modern computational and contemplative companion using standard Hebrew gematria for declared Hebrew spellings and four transparent modern English ciphers, with numerical equality treated as a prompt for comparison rather than evidence of historical or supernatural identity.",
+      "status": "reviewed",
+      "provenanceLayers": ["L2", "L4"],
+      "traditionIds": ["tradition.second-temple-judaism"],
+      "sourceIds": ["source.dead-sea-scrolls-qumran-corpus"],
+      "languages": ["Hebrew", "English"],
+      "tags": ["dead-sea-scrolls", "qumran", "gematria", "english-ciphers", "digital-roots", "discernment", "false-positive-controls"],
+      "computationalMethod": {
+        "name": "Hebrew gematria plus four modern English comparison ciphers",
+        "method": "Hebrew values use the declared Hebrew spelling with standard letter values and standard values for final forms. English comparisons report English Ordinal, Full Reduction, Reverse Ordinal, and Reverse Reduction; spaces, punctuation, accents, and hyphens are ignored. Digital roots are modern contemplative reductions produced by repeated decimal digit summation.",
+        "implementationVersion": "dead-sea-scrolls-gematria-companion-july-2026",
+        "inputFields": ["declared Hebrew spelling", "transliteration or English phrase"],
+        "reproducibilityNote": "Report the spelling and all four English totals rather than selecting only favorable matches. The companion grades exact four-cipher matches above exact single-cipher matches above shared root patterns; none establishes historical or supernatural identity."
+      },
+      "contentLocation": "library/studies/dead-sea-scrolls-gematria.index.json"
     }
   ],
-  "discernments": [],
+  "discernments": [
+    {
+      "id": "discernment.dead-sea-scrolls-personal-ethical-correspondence",
+      "type": "discernment",
+      "title": "Dead Sea Scrolls — Personal and Ethical Correspondence Layer",
+      "summary": "Layer 4 metadata for the personal-symbolic and ethical material in the two Dead Sea Scrolls studies. It treats themes and numerical resonances as reflective prompts and never as proof of prediction, reincarnation, bloodline, supernatural rank, authorship, prophecy, or historical identity.",
+      "status": "reviewed",
+      "provenanceLayers": ["L4"],
+      "studyIds": ["study.dead-sea-scrolls-comprehensive-analysis", "study.dead-sea-scrolls-gematria-companion"],
+      "sourceIds": ["source.dead-sea-scrolls-qumran-corpus"],
+      "tags": ["personal-symbolism", "ethical-practice", "discernment", "compare-without-collapsing"]
+    }
+  ],
   "correspondences": []
 }

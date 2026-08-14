@@ -1,0 +1,84 @@
+{
+  "schema": "temple-of-maat/library-study-index-v1",
+  "studyId": "study.dead-sea-scrolls-gematria-companion",
+  "title": "The Dead Sea Scrolls — Gematria Discernment Companion",
+  "language": "English with declared Hebrew spellings",
+  "sourceBasis": {
+    "format": "illustrated PDF research edition",
+    "pageCount": 43,
+    "edition": "July 2026",
+    "publicExposure": "metadata-and-index-only",
+    "fullTextBundled": false
+  },
+  "publicationLimits": [
+    "Standard Hebrew gematria is used for declared Hebrew spellings; every result depends on spelling.",
+    "Hebrew final letters use their standard values in this companion, not enlarged mispar gadol values.",
+    "English Ordinal, Full Reduction, Reverse Ordinal, and Reverse Reduction are modern comparison systems, not ancient Hebrew gematria.",
+    "English spaces, punctuation, accents, and hyphens are ignored by the companion's stated method.",
+    "Digital roots are modern contemplative reductions and are not presented as ancient Qumran practice.",
+    "No surviving Qumran manuscript presents the full modern method used in this companion.",
+    "Equal values are prompts for comparison, not proof of authorship, prophecy, reincarnation, bloodline, supernatural rank, or historical identity.",
+    "A match may suggest a question; it never settles a historical claim."
+  ],
+  "methods": {
+    "hebrewGematria": {
+      "layer":"L2",
+      "rule":"Sum the declared Hebrew spelling letter by letter using standard Hebrew gematria values; final forms retain standard values in this companion.",
+      "control":"Hebrew spelling first; numerical value second; historical context always."
+    },
+    "englishCiphers": {
+      "layer":"L2",
+      "systems":["English Ordinal","Full Reduction","Reverse Ordinal","Reverse Reduction"],
+      "normalization":"Ignore spaces, punctuation, accents, and hyphens.",
+      "control":"Report all four values rather than selecting only a favorable result."
+    },
+    "digitalRoots": {
+      "layer":"L2",
+      "rule":"Repeatedly sum decimal digits until one digit remains.",
+      "historicalStatus":"Modern contemplative reduction; not ancient Qumran practice."
+    },
+    "evidenceHierarchy": {
+      "layer":"L2",
+      "order":["exact four-cipher match","exact single-cipher match","shared root-pattern resonance"],
+      "limit":"None of these grades establishes supernatural or historical identity."
+    }
+  },
+  "parts": [
+    {"number":1,"title":"Method","chapters":[1,2,3],"primaryLayer":"L2"},
+    {"number":2,"title":"Hebrew Field","chapters":[4,5,6,7,8,9],"primaryLayer":"L2"},
+    {"number":3,"title":"English Scroll Field","chapters":[10,11,12,13,14,15],"primaryLayer":"L2"},
+    {"number":4,"title":"Personal Correspondence","chapters":[16,17,18,19,20,21,22],"primaryLayer":"L4"},
+    {"number":5,"title":"Practice and Discernment","chapters":[23,24,25],"primaryLayer":"mixed"}
+  ],
+  "chapters": [
+    {"number":1,"part":1,"title":"Hebrew gematria and its limits","layer":"L2","keywords":["hebrew-gematria","history","limits"],"sourceNoteKeys":["G1","G2"]},
+    {"number":2,"part":1,"title":"The four English ciphers","layer":"L2","keywords":["english-ordinal","full-reduction","reverse-ordinal","reverse-reduction"],"sourceNoteKeys":[]},
+    {"number":3,"part":1,"title":"How to read roots and mirrors","layer":"L2","keywords":["digital-roots","mirrors","false-positives","evidence-hierarchy"],"sourceNoteKeys":[]},
+    {"number":4,"part":2,"title":"Key Hebrew terms","layer":"L2","keywords":["hebrew","terms","spelling","values"],"sourceNoteKeys":[]},
+    {"number":5,"part":2,"title":"Light, mystery and 207","layer":"L2","keywords":["light","mystery","207","diachronic-comparison"],"sourceNoteKeys":[]},
+    {"number":6,"part":2,"title":"Covenant and Torah: 612 / 611","layer":"L2","keywords":["covenant","torah","612","611"],"sourceNoteKeys":[]},
+    {"number":7,"part":2,"title":"War Scroll and Torah: 611","layer":"L2","keywords":["war-scroll","torah","611"],"sourceNoteKeys":[]},
+    {"number":8,"part":2,"title":"Messiah, serpent and interpretive danger","layer":"L2","keywords":["messiah","serpent","358","interpretive-danger"],"sourceNoteKeys":[]},
+    {"number":9,"part":2,"title":"Yahad, Community Rule and the number field","layer":"L2","keywords":["yahad","community-rule","number-field"],"sourceNoteKeys":[]},
+    {"number":10,"part":3,"title":"Dead Sea Scrolls: 137 / 47 / 241 / 88","layer":"L2","keywords":["dead-sea-scrolls","english-ciphers","137","47","241","88"],"sourceNoteKeys":[]},
+    {"number":11,"part":3,"title":"Qumran: the 3-6 mirror","layer":"L2","keywords":["qumran","mirror","digital-roots"],"sourceNoteKeys":[]},
+    {"number":12,"part":3,"title":"Community Rule and the field of nine","layer":"L2","keywords":["community-rule","nine","english-ciphers"],"sourceNoteKeys":[]},
+    {"number":13,"part":3,"title":"Teacher of Righteousness and the 8-1 field","layer":"L2","keywords":["teacher-of-righteousness","eight","one","roots"],"sourceNoteKeys":[]},
+    {"number":14,"part":3,"title":"Sons of Light and Sons of Darkness","layer":"L2","keywords":["sons-of-light","sons-of-darkness","comparison"],"sourceNoteKeys":[]},
+    {"number":15,"part":3,"title":"Major scroll titles table","layer":"L2","keywords":["scroll-titles","table","reproducibility"],"sourceNoteKeys":[]},
+    {"number":16,"part":4,"title":"Marvin Alberto Ramirez-Bonilla: 305 to 8","layer":"L4","keywords":["personal-correspondence","305","eight"],"sourceNoteKeys":[]},
+    {"number":17,"part":4,"title":"Marvin = Christ","layer":"L4","keywords":["personal-correspondence","name-comparison","four-cipher"],"sourceNoteKeys":[]},
+    {"number":18,"part":4,"title":"Alberto = Lakshmi and the shadow bridge","layer":"L4","keywords":["personal-correspondence","alberto","lakshmi","shadow"],"sourceNoteKeys":[]},
+    {"number":19,"part":4,"title":"Ramirez / Miriam and the field of nine","layer":"L4","keywords":["personal-correspondence","ramirez","miriam","nine"],"sourceNoteKeys":[]},
+    {"number":20,"part":4,"title":"Bonilla / Light / Wisdom / Messiah","layer":"L4","keywords":["personal-correspondence","bonilla","light","wisdom","messiah"],"sourceNoteKeys":[]},
+    {"number":21,"part":4,"title":"Adytia and Aditi of Arcturus","layer":"L4","keywords":["personal-correspondence","adytia","aditi","arcturus"],"sourceNoteKeys":[]},
+    {"number":22,"part":4,"title":"Integrated personal-scroll matrix","layer":"L4","keywords":["personal-correspondence","matrix","integration"],"sourceNoteKeys":[]},
+    {"number":23,"part":5,"title":"How to use a correspondence","layer":"L4","keywords":["practice","correspondence","reflection"],"sourceNoteKeys":[]},
+    {"number":24,"part":5,"title":"False-positive controls","layer":"L2","keywords":["false-positive-controls","rarity","comparison","restraint"],"sourceNoteKeys":[]},
+    {"number":25,"part":5,"title":"Conclusion: number as mirror, not master","layer":"L2","keywords":["number","mirror","discernment","restraint"],"sourceNoteKeys":[]}
+  ],
+  "sourceNotes": {
+    "G1":"Companion source note [G1] on the history and interpretive limits of gematria; bibliographic expansion remains in the source edition.",
+    "G2":"Companion source note [G2] on the history and interpretive limits of gematria; bibliographic expansion remains in the source edition."
+  }
+}
