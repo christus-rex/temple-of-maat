@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2-2026-08-13-r2';
+const VERSION = 'temple-maat-pwa-v5.2-2026-08-14-r4';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -40,25 +40,14 @@ async function releaseDisplayAssets() {
   }
 }
 
-async function parentalDisplayAssets() {
-  try {
-    const response = await fetch('./scripts/parental-powers-assets.json', { cache: 'no-store' });
-    if (!response.ok) return [];
-    const manifest = await response.json();
-    const records = Array.isArray(manifest.records) ? manifest.records : [];
-    return records.flatMap((record) => record.display?.path ? [`./${record.display.path}`] : []);
-  } catch {
-    return [];
-  }
-}
-
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
     // Cache independently so one missing optional asset cannot abort installation.
     await cacheInBatches(cache, CORE_ASSETS);
     await cacheInBatches(cache, await releaseDisplayAssets());
-    await cacheInBatches(cache, await parentalDisplayAssets());
+    // Parental Powers previews are cached on demand so installation does not
+    // fetch all 72 wallpapers before the visitor reaches the horizontal rail.
   })());
 });
 
@@ -78,6 +67,13 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
+
+  // Large archives are downloaded directly and never duplicated in runtime
+  // storage. Individual viewed wallpapers still use the on-demand cache below.
+  if (url.origin === self.location.origin && url.pathname.toLowerCase().endsWith('.zip')) {
+    event.respondWith(fetch(request).catch(() => new Response('', {status: 504, statusText: 'Offline'})));
+    return;
+  }
 
   // Navigation: network-first, then the cached app shell, then offline fallback.
   if (request.mode === 'navigate') {
