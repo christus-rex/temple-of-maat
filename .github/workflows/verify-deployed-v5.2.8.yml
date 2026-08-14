@@ -1,13 +1,20 @@
 name: Verify Deployed Temple v5.2.8
 
 on:
-  workflow_run:
-    workflows:
-      - 'pages build and deployment'
+  push:
     branches:
       - main
-    types:
-      - completed
+    paths:
+      - 'version.json'
+      - 'sw.js'
+      - 'index.html'
+      - 'chambers.json'
+      - 'scripts/**'
+      - 'styles/**'
+      - 'library/**'
+      - 'PWA-CHECKLIST.md'
+      - 'docs/RELEASE_VERIFICATION.md'
+      - '.github/workflows/verify-deployed-v5.2.8.yml'
   workflow_dispatch:
     inputs:
       live_url:
@@ -25,19 +32,27 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   deployed-origin:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Wait for exact-SHA Pages deployment
+        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TEMPLE_LIVE_URL: 'https://christus-rex.github.io/temple-of-maat/'
+          TEMPLE_EXPECTED_VERSION: '5.2.8'
+          TEMPLE_EXPECTED_BUILD: '2026-08-14-v5.2.8-library-journey-offline-hardening'
+        run: node scripts/wait-for-pages-deployment-v5.2.8.mjs
       - name: Install Chromium
         run: |
           npm install --no-save playwright
