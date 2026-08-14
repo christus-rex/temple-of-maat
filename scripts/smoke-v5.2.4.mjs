@@ -40,12 +40,23 @@ try {
   const browser = await chromium.launch(launchOptions);
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   await context.addInitScript(() => localStorage.setItem('temple_last_chamber', '42'));
+
+  // Warm the service worker before exercising threshold/hash behavior. This keeps the
+  // smoke deterministic when it runs after another browser test in the same CI job.
+  const warmup = await context.newPage();
+  await warmup.goto(`http://127.0.0.1:${port}/?codex_warmup=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  if (await warmup.evaluate(() => 'serviceWorker' in navigator)) {
+    await warmup.evaluate(() => navigator.serviceWorker.ready.then(() => true));
+  }
+  await warmup.close();
+
   const page = await context.newPage();
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
-  await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.goto(`http://127.0.0.1:${port}/?codex_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72, { timeout: 30000 });
+  await page.waitForSelector('[data-temple-entry="continue"]', { timeout: 30000 });
 
   const beforeEntry = await page.evaluate(() => ({
     appReady: document.body.classList.contains('temple-app-ready'),
@@ -57,8 +68,8 @@ try {
   }));
 
   await page.locator('[data-temple-entry="continue"]').click();
-  await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'));
-  await page.waitForFunction(() => location.hash === '#chamber-42');
+  await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 30000 });
+  await page.waitForFunction(() => location.hash === '#chamber-42', { timeout: 30000 });
 
   const record = await page.evaluate(() => {
     const item = window.TempleLivingCodex.record(13);
@@ -156,6 +167,7 @@ try {
     localAudioState,
     pageErrors
   }, null, 2));
+  await context.close();
   await browser.close();
   if (!ok) process.exitCode = 1;
 } finally {

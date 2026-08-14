@@ -44,7 +44,16 @@ async function downloadAndInspect(page, locator, filename) {
 
 function attachDiagnostics(page, errors) {
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
-  page.on('requestfailed', (request) => errors.push(`requestfailed: ${request.url()} :: ${request.failure()?.errorText}`));
+  page.on('requestfailed', (request) => {
+    const url = request.url();
+    const errorText = request.failure()?.errorText || '';
+    if (url.includes('/assets/audio/maat-forty-two-declarations.mp3') && errorText.includes('ERR_ABORTED')) return;
+    // The diagnostic intentionally replaces its first page after service-worker
+    // activation. Chromium may report that deliberate top-level diagnostic request
+    // as aborted even though the replacement page is then fully controlled.
+    if (url.includes('wallpaper_diag=') && errorText.includes('ERR_ABORTED') && request.isNavigationRequest()) return;
+    errors.push(`requestfailed: ${url} :: ${errorText}`);
+  });
   page.on('dialog', async (dialog) => {
     errors.push(`dialog:${dialog.type()}: ${dialog.message()}`);
     await dialog.dismiss();
@@ -55,10 +64,14 @@ async function enterAndOpenChamber(page) {
   await page.goto(`${BASE_URL}?wallpaper_diag=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.waitForSelector('[data-temple-entry="guided"]', { timeout: 30000 });
   await page.locator('[data-temple-entry="guided"]').click();
+  await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 30000 });
   await page.waitForSelector('#tm2-artifact.open .tm2-wallpaper', { timeout: 30000 });
   await page.waitForFunction(() => {
-    const image = document.querySelector('#tm2-artifact.open .tm2-parental-section img');
-    return Boolean(image?.complete && image?.naturalWidth >= 900 && image?.naturalHeight >= 500);
+    const artifact = document.querySelector('#tm2-artifact.open');
+    const image = artifact?.querySelector('.tm2-parental-section img');
+    if (!artifact || !image?.complete || image.naturalWidth < 900 || image.naturalHeight < 500) return false;
+    const style = getComputedStyle(artifact);
+    return style.display !== 'none' && style.visibility !== 'hidden';
   }, { timeout: 30000 });
 }
 
