@@ -1,9 +1,50 @@
 {
   "schema": "temple-of-maat/library-v1",
   "updated": "2026-08-14",
-  "traditions": [],
+  "traditions": [
+    {
+      "id": "tradition.buddhism",
+      "type": "tradition",
+      "title": "Buddhist Traditions",
+      "summary": "A Library tradition for early Buddhist teachings and the later Theravada, Mahayana, Zen, Vajrayana, and regional developments treated with explicit historical distinctions.",
+      "status": "reviewed",
+      "provenanceLayers": ["L2"],
+      "languages": ["Pali", "Sanskrit", "Chinese", "Tibetan", "English"],
+      "tags": ["buddhism", "dhamma", "awakening", "ethics", "meditation", "wisdom", "compassion"]
+    }
+  ],
   "sources": [],
-  "studies": [],
+  "studies": [
+    {
+      "id": "study.buddhas-path-of-awakening",
+      "type": "study",
+      "title": "The Buddha's Path of Awakening",
+      "summary": "A comprehensive illustrated educational and contemplative guide to wisdom, compassion, ethics, meditation, liberation, lived practice, later Buddhist horizons, and an integrated practice manual.",
+      "status": "reviewed",
+      "provenanceLayers": ["L2"],
+      "traditionIds": ["tradition.buddhism"],
+      "sourceIds": [],
+      "languages": ["English"],
+      "tags": ["buddhism", "four-noble-truths", "eightfold-path", "dependent-origination", "nibbana", "mindfulness", "compassion", "practice"],
+      "bibliography": [
+        "SuttaCentral — early Buddhist texts, translations, and parallels",
+        "SN 56.11 — Setting in Motion the Wheel of the Dhamma",
+        "SN 22.59 — The Characteristic of Not-Self",
+        "SN 12.2 — Analysis of Dependent Origination",
+        "MN 10 — Mindfulness Meditation",
+        "MN 118 — Mindfulness of Breathing",
+        "DN 31 — Advice to Sigalaka",
+        "DN 16 — The Great Passing",
+        "AN 3.65 — The Discourse to the Kalamas",
+        "Snp 1.8 — The Discourse on Love",
+        "Stanford Encyclopedia of Philosophy — Buddha",
+        "84000 — The Heart of the Perfection of Wisdom",
+        "BDK America — The Lotus Sutra",
+        "84000 — Translating the Words of the Buddha"
+      ],
+      "contentLocation": "library/studies/buddhas-path-of-awakening.index.json"
+    }
+  ],
   "discernments": [],
   "correspondences": []
 }
