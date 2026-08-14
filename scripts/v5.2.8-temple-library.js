@@ -557,6 +557,13 @@
   }
 
   function installLauncher() {
+    if (!document.querySelector('[data-temple-library-launcher="artifact-mobile"]')) {
+      const artifactLauncher = button('Library', () => openLibrary(), 'tm528-artifact-launcher');
+      artifactLauncher.dataset.templeLibraryLauncher = 'artifact-mobile';
+      artifactLauncher.setAttribute('aria-label', 'Open Temple Library');
+      document.body.append(artifactLauncher);
+    }
+
     const installIntoDock = () => {
       const dock = document.getElementById('tm524-dock');
       if (!dock || dock.querySelector('[data-temple-library-launcher]')) return false;

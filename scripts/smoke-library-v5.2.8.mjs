@@ -49,14 +49,14 @@ async function enter(page) {
     throw new Error(`Manual entry did not reach temple-app-ready: ${JSON.stringify(await entryDiagnostic(page))}`);
   }
   try {
-    await page.waitForFunction(() => Boolean(document.querySelector('[data-temple-library-launcher="dock"]')?.offsetParent), { timeout: 15000 });
+    await page.waitForFunction(() => [...document.querySelectorAll('[data-temple-library-launcher]')].some((node) => node.offsetParent), { timeout: 15000 });
   } catch {
     throw new Error(`Library dock launcher did not become visible after entry: ${JSON.stringify(await entryDiagnostic(page))}`);
   }
 }
 
 async function openLibrary(page) {
-  await page.locator('[data-temple-library-launcher="dock"]').click();
+  await page.locator('[data-temple-library-launcher]:visible').first().click();
   await page.waitForSelector('#tm528-library:not([hidden])', { timeout: 15000 });
   await page.waitForFunction(() => /Ready/.test(document.querySelector('#tm528-status')?.textContent || ''), { timeout: 15000 });
 }
@@ -75,7 +75,7 @@ try {
   const threshold = await page.evaluate(() => ({
     ready: document.body.classList.contains('temple-app-ready'),
     layerHidden: document.getElementById('tm528-library')?.hidden !== false,
-    launcherVisible: Boolean(document.querySelector('[data-temple-library-launcher="dock"]')?.offsetParent)
+    launcherVisible: [...document.querySelectorAll('[data-temple-library-launcher]')].some((node) => node.offsetParent)
   }));
   if (threshold.ready || !threshold.layerHidden || threshold.launcherVisible) throw new Error(`Library threshold leak: ${JSON.stringify(threshold)}`);
 

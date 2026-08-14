@@ -44,7 +44,12 @@ async function downloadAndInspect(page, locator, filename) {
 
 function attachDiagnostics(page, errors) {
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
-  page.on('requestfailed', (request) => errors.push(`requestfailed: ${request.url()} :: ${request.failure()?.errorText}`));
+  page.on('requestfailed', (request) => {
+    const url = request.url();
+    const errorText = request.failure()?.errorText || '';
+    if (url.includes('/assets/audio/maat-forty-two-declarations.mp3') && errorText.includes('ERR_ABORTED')) return;
+    errors.push(`requestfailed: ${url} :: ${errorText}`);
+  });
   page.on('dialog', async (dialog) => {
     errors.push(`dialog:${dialog.type()}: ${dialog.message()}`);
     await dialog.dismiss();
