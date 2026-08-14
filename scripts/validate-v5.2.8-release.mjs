@@ -64,8 +64,8 @@ for (const marker of ['provenance-aware Temple Library', 'portable local Pilgrim
   if (!String(version.source || '').includes(marker)) fail(`version.json source marker missing: ${marker}`);
 }
 
-const namespace = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14';
-if (!sw.includes(`const VERSION = '${namespace}'`)) fail('Service-worker namespace does not match final v5.2.8 release');
+const namespace = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r2';
+if (!sw.includes(`const VERSION = '${namespace}'`)) fail('Service-worker namespace does not match final v5.2.8 debug-hardening shell revision');
 if (sw.includes("const VERSION = 'temple-maat-pwa-v5.2.7-wallpaper-hotfix-2026-08-14'")) fail('Historical v5.2.7 namespace is still current');
 
 for (const asset of [
@@ -81,6 +81,9 @@ for (const asset of [
 
 for (const marker of [
   'function isBinaryRitualMedia(url)',
+  'function isReleaseIdentity(url)',
+  'function cacheStrictInBatches(cache, assets',
+  'await cacheStrictInBatches(cache, CORE_ASSETS)',
   "data.type === 'CACHE_FULL_TEMPLE'",
   "data.type === 'CLEAR_OPTIONAL_VISUAL_CACHE'",
   "status: 504, statusText: 'Offline'"
@@ -97,7 +100,10 @@ for (const marker of [
   "document.body.classList.add('temple-app-ready')",
   "loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library')",
   "loadEnhancement('./scripts/v5.2.8-journey-import.js', 'journey-import')",
-  "loadEnhancement('./scripts/v5.2.8-offline-controls.js', 'offline-controls')"
+  "loadEnhancement('./scripts/v5.2.8-offline-controls.js', 'offline-controls')",
+  'const enhancementScopes = new Set()',
+  'function matchingNodes(base, selector)',
+  'writing-mode: vertical-rl'
 ]) {
   if (!threshold.includes(marker)) fail(`Manual threshold/progressive enhancement marker missing: ${marker}`);
 }
@@ -175,7 +181,10 @@ for (const marker of [
   "expectedVersion = process.env.TEMPLE_EXPECTED_VERSION || '5.2.8'",
   'serviceWorkerControlled',
   'deepLinkHeld',
-  'mobileOverlayGeometry'
+  'portalVersionVisible',
+  'mobileArtifactLauncherClear',
+  'mobileOverlayGeometry',
+  'inspectMobile(browser, 320, 740)'
 ]) {
   if (!deployed.includes(marker)) fail(`Deployed verifier marker missing: ${marker}`);
 }
@@ -217,4 +226,4 @@ if (deployedWorkflow.includes('\n  pull_request:')) fail('Deployed-origin verifi
 if (!wallpaper.includes("version?.version === '5.2.8'")) fail('Wallpaper verifier is still locked to a historical release version');
 if (wallpaper.includes("version?.version === '5.2.7'")) fail('Wallpaper verifier contains stale v5.2.7 exact-version assertion');
 
-console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, v5.2.8 service-worker namespace and shell, manual threshold/body-level portal guards, Library/Journey/Offline enhancements, ritual-media cache boundary, update/deep-link/mobile hardening, exact-SHA Pages polling before deployed-origin verification, and screenshot evidence contract.`);
+console.log(`Validated Temple ${version.version} release candidate: exact release/build identity, atomic r2 service-worker shell, fresh release identity, manual threshold/body-level portal guards, Library/Journey/Offline enhancements, ritual-media cache boundary, update/deep-link/mobile hardening, exact-SHA Pages polling before deployed-origin verification, and screenshot evidence contract.`);
