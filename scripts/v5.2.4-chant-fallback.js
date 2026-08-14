@@ -100,7 +100,7 @@
 
       const note = document.createElement('p');
       note.className = 'tm524-note';
-      note.textContent = 'The compact web rendition streams immediately. To keep the exact canonical Ma’at chant offline, choose the original MP3 once; the Temple verifies and stores it privately on this device.';
+      note.textContent = 'The compact web rendition streams immediately. To keep the exact canonical Ma’at chant offline, choose the original MP3 once; the Temple verifies and stores it privately on this device. The file stays on this device and is never uploaded by the Temple.';
 
       const input = document.createElement('input');
       input.type = 'file';
