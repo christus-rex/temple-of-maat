@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2-2026-08-14-r3';
+const VERSION = 'temple-maat-pwa-v5.2-2026-08-14-r4';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -67,6 +67,13 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
+
+  // Large archives are downloaded directly and never duplicated in runtime
+  // storage. Individual viewed wallpapers still use the on-demand cache below.
+  if (url.origin === self.location.origin && url.pathname.toLowerCase().endsWith('.zip')) {
+    event.respondWith(fetch(request).catch(() => new Response('', {status: 504, statusText: 'Offline'})));
+    return;
+  }
 
   // Navigation: network-first, then the cached app shell, then offline fallback.
   if (request.mode === 'navigate') {

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const sharp = require("sharp");
+const JSZip = require("jszip");
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = async (relativePath) => JSON.parse(await readFile(path.join(root, relativePath), "utf8"));
 const failures = [];
@@ -19,13 +20,16 @@ const [chambers, generation, assets, version, index, serviceWorker, runtime] = a
   readFile(path.join(root, "sw.js"), "utf8"),
   readFile(path.join(root, "scripts/parental-powers.js"), "utf8"),
 ]);
+const archiveRelativePath = "downloads/temple-of-maat-parental-powers-wallpapers-v5.2.3.zip";
+const archive = await JSZip.loadAsync(await readFile(path.join(root, archiveRelativePath)), { checkCRC32: true });
+const archiveEntries = Object.values(archive.files).filter((entry) => !entry.dir);
 
 check(chambers.chamberCount === 72 && chambers.chambers.length === 72, "Canonical chamber document must contain 72 chambers.");
 check(generation.records.length === 72, "Generation manifest must contain 72 records.");
 check(assets.records.length === 72, "Asset manifest must contain 72 records.");
 check(assets.completeMasters === 72, `Expected 72 masters; found ${assets.completeMasters}.`);
 check(assets.completeDisplays === 72, `Expected 72 displays; found ${assets.completeDisplays}.`);
-check(version.version === "5.2.2", `Expected version 5.2.2; found ${version.version}.`);
+check(version.version === "5.2.3", `Expected version 5.2.3; found ${version.version}.`);
 check(index.includes("tm2-parental-section"), "Artifact page Parental Powers section is missing.");
 check(index.includes("const W=3840,H=2160"), "4K Parental Powers renderer is missing.");
 check(index.includes("const W=1200,H=2420"), "Expanded collectible plate renderer is missing.");
@@ -34,9 +38,12 @@ check(index.includes("ensureWallpaperRail"), "Horizontal Parental Powers wallpap
 check(index.includes("tm2-wallpaper-track"), "Horizontal wallpaper track styling is missing.");
 check(index.includes("syncPreviews") && index.includes("unmountPreview"), "Wallpaper preview virtualization is missing.");
 check(index.includes("content-visibility:auto"), "Off-screen chamber rendering containment is missing.");
-check(serviceWorker.includes("temple-maat-pwa-v5.2-2026-08-14-r3"), "Service worker cache version was not advanced.");
+check(index.includes(archiveRelativePath), "Download-all wallpaper control is missing or points to the wrong archive.");
+check(archiveEntries.length === 72, `Wallpaper archive must contain 72 files; found ${archiveEntries.length}.`);
+check(serviceWorker.includes("temple-maat-pwa-v5.2-2026-08-14-r4"), "Service worker cache version was not advanced.");
 check(!serviceWorker.includes("parentalDisplayAssets"), "Service worker must not prefetch all Parental Powers previews.");
 check(serviceWorker.includes("cache.put(request"), "On-demand runtime asset caching is missing.");
+check(serviceWorker.includes("endsWith('.zip')"), "Large ZIP downloads must bypass runtime caching.");
 
 const generationIds = new Set(generation.records.map((record) => record.id));
 const assetIds = new Set(assets.records.map((record) => record.id));
@@ -45,10 +52,19 @@ check(new Set(assets.records.map((record) => record.master?.sha256).filter(Boole
 
 let totalMasterBytes = 0;
 let totalDisplayBytes = 0;
+let totalArchiveBytes = 0;
 for (const [indexNumber, chamber] of chambers.chambers.entries()) {
   const id = String(indexNumber + 1).padStart(2, "0");
   const source = generation.records[indexNumber];
   const packaged = assets.records[indexNumber];
+  const archiveName = path.basename(packaged.master.path);
+  const archiveEntry = archive.file(archiveName);
+  check(Boolean(archiveEntry), `Wallpaper archive is missing ${archiveName}.`);
+  if (archiveEntry) {
+    const archivedBytes = await archiveEntry.async("uint8array");
+    totalArchiveBytes += archivedBytes.byteLength;
+    check(archivedBytes.byteLength === packaged.master.bytes, `${archiveName} size drifted inside the wallpaper archive.`);
+  }
   check(chamber.id === id && source.id === id && packaged.id === id, `Chamber ordering mismatch at ${id}.`);
   check(source.angel === chamber.angel && source.daemon === chamber.daemon && source.thirdName === chamber.thirdName, `Canonical name mismatch at chamber ${id}.`);
   check(runtime.includes(`"${id}": {`) && runtime.includes(`"thirdName": "${chamber.thirdName}"`), `Runtime mapping is incomplete for chamber ${id}.`);
@@ -87,6 +103,8 @@ console.log(JSON.stringify({
   displays: assets.completeDisplays,
   totalMasterMiB: Number((totalMasterBytes / 1024 / 1024).toFixed(2)),
   totalDisplayMiB: Number((totalDisplayBytes / 1024 / 1024).toFixed(2)),
+  archiveMiB: Number((totalArchiveBytes / 1024 / 1024).toFixed(2)),
+  archiveEntries: archiveEntries.length,
   version: version.version,
   gallery: "72-card horizontal rail with bounded preview mounting",
   wallpaper: "3840x2160 PNG on demand",

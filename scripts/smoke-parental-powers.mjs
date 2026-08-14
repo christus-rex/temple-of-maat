@@ -38,6 +38,8 @@ try {
       followsHeroGallery: rail?.previousElementSibling === gallery,
       cardCount: rail?.querySelectorAll(".tm2-wallpaper-card").length,
       mountedBeforeScroll: rail?.querySelectorAll(".tm2-wallpaper-card img").length,
+      downloadAllHref: rail?.querySelector(".tm2-wallpaper-pack")?.getAttribute("href"),
+      downloadAllLabel: rail?.querySelector(".tm2-wallpaper-pack")?.textContent?.trim(),
       overflowX: track ? getComputedStyle(track).overflowX : "",
       horizontalMovement: after > before,
       title: rail?.querySelector(".tm2-wallpaper-rail-title")?.textContent?.trim(),
@@ -84,7 +86,7 @@ try {
   result.plateDimensions = `${plateMetadata.width}x${plateMetadata.height}`;
   await page.screenshot({ path: path.join(root, "work", "parental-powers-artifact-smoke.png"), fullPage: false });
   await browser.close();
-  const ok = railResult.followsHeroGallery && railResult.cardCount === 72 && railResult.mountedBeforeScroll > 0 && railResult.mountedBeforeScroll <= 10 && railResult.overflowX === "auto" && railResult.horizontalMovement && result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasDownload && result.chamberMapped && result.manifestMapped && result.wallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
+  const ok = railResult.followsHeroGallery && railResult.cardCount === 72 && railResult.mountedBeforeScroll > 0 && railResult.mountedBeforeScroll <= 10 && railResult.downloadAllHref === "./downloads/temple-of-maat-parental-powers-wallpapers-v5.2.3.zip" && railResult.overflowX === "auto" && railResult.horizontalMovement && result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasDownload && result.chamberMapped && result.manifestMapped && result.wallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
   console.log(JSON.stringify({ ok, railResult, result, pageErrors }, null, 2));
   if (!ok) process.exitCode = 1;
 } finally {
