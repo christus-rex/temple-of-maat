@@ -104,8 +104,6 @@ export function createRelationshipGraph(graphData, options = {}) {
     }
   }
 
-  for (const [namespace, provider] of Object.entries(options.providers || {})) registerProvider(namespace, provider);
-
   function registerProvider(namespace, provider) {
     if (!KNOWN_NAMESPACES.has(namespace)) throw new RangeError(`Cannot register provider for unknown namespace: ${namespace}`);
     if (typeof provider !== 'function') throw new TypeError(`Provider for ${namespace} must be a function.`);
@@ -343,6 +341,12 @@ export function createRelationshipGraph(graphData, options = {}) {
     exportBundle,
     stats
   });
+
+  // Construction-time providers must be installed after `api` exists because
+  // registerProvider intentionally returns the API for fluent late registration.
+  for (const [namespace, provider] of Object.entries(options.providers || {})) {
+    registerProvider(namespace, provider);
+  }
 
   return api;
 }
