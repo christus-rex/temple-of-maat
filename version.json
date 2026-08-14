@@ -1,5 +1,5 @@
 {
-  "version": "5.2.1",
-  "build": "2026-08-13-v5.2.1-horizontal-wallpaper-rail",
-  "source": "Temple v5.2.0 with a horizontally scrollable 72-wallpaper gallery"
+  "version": "5.2.2",
+  "build": "2026-08-14-v5.2.2-virtualized-wallpaper-rail",
+  "source": "Temple v5.2.1 with a memory-bounded 72-wallpaper gallery"
 }

@@ -21,6 +21,7 @@ try {
   page.on("requestfailed", (request) => { if (request.url().startsWith(`http://127.0.0.1:${port}/`)) pageErrors.push(`${request.url()}: ${request.failure()?.errorText}`); });
   await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.waitForSelector("#tm2-wallpaper-rail .tm2-wallpaper-card", { timeout: 30000 });
+  await page.locator("#tm2-wallpaper-rail").scrollIntoViewIfNeeded();
   await page.waitForFunction(() => {
     const image = document.querySelector("#tm2-wallpaper-rail .tm2-wallpaper-card img");
     return Boolean(image?.complete && image?.naturalWidth >= 900 && image?.naturalHeight >= 500);
@@ -36,6 +37,7 @@ try {
     return {
       followsHeroGallery: rail?.previousElementSibling === gallery,
       cardCount: rail?.querySelectorAll(".tm2-wallpaper-card").length,
+      mountedBeforeScroll: rail?.querySelectorAll(".tm2-wallpaper-card img").length,
       overflowX: track ? getComputedStyle(track).overflowX : "",
       horizontalMovement: after > before,
       title: rail?.querySelector(".tm2-wallpaper-rail-title")?.textContent?.trim(),
@@ -82,7 +84,7 @@ try {
   result.plateDimensions = `${plateMetadata.width}x${plateMetadata.height}`;
   await page.screenshot({ path: path.join(root, "work", "parental-powers-artifact-smoke.png"), fullPage: false });
   await browser.close();
-  const ok = railResult.followsHeroGallery && railResult.cardCount === 72 && railResult.overflowX === "auto" && railResult.horizontalMovement && result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasDownload && result.chamberMapped && result.manifestMapped && result.wallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
+  const ok = railResult.followsHeroGallery && railResult.cardCount === 72 && railResult.mountedBeforeScroll > 0 && railResult.mountedBeforeScroll <= 10 && railResult.overflowX === "auto" && railResult.horizontalMovement && result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasDownload && result.chamberMapped && result.manifestMapped && result.wallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
   console.log(JSON.stringify({ ok, railResult, result, pageErrors }, null, 2));
   if (!ok) process.exitCode = 1;
 } finally {
