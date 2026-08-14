@@ -28,9 +28,9 @@ for (const relative of required) {
 
 const version = JSON.parse(read('version.json'));
 if (version.version !== '5.2.7') fail(`Expected stewardship release 5.2.7, found ${version.version}`);
-if (version.build !== '2026-08-14-v5.2.7-stewardship-governance') fail(`Unexpected stewardship build: ${version.build}`);
-if (!/canonical roadmap/i.test(version.source || '') || !/governance covenant/i.test(version.source || '')) {
-  fail('version.json must describe the v5.2.7 roadmap/governance stewardship scope');
+if (version.build !== '2026-08-14-v5.2.7-wallpaper-interaction-hotfix') fail(`Unexpected stewardship/hotfix build: ${version.build}`);
+if (!/canonical roadmap/i.test(version.source || '') || !/governance covenant/i.test(version.source || '') || !/wallpaper/i.test(version.source || '')) {
+  fail('version.json must describe stewardship/governance plus the wallpaper-interaction hotfix');
 }
 
 const readme = read('README.md');
@@ -171,6 +171,22 @@ for (const marker of [
   if (!threshold.includes(marker)) fail(`Manual threshold marker missing: ${marker}`);
 }
 
+// Mobile chamber artifacts must suspend redundant floating controls so artifact
+// downloads cannot be covered by the fixed Codex/Collect dock.
+for (const marker of [
+  'syncArtifactInteractionState',
+  "'temple-artifact-open'",
+  '@media (max-width: 760px)',
+  'body.temple-artifact-open .tm524-dock',
+  'body.temple-artifact-open .tm524-chamber-tools',
+  'body.temple-artifact-open .temple-shem-gateway'
+]) {
+  if (!threshold.includes(marker)) fail(`Wallpaper interaction guard missing: ${marker}`);
+}
+if (threshold.includes('.tm2-artifact-backdrop { z-index: 8900')) {
+  fail('Wallpaper hotfix must not globally raise the artifact above desktop Codex/Chant controls');
+}
+
 // Ritual media remains private, integrity-bound, and never autoplayed.
 for (const marker of [
   "const DB_NAME = 'temple-of-maat-media'",
@@ -193,8 +209,8 @@ if (audioMeta.playbackPolicy?.autoplay !== false || audioMeta.playbackPolicy?.us
 }
 
 // PWA release truth.
-if (!sw.includes("const VERSION = 'temple-maat-pwa-v5.2.7-stewardship-governance-2026-08-14'")) {
-  fail('Service-worker cache namespace is not v5.2.7 stewardship-governance');
+if (!sw.includes("const VERSION = 'temple-maat-pwa-v5.2.7-wallpaper-hotfix-2026-08-14'")) {
+  fail('Service-worker cache namespace is not the v5.2.7 wallpaper hotfix');
 }
 for (const asset of [
   './index.html',
@@ -211,4 +227,4 @@ if (!sw.includes('Canonical ritual audio lives in IndexedDB only after explicit 
   fail('Service-worker ritual-media boundary comment is missing');
 }
 
-console.log(`Validated Temple ${version.version} stewardship: 72 chambers, 72 Codex records, 72 Shem dossiers, roadmap/governance truth, manual threshold, collectibles, Journey/Dossiers, and no-autoplay device-local ritual media preserved.`);
+console.log(`Validated Temple ${version.version} wallpaper hotfix: 72 chambers, 72 Codex records, 72 Shem dossiers, mobile artifact controls unobstructed, manual threshold, collectibles, Journey/Dossiers, and no-autoplay device-local ritual media preserved.`);
