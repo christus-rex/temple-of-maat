@@ -199,8 +199,10 @@ for (const marker of ['## 3. Four provenance layers', '## 8. Personal data and p
   assert(governance.includes(marker), `Governance dependency missing: ${marker}`);
 }
 
+// The bootstrap catalog began empty. Once reviewed ingestion issues land, the
+// canonical catalog may grow; validate every production record semantically instead
+// of imposing a temporary record-count rule.
 const production = validateCatalog(catalog, 'canonical library/catalog.json');
-assert(production.records.length === 0, 'Canonical Library catalog must remain empty until reviewed ingestion issues land');
 const reference = validateCatalog(fixture, 'reference Library fixture');
 assert(reference.records.length === 7, `Expected 7 reference records, found ${reference.records.length}`);
 validatePersonalState(personalFixture, fixture, 'reference personal state');
