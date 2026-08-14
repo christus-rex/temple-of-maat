@@ -1,4 +1,4 @@
-/* Temple of Ma'at v5.3 — Threshold, accessibility, and mobile refinement */
+/* Temple of Ma'at v5.3.1 — Threshold, accessibility, and mobile refinement */
 :root {
   --temple-focus: #40e0d0;
   --temple-gold: #d9bf73;
@@ -89,7 +89,17 @@
   color: #8fa6a6;
   font: 600 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
-.temple-app-ready #temple-static-entry { display: none; }
+
+/* Manual threshold gate: React may render in the background, but the portal stays inaccessible until the visitor chooses to enter. */
+body:not(.temple-app-ready) #root {
+  display: none !important;
+}
+body:not(.temple-app-ready) .temple-skip-link {
+  display: none;
+}
+.temple-app-ready #temple-static-entry {
+  display: none;
+}
 
 /* Clear keyboard focus without changing the visual identity. */
 :where(button, [role="button"], a[href], input, select, textarea):focus-visible {
