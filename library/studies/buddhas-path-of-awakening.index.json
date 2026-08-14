@@ -1,0 +1,108 @@
+{
+  "schema": "temple-of-maat/library-study-index-v1",
+  "studyId": "study.buddhas-path-of-awakening",
+  "title": "The Buddha's Path of Awakening",
+  "subtitle": "A Comprehensive Illustrated Guide to Wisdom, Compassion, Ethics, Meditation, and Liberation",
+  "language": "English",
+  "sourceBasis": {
+    "format": "illustrated PDF",
+    "pageCount": 58,
+    "preparedFor": ["Adytia of Arcturus", "Marvin Alberto Ramirez-Bonilla"],
+    "publicExposure": "metadata-and-index-only",
+    "fullTextBundled": false
+  },
+  "editorialCaveats": [
+    "Early teachings are anchored primarily in the Pali Nikayas and their parallels in the Chinese Agamas.",
+    "Later chapters are explicitly identified as historical developments rather than presented as verbatim speech of the historical Buddha.",
+    "Translations of technical terms vary; the study uses multiple English renderings where they illuminate different facets.",
+    "The work is educational and contemplative and is not a substitute for medical or mental-health care.",
+    "The study paraphrases rather than reproduces long copyrighted translations."
+  ],
+  "guidingPrinciple": "A teaching is understood when it reduces greed, hostility, confusion, and harm, and increases wisdom, compassion, integrity, and freedom.",
+  "strata": [
+    {
+      "id": "early-buddhist-core",
+      "label": "Early Buddhist orientation",
+      "scope": "Parts I–III",
+      "provenanceLayers": ["L2"],
+      "note": "The study presents these chapters as teachings recurring centrally in early Buddhist sources, anchored primarily in the Pali Nikayas and Chinese Agama parallels."
+    },
+    {
+      "id": "later-buddhist-developments",
+      "label": "Later Buddhist historical developments",
+      "scope": "Part IV",
+      "provenanceLayers": ["L2"],
+      "note": "Mahayana, Zen, and Vajrayana materials are labeled as later historical developments rather than verbatim speech of the historical Buddha."
+    },
+    {
+      "id": "integrated-practice-manual",
+      "label": "Integrated practice synthesis",
+      "scope": "Part V and appendices",
+      "provenanceLayers": ["L2"],
+      "note": "The book's own practical synthesis: a thirty-day practice, meditation instructions, daily rule of life, essential lists, glossary, and source map."
+    }
+  ],
+  "parts": [
+    {"number": 1, "title": "The Human Problem and the Way Beyond It", "pageStart": 6, "stratum": "early-buddhist-core"},
+    {"number": 2, "title": "Training the Whole Person", "pageStart": 22, "stratum": "early-buddhist-core"},
+    {"number": 3, "title": "Living the Dhamma", "pageStart": 36, "stratum": "early-buddhist-core"},
+    {"number": 4, "title": "Later Buddhist Horizons", "pageStart": 44, "stratum": "later-buddhist-developments"},
+    {"number": 5, "title": "A Practice Manual", "pageStart": 50, "stratum": "integrated-practice-manual"}
+  ],
+  "chapters": [
+    {"number": 1, "part": 1, "title": "The Buddha and the Question That Changed a Civilization", "pageStart": 7, "stratum": "early-buddhist-core", "keywords": ["buddha", "suffering", "dhamma", "awakening"]},
+    {"number": 2, "part": 1, "title": "The Middle Way and the Four Noble Truths", "pageStart": 9, "stratum": "early-buddhist-core", "keywords": ["middle-way", "four-noble-truths", "dukkha", "craving", "cessation"]},
+    {"number": 3, "part": 1, "title": "The Noble Eightfold Path", "pageStart": 11, "stratum": "early-buddhist-core", "keywords": ["eightfold-path", "wisdom", "ethics", "meditation"]},
+    {"number": 4, "part": 1, "title": "The Three Characteristics: Impermanence, Dukkha, and Not-Self", "pageStart": 13, "stratum": "early-buddhist-core", "keywords": ["impermanence", "dukkha", "not-self", "anatta"]},
+    {"number": 5, "part": 1, "title": "The Five Aggregates and the Construction of a Person", "pageStart": 15, "stratum": "early-buddhist-core", "keywords": ["five-aggregates", "person", "identity"]},
+    {"number": 6, "part": 1, "title": "Dependent Origination: How Suffering Builds Itself", "pageStart": 17, "stratum": "early-buddhist-core", "keywords": ["dependent-origination", "conditionality", "suffering"]},
+    {"number": 7, "part": 1, "title": "Karma, Rebirth, and Moral Causality", "pageStart": 19, "stratum": "early-buddhist-core", "keywords": ["karma", "rebirth", "moral-causality"]},
+    {"number": 8, "part": 1, "title": "Nibbana: The Unbinding", "pageStart": 20, "stratum": "early-buddhist-core", "keywords": ["nibbana", "unbinding", "liberation"]},
+    {"number": 9, "part": 2, "title": "Ethics as the Art of Non-Harm", "pageStart": 23, "stratum": "early-buddhist-core", "keywords": ["ethics", "non-harm", "conduct"]},
+    {"number": 10, "part": 2, "title": "Right Speech, Right Action, and Right Livelihood", "pageStart": 25, "stratum": "early-buddhist-core", "keywords": ["right-speech", "right-action", "right-livelihood"]},
+    {"number": 11, "part": 2, "title": "Right Effort and the Five Hindrances", "pageStart": 26, "stratum": "early-buddhist-core", "keywords": ["right-effort", "five-hindrances", "cultivation"]},
+    {"number": 12, "part": 2, "title": "The Four Foundations of Mindfulness", "pageStart": 28, "stratum": "early-buddhist-core", "keywords": ["mindfulness", "body", "feeling", "mind", "dhammas"]},
+    {"number": 13, "part": 2, "title": "Mindfulness of Breathing and Collectedness", "pageStart": 30, "stratum": "early-buddhist-core", "keywords": ["breathing", "mindfulness", "collectedness", "samadhi"]},
+    {"number": 14, "part": 2, "title": "Insight: Seeing Arising and Passing", "pageStart": 31, "stratum": "early-buddhist-core", "keywords": ["insight", "arising", "passing", "impermanence"]},
+    {"number": 15, "part": 2, "title": "The Boundless Heart: Loving-Kindness, Compassion, Joy, and Equanimity", "pageStart": 32, "stratum": "early-buddhist-core", "keywords": ["loving-kindness", "compassion", "joy", "equanimity"]},
+    {"number": 16, "part": 2, "title": "The Seven Factors of Awakening and the Thirty-Seven Wings", "pageStart": 34, "stratum": "early-buddhist-core", "keywords": ["awakening-factors", "thirty-seven-wings", "cultivation"]},
+    {"number": 17, "part": 3, "title": "Generosity, Friendship, and the Household Life", "pageStart": 37, "stratum": "early-buddhist-core", "keywords": ["generosity", "friendship", "householder", "community"]},
+    {"number": 18, "part": 3, "title": "Working with Anger, Fear, Grief, and Desire", "pageStart": 39, "stratum": "early-buddhist-core", "keywords": ["anger", "fear", "grief", "desire", "practice"]},
+    {"number": 19, "part": 3, "title": "Heedfulness, Death, and the Freedom of Impermanence", "pageStart": 40, "stratum": "early-buddhist-core", "keywords": ["heedfulness", "death", "impermanence", "freedom"]},
+    {"number": 20, "part": 3, "title": "Inquiry, Faith, and Testing the Teaching", "pageStart": 42, "stratum": "early-buddhist-core", "keywords": ["inquiry", "faith", "testing", "discernment"]},
+    {"number": 21, "part": 3, "title": "Refuge, Community, and the Role of a Teacher", "pageStart": 43, "stratum": "early-buddhist-core", "keywords": ["refuge", "community", "teacher", "sangha"]},
+    {"number": 22, "part": 4, "title": "The Bodhisattva Ideal and the Perfections", "pageStart": 45, "stratum": "later-buddhist-developments", "keywords": ["bodhisattva", "perfections", "mahayana"]},
+    {"number": 23, "part": 4, "title": "Emptiness and the Two Truths", "pageStart": 46, "stratum": "later-buddhist-developments", "keywords": ["emptiness", "two-truths", "mahayana"]},
+    {"number": 24, "part": 4, "title": "Buddha-Nature, Zen, and Direct Seeing", "pageStart": 47, "stratum": "later-buddhist-developments", "keywords": ["buddha-nature", "zen", "direct-seeing"]},
+    {"number": 25, "part": 4, "title": "Vajrayana: Symbol, Ritual, and Transformation", "pageStart": 48, "stratum": "later-buddhist-developments", "keywords": ["vajrayana", "symbol", "ritual", "transformation"]},
+    {"number": 26, "part": 4, "title": "Unity and Diversity Across Buddhist Traditions", "pageStart": 49, "stratum": "later-buddhist-developments", "keywords": ["traditions", "unity", "diversity", "comparison"]},
+    {"number": 27, "part": 5, "title": "A Thirty-Day Integrated Practice", "pageStart": 51, "stratum": "integrated-practice-manual", "keywords": ["thirty-day-practice", "practice", "integration"]},
+    {"number": 28, "part": 5, "title": "Essential Meditation Instructions", "pageStart": 53, "stratum": "integrated-practice-manual", "keywords": ["meditation", "instructions", "practice"]},
+    {"number": 29, "part": 5, "title": "A Daily Rule of Life", "pageStart": 54, "stratum": "integrated-practice-manual", "keywords": ["daily-rule", "ethics", "meditation", "practice"]}
+  ],
+  "appendices": [
+    {"id": "A", "title": "Essential Lists at a Glance", "pageStart": 55, "stratum": "integrated-practice-manual"},
+    {"id": "B", "title": "Glossary", "pageStart": 56, "stratum": "integrated-practice-manual"},
+    {"id": "C", "title": "Source Map and Further Reading", "pageStart": 57, "stratum": "integrated-practice-manual"}
+  ],
+  "sourceMap": {
+    "earlyBuddhistDiscourses": [
+      "SuttaCentral — Early Buddhist texts, translations, and parallels",
+      "SN 56.11 — Setting in Motion the Wheel of the Dhamma",
+      "SN 22.59 — The Characteristic of Not-Self",
+      "SN 12.2 — Analysis of Dependent Origination",
+      "MN 10 — Mindfulness Meditation",
+      "MN 118 — Mindfulness of Breathing",
+      "DN 31 — Advice to Sigalaka",
+      "DN 16 — The Great Passing",
+      "AN 3.65 — The Discourse to the Kalamas",
+      "Snp 1.8 — The Discourse on Love"
+    ],
+    "scholarlyOrientation": ["Stanford Encyclopedia of Philosophy — Buddha"],
+    "laterDevelopmentResources": [
+      "84000 — The Heart of the Perfection of Wisdom",
+      "BDK America — The Lotus Sutra",
+      "84000 — Translating the Words of the Buddha"
+    ]
+  }
+}
