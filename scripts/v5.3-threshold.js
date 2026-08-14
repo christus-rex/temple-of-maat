@@ -22,6 +22,7 @@
     loadEnhancement('./scripts/v5.2.4-living-codex.js', 'living-codex');
     loadEnhancement('./scripts/v5.2.4-chant-fallback.js', 'chant-fallback');
     loadEnhancement('./scripts/v5.2.5-living-temple.js', 'living-temple');
+    loadEnhancement('./scripts/v5.3-pilgrimage-navigation.js', 'pilgrimage-navigation');
     loadEnhancement('./scripts/v5.2.6-shem-dossiers.js', 'shem-dossiers');
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
     loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library');
