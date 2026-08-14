@@ -1,4 +1,4 @@
-/* Temple of Ma'at v5.3.1 — progressive enhancement layer */
+/* Temple of Ma'at v5.2.4 — progressive enhancement and manual threshold gate */
 (function () {
   'use strict';
 
@@ -6,6 +6,15 @@
   const statusPhrases = /^(offline mode|update available|update ready|install temple)$/i;
   let enhancementQueued = false;
   let hasEntered = false;
+
+  function loadLivingCodex() {
+    if (document.querySelector('script[data-temple-v524]')) return;
+    const script = document.createElement('script');
+    script.src = './scripts/v5.2.4-living-codex.js';
+    script.async = false;
+    script.dataset.templeV524 = 'true';
+    document.head.appendChild(script);
+  }
 
   function noteApplicationMounted() {
     if (root && root.childElementCount > 0) {
@@ -139,6 +148,8 @@
       return postToServiceWorker({ type: 'CACHE_FULL_TEMPLE' });
     }
   });
+
+  loadLivingCodex();
 
   document.addEventListener('DOMContentLoaded', () => {
     holdAtThreshold();
