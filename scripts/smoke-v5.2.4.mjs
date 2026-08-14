@@ -134,6 +134,7 @@ try {
     audioState.preload === 'metadata' &&
     audioState.paused === true &&
     audioState.localInput === true &&
+    audioState.localAccept.includes('audio/') &&
     localAudioState.srcIsBlob === true &&
     localAudioState.paused === true &&
     pageErrors.length === 0;
