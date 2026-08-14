@@ -1397,29 +1397,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .tm2-parental-copy{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:14px 16px}
   .tm2-parental-copy p{font:11px/1.6 ui-monospace,monospace;color:#c9d5d7;margin:0}
   .tm2-parental-download{white-space:nowrap}
-  .tm2-wallpaper-rail{position:relative;margin:10px 0 44px;padding:22px 0 18px;border-top:1px solid rgba(64,224,208,.18);border-bottom:1px solid rgba(217,191,115,.18);background:linear-gradient(180deg,rgba(64,224,208,.025),rgba(217,191,115,.035))}
-  .tm2-wallpaper-rail-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding:0 4px 14px}
-  .tm2-wallpaper-rail-title{font:700 clamp(18px,2.3vw,28px)/1.15 Cinzel,serif;color:#ead79d}
-  .tm2-wallpaper-rail-sub{font:10px/1.55 ui-monospace,monospace;color:#91aeb2;margin-top:7px}
-  .tm2-wallpaper-rail-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;flex:0 0 auto;margin-left:auto}
-  .tm2-wallpaper-rail-nav button{width:42px;height:42px;border-radius:50%;border:1px solid rgba(64,224,208,.32);background:rgba(64,224,208,.07);color:#e6fbff;font-size:21px;cursor:pointer}
-  .tm2-wallpaper-pack{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 15px;border-radius:999px;border:1px solid rgba(217,191,115,.48);background:linear-gradient(180deg,#fff2c2,#d5b650);color:#1e170d;text-decoration:none;font:700 10px/1 ui-monospace,monospace;letter-spacing:.04em;white-space:nowrap}
-  .tm2-wallpaper-pack:hover{filter:brightness(1.06)}.tm2-wallpaper-pack:focus-visible{outline:3px solid #40e0d0;outline-offset:3px}
-  .tm2-wallpaper-track{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(320px,46vw,680px);gap:16px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:inline mandatory;scroll-padding-inline:4px;padding:2px 4px 16px;outline:none;scrollbar-color:#d9bf73 rgba(255,255,255,.06);scrollbar-width:auto}
-  .tm2-wallpaper-track::-webkit-scrollbar{height:12px}.tm2-wallpaper-track::-webkit-scrollbar-track{background:rgba(255,255,255,.05);border-radius:999px}.tm2-wallpaper-track::-webkit-scrollbar-thumb{background:linear-gradient(90deg,#40e0d0,#d9bf73);border-radius:999px;border:3px solid #101920}
-  .tm2-wallpaper-card{position:relative;display:block;aspect-ratio:16/9;padding:0;overflow:hidden;scroll-snap-align:start;border-radius:18px;border:1px solid rgba(217,191,115,.28);background:linear-gradient(120deg,#091118 20%,#11242a 48%,#091118 76%);background-size:220% 100%;color:#fff;text-align:left;cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.22);contain:layout paint style}
-  .tm2-wallpaper-card[data-preview="idle"]{animation:tm2-wallpaper-pulse 1.8s ease-in-out infinite}
-  @keyframes tm2-wallpaper-pulse{0%,100%{background-position:100% 0}50%{background-position:0 0}}
-  .tm2-wallpaper-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease;pointer-events:none}
-  .tm2-wallpaper-card:hover img,.tm2-wallpaper-card:focus-visible img{transform:scale(1.025)}
-  .tm2-wallpaper-card:focus-visible{outline:3px solid #40e0d0;outline-offset:3px}
-  .tm2-wallpaper-card-shade{position:absolute;inset:38% 0 0;background:linear-gradient(0deg,rgba(3,7,10,.94),rgba(3,7,10,0));pointer-events:none}
-  .tm2-wallpaper-card-copy{position:absolute;left:16px;right:16px;bottom:14px;pointer-events:none}
-  .tm2-wallpaper-card-num{font:700 9px/1.2 ui-monospace,monospace;letter-spacing:.18em;color:#40e0d0}
-  .tm2-wallpaper-card-pair{font:700 clamp(17px,2vw,24px)/1.1 Cinzel,serif;color:#fff4d1;margin-top:5px}
-  .tm2-wallpaper-card-name{font:10px/1.4 ui-monospace,monospace;color:#d9bf73;margin-top:5px}
-  .masonry-item{content-visibility:auto;contain-intrinsic-size:auto 560px}
-  @media(prefers-reduced-motion:reduce){.tm2-wallpaper-card[data-preview="idle"]{animation:none}.tm2-wallpaper-card img{transition:none}}
   .tm2-pack-status{font:10px/1.4 ui-monospace,monospace;color:#d6e2e3;grid-column:1/-1;display:none}
   .tm2-pack-status.show{display:block}
   .tm2-deeplink{font:10px ui-monospace,monospace;color:#78dcd2;overflow-wrap:anywhere}
@@ -1432,7 +1409,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     .tm2-data-grid,.tm2-actions{grid-template-columns:1fr}.tm2-seal-dock{grid-template-columns:1fr}.tm2-seal-dock .seal{width:150px;height:150px;justify-self:center}
     .tm2-portrait-caption .name{font-size:23px}.tm2-btn.full{grid-column:auto}
     .tm2-parental-section{margin:0 12px 12px}.tm2-parental-caption{left:14px;right:14px;bottom:12px}.tm2-parental-copy{grid-template-columns:1fr}.tm2-parental-download{width:100%}
-    .tm2-wallpaper-rail{margin-bottom:30px;padding-top:18px}.tm2-wallpaper-rail-head{align-items:flex-start;flex-direction:column;padding-inline:0}.tm2-wallpaper-rail-nav{width:100%;justify-content:flex-start;margin-left:0}.tm2-wallpaper-rail-nav button{width:38px;height:38px}.tm2-wallpaper-pack{min-height:38px}.tm2-wallpaper-track{grid-auto-columns:86vw;gap:12px}
   }
 </style>
 <script>
@@ -1620,33 +1596,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   function addArtifactButtons(){
     chambers().forEach(info=>{const body=info.card.querySelector('.p-4');let bar=body?.querySelector('.tm-card-collectbar');if(!body)return;if(!bar){bar=document.createElement('div');bar.className='tm-card-collectbar';body.appendChild(bar);}if(!bar.querySelector('.tm2-artifact-open')){const b=document.createElement('button');b.type='button';b.className='tm-collect-toggle tm2-artifact-open';b.textContent='Artifact';b.onclick=ev=>{ev.preventDefault();ev.stopPropagation();openArtifact(info);};bar.appendChild(b);}});
   }
-  function ensureWallpaperRail(){
-    const list=chambers().filter(info=>info.parental);const gallery=list[0]?.card?.parentElement;if(!gallery||list.length!==72)return;
-    let rail=document.getElementById('tm2-wallpaper-rail');
-    if(!rail){rail=document.createElement('section');rail.id='tm2-wallpaper-rail';rail.className='tm2-wallpaper-rail';gallery.insertAdjacentElement('afterend',rail);}
-    if(rail.dataset.ready==='72')return;
-    rail.dataset.ready='72';rail.setAttribute('aria-labelledby','tm2-wallpaper-rail-title');
-    rail.innerHTML=`<div class="tm2-wallpaper-rail-head"><div><div class="tm2-wallpaper-rail-title" id="tm2-wallpaper-rail-title">Parental Powers Wallpapers</div><div class="tm2-wallpaper-rail-sub">Scroll horizontally through all 72 chambers • Select a wallpaper to open its chamber artifact</div></div><div class="tm2-wallpaper-rail-nav"><a class="tm2-wallpaper-pack" href="./downloads/temple-of-maat-parental-powers-wallpapers-v5.2.3.zip" download="temple-of-maat-parental-powers-wallpapers-v5.2.3.zip" aria-label="Download all 72 Parental Powers wallpapers">↓ Download all 72</a><button type="button" class="tm2-wallpaper-prev" aria-label="Previous wallpapers">‹</button><button type="button" class="tm2-wallpaper-next" aria-label="Next wallpapers">›</button></div></div><div class="tm2-wallpaper-track" tabindex="0" aria-label="72 Parental Powers wallpapers"></div>`;
-    const track=rail.querySelector('.tm2-wallpaper-track');
-    const cards=[];const unloadTimers=new WeakMap();let railVisible=!('IntersectionObserver' in window);let previewFrame=0;
-    const mountPreview=card=>{clearTimeout(unloadTimers.get(card));unloadTimers.delete(card);if(card.querySelector('img'))return;const img=new Image();img.alt='';img.loading='lazy';img.decoding='async';img.fetchPriority='low';img.draggable=false;img.onload=()=>card.dataset.preview='loaded';img.onerror=()=>card.dataset.preview='error';img.src=card.dataset.previewSrc;card.prepend(img);};
-    const unmountPreview=card=>{if(card===document.activeElement)return;const img=card.querySelector('img');if(img){img.onload=null;img.onerror=null;img.removeAttribute('src');img.remove();}card.dataset.preview='idle';};
-    const syncPreviews=()=>{previewFrame=0;const left=track.scrollLeft;const right=left+track.clientWidth;const margin=Math.max(track.clientWidth,720);cards.forEach(card=>{const nearby=railVisible&&card.offsetLeft+card.offsetWidth>=left-margin&&card.offsetLeft<=right+margin;if(nearby)mountPreview(card);else if(card.querySelector('img')&&!unloadTimers.get(card)){const timer=setTimeout(()=>{unloadTimers.delete(card);unmountPreview(card);rail.dataset.mounted=String(track.querySelectorAll('img').length);},900);unloadTimers.set(card,timer);}});rail.dataset.mounted=String(track.querySelectorAll('img').length);};
-    const schedulePreviews=()=>{if(!previewFrame)previewFrame=requestAnimationFrame(syncPreviews);};
-    list.forEach(info=>{const p=info.parental;const card=document.createElement('button');card.type='button';card.className='tm2-wallpaper-card';card.dataset.preview='idle';card.dataset.previewSrc=p.displayPath;card.setAttribute('aria-label',`Open Chamber ${info.num}: ${p.angel} and ${p.daemon}, ${p.thirdName}`);card.innerHTML=`<span class="tm2-wallpaper-card-shade"></span><span class="tm2-wallpaper-card-copy"><span class="tm2-wallpaper-card-num">CHAMBER ${esc(info.num)} • PARENTAL POWERS</span><span class="tm2-wallpaper-card-pair">${esc(p.angel)} ↔ ${esc(p.daemon)}</span><span class="tm2-wallpaper-card-name">THIRD NAME • ${esc(p.thirdName)}</span></span>`;card.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();openArtifact(info);});card.addEventListener('focus',()=>mountPreview(card));card.addEventListener('blur',schedulePreviews);card.addEventListener('pointerenter',()=>mountPreview(card),{passive:true});track.appendChild(card);cards.push(card);});
-    if('IntersectionObserver' in window){const railObserver=new IntersectionObserver(entries=>{railVisible=entries.some(entry=>entry.isIntersecting);schedulePreviews();},{rootMargin:'600px 0px'});railObserver.observe(rail);}
-    track.addEventListener('scroll',schedulePreviews,{passive:true});if('ResizeObserver' in window)new ResizeObserver(schedulePreviews).observe(track);else window.addEventListener('resize',schedulePreviews,{passive:true});schedulePreviews();
-    const move=direction=>track.scrollBy({left:direction*Math.max(320,track.clientWidth*.78),behavior:'smooth'});
-    rail.querySelector('.tm2-wallpaper-prev').addEventListener('click',event=>{event.preventDefault();event.stopPropagation();move(-1);});rail.querySelector('.tm2-wallpaper-next').addEventListener('click',event=>{event.preventDefault();event.stopPropagation();move(1);});
-    track.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.preventDefault();move(-1);}if(event.key==='ArrowRight'){event.preventDefault();move(1);}});
-  }
   function enhanceConsole(){
     const actions=document.querySelector('#tm-commit-deck .tm-actions');if(!actions)return;
     if(!actions.querySelector('.tm2-seal-pack')){const b=document.createElement('button');b.type='button';b.className='tm-btn tm2-seal-pack';b.textContent='Download 72 Seals';const s=document.createElement('div');s.className='tm2-pack-status';actions.append(b,s);b.onclick=()=>downloadSealPack(b,s);}
     if(!actions.querySelector('.tm2-manifest')){const b=document.createElement('button');b.type='button';b.className='tm-btn tm-ghost tm2-manifest';b.textContent='Export Manifest';b.onclick=downloadManifest;actions.appendChild(b);}
   }
   function exposeData(){window.TempleArchiveData=manifest();window.TempleArchive={version:VERSION,chambers,manifest,openChamber:(n)=>{const info=chambers().find(i=>i.num===String(n).padStart(2,'0'));if(info)openArtifact(info);},downloadManifest,downloadSealPack:()=>{const fake={textContent:'Download 72 Seals',disabled:false},status={textContent:'',classList:{add(){}}};return downloadSealPack(fake,status);}};}
-  function run(){applyFocals();addArtifactButtons();ensureWallpaperRail();enhanceConsole();ensureArtifactShell();exposeData();openFromHash();}
+  function run(){applyFocals();addArtifactButtons();enhanceConsole();ensureArtifactShell();exposeData();openFromHash();}
   let q=false;function schedule(){if(q)return;q=true;requestAnimationFrame(()=>{q=false;run();});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
   window.addEventListener('load',schedule);window.addEventListener('hashchange',openFromHash);window.addEventListener('resize',applyFocals);
