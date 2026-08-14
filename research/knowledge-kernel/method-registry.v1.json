@@ -1,0 +1,44 @@
+{
+  "schema": "temple-of-maat/method-registry-v1",
+  "version": "1.0.0",
+  "updated": "2026-08-14",
+  "methods": [
+    {
+      "id": "method.gematria.master-catalogue.v1",
+      "label": "Master Catalogue mixed-script compound method",
+      "version": "1.0.0",
+      "status": "active-versioned",
+      "sourceRefs": ["source.shem.master-catalogue"],
+      "scope": "72-fold comparative catalogue",
+      "inputPolicy": {
+        "angel": "Use the declared Hebrew spelling and Mispar Hechrachi value supplied by the catalogue.",
+        "daemon": "Use the declared Latin/English spelling and English Ordinal value.",
+        "compound": "Add angel Hebrew value to daemon English Ordinal value.",
+        "reduction": "Apply digit reduction to the compound as declared by the catalogue."
+      },
+      "outputs": ["angelHebrewMisparHechrachi", "daemonEnglishOrdinal", "compound", "digitReduction"],
+      "caveats": [
+        "Mixed-script arithmetic is a project method, not evidence that two names are historically or metaphysically identical.",
+        "Changing Hebrew spelling, transliteration, or daemon spelling changes results."
+      ]
+    },
+    {
+      "id": "method.gematria.solomonic-pairing.v1",
+      "label": "Solomonic Pairing shared Latin-script four-cipher method",
+      "version": "1.0.0",
+      "status": "active-versioned",
+      "sourceRefs": ["source.solomonic.pairing-codex"],
+      "scope": "Pairwise and Reunited Name comparison on a common Latin-script footing",
+      "inputPolicy": {
+        "normalization": "Preserve the declared Latin spelling/transliteration; uppercase A–Z for cipher evaluation unless the source method says otherwise.",
+        "ciphers": "English Ordinal (EO), Full Reduction (FR), Reverse Ordinal (RO), Reverse Full Reduction (RFR).",
+        "reunitedClassification": "RESOLVE = exact equality in at least one full cipher; BRIDGE = length-normalized profile between both sources on at least 3 of 4 axes; TRANSCEND = otherwise an emergent third profile."
+      },
+      "outputs": ["EO", "FR", "RO", "RFR", "optionalLengthNormalizedProfile", "optionalReunitedClassification"],
+      "caveats": [
+        "RESOLVE / BRIDGE / TRANSCEND are computational and interpretive labels, not metaphysical validation.",
+        "A different spelling or transliteration requires recalculation rather than retrofitting the prior result."
+      ]
+    }
+  ]
+}
