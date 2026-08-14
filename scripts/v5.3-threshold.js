@@ -1,18 +1,39 @@
-/* Temple of Ma'at v5.3 — progressive enhancement layer */
+/* Temple of Ma'at v5.3.1 — progressive enhancement layer */
 (function () {
   'use strict';
 
   const root = document.getElementById('root');
   const statusPhrases = /^(offline mode|update available|update ready|install temple)$/i;
   let enhancementQueued = false;
+  let hasEntered = false;
 
-  function markApplicationReady() {
+  function noteApplicationMounted() {
     if (root && root.childElementCount > 0) {
-      document.body.classList.add('temple-app-ready');
       root.setAttribute('tabindex', '-1');
       return true;
     }
     return false;
+  }
+
+  function holdAtThreshold() {
+    hasEntered = false;
+    document.body.classList.remove('temple-app-ready');
+    if (root) {
+      root.setAttribute('aria-hidden', 'true');
+      root.setAttribute('inert', '');
+    }
+    const status = document.querySelector('#temple-static-entry .temple-static-entry__status');
+    if (status) status.textContent = 'Awaiting your entry.';
+  }
+
+  function enterTemple() {
+    if (hasEntered) return;
+    hasEntered = true;
+    if (root) {
+      root.removeAttribute('aria-hidden');
+      root.removeAttribute('inert');
+    }
+    document.body.classList.add('temple-app-ready');
   }
 
   function inferControlLabel(control) {
@@ -79,7 +100,7 @@
     enhancementQueued = true;
     requestAnimationFrame(() => {
       enhancementQueued = false;
-      markApplicationReady();
+      noteApplicationMounted();
       enhanceControls(document);
     });
   }
@@ -120,7 +141,8 @@
   });
 
   document.addEventListener('DOMContentLoaded', () => {
-    markApplicationReady();
+    holdAtThreshold();
+    noteApplicationMounted();
     enhanceControls(document);
     cacheCurrentChamber();
 
@@ -129,7 +151,7 @@
       staticEntry.addEventListener('click', (event) => {
         const link = event.target.closest('a[data-temple-entry]');
         if (!link) return;
-        document.body.classList.add('temple-app-ready');
+        enterTemple();
       });
     }
   });
