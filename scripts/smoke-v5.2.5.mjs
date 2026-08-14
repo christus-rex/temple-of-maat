@@ -41,8 +41,10 @@ try {
   const browser = await chromium.launch(launchOptions);
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   await context.addInitScript(() => {
+    if (sessionStorage.getItem('tm525-smoke-initialized')) return;
     localStorage.removeItem('temple_v525_pilgrim_journey');
     localStorage.removeItem('temple_last_chamber');
+    sessionStorage.setItem('tm525-smoke-initialized', '1');
   });
   const page = await context.newPage();
   const pageErrors = [];
@@ -149,8 +151,7 @@ try {
     cardText: document.querySelector('#tm524-chant .tm525-media-vault')?.innerText || ''
   }));
 
-  // Keep IndexedDB across reload while no longer clearing journey state in init script.
-  await context.addInitScript(() => {});
+  // Keep IndexedDB and localStorage across reload; sessionStorage prevents the first-load reset from running twice.
   await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.waitForFunction(() => window.TemplePilgrimJourney?.version === '5.2.5' && window.TempleMediaVault?.installed() === true, { timeout: 30000 });
   const restored = await page.evaluate(() => ({
