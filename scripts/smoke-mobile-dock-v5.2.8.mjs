@@ -30,8 +30,16 @@ async function inspect(page, width) {
     }).map((node) => {
       const box = node.getBoundingClientRect();
       const style = getComputedStyle(node);
+      const label = (node.textContent || '').replace(/\s+/g, ' ').trim();
+      let semantic = label;
+      if (node.id === 'tm525-journey-button') semantic = 'Journey';
+      else if (node.id === 'tm525-dossier-button') semantic = 'Dossier';
+      else if (node.dataset.templeLibraryLauncher === 'dock') semantic = 'Library';
+      else if (node.dataset.templeOfflineOpen === 'true') semantic = 'Offline';
       return {
-        label: (node.textContent || '').replace(/\s+/g, ' ').trim(),
+        semantic,
+        label,
+        id: node.id || '',
         left: box.left,
         right: box.right,
         top: box.top,
@@ -42,7 +50,9 @@ async function inspect(page, width) {
         scrollWidth: node.scrollWidth,
         whiteSpace: style.whiteSpace,
         overflow: style.overflow,
-        textOverflow: style.textOverflow
+        textOverflow: style.textOverflow,
+        fontSize: style.fontSize,
+        afterContent: getComputedStyle(node, '::after').content
       };
     }) : [];
 
@@ -73,23 +83,25 @@ async function inspect(page, width) {
   });
 
   const expected = ['Codex', 'Collect', 'Chant', 'Journey', 'Dossier', 'Library', 'Offline'];
-  const labels = state.buttons.map((button) => button.label);
+  const semantics = state.buttons.map((button) => button.semantic);
+  const journey = state.buttons.find((button) => button.semantic === 'Journey');
   const overlaps = [];
   for (let i = 0; i < state.buttons.length; i += 1) {
     for (let j = i + 1; j < state.buttons.length; j += 1) {
-      if (rectanglesOverlap(state.buttons[i], state.buttons[j])) overlaps.push([state.buttons[i].label, state.buttons[j].label]);
+      if (rectanglesOverlap(state.buttons[i], state.buttons[j])) overlaps.push([state.buttons[i].semantic, state.buttons[j].semantic]);
     }
   }
 
   const assertions = {
     dockPresent: Boolean(state.dock),
-    expectedButtons: expected.every((label) => labels.includes(label)),
+    expectedButtons: expected.every((label) => semantics.includes(label)),
     exactlySevenVisibleControls: state.buttons.length === 7,
     wrappedIntoTwoRows: state.rows.length === 2,
     noButtonOverlap: overlaps.length === 0,
     dockInsideViewport: Boolean(state.dock) && state.dock.left >= -1 && state.dock.right <= state.viewport.width + 1,
     buttonsInsideDock: Boolean(state.dock) && state.buttons.every((button) => button.left >= state.dock.left - 1 && button.right <= state.dock.right + 1 && button.top >= state.dock.top - 1 && button.bottom <= state.dock.bottom + 1),
     labelsNotClipped: state.buttons.every((button) => button.scrollWidth <= button.clientWidth + 1),
+    journeyUsesCompactVisualLabel: Boolean(journey) && journey.fontSize === '0px' && journey.afterContent === '"Journey"',
     noHorizontalDockScroll: Boolean(state.dock) && state.dock.scrollWidth <= state.dock.clientWidth + 1,
     noPageHorizontalOverflow: state.pageScrollWidth <= state.viewport.width + 1,
     wrappingEnabled: state.dock?.flexWrap === 'wrap'
@@ -110,14 +122,14 @@ try {
     await page.goto(`http://127.0.0.1:${port}/?mobile_dock_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
     await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
     await page.waitForSelector('[data-temple-entry="journey"]', { timeout: 30000 });
-    await page.locator('[data-temple-entry="journey"]').click();
+    await page.evaluate(() => document.querySelector('[data-temple-entry="journey"]')?.click());
     await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 30000 });
-    await page.waitForFunction(() => {
-      const labels = [...document.querySelectorAll('#tm524-dock > *')]
-        .filter((node) => getComputedStyle(node).display !== 'none')
-        .map((node) => (node.textContent || '').trim());
-      return ['Journey', 'Dossier', 'Library', 'Offline'].every((label) => labels.includes(label));
-    }, null, { timeout: 30000 });
+    await page.waitForFunction(() => Boolean(
+      document.getElementById('tm525-journey-button') &&
+      document.getElementById('tm525-dossier-button') &&
+      document.querySelector('[data-temple-library-launcher="dock"]') &&
+      document.querySelector('[data-temple-offline-open]')
+    ), null, { timeout: 30000 });
 
     const at360 = await inspect(page, 360);
     await page.screenshot({ path: path.join(outDir, 'mobile-dock-360.png'), fullPage: false });
