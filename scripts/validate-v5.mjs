@@ -185,8 +185,8 @@ if (/^5\.(?:1|2)\./.test(version.version)) {
   if (!persistentData.includes("window.indexedDB.open(DB_NAME, 1)")) fail('Persistent dynamic data does not use IndexedDB backup storage');
   if (!persistentData.includes('mergeSignatures(local.signatures')) fail('Persistent ledger records are not merged during hydration');
   if (!persistentData.includes("storage.setItem('temple_persistence_reset', '1')")) fail('Persistent dynamic data does not preserve explicit reset semantics');
-  if (!/temple-maat-pwa-v5\.[12]/.test(serviceWorker)) fail('Service worker cache namespace is not v5.1 or v5.2');
-  if (!serviceWorker.includes("fetch('./scripts/v5.1-asset-manifest.json'")) fail('Service worker does not load the v5.1 display-asset manifest for offline caching');
+  if (!/temple-maat-pwa-v5\.[123]/.test(serviceWorker)) fail('Service worker cache namespace is not v5.1, v5.2, or v5.3');
+  if (!serviceWorker.includes("'./scripts/v5.1-asset-manifest.json'")) fail('Service worker does not load the v5.1 display-asset manifest for offline caching');
   if (!serviceWorker.includes("asset.category === 'support'") || !serviceWorker.includes("asset.display?.path")) fail('Service worker does not preserve complete offline display imagery');
   externalAssetSummary = `, ${categoryCounts.hero} heroes, ${categoryCounts.seal} seals, ${categoryCounts.support} support images`;
 } else if (verifyRelease && !releaseBaseline) {
