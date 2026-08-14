@@ -1,5 +1,5 @@
-const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r3';
-// Shell revision r3: chant web fallback, strict core install, fresh release identity, and isolated cache promotion.
+const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
+// Shell revision r4: mobile dock alignment, chant web fallback, strict core install, fresh release identity, and isolated cache promotion.
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
