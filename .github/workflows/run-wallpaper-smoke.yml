@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/run-wallpaper-smoke.yml'
+      - 'scripts/smoke-parental-powers.mjs'
 
 permissions:
   contents: read
