@@ -1,12 +1,8 @@
 name: Validate Temple v5
 
 on:
-  pull_request:
   push:
-    branches: [main]
-
-permissions:
-  contents: read
+  pull_request:
 
 jobs:
   validate:
@@ -15,6 +11,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: '24'
       - run: node scripts/validate-v5.mjs --release
+      - run: node scripts/validate-v5.2.4.mjs
+      - run: node scripts/validate-v5.2.5.mjs
       - run: node scripts/validate-v5.2.7.mjs
+      - run: node scripts/validate-library-v1.mjs

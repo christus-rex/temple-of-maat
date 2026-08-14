@@ -1,0 +1,136 @@
+{
+  "schema": "temple-of-maat/library-v1",
+  "updated": "2026-08-14",
+  "traditions": [
+    {
+      "id": "tradition.fixture-historical",
+      "type": "tradition",
+      "title": "Fixture Historical Tradition",
+      "summary": "Test-only record; not a public research claim.",
+      "status": "draft",
+      "provenanceLayers": ["L2"],
+      "languages": ["fixture"],
+      "tags": ["fixture"]
+    },
+    {
+      "id": "tradition.fixture-comparative",
+      "type": "tradition",
+      "title": "Fixture Comparative Tradition",
+      "summary": "Second test-only taxonomy record for cross-record correspondence validation.",
+      "status": "draft",
+      "provenanceLayers": ["L2"],
+      "tags": ["fixture"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "source.fixture-corpus",
+      "type": "source",
+      "title": "Fixture Source Corpus",
+      "summary": "Synthetic test fixture used only by CI.",
+      "status": "draft",
+      "provenanceLayers": ["L1"],
+      "traditionIds": ["tradition.fixture-historical"],
+      "languages": ["fixture"],
+      "tags": ["fixture"],
+      "sourceMetadata": {
+        "sourceKind": "corpus",
+        "edition": "Fixture Edition 1",
+        "corpus": "Fixture Corpus",
+        "dateLabel": "test-only",
+        "repository": "Temple CI fixture",
+        "identifiers": {
+          "fixture": "source-001"
+        }
+      },
+      "rights": {
+        "attribution": "Synthetic Temple CI fixture",
+        "license": "Test fixture only",
+        "publicExposure": "metadata-only",
+        "notes": "Contains no third-party source text."
+      },
+      "integrity": {
+        "recordCount": 3,
+        "integrityNote": "Synthetic record count for validator coverage."
+      },
+      "contentLocation": "scripts/fixtures/library-reference-catalog.json"
+    }
+  ],
+  "studies": [
+    {
+      "id": "study.fixture-computation",
+      "type": "study",
+      "title": "Fixture Computational Study",
+      "summary": "Synthetic method record proving source/method separation.",
+      "status": "draft",
+      "provenanceLayers": ["L2"],
+      "traditionIds": ["tradition.fixture-historical"],
+      "sourceIds": ["source.fixture-corpus"],
+      "tags": ["fixture", "computation"],
+      "normalizationProfile": {
+        "name": "Fixture normalization",
+        "version": "1",
+        "rules": ["Preserve original source separately", "Normalize only the declared analysis input"],
+        "preservesOriginal": true
+      },
+      "computationalMethod": {
+        "name": "Fixture count",
+        "method": "Count declared normalized records",
+        "implementationVersion": "1",
+        "inputFields": ["normalized-record"],
+        "reproducibilityNote": "Synthetic method used only to exercise the Library schema."
+      },
+      "contentLocation": "scripts/fixtures/library-reference-catalog.json"
+    }
+  ],
+  "discernments": [
+    {
+      "id": "discernment.fixture-comparison",
+      "type": "discernment",
+      "title": "Fixture Comparative Discernment",
+      "summary": "Synthetic interpretation kept separate from measured fixture data.",
+      "status": "draft",
+      "provenanceLayers": ["L3"],
+      "studyIds": ["study.fixture-computation"],
+      "sourceIds": ["source.fixture-corpus"],
+      "tags": ["fixture", "comparison"],
+      "contentLocation": "scripts/fixtures/library-reference-catalog.json"
+    }
+  ],
+  "correspondences": [
+    {
+      "id": "correspondence.fixture-study-to-chamber-13",
+      "type": "correspondence",
+      "title": "Fixture study to Chamber 13",
+      "summary": "Synthetic Layer-4 edge proving chamber links do not assert identity.",
+      "status": "draft",
+      "provenanceLayers": ["L4"],
+      "fromRecordId": "study.fixture-computation",
+      "target": {
+        "kind": "chamber",
+        "chamberId": "13"
+      },
+      "relationType": "symbolic-correspondence",
+      "identityClaim": false,
+      "evidenceNote": "Test-only correspondence.",
+      "limitations": "No historical identity or causation is claimed."
+    },
+    {
+      "id": "correspondence.fixture-discernment-to-tradition",
+      "type": "correspondence",
+      "title": "Fixture discernment to comparison tradition",
+      "summary": "Synthetic library-to-library comparison edge.",
+      "status": "draft",
+      "provenanceLayers": ["L3"],
+      "fromRecordId": "discernment.fixture-comparison",
+      "target": {
+        "kind": "library-record",
+        "recordId": "tradition.fixture-comparative"
+      },
+      "relationType": "comparative-similarity",
+      "identityClaim": false,
+      "evidenceNote": "Test-only comparison.",
+      "limitations": "Similarity is not historical dependence."
+    }
+  ]
+}

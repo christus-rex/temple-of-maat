@@ -5,9 +5,19 @@ import vm from 'node:vm';
 const root = process.cwd();
 const file = (relative) => path.join(root, ...relative.split('/'));
 const fail = (message) => { throw new Error(message); };
+const atLeast = (actual, minimum) => {
+  const left = String(actual).split('.').map(Number);
+  const right = String(minimum).split('.').map(Number);
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const a = left[index] || 0;
+    const b = right[index] || 0;
+    if (a !== b) return a > b;
+  }
+  return true;
+};
 
 const version = JSON.parse(fs.readFileSync(file('version.json'), 'utf8'));
-if (version.version !== '5.2.4') fail(`Expected Living Codex version 5.2.4, found ${version.version}`);
+if (!atLeast(version.version, '5.2.4')) fail(`Living Codex invariants require Temple >= 5.2.4, found ${version.version}`);
 
 for (const relative of [
   'scripts/v5.2.4-living-codex.js',
@@ -102,10 +112,10 @@ if (!threshold.includes("document.body.classList.add('temple-app-ready')")) fail
 for (const asset of ['./styles/v5.2.4-living-codex.css', './scripts/v5.2.4-living-codex.js', './scripts/v5.2.4-chant-fallback.js']) {
   if (!sw.includes(`'${asset}'`)) fail(`Service worker does not cache ${asset}`);
 }
-if (!sw.includes('temple-maat-pwa-v5.2.4-living-codex')) fail('Service worker cache namespace was not bumped for v5.2.4');
+if (!sw.includes(`temple-maat-pwa-v${version.version}`)) fail(`Service worker cache namespace does not match current Temple ${version.version}`);
 
 for (const marker of ['.tm524-codex-body', '.tm524-vault-grid', '.tm524-transport', 'body:not(.temple-app-ready) .tm524-dock']) {
   if (!css.includes(marker)) fail(`Living Codex CSS marker is missing: ${marker}`);
 }
 
-console.log(`Validated Temple ${version.version} Living Codex: ${rows.length} records; strengths ${JSON.stringify(strengthCounts)}; manual entry, collectibles, return journey, no-autoplay chant controls, and local media fallback preserved.`);
+console.log(`Validated Temple ${version.version} Living Codex invariants: ${rows.length} records; strengths ${JSON.stringify(strengthCounts)}; manual entry, collectibles, return journey, no-autoplay chant controls, and local media fallback preserved.`);
