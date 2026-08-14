@@ -7,6 +7,7 @@
   let sourceObserver = null;
   let panelObserver = null;
   let webRepairQueued = false;
+  let openTriggerBound = false;
 
   function player() {
     const chant = document.getElementById('tm524-chant');
@@ -88,6 +89,16 @@
     });
   }
 
+  function bindOpenTrigger() {
+    if (openTriggerBound) return;
+    openTriggerBound = true;
+    document.addEventListener('click', (event) => {
+      const button = event.target?.closest?.('button');
+      if (!button || !/^chant$/i.test(button.textContent.trim())) return;
+      setTimeout(() => ensureWebSource('Loading the compact web chant rendition…'), 0);
+    }, true);
+  }
+
   function bindStreamingEvents(ui) {
     if (!ui?.audio || ui.audio.dataset.tm524StreamingBound === 'true') return;
     ui.audio.dataset.tm524StreamingBound = 'true';
@@ -145,11 +156,13 @@
     bindStreamingEvents(ui);
     watchSource(ui.audio);
     watchPanel(ui.chant);
+    bindOpenTrigger();
     ensureWebSource();
     return true;
   }
 
   function installWhenReady() {
+    bindOpenTrigger();
     if (installLocalChantLoader()) return;
     const observer = new MutationObserver(() => {
       if (installLocalChantLoader()) observer.disconnect();
@@ -157,6 +170,13 @@
     observer.observe(document.documentElement, { childList: true, subtree: true });
     setTimeout(() => observer.disconnect(), 30000);
   }
+
+  window.TempleChantStreaming = Object.freeze({
+    version: '5.2.8',
+    source: WEB_SRC,
+    ensure: ensureWebSource,
+    usingWebSource: () => isWebSource(player()?.audio)
+  });
 
   document.addEventListener('temple:living-codex-ready', installWhenReady, { once: true });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installWhenReady, { once: true });
