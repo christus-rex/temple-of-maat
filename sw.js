@@ -16,6 +16,8 @@ const CORE_ASSETS = [
   './styles/v5.3-threshold.css',
   './styles/v5.2.4-living-codex.css',
   './styles/v5.2.5-living-temple.css',
+  './styles/v5.2.8-temple-library.css',
+  './styles/v5.2.8-journey-import.css',
   './styles/v5.2.8-offline-controls.css',
   './scripts/persistent-data.js',
   './scripts/parental-powers.js',
@@ -27,6 +29,8 @@ const CORE_ASSETS = [
   './scripts/v5.2.5-living-temple.js',
   './scripts/v5.2.6-shem-dossiers.js',
   './scripts/v5.2.5-media-vault.js',
+  './scripts/v5.2.8-temple-library.js',
+  './scripts/v5.2.8-journey-import.js',
   './scripts/v5.2.8-offline-controls.js',
   './assets/audio/maat-forty-two-declarations.json'
 ];
