@@ -94,6 +94,13 @@
 body:not(.temple-app-ready) #root {
   display: none !important;
 }
+/* Some runtime controls are mounted directly under body rather than inside #root.
+   They must remain equally inaccessible and, critically, must not intercept the
+   visible threshold controls on narrow screens. */
+body:not(.temple-app-ready) #tm-commit-deck {
+  display: none !important;
+  pointer-events: none !important;
+}
 body:not(.temple-app-ready) .temple-skip-link {
   display: none;
 }
