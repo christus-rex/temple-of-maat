@@ -1,0 +1,28 @@
+{
+  "schema": "temple-of-maat/library-personal-state-v1",
+  "updatedAt": "2026-08-14T13:20:00Z",
+  "bookmarks": ["study.fixture-computation"],
+  "notes": [
+    {
+      "id": "note.fixture-reflection",
+      "recordId": "study.fixture-computation",
+      "text": "Test-only private note.",
+      "updatedAt": "2026-08-14T13:20:00Z"
+    }
+  ],
+  "privateCorrespondences": [
+    {
+      "id": "private-correspondence.fixture-chamber-42",
+      "fromRecordId": "study.fixture-computation",
+      "target": {
+        "kind": "chamber",
+        "chamberId": "42"
+      },
+      "relationType": "symbolic-correspondence",
+      "provenanceLayer": "L4",
+      "identityClaim": false,
+      "note": "Test-only private correspondence.",
+      "updatedAt": "2026-08-14T13:20:00Z"
+    }
+  ]
+}
