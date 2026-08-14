@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2.6-shem-dossiers-2026-08-14';
+const VERSION = 'temple-maat-pwa-v5.2.7-stewardship-governance-2026-08-14';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
