@@ -38,6 +38,13 @@
       const style = document.createElement('style');
       style.dataset.templeArtifactGuard = 'true';
       style.textContent = `
+        /* Manual threshold covenant: runtime chamber artifacts may mount from a URL hash,
+           but they must never be visible or intercept the explicit entrance gesture. */
+        body:not(.temple-app-ready) .tm2-artifact-backdrop {
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+
         /* The chamber artifact already contains its own Collect and download controls.
            On narrow screens, suspend redundant global floating controls while that
            artifact is open so they cannot cover or intercept artifact buttons. */
