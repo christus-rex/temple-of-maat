@@ -127,7 +127,7 @@ try {
     recordCiphers: record.exactCiphers === 'EO,FR,RO,RFR',
     visibleAngel: codexText.includes('Iezalel'),
     visibleTwin: codexText.includes('Focalor'),
-    visibleStrength: codexText.includes('Tetrad exact'),
+    visibleStrength: /tetrad exact/i.test(codexText),
     sourceDiscernment: sourceDetail.includes('Reversal, not gematria, creates the 72.'),
     vaultLabels: requiredVaultLabels.every((label) => vaultLabels.includes(label)),
     noAutoplayProperty: audioState.autoplay === false,
