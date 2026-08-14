@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2.4-living-codex-2026-08-14';
+const VERSION = 'temple-maat-pwa-v5.2.5-living-temple-2026-08-14';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -14,13 +14,17 @@ const CORE_ASSETS = [
   './version.json',
   './styles/v5.3-threshold.css',
   './styles/v5.2.4-living-codex.css',
+  './styles/v5.2.5-living-temple.css',
   './scripts/persistent-data.js',
   './scripts/parental-powers.js',
   './scripts/parental-powers-assets.json',
   './scripts/v5.1-asset-manifest.json',
   './scripts/v5.3-threshold.js',
   './scripts/v5.2.4-living-codex.js',
-  './scripts/v5.2.4-chant-fallback.js'
+  './scripts/v5.2.4-chant-fallback.js',
+  './scripts/v5.2.5-living-temple.js',
+  './scripts/v5.2.5-media-vault.js',
+  './assets/audio/maat-forty-two-declarations.json'
 ];
 
 async function cacheInBatches(cache, assets, batchSize = 12) {
@@ -105,7 +109,7 @@ async function cacheFullTemple() {
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
-    // Keep installation light: app shell + five support visuals only.
+    // Keep installation light: app shell + support visuals. Canonical ritual audio lives in IndexedDB only after explicit visitor installation.
     await cacheInBatches(cache, CORE_ASSETS);
     await cacheInBatches(cache, await supportDisplayAssets());
   })());
