@@ -180,15 +180,20 @@ async function runMobile(browser, width, height) {
   const artifact = await page.evaluate(() => {
     const node = document.querySelector('#tm2-artifact.open');
     const image = node?.querySelector('.tm2-parental-section img');
+    const launcher = document.querySelector('[data-temple-library-launcher="artifact-mobile"]');
     const rect = node?.getBoundingClientRect();
     const imageRect = image?.getBoundingClientRect();
+    const launcherRect = launcher?.getBoundingClientRect();
     const style = image ? getComputedStyle(image) : null;
+    const headerClearance = rect ? Math.min(180, Math.max(120, rect.height * 0.2)) : 180;
     return {
       viewportWidth: innerWidth,
       docScrollWidth: document.documentElement.scrollWidth,
       bodyScrollWidth: document.body.scrollWidth,
-      rect: rect ? { left: rect.left, right: rect.right, width: rect.width } : null,
+      rect: rect ? { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height } : null,
       imageRect: imageRect ? { left: imageRect.left, right: imageRect.right, width: imageRect.width, height: imageRect.height } : null,
+      launcherRect: launcherRect ? { left: launcherRect.left, right: launcherRect.right, top: launcherRect.top, bottom: launcherRect.bottom, width: launcherRect.width, height: launcherRect.height } : null,
+      launcherClearOfHeader: Boolean(rect && launcherRect && launcherRect.top >= rect.top + headerClearance),
       imageLoaded: Boolean(image?.naturalWidth),
       objectFit: style?.objectFit || '',
       objectPosition: style?.objectPosition || ''
@@ -217,7 +222,7 @@ async function runMobile(browser, width, height) {
   const noHorizontalOverflow = artifact.docScrollWidth <= width + 1 && artifact.bodyScrollWidth <= width + 1;
   const artifactInside = geometryFromRect(artifact.rect, width) && geometryFromRect(artifact.imageRect, width);
   const panelsInside = Object.values(panels).every((item) => item.visible && geometryFromRect(item.rect, width) && item.docScrollWidth <= width + 1 && item.bodyScrollWidth <= width + 1);
-  const result = { width, height, noHorizontalOverflow, artifactInside, panelsInside, artifact, panels, pageErrors };
+  const result = { width, height, noHorizontalOverflow, artifactInside, artifactLauncherClear: artifact.launcherClearOfHeader, panelsInside, artifact, panels, pageErrors };
   await context.close();
   return result;
 }
@@ -281,6 +286,7 @@ try {
     explicitEntryToIntendedChamber: afterEntry.ready === true && afterEntry.hash === '#chamber-42' && afterEntry.rootInert === false && afterEntry.artifactOpen === true,
     mobileNoHorizontalOverflow: mobile.every((item) => item.noHorizontalOverflow),
     mobileArtifactGeometry: mobile.every((item) => item.artifactInside && item.artifact.imageLoaded),
+    mobileArtifactLauncherClear: mobile.every((item) => item.artifactLauncherClear),
     mobileOverlayGeometry: mobile.every((item) => item.panelsInside),
     noPageErrors: pageErrors.length === 0 && mobile.every((item) => item.pageErrors.length === 0)
   };
