@@ -16,6 +16,7 @@ const CORE_ASSETS = [
   './styles/v5.3-threshold.css',
   './styles/v5.2.4-living-codex.css',
   './styles/v5.2.5-living-temple.css',
+  './styles/v5.2.8-offline-controls.css',
   './scripts/persistent-data.js',
   './scripts/parental-powers.js',
   './scripts/parental-powers-assets.json',
@@ -26,13 +27,23 @@ const CORE_ASSETS = [
   './scripts/v5.2.5-living-temple.js',
   './scripts/v5.2.6-shem-dossiers.js',
   './scripts/v5.2.5-media-vault.js',
+  './scripts/v5.2.8-offline-controls.js',
   './assets/audio/maat-forty-two-declarations.json'
 ];
+const cancelledFullCacheJobs = new Set();
+
+function uniqueAssets(assets) {
+  return [...new Set((assets || []).filter(Boolean))];
+}
+
+function assetUrl(asset) {
+  return new URL(asset, self.registration.scope).href;
+}
 
 async function cacheInBatches(cache, assets, batchSize = 12) {
-  const uniqueAssets = [...new Set(assets.filter(Boolean))];
-  for (let index = 0; index < uniqueAssets.length; index += batchSize) {
-    await Promise.allSettled(uniqueAssets.slice(index, index + batchSize).map((asset) => cache.add(asset)));
+  const unique = uniqueAssets(assets);
+  for (let index = 0; index < unique.length; index += batchSize) {
+    await Promise.allSettled(unique.slice(index, index + batchSize).map((asset) => cache.add(asset)));
   }
 }
 
@@ -61,6 +72,19 @@ async function supportDisplayAssets() {
   return assets.flatMap((asset) => asset.category === 'support' && asset.path ? [`./${asset.path}`] : []);
 }
 
+async function optionalDisplayAssets() {
+  const release = await releaseManifest();
+  const parental = await parentalManifest();
+  const releaseAssets = Array.isArray(release?.assets) ? release.assets : [];
+  const records = Array.isArray(parental?.records) ? parental.records : [];
+  const chamberVisuals = releaseAssets.flatMap((asset) => {
+    if ((asset.category === 'hero' || asset.category === 'seal') && asset.display?.path) return [`./${asset.display.path}`];
+    return [];
+  });
+  const parentalAssets = records.flatMap((record) => record.display?.path ? [`./${record.display.path}`] : []);
+  return uniqueAssets([...chamberVisuals, ...parentalAssets]);
+}
+
 async function chamberDisplayAssets(chamber, ahead = 2) {
   const first = Math.max(1, Math.min(72, Number(chamber) || 1));
   const last = Math.min(72, first + Math.max(0, ahead));
@@ -85,17 +109,10 @@ async function chamberDisplayAssets(chamber, ahead = 2) {
 }
 
 async function allDisplayAssets() {
-  const release = await releaseManifest();
-  const parental = await parentalManifest();
-  const releaseAssets = Array.isArray(release?.assets) ? release.assets : [];
-  const records = Array.isArray(parental?.records) ? parental.records : [];
-  const visuals = releaseAssets.flatMap((asset) => {
-    if (asset.category === 'support' && asset.path) return [`./${asset.path}`];
-    if ((asset.category === 'hero' || asset.category === 'seal') && asset.display?.path) return [`./${asset.display.path}`];
-    return [];
-  });
-  const parentalAssets = records.flatMap((record) => record.display?.path ? [`./${record.display.path}`] : []);
-  return [...visuals, ...parentalAssets];
+  return uniqueAssets([
+    ...(await supportDisplayAssets()),
+    ...(await optionalDisplayAssets())
+  ]);
 }
 
 async function cacheChamberWindow(chamber) {
@@ -103,9 +120,116 @@ async function cacheChamberWindow(chamber) {
   await cacheInBatches(cache, await chamberDisplayAssets(chamber, 2), 9);
 }
 
-async function cacheFullTemple() {
+async function postToClient(clientId, message) {
+  if (clientId) {
+    const client = await self.clients.get(clientId);
+    if (client) {
+      client.postMessage(message);
+      return;
+    }
+  }
+  const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+  clients.forEach((client) => client.postMessage(message));
+}
+
+async function offlineStatus() {
+  const optional = await optionalDisplayAssets();
+  const all = await allDisplayAssets();
   const cache = await caches.open(RUNTIME_CACHE);
-  await cacheInBatches(cache, await allDisplayAssets());
+  const keys = await cache.keys();
+  const cachedUrls = new Set(keys.map((request) => request.url));
+  return {
+    optionalCached: optional.filter((asset) => cachedUrls.has(assetUrl(asset))).length,
+    optionalTotal: optional.length,
+    fullVisualTotal: all.length,
+    staticCache: STATIC_CACHE,
+    runtimeCache: RUNTIME_CACHE
+  };
+}
+
+async function sendOfflineStatus(requestId, clientId) {
+  try {
+    await postToClient(clientId, {
+      type: 'TEMPLE_OFFLINE_STATUS',
+      requestId,
+      ok: true,
+      ...(await offlineStatus())
+    });
+  } catch (error) {
+    await postToClient(clientId, {
+      type: 'TEMPLE_OFFLINE_STATUS',
+      requestId,
+      ok: false,
+      error: error?.message || 'Unable to inspect offline cache status.'
+    });
+  }
+}
+
+async function cacheFullTemple(requestId, clientId) {
+  const id = requestId || `legacy-${Date.now()}`;
+  cancelledFullCacheJobs.delete(id);
+  try {
+    const assets = await allDisplayAssets();
+    const cache = await caches.open(RUNTIME_CACHE);
+    const total = assets.length;
+    let completed = 0;
+    let failed = 0;
+    await postToClient(clientId, { type: 'TEMPLE_OFFLINE_FULL_PROGRESS', requestId: id, phase: 'started', completed, failed, total });
+
+    for (let index = 0; index < assets.length; index += 12) {
+      if (cancelledFullCacheJobs.has(id)) {
+        cancelledFullCacheJobs.delete(id);
+        await postToClient(clientId, { type: 'TEMPLE_OFFLINE_FULL_PROGRESS', requestId: id, phase: 'cancelled', completed, failed, total });
+        return;
+      }
+      const batch = assets.slice(index, index + 12);
+      const results = await Promise.allSettled(batch.map((asset) => cache.add(asset)));
+      completed += batch.length;
+      failed += results.filter((result) => result.status === 'rejected').length;
+      await postToClient(clientId, { type: 'TEMPLE_OFFLINE_FULL_PROGRESS', requestId: id, phase: 'progress', completed, failed, total });
+    }
+
+    cancelledFullCacheJobs.delete(id);
+    await postToClient(clientId, { type: 'TEMPLE_OFFLINE_FULL_PROGRESS', requestId: id, phase: failed ? 'complete-with-errors' : 'complete', completed, failed, total });
+  } catch (error) {
+    cancelledFullCacheJobs.delete(id);
+    await postToClient(clientId, {
+      type: 'TEMPLE_OFFLINE_FULL_PROGRESS',
+      requestId: id,
+      phase: 'failed',
+      completed: 0,
+      failed: 0,
+      total: 0,
+      error: error?.message || 'Unable to cache the Temple visual archive.'
+    });
+  }
+}
+
+async function clearOptionalVisualCache(requestId, clientId) {
+  try {
+    const cache = await caches.open(RUNTIME_CACHE);
+    const assets = await optionalDisplayAssets();
+    let cleared = 0;
+    for (let index = 0; index < assets.length; index += 24) {
+      const batch = assets.slice(index, index + 24);
+      const results = await Promise.all(batch.map(async (asset) => ({ removed: await cache.delete(asset) })));
+      cleared += results.filter((result) => result.removed).length;
+    }
+    await postToClient(clientId, {
+      type: 'TEMPLE_OFFLINE_CLEAR_RESULT',
+      requestId,
+      ok: true,
+      cleared,
+      optionalTotal: assets.length
+    });
+  } catch (error) {
+    await postToClient(clientId, {
+      type: 'TEMPLE_OFFLINE_CLEAR_RESULT',
+      requestId,
+      ok: false,
+      error: error?.message || 'Unable to clear optional offline visuals.'
+    });
+  }
 }
 
 self.addEventListener('install', (event) => {
@@ -127,6 +251,7 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('message', (event) => {
   const data = event.data || {};
+  const clientId = event.source?.id || null;
   if (data.type === 'SKIP_WAITING') {
     self.skipWaiting();
     return;
@@ -136,8 +261,20 @@ self.addEventListener('message', (event) => {
     return;
   }
   if (data.type === 'CACHE_FULL_TEMPLE') {
-    // Explicit opt-in path exposed through window.TempleOfflineCache.downloadFull().
-    event.waitUntil(cacheFullTemple());
+    // Explicit opt-in path exposed through window.TempleOfflineCache.downloadFull() and the visitor-facing Offline panel.
+    event.waitUntil(cacheFullTemple(data.requestId, clientId));
+    return;
+  }
+  if (data.type === 'CANCEL_FULL_TEMPLE') {
+    if (data.requestId) cancelledFullCacheJobs.add(data.requestId);
+    return;
+  }
+  if (data.type === 'GET_OFFLINE_STATUS') {
+    event.waitUntil(sendOfflineStatus(data.requestId, clientId));
+    return;
+  }
+  if (data.type === 'CLEAR_OPTIONAL_VISUAL_CACHE') {
+    event.waitUntil(clearOptionalVisualCache(data.requestId, clientId));
   }
 });
 
