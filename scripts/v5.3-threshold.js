@@ -23,6 +23,39 @@
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
   }
 
+  function installShemGateway() {
+    if (document.querySelector('[data-shem-gateway]')) return;
+
+    const staticNav = document.querySelector('#temple-static-entry .temple-static-entry__actions');
+    if (staticNav) {
+      const staticLink = document.createElement('a');
+      staticLink.className = 'temple-static-entry__action temple-static-entry__action--secondary';
+      staticLink.href = './shem-hamephorash-72.html';
+      staticLink.dataset.shemGateway = 'static';
+      staticLink.textContent = 'Enter the Shem 72 Archive';
+      staticNav.appendChild(staticLink);
+    }
+
+    const style = document.createElement('style');
+    style.dataset.shemGateway = 'styles';
+    style.textContent = `
+      .temple-shem-gateway{display:none;position:fixed;left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));z-index:55;align-items:center;gap:8px;padding:10px 13px;border:1px solid rgba(212,175,55,.38);border-radius:999px;background:rgba(10,9,7,.9);color:#f5e6c8;text-decoration:none;font:700 11px/1.2 ui-monospace,monospace;letter-spacing:.06em;box-shadow:0 10px 30px rgba(0,0,0,.42);backdrop-filter:blur(12px)}
+      .temple-app-ready .temple-shem-gateway{display:inline-flex}
+      .temple-shem-gateway__sigil{color:#d4af37;font-size:14px}
+      .temple-shem-gateway:focus-visible{outline:2px solid #d4af37;outline-offset:3px}
+      @media (max-width:520px){.temple-shem-gateway{font-size:10px;padding:9px 11px}.temple-shem-gateway__long{display:none}}
+    `;
+    document.head.appendChild(style);
+
+    const gateway = document.createElement('a');
+    gateway.className = 'temple-shem-gateway';
+    gateway.href = './shem-hamephorash-72.html';
+    gateway.dataset.shemGateway = 'floating';
+    gateway.setAttribute('aria-label', 'Open the Shem HaMephorash 72 archive');
+    gateway.innerHTML = '<span class="temple-shem-gateway__sigil" aria-hidden="true">✦</span><span>SHEM 72<span class="temple-shem-gateway__long"> · ARCHIVE</span></span>';
+    document.body.appendChild(gateway);
+  }
+
   function noteApplicationMounted() {
     if (root && root.childElementCount > 0) {
       root.setAttribute('tabindex', '-1');
@@ -162,6 +195,7 @@
     holdAtThreshold();
     noteApplicationMounted();
     enhanceControls(document);
+    installShemGateway();
     cacheCurrentChamber();
 
     const staticEntry = document.getElementById('temple-static-entry');
