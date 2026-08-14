@@ -33,7 +33,8 @@ for (const marker of [
   'stay on this device unless you explicitly export',
   'The 72-chamber Temple remains fully usable',
   'window.TempleLibrary = Object.freeze',
-  "document.getElementById('tm524-dock')"
+  "document.getElementById('tm524-dock')",
+  "artifactLauncher.dataset.templeLibraryLauncher = 'artifact-mobile'"
 ]) {
   if (!js.includes(marker)) fail(`Library UI contract marker missing: ${marker}`);
 }
@@ -51,7 +52,16 @@ const loadCatalogBody = js.match(/async function loadCatalog\(\) \{([\s\S]*?)\n 
 if (!loadCatalogBody) fail('Could not inspect loadCatalog() for lazy-loading policy');
 if (loadCatalogBody[1].includes('contentLocation')) fail('Library indexes must remain lazy rather than loading with the catalog');
 
-for (const marker of ['.tm528-body','.tm528-reader','overflow-wrap:anywhere','@media(max-width:760px)','body.temple-library-open','body.temple-artifact-open .tm528-launcher']) {
+for (const marker of [
+  '.tm528-body',
+  '.tm528-reader',
+  'overflow-wrap:anywhere',
+  '@media(max-width:760px)',
+  'body.temple-library-open',
+  'body.temple-artifact-open .tm528-launcher',
+  '.tm528-artifact-launcher',
+  'body.temple-app-ready.temple-artifact-open:not(.temple-library-open) .tm528-artifact-launcher'
+]) {
   if (!css.includes(marker)) fail(`Library mobile/interaction CSS marker missing: ${marker}`);
 }
 if (!css.includes('grid-template-columns:1fr') || !css.includes('overflow:hidden')) fail('Library mobile layout must avoid horizontal overflow');
@@ -59,4 +69,4 @@ if (!css.includes('grid-template-columns:1fr') || !css.includes('overflow:hidden
 const sourceWithRights = catalog.sources.filter((item) => item.rights?.attribution).length;
 if (sourceWithRights < 2) fail('Library reading UI needs at least two source records with attribution/rights metadata');
 
-console.log(`Validated Temple Library UI contract: ${records.length} public records across ${catalog.traditions.length} traditions; lazy indexes, provenance/type search, source rights, local bookmarks/notes/L4 chamber links, personal export, mobile overflow guards, hash-reload threshold protection, and failure isolation present.`);
+console.log(`Validated Temple Library UI contract: ${records.length} public records across ${catalog.traditions.length} traditions; lazy indexes, provenance/type search, source rights, local bookmarks/notes/L4 chamber links, personal export, mobile artifact access without restoring the bottom dock, mobile overflow guards, hash-reload threshold protection, and failure isolation present.`);
