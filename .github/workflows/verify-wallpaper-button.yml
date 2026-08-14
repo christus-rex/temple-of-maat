@@ -1,0 +1,45 @@
+name: Verify v5.2.3 wallpaper download
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-wallpaper-button.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify wallpaper download control is packaged
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          html = Path('index.html').read_text(encoding='utf-8')
+          version = json.loads(Path('version.json').read_text(encoding='utf-8'))
+          markers = {
+              'parental_download_class': 'tm2-parental-download' in html,
+              'parental_section_class': 'tm2-parental-section' in html,
+              'plate_download_class': 'tm2-plate-download' in html,
+              'wallpaper_word': 'wallpaper' in html.lower(),
+              'download_word': 'download' in html.lower(),
+          }
+          print('version:', version)
+          print('markers:', json.dumps(markers, indent=2))
+          for needle in ['tm2-parental-download', 'tm2-parental-section', 'tm2-plate-download']:
+              pos = html.find(needle)
+              if pos >= 0:
+                  print(f'\n--- {needle} context ---')
+                  print(html[max(0,pos-700):pos+1200])
+          if version.get('version') != '5.2.3':
+              raise SystemExit('version.json is not 5.2.3')
+          if not markers['parental_download_class']:
+              raise SystemExit('Wallpaper download control marker tm2-parental-download is missing from packaged index.html')
+          if not markers['parental_section_class']:
+              raise SystemExit('Parental powers section marker is missing from packaged index.html')
+          PY
