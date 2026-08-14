@@ -8,9 +8,25 @@
       "title": "Buddhist Traditions",
       "summary": "A Library tradition for early Buddhist teachings and the later Theravada, Mahayana, Zen, Vajrayana, and regional developments treated with explicit historical distinctions.",
       "status": "reviewed",
-      "provenanceLayers": ["L2"],
-      "languages": ["Pali", "Sanskrit", "Chinese", "Tibetan", "English"],
-      "tags": ["buddhism", "dhamma", "awakening", "ethics", "meditation", "wisdom", "compassion"]
+      "provenanceLayers": [
+        "L2"
+      ],
+      "languages": [
+        "Pali",
+        "Sanskrit",
+        "Chinese",
+        "Tibetan",
+        "English"
+      ],
+      "tags": [
+        "buddhism",
+        "dhamma",
+        "awakening",
+        "ethics",
+        "meditation",
+        "wisdom",
+        "compassion"
+      ]
     },
     {
       "id": "tradition.second-temple-judaism",
@@ -18,9 +34,23 @@
       "title": "Second Temple Judaism and the Judean Desert Manuscripts",
       "summary": "A Library tradition for the diverse Jewish textual, legal, liturgical, apocalyptic, and communal worlds represented by the Dead Sea Scrolls and related Judean Desert manuscripts, without collapsing them into later religious identities.",
       "status": "reviewed",
-      "provenanceLayers": ["L2"],
-      "languages": ["Hebrew", "Aramaic", "Greek", "English"],
-      "tags": ["dead-sea-scrolls", "qumran", "second-temple-judaism", "judean-desert", "manuscripts", "textual-history"]
+      "provenanceLayers": [
+        "L2"
+      ],
+      "languages": [
+        "Hebrew",
+        "Aramaic",
+        "Greek",
+        "English"
+      ],
+      "tags": [
+        "dead-sea-scrolls",
+        "qumran",
+        "second-temple-judaism",
+        "judean-desert",
+        "manuscripts",
+        "textual-history"
+      ]
     },
     {
       "id": "tradition.islamic-scripture",
@@ -28,9 +58,45 @@
       "title": "Qur'anic Scripture and Islamic Textual Study",
       "summary": "A Library tradition for Qur'anic source editions and transparent linguistic or computational studies that remain subordinate to the source text, attribution, context, and living interpretive traditions of Islam.",
       "status": "reviewed",
-      "provenanceLayers": ["L2"],
-      "languages": ["Arabic", "English"],
-      "tags": ["quran", "arabic", "islam", "scripture", "textual-study", "abjad"]
+      "provenanceLayers": [
+        "L2"
+      ],
+      "languages": [
+        "Arabic",
+        "English"
+      ],
+      "tags": [
+        "quran",
+        "arabic",
+        "islam",
+        "scripture",
+        "textual-study",
+        "abjad"
+      ]
+    },
+    {
+      "id": "tradition.sephardic-biblical-translation",
+      "type": "tradition",
+      "title": "Sephardic Biblical Translation and the Ferrara Tradition",
+      "summary": "A Library tradition for the Biblia de Ferrara textual lineage: Hebrew scripture carried into source-close Sephardic Spanish, with historical orthography, translation method, and edition provenance kept visible rather than modernized away.",
+      "status": "reviewed",
+      "provenanceLayers": [
+        "L2"
+      ],
+      "languages": [
+        "Hebrew",
+        "Spanish",
+        "English"
+      ],
+      "tags": [
+        "biblia-de-ferrara",
+        "sephardic",
+        "spanish",
+        "hebrew",
+        "translation",
+        "1553",
+        "amsterdam-1646"
+      ]
     }
   ],
   "sources": [
@@ -40,10 +106,25 @@
       "title": "Dead Sea Scrolls / Qumran Manuscript Corpus",
       "summary": "Ancient Jewish and related Judean Desert manuscript witnesses dating broadly from the third century BCE to the first century CE, represented here as a source-family record rather than a single authored text.",
       "status": "reviewed",
-      "provenanceLayers": ["L1"],
-      "traditionIds": ["tradition.second-temple-judaism"],
-      "languages": ["Hebrew", "Aramaic", "Greek"],
-      "tags": ["dead-sea-scrolls", "qumran", "judean-desert", "manuscripts", "archaeology", "second-temple-judaism"],
+      "provenanceLayers": [
+        "L1"
+      ],
+      "traditionIds": [
+        "tradition.second-temple-judaism"
+      ],
+      "languages": [
+        "Hebrew",
+        "Aramaic",
+        "Greek"
+      ],
+      "tags": [
+        "dead-sea-scrolls",
+        "qumran",
+        "judean-desert",
+        "manuscripts",
+        "archaeology",
+        "second-temple-judaism"
+      ],
       "sourceMetadata": {
         "sourceKind": "corpus",
         "corpus": "Dead Sea Scrolls and Judean Desert manuscript corpus",
@@ -65,10 +146,25 @@
       "title": "The Qur'an — Arabic Source Text with Pickthall Translation",
       "summary": "The 2026 source edition used by the Abjad study: a 6,236-verse Tanzil Arabic corpus reproduced without analytical normalization and aligned verse-for-verse with 6,236 Pickthall translation records.",
       "status": "reviewed",
-      "provenanceLayers": ["L1", "L2"],
-      "traditionIds": ["tradition.islamic-scripture"],
-      "languages": ["Arabic", "English"],
-      "tags": ["quran", "tanzil", "pickthall", "arabic-source", "translation", "6236-verses"],
+      "provenanceLayers": [
+        "L1",
+        "L2"
+      ],
+      "traditionIds": [
+        "tradition.islamic-scripture"
+      ],
+      "languages": [
+        "Arabic",
+        "English"
+      ],
+      "tags": [
+        "quran",
+        "tanzil",
+        "pickthall",
+        "arabic-source",
+        "translation",
+        "6236-verses"
+      ],
       "sourceMetadata": {
         "sourceKind": "edition",
         "edition": "Source Edition for the Abjad Study — 2026",
@@ -88,6 +184,47 @@
         "integrityNote": "Arabic corpus SHA-256 above; Pickthall/Gutenberg source SHA-256 3b96fa3ad318ab9d91db53b25100d5169fafe3a1ecb993e7c36ffff55bf9d8bc. Both aligned corpora audit to 6,236 verse records. Structured dual-hash provenance is stored in the source index."
       },
       "contentLocation": "library/sources/quran-tanzil-pickthall.index.json"
+    },
+    {
+      "id": "source.biblia-ferrara-amsterdam-1646-facsimile",
+      "type": "source",
+      "title": "Biblia de Ferrara — Amsterdam 5406/1646 Source Facsimile",
+      "summary": "A digitized public-domain consultation facsimile of the Amsterdam Hebrew-year 5406/1646 edition preserving the Ferrara textual tradition associated with the first Ferrara edition of 1553. The source is kept separate and unmodified from modern gematria/discernment analysis.",
+      "status": "reviewed",
+      "provenanceLayers": [
+        "L1"
+      ],
+      "traditionIds": [
+        "tradition.sephardic-biblical-translation"
+      ],
+      "languages": [
+        "Spanish",
+        "Hebrew"
+      ],
+      "tags": [
+        "biblia-de-ferrara",
+        "facsimile",
+        "amsterdam-1646",
+        "5406",
+        "sephardic-spanish",
+        "source-edition"
+      ],
+      "sourceMetadata": {
+        "sourceKind": "facsimile",
+        "edition": "Amsterdam, Hebrew year 5406 / 1646",
+        "dateLabel": "Ferrara textual tradition; first Ferrara edition 1553; consultation facsimile Amsterdam 5406/1646",
+        "repository": "Digitized public-domain volume supplied through Google Books; preserved in the project as a source facsimile separate from the analytical study"
+      },
+      "rights": {
+        "attribution": "Underlying historical work identified by the digitized source as public domain; this specific Google Books digitized file carries Google usage/attribution conditions.",
+        "publicExposure": "metadata-only",
+        "notes": "Respect the reproduced Google Books terms: personal/non-commercial use of the digitized file, no automated requests, preserve Google attribution/watermark, and verify legality in the user's jurisdiction. The Temple Library exposes metadata only and does not republish the facsimile."
+      },
+      "integrity": {
+        "recordCount": 639,
+        "integrityNote": "Complete project consultation facsimile is 639 pages. Historical title-page spelling and typography are source evidence; OCR irregularities are not silently normalized into the L1 record."
+      },
+      "contentLocation": "library/sources/biblia-ferrara-amsterdam-1646.index.json"
     }
   ],
   "studies": [
@@ -97,11 +234,26 @@
       "title": "The Buddha's Path of Awakening",
       "summary": "A comprehensive illustrated educational and contemplative guide to wisdom, compassion, ethics, meditation, liberation, lived practice, later Buddhist horizons, and an integrated practice manual.",
       "status": "reviewed",
-      "provenanceLayers": ["L2"],
-      "traditionIds": ["tradition.buddhism"],
+      "provenanceLayers": [
+        "L2"
+      ],
+      "traditionIds": [
+        "tradition.buddhism"
+      ],
       "sourceIds": [],
-      "languages": ["English"],
-      "tags": ["buddhism", "four-noble-truths", "eightfold-path", "dependent-origination", "nibbana", "mindfulness", "compassion", "practice"],
+      "languages": [
+        "English"
+      ],
+      "tags": [
+        "buddhism",
+        "four-noble-truths",
+        "eightfold-path",
+        "dependent-origination",
+        "nibbana",
+        "mindfulness",
+        "compassion",
+        "practice"
+      ],
       "bibliography": [
         "SuttaCentral — early Buddhist texts, translations, and parallels",
         "SN 56.11 — Setting in Motion the Wheel of the Dhamma",
@@ -126,11 +278,29 @@
       "title": "The Dead Sea Scrolls — Comprehensive Analysis and Comparative Relevance",
       "summary": "A research edition treating the scrolls first as ancient manuscripts and archaeological objects, then distinguishing literary/social context, comparative theology, and personal ethical symbolism under the rule compare without collapsing.",
       "status": "reviewed",
-      "provenanceLayers": ["L2", "L3", "L4"],
-      "traditionIds": ["tradition.second-temple-judaism"],
-      "sourceIds": ["source.dead-sea-scrolls-qumran-corpus"],
-      "languages": ["English"],
-      "tags": ["dead-sea-scrolls", "qumran", "history", "archaeology", "textual-history", "comparative-theology", "discernment"],
+      "provenanceLayers": [
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "traditionIds": [
+        "tradition.second-temple-judaism"
+      ],
+      "sourceIds": [
+        "source.dead-sea-scrolls-qumran-corpus"
+      ],
+      "languages": [
+        "English"
+      ],
+      "tags": [
+        "dead-sea-scrolls",
+        "qumran",
+        "history",
+        "archaeology",
+        "textual-history",
+        "comparative-theology",
+        "discernment"
+      ],
       "bibliography": [
         "Israel Antiquities Authority — Leon Levy Dead Sea Scrolls Digital Library: Discovery and Publication, Discovery Sites, Languages and Scripts, Conservation, Digital Library",
         "Library of Congress — Scrolls from the Dead Sea online exhibition: Introduction, Qumran Community, Qumran Library, Judaism and Christianity, Conclusion",
@@ -158,16 +328,37 @@
       "title": "The Dead Sea Scrolls — Gematria Discernment Companion",
       "summary": "A modern computational and contemplative companion using standard Hebrew gematria for declared Hebrew spellings and four transparent modern English ciphers, with numerical equality treated as a prompt for comparison rather than evidence of historical or supernatural identity.",
       "status": "reviewed",
-      "provenanceLayers": ["L2", "L4"],
-      "traditionIds": ["tradition.second-temple-judaism"],
-      "sourceIds": ["source.dead-sea-scrolls-qumran-corpus"],
-      "languages": ["Hebrew", "English"],
-      "tags": ["dead-sea-scrolls", "qumran", "gematria", "english-ciphers", "digital-roots", "discernment", "false-positive-controls"],
+      "provenanceLayers": [
+        "L2",
+        "L4"
+      ],
+      "traditionIds": [
+        "tradition.second-temple-judaism"
+      ],
+      "sourceIds": [
+        "source.dead-sea-scrolls-qumran-corpus"
+      ],
+      "languages": [
+        "Hebrew",
+        "English"
+      ],
+      "tags": [
+        "dead-sea-scrolls",
+        "qumran",
+        "gematria",
+        "english-ciphers",
+        "digital-roots",
+        "discernment",
+        "false-positive-controls"
+      ],
       "computationalMethod": {
         "name": "Hebrew gematria plus four modern English comparison ciphers",
         "method": "Hebrew values use the declared Hebrew spelling with standard letter values and standard values for final forms. English comparisons report English Ordinal, Full Reduction, Reverse Ordinal, and Reverse Reduction; spaces, punctuation, accents, and hyphens are ignored. Digital roots are modern contemplative reductions produced by repeated decimal digit summation.",
         "implementationVersion": "dead-sea-scrolls-gematria-companion-july-2026",
-        "inputFields": ["declared Hebrew spelling", "transliteration or English phrase"],
+        "inputFields": [
+          "declared Hebrew spelling",
+          "transliteration or English phrase"
+        ],
         "reproducibilityNote": "Report the spelling and all four English totals rather than selecting only favorable matches. The companion grades exact four-cipher matches above exact single-cipher matches above shared root patterns; none establishes historical or supernatural identity."
       },
       "contentLocation": "library/studies/dead-sea-scrolls-gematria.index.json"
@@ -178,11 +369,28 @@
       "title": "The Qur'an in Abjad — Number, Structure, and Discernment",
       "summary": "A transparent computational study of the 6,236-verse Arabic source corpus using Eastern Abjad values, declared normalization and sensitivity rules, verse/surah/title/vocabulary totals, and explicit interpretive restraint. Arithmetic patterns are not independent proof of doctrine, prophecy, divine intention, miracle, or hidden code.",
       "status": "reviewed",
-      "provenanceLayers": ["L2"],
-      "traditionIds": ["tradition.islamic-scripture"],
-      "sourceIds": ["source.quran-tanzil-pickthall-edition"],
-      "languages": ["Arabic", "English"],
-      "tags": ["quran", "abjad", "computation", "normalization", "surah-audit", "digital-roots", "discernment"],
+      "provenanceLayers": [
+        "L2"
+      ],
+      "traditionIds": [
+        "tradition.islamic-scripture"
+      ],
+      "sourceIds": [
+        "source.quran-tanzil-pickthall-edition"
+      ],
+      "languages": [
+        "Arabic",
+        "English"
+      ],
+      "tags": [
+        "quran",
+        "abjad",
+        "computation",
+        "normalization",
+        "surah-audit",
+        "digital-roots",
+        "discernment"
+      ],
       "normalizationProfile": {
         "name": "Qur'an in Abjad — primary Arabic normalization",
         "preservesOriginal": true,
@@ -201,10 +409,73 @@
         "name": "Eastern Abjad additive analysis",
         "method": "Assign Eastern Abjad values from 1 through 1000 to normalized Arabic letters and add letter values for phrases, verses, surahs, titles, and vocabulary; also report token and normalized-letter counts, exact repeated verse strings, and modern digital-root reductions where used.",
         "implementationVersion": "quran-abjad-research-edition-2026",
-        "inputFields": ["surah number", "ayah number", "source Arabic", "normalized Arabic"],
+        "inputFields": [
+          "surah number",
+          "ayah number",
+          "source Arabic",
+          "normalized Arabic"
+        ],
         "reproducibilityNote": "Results are corpus- and normalization-dependent. Keep the source hashes and normalization profile visible; arithmetic identity proves arithmetic identity, while theological conclusions require independent historical, linguistic, and interpretive support."
       },
       "contentLocation": "library/studies/quran-abjad.index.json"
+    },
+    {
+      "id": "study.verdad-hebrayca-ferrara-gematria",
+      "type": "study",
+      "title": "Verdad Hebrayca — Ferrara Gematria Discernment",
+      "summary": "A modern Spanish-Hebrew computational and contemplative study of translation, creation, light, goodness, truth, exile, and ethical responsibility. Its strongest reproducible title finding is the exact 1:2:3 architecture 22/44/66 letters and 197/394/591 Spanish-ordinal totals; interpretation remains symbolic rather than evidence of historical authorial intent, prophecy, diagnosis, or supernatural rank.",
+      "status": "reviewed",
+      "provenanceLayers": [
+        "L2",
+        "L4"
+      ],
+      "traditionIds": [
+        "tradition.sephardic-biblical-translation"
+      ],
+      "sourceIds": [
+        "source.biblia-ferrara-amsterdam-1646-facsimile"
+      ],
+      "languages": [
+        "Spanish",
+        "Hebrew",
+        "English"
+      ],
+      "tags": [
+        "verdad-hebrayca",
+        "gematria",
+        "spanish-ordinal",
+        "reverse-ordinal",
+        "reduction",
+        "hebrew-gematria",
+        "translation",
+        "discernment"
+      ],
+      "normalizationProfile": {
+        "name": "Ferrara Spanish 26-letter comparison profile",
+        "preservesOriginal": true,
+        "rules": [
+          "Spanish Ordinal uses A=1 through Z=26.",
+          "Remove spaces and punctuation for calculation.",
+          "Normalize accented vowels to their unaccented forms.",
+          "Count Spanish Ñ as N to preserve the declared 26-letter comparison system.",
+          "Retain the historical spellings TRADUZIDA and HEBRAYCA before normalization.",
+          "Reverse Ordinal uses A=26 through Z=1.",
+          "Reduction places letter values on the 1–9 cycle; Reverse Reduction is recorded separately; digital roots summarize totals but never replace the full calculation."
+        ],
+        "sourcePolicy": "The Amsterdam 5406/1646 facsimile remains an L1 source object. Historical spellings are preserved when source-faithful; normalization occurs only in the analytical study."
+      },
+      "computationalMethod": {
+        "name": "Ferrara Spanish/Hebrew dual-profile gematria",
+        "method": "Spanish calculations use the separately named 26-letter Ordinal, Reverse Ordinal, Reduction, and Reverse Reduction profile. Hebrew calculations use a distinct Standard Hebrew Gematria profile for the declared Hebrew spelling. Systems are fixed before calculation and are not changed to force a desired total.",
+        "implementationVersion": "verdad-hebrayca-drive-edition-2026",
+        "inputFields": [
+          "source-faithful or declared phrase",
+          "language",
+          "named numerical profile"
+        ],
+        "reproducibilityNote": "Exact mathematical equality is distinguished from symbolic interpretation, and symbolic interpretation from historical evidence. The 1:2:3 title architecture is reproducible under the declared Spanish profile but is not evidence that the historical printers engineered it numerically."
+      },
+      "contentLocation": "library/studies/verdad-hebrayca-ferrara.index.json"
     }
   ],
   "discernments": [
@@ -214,10 +485,46 @@
       "title": "Dead Sea Scrolls — Personal and Ethical Correspondence Layer",
       "summary": "Layer 4 metadata for the personal-symbolic and ethical material in the two Dead Sea Scrolls studies. It treats themes and numerical resonances as reflective prompts and never as proof of prediction, reincarnation, bloodline, supernatural rank, authorship, prophecy, or historical identity.",
       "status": "reviewed",
-      "provenanceLayers": ["L4"],
-      "studyIds": ["study.dead-sea-scrolls-comprehensive-analysis", "study.dead-sea-scrolls-gematria-companion"],
-      "sourceIds": ["source.dead-sea-scrolls-qumran-corpus"],
-      "tags": ["personal-symbolism", "ethical-practice", "discernment", "compare-without-collapsing"]
+      "provenanceLayers": [
+        "L4"
+      ],
+      "studyIds": [
+        "study.dead-sea-scrolls-comprehensive-analysis",
+        "study.dead-sea-scrolls-gematria-companion"
+      ],
+      "sourceIds": [
+        "source.dead-sea-scrolls-qumran-corpus"
+      ],
+      "tags": [
+        "personal-symbolism",
+        "ethical-practice",
+        "discernment",
+        "compare-without-collapsing"
+      ]
+    },
+    {
+      "id": "discernment.ferrara-symbolic-resonance",
+      "type": "discernment",
+      "title": "Ferrara — Symbolic Resonance and Ethical Discernment",
+      "summary": "Layer 4 metadata for the study's contemplative and personal readings. Numerical resonances are treated as questions and ethical mirrors, never as causality, historical proof, prophecy, diagnosis, destiny, or authority over another person.",
+      "status": "reviewed",
+      "provenanceLayers": [
+        "L4"
+      ],
+      "studyIds": [
+        "study.verdad-hebrayca-ferrara-gematria"
+      ],
+      "sourceIds": [
+        "source.biblia-ferrara-amsterdam-1646-facsimile"
+      ],
+      "tags": [
+        "symbolic-resonance",
+        "translation",
+        "ethics",
+        "exile",
+        "responsibility",
+        "discernment"
+      ]
     }
   ],
   "correspondences": []

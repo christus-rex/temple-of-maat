@@ -1,0 +1,134 @@
+{
+  "schema": "temple-of-maat/library-study-index-v1",
+  "studyId": "study.verdad-hebrayca-ferrara-gematria",
+  "title": "Verdad Hebrayca — Ferrara Gematria Discernment",
+  "language": "Spanish, Hebrew, and English",
+  "sourceBasis": {
+    "sourceId": "source.biblia-ferrara-amsterdam-1646-facsimile",
+    "sourceTextKeptSeparate": true,
+    "fullSourceTextBundled": false,
+    "historicalFrame": "First Ferrara edition 1553; linked consultation facsimile Amsterdam 5406/1646."
+  },
+  "methodProfiles": {
+    "spanish26Letter": {
+      "name": "Ferrara Spanish 26-letter comparison profile",
+      "layer": "L2",
+      "ordinal": "A=1, B=2, ... Z=26",
+      "reverseOrdinal": "A=26, B=25, ... Z=1",
+      "reduction": "Reduce each direct letter value to the 1–9 cycle.",
+      "reverseReduction": "Reduce each reverse letter value to the 1–9 cycle.",
+      "normalization": [
+        "Remove spaces and punctuation.",
+        "Normalize accented vowels.",
+        "Count Ñ as N to preserve the declared 26-letter comparison system.",
+        "Retain historical spellings TRADUZIDA and HEBRAYCA before normalization."
+      ],
+      "digitalRoots": "Digital roots summarize totals but never replace the full calculation."
+    },
+    "hebrewStandard": {
+      "name": "Standard Hebrew Gematria profile",
+      "layer": "L2",
+      "rule": "Use the conventional standard values of the twenty-two Hebrew letters for the declared Hebrew spelling.",
+      "referenceValues": [
+        {"transliteration":"ECHAD","hebrew":"אחד","value":13},
+        {"transliteration":"AHAVAH","hebrew":"אהבה","value":13},
+        {"transliteration":"YHWH","hebrew":"יהוה","value":26},
+        {"transliteration":"ADAM","hebrew":"אדם","value":45},
+        {"transliteration":"ELOHIM","hebrew":"אלהים","value":86},
+        {"transliteration":"OR","hebrew":"אור","value":207},
+        {"transliteration":"EMET","hebrew":"אמת","value":441},
+        {"transliteration":"CHOKHMAH","hebrew":"חכמה","value":73},
+        {"transliteration":"TORAH","hebrew":"תורה","value":611},
+        {"transliteration":"SHALOM","hebrew":"שלום","value":376}
+      ]
+    }
+  },
+  "ruleOfDiscernment": [
+    "A result is reproducible only when the spelling and cipher are fixed before calculation.",
+    "Systems are not changed merely to force a desired total.",
+    "Exact equality is distinguished from symbolic interpretation, and symbolic interpretation from historical evidence.",
+    "Gematria in this study is a contemplative reading practice, not proof of authorial intent, prediction, diagnosis, or supernatural rank."
+  ],
+  "titleArchitecture": {
+    "claimLevel": "reproducible arithmetic finding under the declared Spanish profile",
+    "authorialIntentClaim": false,
+    "units": [
+      {
+        "id": "first-unit",
+        "sourceLabel": "BIBLIA EN LENGUA ESPAÑOLA",
+        "calculationString": "BIBLIA EN LENGUA ESPANOLA",
+        "normalizedLetters": 22,
+        "ordinal": 197
+      },
+      {
+        "id": "second-unit",
+        "sourceLabel": "TRADUZIDA PALABRA POR PALABRA DE LA VERDAD HEBRAYCA",
+        "calculationString": "TRADUZIDA PALABRA POR PALABRA DE LA VERDAD HEBRAYCA",
+        "normalizedLetters": 44,
+        "ordinal": 394
+      },
+      {
+        "id": "combined-title",
+        "sourceLabel": "BIBLIA EN LENGUA ESPAÑOLA — TRADUZIDA PALABRA POR PALABRA DE LA VERDAD HEBRAYCA",
+        "calculationString": "BIBLIA EN LENGUA ESPANOLA TRADUZIDA PALABRA POR PALABRA DE LA VERDAD HEBRAYCA",
+        "normalizedLetters": 66,
+        "ordinal": 591
+      }
+    ],
+    "relations": ["44 = 2 × 22", "66 = 3 × 22", "394 = 2 × 197", "591 = 3 × 197"],
+    "ratioByLetters": "22:44:66 = 1:2:3",
+    "ratioByOrdinal": "197:394:591 = 1:2:3",
+    "interpretiveLimit": "The study calls this its strongest mathematical discovery but does not treat 66 as an omen or the progression as evidence that the historical publication was numerically engineered."
+  },
+  "selectedReproducibleFindings": [
+    {
+      "label": "Word-by-word / light mirror",
+      "layer": "L2",
+      "left": "PALABRA POR PALABRA — direct ordinal 151",
+      "right": "SEA LUZ Y FUE LUZ — reverse ordinal 151",
+      "interpretiveLimit": "A numerical relation under declared rules, not a magical command or evidence of authorial intent."
+    },
+    {
+      "label": "Goodness / Elohim",
+      "layer": "L4",
+      "left": "Y VIDO EL DIO QUE BUENO — reverse reduction 86",
+      "right": "ELOHIM / אלהים — standard Hebrew gematria 86",
+      "interpretiveLimit": "The study explicitly says the equality does not show that translators engineered the phrase to produce 86."
+    },
+    {
+      "label": "Human image",
+      "layer": "L4",
+      "left": "EL DIO — Spanish ordinal 45",
+      "right": "ADAM / אדם — standard Hebrew gematria 45",
+      "interpretiveLimit": "A contemplative ethical comparison, not identity of human and divine."
+    },
+    {
+      "label": "Verdad Hebrayca",
+      "layer": "L4",
+      "left": "VERDAD HEBRAYCA — Spanish ordinal 117",
+      "right": "117 = 9 × 13; AHAVAH and ECHAD each equal 13 in the declared Hebrew profile",
+      "interpretiveLimit": "The arithmetic is exact; completion/love/unity readings are symbolic."
+    },
+    {
+      "label": "Editorial resonance",
+      "layer": "L4",
+      "left": "ABRAHAM USQUE — reverse ordinal 197",
+      "right": "First title unit — direct ordinal 197",
+      "interpretiveLimit": "Commemorative correspondence; the study states there is no evidence the publication was engineered around the total."
+    }
+  ],
+  "sections": [
+    {"number":2,"title":"The Ferrara Textual Bridge","layer":"L2","keywords":["ferrara-1553","amsterdam-1646","translation","sephardic-spanish"]},
+    {"number":3,"title":"Method — How the Numbers Were Calculated","layer":"L2","keywords":["spanish-ordinal","reverse-ordinal","reduction","hebrew-gematria","normalization"]},
+    {"number":4,"title":"The Exact 1 : 2 : 3 Architecture","layer":"L2","keywords":["22-44-66","197-394-591","title-architecture","reproducibility"]},
+    {"number":5,"title":"Hebrew Roots and Values","layer":"L2","keywords":["hebrew-gematria","echad","ahavah","yhwh","emet","torah","shalom"]},
+    {"number":6,"title":"Genesis 1:1 — 2701, 37 and 73","layer":"L2","keywords":["genesis-1-1","2701","37","73","chokhmah"]},
+    {"number":7,"title":"Light and the Mirror of 151","layer":"L3","keywords":["light","151","translation","mirror"]},
+    {"number":8,"title":"Goodness 86 and the Human Image 45","layer":"L4","keywords":["goodness","86","elohim","45","adam","ethics"]},
+    {"number":9,"title":"Truth, Authors, City and Calendar","layer":"L4","keywords":["verdad-hebrayca","abraham-usque","yom-tob-atias","ferrara","calendars","shalom"]},
+    {"number":10,"title":"Exile, Preservation and Five Ethical Gates","layer":"L4","keywords":["exile","sefarad","preservation","hospitality","ethical-gates"]},
+    {"number":11,"title":"Personal Key: 137 and the Shadow of the Number","layer":"L4","keywords":["137","personal-symbolism","discernment","number-idolatry"]},
+    {"number":12,"title":"Conclusion / English Companion / Sources","layer":"L3","keywords":["conclusion","sources","translation","discernment"]}
+  ],
+  "ethicalBoundary": "A numerical interpretation fails when it increases contempt, paranoia, isolation, or domination; the study says it matures when it produces careful study, truthfulness, compassion, freedom, and responsibility."
+}
