@@ -121,9 +121,9 @@ try {
 
     await page.goto(`http://127.0.0.1:${port}/?mobile_dock_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
     await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
-    await page.waitForSelector('[data-temple-entry="journey"]', { timeout: 30000 });
-    await page.evaluate(() => document.querySelector('[data-temple-entry="journey"]')?.click());
-    await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 30000 });
+    await page.waitForSelector('[data-temple-entry="explore"]', { timeout: 30000 });
+    await page.evaluate(() => document.querySelector('[data-temple-entry="explore"]')?.click());
+    await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && !document.body.classList.contains('temple-artifact-open'), null, { timeout: 30000 });
     await page.waitForFunction(() => Boolean(
       document.getElementById('tm525-journey-button') &&
       document.getElementById('tm525-dossier-button') &&
