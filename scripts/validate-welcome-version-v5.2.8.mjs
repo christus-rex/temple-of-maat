@@ -32,7 +32,7 @@ for (const marker of [
 if (!sw.includes("'./version.json'")) fail('version.json must remain in the service-worker core shell');
 if (!sw.includes("'./scripts/v5.3-threshold.js'")) fail('threshold script must remain in the service-worker core shell');
 if (!sw.includes("'./styles/v5.3-threshold.css'")) fail('threshold stylesheet must remain in the service-worker core shell');
-if (!sw.includes('Shell revision r3: chant web fallback, strict core install, fresh release identity, and isolated cache promotion.')) fail('Service-worker r3 shell refresh marker missing for welcome version rollout');
+if (!sw.includes('Shell revision r4: mobile dock alignment, chant web fallback, strict core install, fresh release identity, and isolated cache promotion.')) fail('Service-worker r4 shell refresh marker missing for welcome version rollout');
 if (!sw.includes('function isReleaseIdentity(url)')) fail('Portal version must use the service-worker release-identity network-first path');
 
 console.log(JSON.stringify({
