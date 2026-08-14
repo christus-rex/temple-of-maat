@@ -9,6 +9,7 @@ on:
       - 'sw.js'
       - 'index.html'
       - 'chambers.json'
+      - 'assets/audio/**'
       - 'scripts/**'
       - 'styles/**'
       - 'library/**'
@@ -63,6 +64,10 @@ jobs:
           TEMPLE_EXPECTED_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.expected_version || '5.2.8' }}
           TEMPLE_EXPECTED_BUILD: ${{ github.event_name == 'workflow_dispatch' && inputs.expected_build || '2026-08-14-v5.2.8-library-journey-offline-hardening' }}
         run: node scripts/verify-deployed-v5.2.8.mjs
+      - name: Verify deployed chant streaming transport
+        env:
+          TEMPLE_LIVE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.live_url || 'https://christus-rex.github.io/temple-of-maat/' }}
+        run: node scripts/smoke-chant-streaming-v5.2.8.mjs
       - name: Preserve deployed-origin screenshot evidence
         if: always()
         uses: actions/upload-artifact@v4
