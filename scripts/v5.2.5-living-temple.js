@@ -85,15 +85,25 @@
 
   function markVisited(number) {
     const valid = chamberNumber(number);
-    if (!valid || !document.body.classList.contains('temple-app-ready')) return;
+    if (!valid || !document.body.classList.contains('temple-app-ready')) return false;
+    let changed = false;
     if (!state.started) {
       state.started = true;
       state.startedAt = state.startedAt || new Date().toISOString();
+      changed = true;
     }
-    state.current = valid;
-    if (!state.visited.includes(valid)) state.visited = [...state.visited, valid].sort((a, b) => a - b);
+    if (state.current !== valid) {
+      state.current = valid;
+      changed = true;
+    }
+    if (!state.visited.includes(valid)) {
+      state.visited = [...state.visited, valid].sort((a, b) => a - b);
+      changed = true;
+    }
+    if (!changed) return false;
     persist();
     if (journeyLayer && !journeyLayer.hidden) renderJourney();
+    return true;
   }
 
   function startJourney(number = 1) {
@@ -241,7 +251,9 @@
 
   function refreshJourneyButton() {
     const node = document.getElementById('tm525-journey-button');
-    if (node) node.textContent = state.started ? `Journey ${progressText()}` : 'Begin Journey';
+    if (!node) return;
+    const nextText = state.started ? `Journey ${progressText()}` : 'Begin Journey';
+    if (node.textContent !== nextText) node.textContent = nextText;
   }
 
   function ensureDockControls() {
