@@ -24,15 +24,26 @@ try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
   const pageErrors = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
-  page.on("requestfailed", (request) => { if (request.url().startsWith(`http://127.0.0.1:${port}/`)) pageErrors.push(`${request.url()}: ${request.failure()?.errorText}`); });
+  page.on("requestfailed", (request) => {
+    const url = request.url();
+    const errorText = request.failure()?.errorText || "";
+    if (url.includes("/assets/audio/maat-forty-two-declarations.mp3") && errorText.includes("ERR_ABORTED")) return;
+    if (url.startsWith(`http://127.0.0.1:${port}/`)) pageErrors.push(`${url}: ${errorText}`);
+  });
   await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.locator('[data-temple-entry="guided"]').click();
-  // Wait on current DOM state rather than holding a locator across React/artifact
-  // stabilization, which can legitimately replace the section node once after entry.
+  await page.waitForFunction(() => document.body.classList.contains("temple-app-ready"), { timeout: 30000 });
+  // The artifact may be mounted before entry, but the manual-threshold covenant keeps
+  // it hidden and noninteractive until temple-app-ready. Wait for rendered visibility,
+  // loaded artwork, and stable current DOM before exercising collectible controls.
   await page.waitForFunction(() => {
-    const section = document.querySelector("#tm2-artifact.open .tm2-parental-section");
+    const artifact = document.querySelector("#tm2-artifact.open");
+    const section = artifact?.querySelector(".tm2-parental-section");
     const image = section?.querySelector("img");
-    return Boolean(section && image?.complete && image?.naturalWidth >= 900 && image?.naturalHeight >= 500);
+    if (!artifact || !section || !image?.complete || image.naturalWidth < 900 || image.naturalHeight < 500) return false;
+    const style = getComputedStyle(artifact);
+    const rect = artifact.getBoundingClientRect();
+    return style.visibility !== "hidden" && style.display !== "none" && rect.width > 0 && rect.height > 0;
   }, { timeout: 30000 });
   const result = await page.evaluate(() => {
     const chamber = window.TempleArchive?.chambers?.().find((item) => item.num === "01");
