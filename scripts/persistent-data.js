@@ -132,8 +132,6 @@
       },
       clear() {
         storage.clear();
-        // The existing reset control reloads immediately. This tombstone makes
-        // that explicit reset win over any older IndexedDB snapshot.
         storage.setItem('temple_persistence_reset', '1');
         pendingWrite = pendingWrite.then(clearBackup).catch(() => {});
       },
@@ -172,4 +170,29 @@
   }
 
   window.TemplePersistentData = Object.freeze({ attach, hydrate, snapshot: localSnapshot });
+})();
+
+// v6.2.1 additive refinement loader. Kept here because this script is already
+// part of the stable app shell; loading refinements here preserves the current
+// React artifact and the 72 Parental Powers feature without rewriting index.html.
+(function () {
+  'use strict';
+  function loadRefinement() {
+    if (!document.querySelector('link[data-temple-refinement="6.2.1"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './styles/refinement-v6.2.1.css';
+      link.dataset.templeRefinement = '6.2.1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-temple-refinement="6.2.1"]')) {
+      const script = document.createElement('script');
+      script.src = './scripts/refinement-v6.2.1.js';
+      script.defer = true;
+      script.dataset.templeRefinement = '6.2.1';
+      document.head.appendChild(script);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadRefinement, { once: true });
+  else loadRefinement();
 })();

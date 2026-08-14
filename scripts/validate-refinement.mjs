@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+const required=['scripts/refinement-v6.2.1.js','styles/refinement-v6.2.1.css','methodology.html','seal-system.json','SOURCE-NOTES.md','scripts/parental-powers.js','scripts/parental-powers-assets.json'];
+for(const f of required) if(!fs.existsSync(f)) throw new Error(`Missing ${f}`);
+const seal=JSON.parse(fs.readFileSync('seal-system.json','utf8'));
+if(seal.version!=='6.2.1') throw new Error('seal-system version mismatch');
+if(seal.chamberCount!==72) throw new Error('Expected 72 seal chambers');
+if(Object.keys(seal.fires||{}).length!==7) throw new Error('Expected 7 Fire motifs');
+if(Object.keys(seal.pillars||{}).length!==3) throw new Error('Expected 3 Pillar structures');
+const parental=fs.readFileSync('scripts/parental-powers.js','utf8');
+if(!parental.includes('TEMPLE_PARENTAL_POWERS')) throw new Error('Parental Powers integration missing');
+const refine=fs.readFileSync('scripts/refinement-v6.2.1.js','utf8');
+for(const token of ['temple_visited_v1','temple_collected_v2','Human-Origin Seal Library','Parental Powers','About & Methodology','Play Ritual']) if(!refine.includes(token)) throw new Error(`Refinement token missing: ${token}`);
+console.log('v6.2.1 refinement validation passed: 72 semantic seals, 7 Fires, 3 Pillars, Parental Powers preserved.');

@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2-2026-08-14-r4';
+const VERSION = 'temple-maat-pwa-v6.2.1-2026-08-14';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -13,6 +13,11 @@ const CORE_ASSETS = [
   './offline.html',
   './version.json',
   './scripts/persistent-data.js',
+  './scripts/refinement-v6.2.1.js',
+  './styles/refinement-v6.2.1.css',
+  './methodology.html',
+  './seal-system.json',
+  './SOURCE-NOTES.md',
   './scripts/parental-powers.js',
   './scripts/parental-powers-assets.json',
   './scripts/v5.1-asset-manifest.json'
@@ -43,11 +48,10 @@ async function releaseDisplayAssets() {
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
-    // Cache independently so one missing optional asset cannot abort installation.
     await cacheInBatches(cache, CORE_ASSETS);
     await cacheInBatches(cache, await releaseDisplayAssets());
-    // Parental Powers previews are cached on demand so installation does not
-    // fetch all 72 wallpapers before the visitor reaches the horizontal rail.
+    // Parental Powers previews remain cached on demand so installation does
+    // not fetch all 72 wallpapers before the visitor reaches that archive.
   })());
 });
 
@@ -68,14 +72,11 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
 
-  // Large archives are downloaded directly and never duplicated in runtime
-  // storage. Individual viewed wallpapers still use the on-demand cache below.
   if (url.origin === self.location.origin && url.pathname.toLowerCase().endsWith('.zip')) {
     event.respondWith(fetch(request).catch(() => new Response('', {status: 504, statusText: 'Offline'})));
     return;
   }
 
-  // Navigation: network-first, then the cached app shell, then offline fallback.
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
       try {
@@ -92,7 +93,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Same-origin static resources: cache-first with background refresh.
   if (url.origin === self.location.origin) {
     event.respondWith((async () => {
       const cached = await caches.match(request);

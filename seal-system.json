@@ -1,0 +1,27 @@
+{
+  "version": "6.2.1",
+  "chamberCount": 72,
+  "principle": "The human figure remains constant. Variation is semantic: Fire motif + Pillar structure + deterministic chamber mark.",
+  "historicalStatus": "Modern Temple of Ma'at visual synthesis; not presented as an ancient Egyptian or historical Solomonic seal corpus.",
+  "integration": "Uses the live TEMPLE_PARENTAL_POWERS chamber metadata so the refinement layer preserves the current 72 Parental Powers wallpaper archive.",
+  "fires": {
+    "1": {"code": "spiral-memory", "label": "Spiral of Remembering", "meaning": "returning memory / origin"},
+    "2": {"code": "concord-arcs", "label": "Concord Arcs", "meaning": "two currents meeting without erasure"},
+    "3": {"code": "severed-gate", "label": "Severed Gate", "meaning": "necessary boundary and clean ending"},
+    "4": {"code": "healing-leaf", "label": "Healing Leaf", "meaning": "repair, growth, reintegration"},
+    "5": {"code": "craft-square", "label": "Craft Square", "meaning": "work, measure, making"},
+    "6": {"code": "depth-chevron", "label": "Depth Chevron", "meaning": "descent, interiority, containment"},
+    "7": {"code": "return-arc", "label": "Return Arc", "meaning": "restoration, second path, homecoming"}
+  },
+  "pillars": {
+    "Jachin": {"code": "left-establishing", "meaning": "establishing / first stone"},
+    "Boaz": {"code": "right-preserving", "meaning": "preserving / continuity"},
+    "Middle": {"code": "balanced-middle", "meaning": "reconciling / measured center"}
+  },
+  "chamberMark": {
+    "algorithm": "FNV-1a based deterministic polygon",
+    "input": "chamber id + law + office + third name",
+    "purpose": "gives each chamber a stable individual mark without claiming historical transmission"
+  },
+  "download": "Each seal is rendered as transparent SVG in the live Seal Library and can be exported to a 2048x2048 transparent PNG."
+}
