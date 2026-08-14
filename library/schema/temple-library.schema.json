@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://christus-rex.github.io/temple-of-maat/library/schema/temple-library.schema.json",
+  "title": "Temple of Ma'at Library Catalog v1",
+  "description": "Public research catalog contract. Provenance layers remain explicit; personal notes/bookmarks are excluded by design.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "updated", "traditions", "sources", "studies", "discernments", "correspondences"],
+  "properties": {
+    "schema": { "const": "temple-of-maat/library-v1" },
+    "updated": { "type": "string", "format": "date" },
+    "traditions": { "type": "array", "items": { "$ref": "#/$defs/tradition" } },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "studies": { "type": "array", "items": { "$ref": "#/$defs/study" } },
+    "discernments": { "type": "array", "items": { "$ref": "#/$defs/discernment" } },
+    "correspondences": { "type": "array", "items": { "$ref": "#/$defs/correspondence" } }
+  },
+  "$defs": {
+    "provenanceLayer": {
+      "type": "string",
+      "enum": ["L1", "L2", "L3", "L4"]
+    },
+    "recordStatus": {
+      "type": "string",
+      "enum": ["planned", "draft", "reviewed", "published", "archived"]
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "commonRecord": {
+      "type": "object",
+      "required": ["id", "type", "title", "status", "provenanceLayers"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "status": { "$ref": "#/$defs/recordStatus" },
+        "provenanceLayers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/provenanceLayer" }
+        },
+        "languages": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/slug" }
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attribution", "publicExposure"],
+      "properties": {
+        "attribution": { "type": "string", "minLength": 1 },
+        "license": { "type": "string" },
+        "licenseUrl": { "type": "string", "format": "uri" },
+        "publicExposure": {
+          "type": "string",
+          "enum": ["full", "excerpt-only", "metadata-only", "restricted", "unknown"]
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "recordCount": { "type": "integer", "minimum": 0 },
+        "integrityNote": { "type": "string" }
+      }
+    },
+    "sourceMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sourceKind": {
+          "type": "string",
+          "enum": ["manuscript", "artifact-record", "source-text", "translation", "edition", "facsimile", "corpus", "dataset", "other"]
+        },
+        "edition": { "type": "string" },
+        "corpus": { "type": "string" },
+        "dateLabel": { "type": "string" },
+        "repository": { "type": "string" },
+        "identifiers": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "normalizationProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "rules"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "preservesOriginal": { "const": true }
+      }
+    },
+    "computationalMethod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "method"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "method": { "type": "string", "minLength": 1 },
+        "implementationVersion": { "type": "string" },
+        "inputFields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "reproducibilityNote": { "type": "string" }
+      }
+    },
+    "tradition": {
+      "allOf": [
+        { "$ref": "#/$defs/commonRecord" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type", "title", "status", "provenanceLayers"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^tradition\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+            "type": { "const": "tradition" },
+            "title": { "type": "string" },
+            "summary": { "type": "string" },
+            "status": { "$ref": "#/$defs/recordStatus" },
+            "provenanceLayers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/provenanceLayer" } },
+            "languages": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+            "tags": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } }
+          }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "status", "provenanceLayers", "traditionIds", "sourceMetadata", "rights"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^source\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "type": { "const": "source" },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "status": { "$ref": "#/$defs/recordStatus" },
+        "provenanceLayers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "contains": { "const": "L1" },
+          "items": { "$ref": "#/$defs/provenanceLayer" }
+        },
+        "traditionIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^tradition\\." }
+        },
+        "languages": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "tags": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+        "sourceMetadata": { "$ref": "#/$defs/sourceMetadata" },
+        "rights": { "$ref": "#/$defs/rights" },
+        "integrity": { "$ref": "#/$defs/integrity" },
+        "contentLocation": { "type": "string" }
+      }
+    },
+    "study": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "status", "provenanceLayers", "traditionIds", "sourceIds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^study\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "type": { "const": "study" },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "status": { "$ref": "#/$defs/recordStatus" },
+        "provenanceLayers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/provenanceLayer" } },
+        "traditionIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^tradition\\." } },
+        "sourceIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^source\\." } },
+        "languages": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "tags": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+        "normalizationProfile": { "$ref": "#/$defs/normalizationProfile" },
+        "computationalMethod": { "$ref": "#/$defs/computationalMethod" },
+        "bibliography": { "type": "array", "items": { "type": "string" } },
+        "contentLocation": { "type": "string" }
+      }
+    },
+    "discernment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "status", "provenanceLayers", "studyIds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^discernment\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "type": { "const": "discernment" },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "status": { "$ref": "#/$defs/recordStatus" },
+        "provenanceLayers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/provenanceLayer" } },
+        "studyIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^study\\." } },
+        "sourceIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^source\\." } },
+        "tags": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+        "contentLocation": { "type": "string" }
+      }
+    },
+    "libraryTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "recordId"],
+      "properties": {
+        "kind": { "const": "library-record" },
+        "recordId": { "type": "string", "pattern": "^(tradition|source|study|discernment)\\." }
+      }
+    },
+    "chamberTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "chamberId"],
+      "properties": {
+        "kind": { "const": "chamber" },
+        "chamberId": { "type": "string", "pattern": "^(0[1-9]|[1-6][0-9]|7[0-2])$" }
+      }
+    },
+    "correspondence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "status", "provenanceLayers", "fromRecordId", "target", "relationType", "identityClaim"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^correspondence\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "type": { "const": "correspondence" },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "status": { "$ref": "#/$defs/recordStatus" },
+        "provenanceLayers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/provenanceLayer" } },
+        "fromRecordId": { "type": "string", "pattern": "^(tradition|source|study|discernment)\\." },
+        "target": { "oneOf": [{ "$ref": "#/$defs/libraryTarget" }, { "$ref": "#/$defs/chamberTarget" }] },
+        "relationType": {
+          "type": "string",
+          "enum": ["thematic-parallel", "comparative-similarity", "symbolic-correspondence", "historical-influence", "textual-relationship", "methodological-parallel"]
+        },
+        "identityClaim": { "const": false },
+        "evidenceNote": { "type": "string" },
+        "limitations": { "type": "string" }
+      }
+    }
+  }
+}
