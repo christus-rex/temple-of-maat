@@ -20,6 +20,7 @@ try {
   page.on("pageerror", (error) => pageErrors.push(error.message));
   page.on("requestfailed", (request) => { if (request.url().startsWith(`http://127.0.0.1:${port}/`)) pageErrors.push(`${request.url()}: ${request.failure()?.errorText}`); });
   await page.goto(`http://127.0.0.1:${port}/#chamber-01`, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.locator('[data-temple-entry="guided"]').click();
   await page.waitForSelector("#tm2-artifact.open .tm2-parental-section", { timeout: 30000 });
   await page.locator("#tm2-artifact.open .tm2-parental-section").scrollIntoViewIfNeeded();
   await page.waitForFunction(() => {

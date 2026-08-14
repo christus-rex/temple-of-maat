@@ -82,6 +82,29 @@ for (const relativePath of serviceWorkerAssets) {
 }
 
 const html = fs.readFileSync(filePath('index.html'), 'utf8');
+
+// v5.2.3 collectible wallpaper guarantees. These markers are part of the public chamber UI
+// and must not disappear during future threshold, PWA, or accessibility refinements.
+const wallpaperUiMarkers = [
+  ['chamber wallpaper download control', 'class="tm2-btn tm2-wallpaper">Wallpaper 1440×2560</button>'],
+  ['Parental Powers wallpaper download control', 'tm2-parental-download'],
+  ['Parental Powers chamber section', 'tm2-parental-section']
+];
+for (const [label, marker] of wallpaperUiMarkers) {
+  if (!html.includes(marker)) fail(`Missing ${label} in index.html`);
+}
+
+const parentalAssetManifestPath = 'scripts/parental-powers-assets.json';
+if (!fs.existsSync(filePath(parentalAssetManifestPath))) fail('Missing Parental Powers asset manifest');
+const parentalAssetManifest = JSON.parse(fs.readFileSync(filePath(parentalAssetManifestPath), 'utf8'));
+const parentalRecords = parentalAssetManifest.records;
+if (!Array.isArray(parentalRecords) || parentalRecords.length !== 72) fail(`Expected 72 Parental Powers wallpaper records, found ${parentalRecords?.length}`);
+for (const record of parentalRecords) {
+  for (const key of ['masterPath', 'displayPath']) {
+    const relativePath = record?.[key];
+    if (!relativePath || !fs.existsSync(filePath(relativePath))) fail(`Missing Parental Powers ${key} for chamber ${record?.id || record?.number || '?'}`);
+  }
+}
 const scripts = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)];
 for (const [index, match] of scripts.entries()) {
   const attributes = match[1];
