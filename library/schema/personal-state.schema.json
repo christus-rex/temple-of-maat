@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://christus-rex.github.io/temple-of-maat/library/schema/personal-state.schema.json",
+  "title": "Temple of Ma'at Library Personal State v1",
+  "description": "Visitor-local Library state. This schema is intentionally separate from the public research catalog.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "updatedAt", "bookmarks", "notes", "privateCorrespondences"],
+  "properties": {
+    "schema": { "const": "temple-of-maat/library-personal-state-v1" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "bookmarks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^(tradition|source|study|discernment|correspondence)\\." }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "recordId", "text", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^note\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "recordId": { "type": "string", "pattern": "^(tradition|source|study|discernment|correspondence)\\." },
+          "text": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "privateCorrespondences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "fromRecordId", "target", "relationType", "provenanceLayer", "identityClaim", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^private-correspondence\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "fromRecordId": { "type": "string", "pattern": "^(tradition|source|study|discernment|correspondence)\\." },
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind", "recordId"],
+                "properties": {
+                  "kind": { "const": "library-record" },
+                  "recordId": { "type": "string", "pattern": "^(tradition|source|study|discernment|correspondence)\\." }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind", "chamberId"],
+                "properties": {
+                  "kind": { "const": "chamber" },
+                  "chamberId": { "type": "string", "pattern": "^(0[1-9]|[1-6][0-9]|7[0-2])$" }
+                }
+              }
+            ]
+          },
+          "relationType": {
+            "type": "string",
+            "enum": ["thematic-parallel", "comparative-similarity", "symbolic-correspondence", "methodological-parallel"]
+          },
+          "provenanceLayer": { "const": "L4" },
+          "identityClaim": { "const": false },
+          "note": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}
