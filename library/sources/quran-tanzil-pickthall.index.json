@@ -1,0 +1,53 @@
+{
+  "schema": "temple-of-maat/library-source-index-v1",
+  "sourceId": "source.quran-tanzil-pickthall-edition",
+  "title": "The Qur'an — Arabic Source Text with Pickthall Translation",
+  "sourceBasis": {
+    "format": "PDF source edition",
+    "pageCount": 466,
+    "edition": "2026 source edition for the Abjad study",
+    "fullTextBundledInTempleShell": false,
+    "analyticalNormalizationApplied": false,
+    "arabicReproductionPolicy": "Arabic wording is reproduced exactly after trimming outer whitespace only.",
+    "pickthallPolicy": "Pickthall wrapping is reflowed; wording is not modernized.",
+    "basmalaPolicy": "The Basmala is Al-Fatiha 1:1 in this corpus."
+  },
+  "corpusIntegrity": {
+    "arabic": {
+      "records": 6236,
+      "sha256": "7628eeb5456a994b6aca2336d316e6cf37dd4a9aec118de6553552d49c2f10ca",
+      "source": "Tanzil Project"
+    },
+    "pickthall": {
+      "records": 6236,
+      "sha256": "3b96fa3ad318ab9d91db53b25100d5169fafe3a1ecb993e7c36ffff55bf9d8bc",
+      "source": "Project Gutenberg eBook #16955 — Three Translations of the Koran Side by Side; M. M. Pickthall translation"
+    }
+  },
+  "rights": {
+    "tanzil": {
+      "copyright": "Copyright © 2007–2021 Tanzil Project",
+      "license": "Creative Commons Attribution 3.0",
+      "terms": [
+        "Permission is granted to copy and distribute verbatim copies; changing the Tanzil Quran text is not allowed under the reproduced notice.",
+        "Where used in a website or application, clearly indicate Tanzil Project as the source and provide a link to tanzil.net so users can track changes.",
+        "Include the copyright notice in verbatim copies and reproduce it appropriately in files containing a substantial portion of the text."
+      ]
+    },
+    "pickthall": {
+      "source": "Project Gutenberg eBook #16955",
+      "status": "Public domain in the United States"
+    }
+  },
+  "searchAddressing": {
+    "surahCount": 114,
+    "ayahRecordCount": 6236,
+    "addressFormat": "surah:ayah",
+    "example": "24:35",
+    "initialShellBehavior": "Search parses a surah:ayah address and resolves the surah metadata from this compact index; full verse text is loaded only from an attributed source layer when requested, not from the initial PWA shell.",
+    "ayahBoundsValidation": "Resolved against the lazy source/analysis corpus rather than inferred by the initial shell index."
+  },
+  "surahs": [
+    {"number":1,"name":"Al-Fatiha","pageStart":7},{"number":2,"name":"Al-Baqara","pageStart":8},{"number":3,"name":"Al-E-Imran","pageStart":34},{"number":4,"name":"An-Nisa","pageStart":50},{"number":5,"name":"Al-Maeda","pageStart":67},{"number":6,"name":"Al-Anaam","pageStart":79},{"number":7,"name":"Al-Araf","pageStart":93},{"number":8,"name":"Al-Anfal","pageStart":109},{"number":9,"name":"Al-Tawba","pageStart":115},{"number":10,"name":"Yunus","pageStart":127},{"number":11,"name":"Hud","pageStart":136},{"number":12,"name":"Yusuf","pageStart":145},{"number":13,"name":"Al-Rad","pageStart":153},{"number":14,"name":"Ibrahim","pageStart":157},{"number":15,"name":"Al-Hijr","pageStart":162},{"number":16,"name":"An-Nahl","pageStart":167},{"number":17,"name":"Al-Isra","pageStart":176},{"number":18,"name":"Al-Kahf","pageStart":184},{"number":19,"name":"Maryam","pageStart":192},{"number":20,"name":"Ta-Ha","pageStart":198},{"number":21,"name":"Al-Anbiya","pageStart":206},{"number":22,"name":"Al-Hajj","pageStart":213},{"number":23,"name":"Al-Mumenoon","pageStart":220},{"number":24,"name":"Al-Noor","pageStart":227},{"number":25,"name":"Al-Furqan","pageStart":233},{"number":26,"name":"Al-Shuara","pageStart":238},{"number":27,"name":"Al-Naml","pageStart":248},{"number":28,"name":"Al-Qasas","pageStart":254},{"number":29,"name":"Al-Ankaboot","pageStart":261},{"number":30,"name":"Al-Room","pageStart":266},{"number":31,"name":"Luqman","pageStart":271},{"number":32,"name":"As-Sajda","pageStart":274},{"number":33,"name":"Al-Ahzab","pageStart":276},{"number":34,"name":"Saba","pageStart":282},{"number":35,"name":"Fatir","pageStart":287},{"number":36,"name":"Ya-Seen","pageStart":291},{"number":37,"name":"As-Saaffat","pageStart":296},{"number":38,"name":"Sad","pageStart":304},{"number":39,"name":"Az-Zumar","pageStart":309},{"number":40,"name":"Al-Ghafir","pageStart":315},{"number":41,"name":"Fussilat","pageStart":321},{"number":42,"name":"Ash-Shura","pageStart":325},{"number":43,"name":"Az-Zukhruf","pageStart":330},{"number":44,"name":"Ad-Dukhan","pageStart":335},{"number":45,"name":"Al-Jathiya","pageStart":338},{"number":46,"name":"Al-Ahqaf","pageStart":341},{"number":47,"name":"Muhammad","pageStart":344},{"number":48,"name":"Al-Fath","pageStart":347},{"number":49,"name":"Al-Hujraat","pageStart":350},{"number":50,"name":"Qaf","pageStart":352},{"number":51,"name":"Adh-Dhariyat","pageStart":355},{"number":52,"name":"At-Tur","pageStart":358},{"number":53,"name":"An-Najm","pageStart":361},{"number":54,"name":"Al-Qamar","pageStart":364},{"number":55,"name":"Ar-Rahman","pageStart":367},{"number":56,"name":"Al-Waqia","pageStart":371},{"number":57,"name":"Al-Hadid","pageStart":375},{"number":58,"name":"Al-Mujadila","pageStart":378},{"number":59,"name":"Al-Hashr","pageStart":380},{"number":60,"name":"Al-Mumtahina","pageStart":383},{"number":61,"name":"As-Saff","pageStart":385},{"number":62,"name":"Al-Jumua","pageStart":387},{"number":63,"name":"Al-Munafiqoon","pageStart":388},{"number":64,"name":"At-Taghabun","pageStart":389},{"number":65,"name":"At-Talaq","pageStart":391},{"number":66,"name":"At-Tahrim","pageStart":393},{"number":67,"name":"Al-Mulk","pageStart":395},{"number":68,"name":"Al-Qalam","pageStart":397},{"number":69,"name":"Al-Haaqqa","pageStart":400},{"number":70,"name":"Al-Maarij","pageStart":403},{"number":71,"name":"Nooh","pageStart":405},{"number":72,"name":"Al-Jinn","pageStart":407},{"number":73,"name":"Al-Muzzammil","pageStart":409},{"number":74,"name":"Al-Muddaththir","pageStart":411},{"number":75,"name":"Al-Qiyama","pageStart":414},{"number":76,"name":"Al-Insan","pageStart":416},{"number":77,"name":"Al-Mursalat","pageStart":418},{"number":78,"name":"An-Naba","pageStart":421},{"number":79,"name":"An-Naziat","pageStart":423},{"number":80,"name":"Abasa","pageStart":425},{"number":81,"name":"At-Takwir","pageStart":427},{"number":82,"name":"Al-Infitar","pageStart":429},{"number":83,"name":"Al-Mutaffifin","pageStart":430},{"number":84,"name":"Al-Inshiqaq","pageStart":432},{"number":85,"name":"Al-Burooj","pageStart":434},{"number":86,"name":"At-Tariq","pageStart":436},{"number":87,"name":"Al-Ala","pageStart":437},{"number":88,"name":"Al-Ghashiya","pageStart":438},{"number":89,"name":"Al-Fajr","pageStart":440},{"number":90,"name":"Al-Balad","pageStart":442},{"number":91,"name":"Ash-Shams","pageStart":443},{"number":92,"name":"Al-Lail","pageStart":444},{"number":93,"name":"Ad-Dhuha","pageStart":445},{"number":94,"name":"Al-Inshirah","pageStart":446},{"number":95,"name":"At-Tin","pageStart":447},{"number":96,"name":"Al-Alaq","pageStart":448},{"number":97,"name":"Al-Qadr","pageStart":449},{"number":98,"name":"Al-Bayyina","pageStart":450},{"number":99,"name":"Al-Zalzala","pageStart":451},{"number":100,"name":"Al-Adiyat","pageStart":452},{"number":101,"name":"Al-Qaria","pageStart":453},{"number":102,"name":"At-Takathur","pageStart":454},{"number":103,"name":"Al-Asr","pageStart":455},{"number":104,"name":"Al-Humaza","pageStart":456},{"number":105,"name":"Al-Fil","pageStart":457},{"number":106,"name":"Quraish","pageStart":458},{"number":107,"name":"Al-Maun","pageStart":459},{"number":108,"name":"Al-Kauther","pageStart":460},{"number":109,"name":"Al-Kafiroon","pageStart":461},{"number":110,"name":"An-Nasr","pageStart":462},{"number":111,"name":"Al-Masadd","pageStart":463},{"number":112,"name":"Al-Ikhlas","pageStart":464},{"number":113,"name":"Al-Falaq","pageStart":465},{"number":114,"name":"An-Nas","pageStart":466}
+  ]
+}
