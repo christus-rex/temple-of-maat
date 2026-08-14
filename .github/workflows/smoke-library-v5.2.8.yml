@@ -3,6 +3,8 @@ name: Smoke Temple Library v5.2.8
 on:
   pull_request:
     paths:
+      - 'version.json'
+      - 'sw.js'
       - 'library/**'
       - 'scripts/v5.2.8-temple-library.js'
       - 'styles/v5.2.8-temple-library.css'
