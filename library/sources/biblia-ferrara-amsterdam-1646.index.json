@@ -1,0 +1,36 @@
+{
+  "schema": "temple-of-maat/library-source-index-v1",
+  "sourceId": "source.biblia-ferrara-amsterdam-1646-facsimile",
+  "title": "Biblia de Ferrara — Amsterdam 5406/1646 Source Facsimile",
+  "sourceBasis": {
+    "format": "digitized historical facsimile",
+    "pageCount": 639,
+    "fullTextBundledInTempleShell": false,
+    "historicalRelation": "The first Biblia de Ferrara was printed in Ferrara in 1553 for Spanish-speaking Sephardic readers and is associated in the linked study with Abraham Usque and Yom-Tob Atias. The preserved consultation facsimile is an Amsterdam edition dated Hebrew year 5406 / 1646 within the Ferrara textual tradition.",
+    "sourcePreservation": "The facsimile remains separate from the modern numerical study. Historical spelling and typography are retained as source evidence; OCR artifacts are not silently promoted to normalized source text."
+  },
+  "titlePageWitness": {
+    "sourceFaithfulLines": [
+      "BIBLIA",
+      "En Lengua ESPAÑOLA,",
+      "Traduzida palabra por palabra de la verdad Hebrayca,",
+      "por muy excelentes letrados.",
+      "AMSTERDAM",
+      "5406"
+    ],
+    "orthographyMarkers": ["Traduzida", "Hebrayca"],
+    "note": "These lines preserve historically significant spelling from the facsimile witness. The analytical study uses a separately declared normalization profile for calculation."
+  },
+  "translationProgram": {
+    "sourcePhrase": "palabra por palabra de la verdad Hebrayca",
+    "studyInterpretationBoundary": "The linked study treats the source-close Spanish as a historical translation bridge. Numerical analysis does not alter or replace the source wording."
+  },
+  "digitizationUseTerms": {
+    "underlyingWorkStatus": "The Google Books notice identifies the historical volume as public domain, while warning that public-domain status can vary by jurisdiction.",
+    "fileUse": "personal/non-commercial",
+    "automatedRequests": "do not send automated requests to the Google system",
+    "attribution": "preserve Google attribution and watermark",
+    "jurisdiction": "users remain responsible for ensuring their use is lawful in their jurisdiction",
+    "templeExposure": "metadata-only; the Temple Library does not republish the digitized facsimile"
+  }
+}
