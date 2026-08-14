@@ -35,7 +35,7 @@ for (const marker of [
   if (!fallback.includes(marker)) fail(`Chant streaming fallback marker missing: ${marker}`);
 }
 
-if (!sw.includes("const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r3'")) fail('Chant streaming service-worker shell must be r3');
+if (!sw.includes("const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4'")) fail('Chant streaming service-worker shell must be r4');
 const core = sw.match(/const CORE_ASSETS = \[([\s\S]*?)\];/);
 if (!core) fail('Unable to inspect service-worker CORE_ASSETS');
 if (core[1].includes('maat-forty-two-declarations.web.opus')) fail('Streaming chant binary must remain network-only, outside Cache Storage');
@@ -46,6 +46,6 @@ console.log(JSON.stringify({
   webRendition: { path: audioPath, bytes: audio.length, sha256 },
   canonicalSha256: meta.source.sha256,
   distribution: meta.distribution.mode,
-  serviceWorkerShell: 'r3',
+  serviceWorkerShell: 'r4',
   autoplay: false
 }, null, 2));
