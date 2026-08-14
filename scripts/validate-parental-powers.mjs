@@ -25,12 +25,14 @@ check(generation.records.length === 72, "Generation manifest must contain 72 rec
 check(assets.records.length === 72, "Asset manifest must contain 72 records.");
 check(assets.completeMasters === 72, `Expected 72 masters; found ${assets.completeMasters}.`);
 check(assets.completeDisplays === 72, `Expected 72 displays; found ${assets.completeDisplays}.`);
-check(version.version === "5.2.0", `Expected version 5.2.0; found ${version.version}.`);
+check(version.version === "5.2.1", `Expected version 5.2.1; found ${version.version}.`);
 check(index.includes("tm2-parental-section"), "Artifact page Parental Powers section is missing.");
 check(index.includes("const W=3840,H=2160"), "4K Parental Powers renderer is missing.");
 check(index.includes("const W=1200,H=2420"), "Expanded collectible plate renderer is missing.");
 check(index.includes('<script src="./scripts/parental-powers.js"></script>'), "Runtime manifest is not loaded by index.html.");
-check(serviceWorker.includes("temple-maat-pwa-v5.2-2026-08-13-r1"), "Service worker cache version was not advanced.");
+check(index.includes("ensureWallpaperRail"), "Horizontal Parental Powers wallpaper rail is missing.");
+check(index.includes("tm2-wallpaper-track"), "Horizontal wallpaper track styling is missing.");
+check(serviceWorker.includes("temple-maat-pwa-v5.2-2026-08-13-r2"), "Service worker cache version was not advanced.");
 check(serviceWorker.includes("parentalDisplayAssets"), "Service worker does not cache Parental Powers display assets.");
 
 const generationIds = new Set(generation.records.map((record) => record.id));
@@ -83,6 +85,7 @@ console.log(JSON.stringify({
   totalMasterMiB: Number((totalMasterBytes / 1024 / 1024).toFixed(2)),
   totalDisplayMiB: Number((totalDisplayBytes / 1024 / 1024).toFixed(2)),
   version: version.version,
+  gallery: "72-card horizontal rail after hero masonry",
   wallpaper: "3840x2160 PNG on demand",
   plate: "1200x2420 PNG",
 }, null, 2));
