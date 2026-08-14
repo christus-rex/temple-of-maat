@@ -82,7 +82,7 @@ async function installPriorWorker(page) {
 }
 
 async function upgradeToCurrentWorker(page) {
-  return await page.evaluate(async ({ currentNamespace }) => {
+  return await page.evaluate(async ({ currentNamespace, priorNamespace }) => {
     const before = navigator.serviceWorker.controller?.scriptURL || '';
     const registration = await navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' });
     await registration.update();
@@ -105,17 +105,30 @@ async function upgradeToCurrentWorker(page) {
       await Promise.race([changed, new Promise((_, reject) => setTimeout(() => reject(new Error('controllerchange timeout')), 90000))]);
     }
 
-    const activeRegistration = await navigator.serviceWorker.getRegistration('./');
-    const cachesNow = await caches.keys();
+    // controllerchange can fire while the new worker is still finishing activate-event
+    // cleanup. Wait for the worker to reach activated and for the prior namespace to
+    // disappear before judging the update contract.
+    let activeRegistration = null;
+    let cachesNow = [];
+    const cleanupDeadline = Date.now() + 90000;
+    while (Date.now() < cleanupDeadline) {
+      activeRegistration = await navigator.serviceWorker.getRegistration('./');
+      cachesNow = await caches.keys();
+      const activeReady = activeRegistration?.active?.state === 'activated';
+      const priorCachePresent = cachesNow.some((name) => name.includes(priorNamespace));
+      if (activeReady && !priorCachePresent) break;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
     return {
       before,
       after: navigator.serviceWorker.controller?.scriptURL || '',
       active: activeRegistration?.active?.scriptURL || '',
+      activeState: activeRegistration?.active?.state || '',
       caches: cachesNow,
       currentCachePresent: cachesNow.some((name) => name.startsWith(currentNamespace)),
-      priorCachePresent: cachesNow.some((name) => name.includes('v5.2.7-prior-release-fixture'))
+      priorCachePresent: cachesNow.some((name) => name.includes(priorNamespace))
     };
-  }, { currentNamespace: CURRENT_NAMESPACE });
+  }, { currentNamespace: CURRENT_NAMESPACE, priorNamespace: PRIOR_NAMESPACE });
 }
 
 function geometryFromRect(rect, viewportWidth) {
@@ -220,8 +233,10 @@ try {
   page.on('pageerror', (error) => pageErrors.push(error.message));
   const prior = await installPriorWorker(page);
   const upgrade = await upgradeToCurrentWorker(page);
+  fs.writeFileSync(path.join(outDir, 'service-worker-upgrade.json'), JSON.stringify({ prior, upgrade }, null, 2));
+  await page.screenshot({ path: path.join(outDir, 'service-worker-upgrade-state.png'), fullPage: false });
   if (!prior.controller.includes('__prior-v527-sw.js')) throw new Error(`Prior worker never controlled the test origin: ${JSON.stringify(prior)}`);
-  if (!upgrade.after.endsWith('/sw.js') || !upgrade.active.endsWith('/sw.js') || !upgrade.currentCachePresent || upgrade.priorCachePresent) {
+  if (!upgrade.after.endsWith('/sw.js') || !upgrade.active.endsWith('/sw.js') || upgrade.activeState !== 'activated' || !upgrade.currentCachePresent || upgrade.priorCachePresent) {
     throw new Error(`Service-worker upgrade contract failed: ${JSON.stringify(upgrade)}`);
   }
 
@@ -260,7 +275,7 @@ try {
   const assertions = {
     releaseVersion: version.version === '5.2.8' && version.build === '2026-08-14-v5.2.8-library-journey-offline-hardening',
     priorWorkerInstalled: prior.controller.includes('__prior-v527-sw.js') && prior.caches.some((name) => name.includes(PRIOR_NAMESPACE)),
-    upgradedToCurrentWorker: upgrade.after.endsWith('/sw.js') && upgrade.active.endsWith('/sw.js') && upgrade.currentCachePresent && !upgrade.priorCachePresent,
+    upgradedToCurrentWorker: upgrade.after.endsWith('/sw.js') && upgrade.active.endsWith('/sw.js') && upgrade.activeState === 'activated' && upgrade.currentCachePresent && !upgrade.priorCachePresent,
     thresholdHeldAfterUpdate: threshold.ready === false && threshold.rootInert === true && threshold.rootHidden === true && threshold.artifactVisibility === 'hidden',
     deepLinkPreserved: threshold.continueText === 'Continue at Chamber 42' && threshold.continueHref === '#chamber-42',
     explicitEntryToIntendedChamber: afterEntry.ready === true && afterEntry.hash === '#chamber-42' && afterEntry.rootInert === false && afterEntry.artifactOpen === true,
