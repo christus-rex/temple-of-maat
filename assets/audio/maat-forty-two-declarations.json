@@ -9,19 +9,23 @@
     "bitRate": 128003,
     "sha256": "3e40ba7d0b60c3a04f7edf3022fc98f9daf2fcc3ca9e7900c87bb2b62f02fbe6"
   },
-  "webRendition": {
-    "fileName": "maat-forty-two-declarations-web.opus",
-    "path": "assets/audio/maat-forty-two-declarations-web.opus",
+  "distribution": {
+    "mode": "indexeddb-device-install",
+    "reason": "The repository connector cannot stream the uploaded binary into GitHub and connected Drive storage is over quota. v5.2.5 therefore verifies the exact source MP3 by size and SHA-256, stores it privately in the PWA media vault, and restores it for offline playback on later visits.",
+    "networkUpload": false,
+    "persistsOnDevice": true
+  },
+  "preparedWebRendition": {
+    "status": "not-published",
     "mimeType": "audio/ogg; codecs=opus",
     "bytes": 1336596,
     "durationSeconds": 1013.072229,
-    "sha256": "60f73465d4f6022e6054a1be1c228cfeba04be7947344e4e7a43537400db7782",
-    "encoding": "libopus mono web rendition derived from the canonical uploaded MP3"
+    "sha256": "60f73465d4f6022e6054a1be1c228cfeba04be7947344e4e7a43537400db7782"
   },
   "playbackPolicy": {
     "autoplay": false,
     "preload": "metadata",
     "userGestureRequired": true,
-    "localOriginalFallback": true
+    "canonicalFileRequired": true
   }
 }
