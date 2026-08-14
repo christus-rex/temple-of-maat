@@ -1,5 +1,5 @@
 {
   "version": "5.2.4",
   "build": "2026-08-14-v5.2.4-living-codex",
-  "source": "Temple v5.2 series with Living Codex, collectible vault, return journey, and user-governed Ma'at chant"
+  "source": "Temple v5.2 series with Living Codex, collectible vault, return journey, and no-autoplay Ma'at chant player with device-local media fallback"
 }
