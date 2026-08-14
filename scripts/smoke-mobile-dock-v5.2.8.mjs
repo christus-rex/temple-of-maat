@@ -108,9 +108,9 @@ try {
     page.on('pageerror', (error) => pageErrors.push(error.message));
 
     await page.goto(`http://127.0.0.1:${port}/?mobile_dock_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72, null, { timeout: 30000 });
-    await page.waitForSelector('[data-temple-entry="continue"]', { timeout: 30000 });
-    await page.locator('[data-temple-entry="continue"]').click();
+    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+    await page.waitForSelector('[data-temple-entry="journey"]', { timeout: 30000 });
+    await page.locator('[data-temple-entry="journey"]').click();
     await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 30000 });
     await page.waitForFunction(() => {
       const labels = [...document.querySelectorAll('#tm524-dock > *')]
