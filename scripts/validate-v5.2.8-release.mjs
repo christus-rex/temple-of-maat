@@ -44,11 +44,11 @@ const hardeningWorkflow = read('.github/workflows/smoke-release-hardening-v5.2.8
 const deployedWorkflow = read('.github/workflows/verify-deployed-v5.2.8.yml');
 const wallpaper = read('scripts/diagnose-live-wallpapers.mjs');
 
+// These are classic scripts and can be parsed with vm.Script. The hardening and
+// deployed runners are ESM .mjs files; their actual CI execution is the syntax/runtime gate.
 for (const [name, source] of [
   ['Service Worker', sw],
-  ['Threshold', threshold],
-  ['Release hardening smoke', hardening],
-  ['Deployed-origin verifier', deployed]
+  ['Threshold', threshold]
 ]) {
   try { new vm.Script(source, { filename: name }); }
   catch (error) { fail(`${name} JavaScript does not parse: ${error.message}`); }
@@ -148,7 +148,7 @@ for (const marker of [
 for (const marker of [
   "const CURRENT_NAMESPACE = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14'",
   "const PRIOR_NAMESPACE = 'temple-maat-pwa-v5.2.7-prior-release-fixture'",
-  "#chamber-42",
+  '#chamber-42',
   '[[320, 740], [360, 800], [412, 915]]',
   'mobileOverlayGeometry',
   'thresholdHeldAfterUpdate',
@@ -158,7 +158,7 @@ for (const marker of [
 }
 
 for (const marker of [
-  "https://christus-rex.github.io/temple-of-maat/",
+  'https://christus-rex.github.io/temple-of-maat/',
   "expectedVersion = process.env.TEMPLE_EXPECTED_VERSION || '5.2.8'",
   'serviceWorkerControlled',
   'deepLinkHeld',
