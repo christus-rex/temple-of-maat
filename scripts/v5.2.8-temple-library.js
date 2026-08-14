@@ -68,7 +68,14 @@
   }
 
   function publicRecords(data) {
-    return TYPES.flatMap((type) => Array.isArray(data?.[`${type}s`]) ? data[`${type}s`] : []);
+    const groups = {
+      tradition: 'traditions',
+      source: 'sources',
+      study: 'studies',
+      discernment: 'discernments',
+      correspondence: 'correspondences'
+    };
+    return TYPES.flatMap((type) => Array.isArray(data?.[groups[type]]) ? data[groups[type]] : []);
   }
 
   async function loadCatalog() {
