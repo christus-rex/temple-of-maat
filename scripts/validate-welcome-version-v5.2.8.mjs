@@ -32,7 +32,8 @@ for (const marker of [
 if (!sw.includes("'./version.json'")) fail('version.json must remain in the service-worker core shell');
 if (!sw.includes("'./scripts/v5.3-threshold.js'")) fail('threshold script must remain in the service-worker core shell');
 if (!sw.includes("'./styles/v5.3-threshold.css'")) fail('threshold stylesheet must remain in the service-worker core shell');
-if (!sw.includes('Shell refresh: recache the welcome threshold')) fail('Service-worker shell refresh marker missing for welcome version rollout');
+if (!sw.includes('Shell revision r2: strict core install, fresh release identity, and isolated cache promotion.')) fail('Service-worker r2 shell refresh marker missing for welcome version rollout');
+if (!sw.includes('function isReleaseIdentity(url)')) fail('Portal version must use the service-worker release-identity network-first path');
 
 console.log(JSON.stringify({
   ok: true,
@@ -40,5 +41,6 @@ console.log(JSON.stringify({
   build: version.build,
   source: 'version.json',
   welcomeLabel: `PORTAL v${version.version}`,
-  offlineCore: true
+  offlineCore: true,
+  freshReleaseIdentity: true
 }, null, 2));
