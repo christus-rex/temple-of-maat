@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2.5-living-temple-shem-72-2026-08-14';
+const VERSION = 'temple-maat-pwa-v5.2.6-shem-dossiers-2026-08-14';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -24,6 +24,7 @@ const CORE_ASSETS = [
   './scripts/v5.2.4-living-codex.js',
   './scripts/v5.2.4-chant-fallback.js',
   './scripts/v5.2.5-living-temple.js',
+  './scripts/v5.2.6-shem-dossiers.js',
   './scripts/v5.2.5-media-vault.js',
   './assets/audio/maat-forty-two-declarations.json'
 ];
