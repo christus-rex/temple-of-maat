@@ -57,7 +57,8 @@ for (const [name, source] of [
   catch (error) { fail(`${name} JavaScript does not parse: ${error.message}`); }
 }
 
-// Documentation truth.
+// Documentation truth. v5.2.7 remains the production release while ROADMAP may
+// advance to current work; the historical stewardship milestone must remain visible.
 for (const marker of [
   '# Temple of Ma\'at — GitHub Pages PWA v5.2.7',
   'v5.2.6 Shem Dossiers → v5.2.7 Stewardship & Governance',
@@ -69,10 +70,10 @@ for (const marker of [
 }
 
 for (const marker of [
-  '## Current release',
-  '### v5.2.6 — Shem Dossiers',
-  '## NOW — v5.2.7 Stewardship & Governance',
-  '## NEXT — v5.2.8 Temple Library',
+  '## Current production release',
+  '### v5.2.7 — Stewardship & Governance',
+  '## COMPLETED — v5.2.7 Stewardship & Governance',
+  '## NOW — v5.2.8 Temple Library',
   '## LATER — v5.3.0 Integrated Research Temple',
   '## Research backlog',
   '## Release gates',
