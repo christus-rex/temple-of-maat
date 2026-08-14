@@ -39,6 +39,13 @@ for (const marker of [
 }
 
 if (!threshold.includes("loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library')")) fail('Threshold does not load the v5.2.8 Temple Library enhancement');
+for (const marker of [
+  'body:not(.temple-app-ready) .tm2-artifact-backdrop',
+  'visibility: hidden !important',
+  'pointer-events: none !important'
+]) {
+  if (!threshold.includes(marker)) fail(`Manual threshold hash-reload artifact guard missing: ${marker}`);
+}
 if (/localStorage\.setItem\([^,]+catalog/i.test(js)) fail('Public Library catalog must not be written into personal local state');
 const loadCatalogBody = js.match(/async function loadCatalog\(\) \{([\s\S]*?)\n  \}\n\n  function recordSearchText/);
 if (!loadCatalogBody) fail('Could not inspect loadCatalog() for lazy-loading policy');
@@ -52,4 +59,4 @@ if (!css.includes('grid-template-columns:1fr') || !css.includes('overflow:hidden
 const sourceWithRights = catalog.sources.filter((item) => item.rights?.attribution).length;
 if (sourceWithRights < 2) fail('Library reading UI needs at least two source records with attribution/rights metadata');
 
-console.log(`Validated Temple Library UI contract: ${records.length} public records across ${catalog.traditions.length} traditions; lazy indexes, provenance/type search, source rights, local bookmarks/notes/L4 chamber links, personal export, mobile overflow guards, and failure isolation present.`);
+console.log(`Validated Temple Library UI contract: ${records.length} public records across ${catalog.traditions.length} traditions; lazy indexes, provenance/type search, source rights, local bookmarks/notes/L4 chamber links, personal export, mobile overflow guards, hash-reload threshold protection, and failure isolation present.`);
