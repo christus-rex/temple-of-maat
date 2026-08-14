@@ -256,6 +256,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
     try {
+      // Canonical ritual audio lives in IndexedDB only after explicit visitor installation.
       // Core shell is atomic: a missing required asset rejects this worker rather
       // than promoting a partially offline-capable release. Support art remains optional.
       await cacheStrictInBatches(cache, CORE_ASSETS);
