@@ -1,4 +1,4 @@
-# Temple of Ma'at — GitHub Pages PWA v5.2
+# Temple of Ma'at — GitHub Pages PWA v5.3
 
 This folder is ready to publish from the root of a GitHub Pages repository.
 

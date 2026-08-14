@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2-2026-08-13-r1';
+const VERSION = 'temple-maat-pwa-v5.3.0-rc1-2026-08-14';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -12,53 +12,99 @@ const CORE_ASSETS = [
   './chambers.json',
   './offline.html',
   './version.json',
+  './styles/v5.3-threshold.css',
   './scripts/persistent-data.js',
   './scripts/parental-powers.js',
   './scripts/parental-powers-assets.json',
-  './scripts/v5.1-asset-manifest.json'
+  './scripts/v5.1-asset-manifest.json',
+  './scripts/v5.3-threshold.js'
 ];
 
 async function cacheInBatches(cache, assets, batchSize = 12) {
-  for (let index = 0; index < assets.length; index += batchSize) {
-    await Promise.allSettled(assets.slice(index, index + batchSize).map((asset) => cache.add(asset)));
+  const uniqueAssets = [...new Set(assets.filter(Boolean))];
+  for (let index = 0; index < uniqueAssets.length; index += batchSize) {
+    await Promise.allSettled(uniqueAssets.slice(index, index + batchSize).map((asset) => cache.add(asset)));
   }
 }
 
-async function releaseDisplayAssets() {
+async function readJsonAsset(path) {
   try {
-    const response = await fetch('./scripts/v5.1-asset-manifest.json', { cache: 'no-store' });
-    if (!response.ok) return [];
-    const manifest = await response.json();
-    const assets = Array.isArray(manifest.assets) ? manifest.assets : [];
-    return assets.flatMap((asset) => {
-      if (asset.category === 'support' && asset.path) return [`./${asset.path}`];
-      if ((asset.category === 'hero' || asset.category === 'seal') && asset.display?.path) return [`./${asset.display.path}`];
-      return [];
-    });
+    const cached = await caches.match(path);
+    const response = cached || await fetch(path, { cache: 'no-store' });
+    if (!response || !response.ok) return null;
+    return await response.clone().json();
   } catch {
-    return [];
+    return null;
   }
 }
 
-async function parentalDisplayAssets() {
-  try {
-    const response = await fetch('./scripts/parental-powers-assets.json', { cache: 'no-store' });
-    if (!response.ok) return [];
-    const manifest = await response.json();
-    const records = Array.isArray(manifest.records) ? manifest.records : [];
-    return records.flatMap((record) => record.display?.path ? [`./${record.display.path}`] : []);
-  } catch {
-    return [];
+async function releaseManifest() {
+  return await readJsonAsset('./scripts/v5.1-asset-manifest.json');
+}
+
+async function parentalManifest() {
+  return await readJsonAsset('./scripts/parental-powers-assets.json');
+}
+
+async function supportDisplayAssets() {
+  const manifest = await releaseManifest();
+  const assets = Array.isArray(manifest?.assets) ? manifest.assets : [];
+  return assets.flatMap((asset) => asset.category === 'support' && asset.path ? [`./${asset.path}`] : []);
+}
+
+async function chamberDisplayAssets(chamber, ahead = 2) {
+  const first = Math.max(1, Math.min(72, Number(chamber) || 1));
+  const last = Math.min(72, first + Math.max(0, ahead));
+  const release = await releaseManifest();
+  const parental = await parentalManifest();
+  const assets = Array.isArray(release?.assets) ? release.assets : [];
+  const records = Array.isArray(parental?.records) ? parental.records : [];
+  const heroes = assets.filter((asset) => asset.category === 'hero');
+  const seals = assets.filter((asset) => asset.category === 'seal');
+  const selected = [];
+
+  for (let number = first; number <= last; number += 1) {
+    const hero = heroes[number - 1];
+    const seal = seals[number - 1];
+    const parentalRecord = records.find((record) => Number(record.number) === number);
+    if (hero?.display?.path) selected.push(`./${hero.display.path}`);
+    if (seal?.display?.path) selected.push(`./${seal.display.path}`);
+    if (parentalRecord?.display?.path) selected.push(`./${parentalRecord.display.path}`);
   }
+
+  return selected;
+}
+
+async function allDisplayAssets() {
+  const release = await releaseManifest();
+  const parental = await parentalManifest();
+  const releaseAssets = Array.isArray(release?.assets) ? release.assets : [];
+  const records = Array.isArray(parental?.records) ? parental.records : [];
+  const visuals = releaseAssets.flatMap((asset) => {
+    if (asset.category === 'support' && asset.path) return [`./${asset.path}`];
+    if ((asset.category === 'hero' || asset.category === 'seal') && asset.display?.path) return [`./${asset.display.path}`];
+    return [];
+  });
+  const parentalAssets = records.flatMap((record) => record.display?.path ? [`./${record.display.path}`] : []);
+  return [...visuals, ...parentalAssets];
+}
+
+async function cacheChamberWindow(chamber) {
+  const cache = await caches.open(RUNTIME_CACHE);
+  await cacheInBatches(cache, await chamberDisplayAssets(chamber, 2), 9);
+}
+
+async function cacheFullTemple() {
+  const cache = await caches.open(RUNTIME_CACHE);
+  await cacheInBatches(cache, await allDisplayAssets());
 }
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
-    // Cache independently so one missing optional asset cannot abort installation.
+    // Keep installation light: app shell + five support visuals only.
     await cacheInBatches(cache, CORE_ASSETS);
-    await cacheInBatches(cache, await releaseDisplayAssets());
-    await cacheInBatches(cache, await parentalDisplayAssets());
+    await cacheInBatches(cache, await supportDisplayAssets());
   })());
 });
 
@@ -71,7 +117,19 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+  const data = event.data || {};
+  if (data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+    return;
+  }
+  if (data.type === 'CACHE_CHAMBER') {
+    event.waitUntil(cacheChamberWindow(data.chamber));
+    return;
+  }
+  if (data.type === 'CACHE_FULL_TEMPLE') {
+    // Explicit opt-in path exposed through window.TempleOfflineCache.downloadFull().
+    event.waitUntil(cacheFullTemple());
+  }
 });
 
 self.addEventListener('fetch', (event) => {
@@ -89,14 +147,14 @@ self.addEventListener('fetch', (event) => {
           cache.put('./index.html', response.clone());
         }
         return response;
-      } catch (error) {
+      } catch {
         return (await caches.match('./index.html')) || (await caches.match('./')) || (await caches.match('./offline.html'));
       }
     })());
     return;
   }
 
-  // Same-origin static resources: cache-first with background refresh.
+  // Same-origin resources: use cached content immediately and refresh it in the background.
   if (url.origin === self.location.origin) {
     event.respondWith((async () => {
       const cached = await caches.match(request);
@@ -107,7 +165,7 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       }).catch(() => null);
-      return cached || (await networkPromise) || new Response('', {status: 504, statusText: 'Offline'});
+      return cached || (await networkPromise) || new Response('', { status: 504, statusText: 'Offline' });
     })());
   }
 });

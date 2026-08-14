@@ -1,0 +1,132 @@
+/* Temple of Ma'at v5.3 — Threshold, accessibility, and mobile refinement */
+:root {
+  --temple-focus: #40e0d0;
+  --temple-gold: #d9bf73;
+  --temple-ink: #071019;
+  --temple-panel: rgba(7, 16, 25, 0.94);
+}
+
+.temple-skip-link {
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  left: max(8px, env(safe-area-inset-left));
+  z-index: 9999;
+  transform: translateY(-160%);
+  padding: 10px 14px;
+  border: 1px solid var(--temple-focus);
+  border-radius: 10px;
+  background: #071019;
+  color: #fff;
+  font: 700 14px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+  text-decoration: none;
+}
+.temple-skip-link:focus { transform: translateY(0); }
+
+#temple-static-entry {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: max(28px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  background:
+    radial-gradient(circle at 50% 18%, rgba(64, 224, 208, 0.12), transparent 34rem),
+    linear-gradient(180deg, #071019 0%, #0b151c 100%);
+  color: #f7f1df;
+}
+.temple-static-entry__panel {
+  width: min(680px, 100%);
+  padding: clamp(26px, 5vw, 52px);
+  border: 1px solid rgba(217, 191, 115, 0.38);
+  border-radius: 24px;
+  background: var(--temple-panel);
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.38);
+  text-align: center;
+}
+.temple-static-entry__eyebrow {
+  margin: 0 0 12px;
+  color: var(--temple-focus);
+  font: 800 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.temple-static-entry__panel h1 {
+  margin: 0;
+  color: #fff8e8;
+  font: 800 clamp(38px, 8vw, 72px)/0.98 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.04em;
+}
+.temple-static-entry__lead {
+  margin: 20px auto 0;
+  max-width: 52ch;
+  color: #cdd7d7;
+  font: 400 clamp(16px, 2.8vw, 19px)/1.65 Inter, ui-sans-serif, system-ui, sans-serif;
+}
+.temple-static-entry__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+.temple-static-entry__action {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border: 1px solid rgba(64, 224, 208, 0.46);
+  border-radius: 14px;
+  background: rgba(64, 224, 208, 0.08);
+  color: #efffff;
+  font: 800 14px/1.25 Inter, ui-sans-serif, system-ui, sans-serif;
+  text-decoration: none;
+}
+.temple-static-entry__action--secondary {
+  border-color: rgba(217, 191, 115, 0.4);
+  background: rgba(217, 191, 115, 0.06);
+  color: #f3dfaa;
+}
+.temple-static-entry__status {
+  margin: 18px 0 0;
+  color: #8fa6a6;
+  font: 600 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.temple-app-ready #temple-static-entry { display: none; }
+
+/* Clear keyboard focus without changing the visual identity. */
+:where(button, [role="button"], a[href], input, select, textarea):focus-visible {
+  outline: 3px solid var(--temple-focus) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 2px var(--temple-ink) !important;
+}
+
+/* Core tap targets: do not enlarge ordinary inline text links. */
+:where(button, [role="button"], select, input[type="button"], input[type="submit"], input[type="reset"]) {
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+@media (max-width: 767px) {
+  .temple-static-entry__actions { grid-template-columns: 1fr; }
+  .temple-static-entry__panel { border-radius: 20px; }
+
+  /* Existing micro-labels remain compact but readable on phones. */
+  .text-\[9px\], .text-\[10px\], .text-\[11px\] {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .temple-static-entry__panel,
+  .temple-static-entry__action { border: 1px solid CanvasText; }
+}
