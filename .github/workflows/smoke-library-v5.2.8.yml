@@ -1,0 +1,31 @@
+name: Smoke Temple Library v5.2.8
+
+on:
+  pull_request:
+    paths:
+      - 'library/**'
+      - 'scripts/v5.2.8-temple-library.js'
+      - 'styles/v5.2.8-temple-library.css'
+      - 'scripts/smoke-library-v5.2.8.mjs'
+      - 'scripts/v5.3-threshold.js'
+      - '.github/workflows/smoke-library-v5.2.8.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-library:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser dependencies
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify Library open/search/bookmark/note/reload/mobile behavior
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-library-v5.2.8.mjs
