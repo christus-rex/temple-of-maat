@@ -10,6 +10,7 @@ const version = JSON.parse(fs.readFileSync(file('version.json'), 'utf8'));
 if (version.version !== '5.2.5') fail(`Expected Living Temple version 5.2.5, found ${version.version}`);
 
 const required = [
+  'scripts/v5.2.4-living-codex.js',
   'scripts/v5.2.5-living-temple.js',
   'scripts/v5.2.5-media-vault.js',
   'styles/v5.2.5-living-temple.css',
@@ -21,6 +22,7 @@ required.forEach((relative) => {
   if (!fs.existsSync(file(relative))) fail(`Missing v5.2.5 release file: ${relative}`);
 });
 
+const livingCodex = fs.readFileSync(file('scripts/v5.2.4-living-codex.js'), 'utf8');
 const livingTemple = fs.readFileSync(file('scripts/v5.2.5-living-temple.js'), 'utf8');
 const mediaVault = fs.readFileSync(file('scripts/v5.2.5-media-vault.js'), 'utf8');
 const css = fs.readFileSync(file('styles/v5.2.5-living-temple.css'), 'utf8');
@@ -29,12 +31,51 @@ const sw = fs.readFileSync(file('sw.js'), 'utf8');
 const audioMeta = JSON.parse(fs.readFileSync(file('assets/audio/maat-forty-two-declarations.json'), 'utf8'));
 
 for (const [name, source] of [
+  ['Living Codex', livingCodex],
   ['Living Temple', livingTemple],
   ['Media Vault', mediaVault],
   ['Threshold', threshold]
 ]) {
   try { new vm.Script(source, { filename: name }); }
   catch (error) { fail(`${name} JavaScript does not parse: ${error.message}`); }
+}
+
+// Carry forward the v5.2.4 source-integrity invariants.
+const rawMatch = livingCodex.match(/const RAW = `([\s\S]*?)`;/);
+if (!rawMatch) fail('Living Codex 72-record source table is missing');
+const rows = rawMatch[1].trim().split('\n');
+if (rows.length !== 72) fail(`Expected 72 Living Codex records, found ${rows.length}`);
+const codexRecords = rows.map((row, index) => {
+  const fields = row.split('|');
+  if (fields.length !== 15) fail(`Living Codex record ${index + 1} has ${fields.length} fields instead of 15`);
+  return { id: fields[0], hebrew: fields[1], angel: fields[5], daemon: fields[10], strength: fields[11] };
+});
+for (let index = 0; index < 72; index += 1) {
+  const expected = String(index + 1).padStart(2, '0');
+  if (codexRecords[index].id !== expected) fail(`Expected Codex record ${expected}, found ${codexRecords[index].id}`);
+  if (!codexRecords[index].hebrew || !codexRecords[index].angel || !codexRecords[index].daemon) fail(`Codex record ${expected} is incomplete`);
+}
+const strengthCounts = codexRecords.reduce((counts, item) => {
+  counts[item.strength] = (counts[item.strength] || 0) + 1;
+  return counts;
+}, {});
+const expectedStrengths = { 'Single exact': 24, 'Double match': 32, 'Triple lock': 13, 'Tetrad exact': 3 };
+for (const [strength, expected] of Object.entries(expectedStrengths)) {
+  if (strengthCounts[strength] !== expected) fail(`Expected ${expected} ${strength} records, found ${strengthCounts[strength] || 0}`);
+}
+const tetrads = codexRecords.filter((item) => item.strength === 'Tetrad exact').map((item) => item.id).join(',');
+if (tetrads !== '13,37,42') fail(`Expected tetrad-exact records 13,37,42, found ${tetrads}`);
+for (const selector of ['.tm2-wallpaper', '.tm2-parental-download', '.tm2-plate-download']) {
+  if (!livingCodex.includes(selector)) fail(`Living Codex collectible relay disappeared: ${selector}`);
+}
+for (const marker of [
+  'Reversal, not gematria, creates the 72.',
+  'numerical correspondences, not claims of historical or metaphysical identity',
+  'Hebrew triplet · Layer B',
+  'Gematria twin · later analytical layer',
+  'Temple chamber layer'
+]) {
+  if (!livingCodex.includes(marker)) fail(`Living Codex provenance marker missing: ${marker}`);
 }
 
 for (const marker of [
@@ -61,17 +102,17 @@ for (const marker of [
   'const CANONICAL_BYTES = 16210172',
   "crypto.subtle.digest('SHA-256'",
   'indexedDB.open(DB_NAME, DB_VERSION)',
-  "audio.removeAttribute('autoplay')",
-  'files with a different byte size continue through the older generic local-audio fallback'.toLowerCase()
+  "audio.removeAttribute('autoplay')"
 ]) {
-  const haystack = marker === marker.toLowerCase() ? mediaVault.toLowerCase() : mediaVault;
-  if (!haystack.includes(marker)) fail(`Media Vault marker missing: ${marker}`);
+  if (!mediaVault.includes(marker)) fail(`Media Vault marker missing: ${marker}`);
 }
-
-if (/\bautoplay\b\s*=\s*true|setAttribute\(\s*['\"]autoplay/i.test(livingTemple + mediaVault)) {
+if (!mediaVault.toLowerCase().includes('files with a different byte size continue through the older generic local-audio fallback')) {
+  fail('Media Vault must preserve the generic local-audio fallback for noncanonical files');
+}
+if (/\bautoplay\b\s*=\s*true|setAttribute\(\s*['\"]autoplay/i.test(livingCodex + livingTemple + mediaVault)) {
   fail('v5.2.5 must never enable ritual-audio autoplay');
 }
-if (!mediaVault.includes("file.size !== CANONICAL_BYTES") || !mediaVault.includes('event.stopImmediatePropagation()')) {
+if (!mediaVault.includes('file.size !== CANONICAL_BYTES') || !mediaVault.includes('event.stopImmediatePropagation()')) {
   fail('Canonical chant interception/verification path is incomplete');
 }
 if (!mediaVault.includes('putMedia({') || !mediaVault.includes('getMedia()')) {
@@ -85,6 +126,7 @@ if (audioMeta.distribution?.networkUpload !== false) fail('Audio metadata must n
 if (audioMeta.playbackPolicy?.autoplay !== false || audioMeta.playbackPolicy?.userGestureRequired !== true) fail('Audio playback policy drifted');
 
 for (const marker of [
+  "loadEnhancement('./scripts/v5.2.4-living-codex.js', 'living-codex')",
   "loadEnhancement('./scripts/v5.2.5-living-temple.js', 'living-temple')",
   "loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault')",
   "root.setAttribute('inert', '')",
@@ -116,4 +158,4 @@ for (const marker of [
   if (!css.includes(marker)) fail(`Living Temple CSS marker missing: ${marker}`);
 }
 
-console.log(`Validated Temple ${version.version} Living Temple: 72-node journey, unified dossiers, favorites/reflections, manual threshold, and SHA-verified IndexedDB ritual-media vault.`);
+console.log(`Validated Temple ${version.version}: 72 Codex records ${JSON.stringify(strengthCounts)}, legacy collectible relays, 72-node journey, unified dossiers, favorites/reflections, manual threshold, and SHA-verified IndexedDB ritual-media vault.`);
