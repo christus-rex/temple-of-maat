@@ -37,9 +37,10 @@
     localObjectUrl = null;
   }
 
-  function ensureWebSource(message = 'Loading the compact web chant rendition…') {
+  function ensureWebSource(message = 'Loading the compact web chant rendition…', options = {}) {
     const ui = player();
-    if (!ui?.audio || ui.chant.hidden || localObjectUrl || canonicalInstalled(ui.audio)) return false;
+    const force = options?.force === true;
+    if (!ui?.audio || (!force && ui.chant.hidden) || localObjectUrl || canonicalInstalled(ui.audio)) return false;
     if (isWebSource(ui.audio) && ui.audio.getAttribute('src')) return true;
 
     ui.audio.pause();
@@ -95,7 +96,10 @@
     document.addEventListener('click', (event) => {
       const button = event.target?.closest?.('button');
       if (!button || !/^chant$/i.test(button.textContent.trim())) return;
-      setTimeout(() => ensureWebSource('Loading the compact web chant rendition…'), 0);
+      setTimeout(() => {
+        const assigned = ensureWebSource('Loading the compact web chant rendition…', { force: true });
+        if (!assigned) requestAnimationFrame(() => ensureWebSource('Loading the compact web chant rendition…', { force: true }));
+      }, 0);
     }, true);
   }
 
