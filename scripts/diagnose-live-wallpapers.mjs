@@ -42,6 +42,15 @@ async function downloadAndInspect(page, locator, filename) {
   };
 }
 
+function attachDiagnostics(page, errors) {
+  page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
+  page.on('requestfailed', (request) => errors.push(`requestfailed: ${request.url()} :: ${request.failure()?.errorText}`));
+  page.on('dialog', async (dialog) => {
+    errors.push(`dialog:${dialog.type()}: ${dialog.message()}`);
+    await dialog.dismiss();
+  });
+}
+
 async function enterAndOpenChamber(page) {
   await page.goto(`${BASE_URL}?wallpaper_diag=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.waitForSelector('[data-temple-entry="guided"]', { timeout: 30000 });
@@ -55,14 +64,9 @@ async function enterAndOpenChamber(page) {
 
 async function runProfile(browser, profile) {
   const context = await browser.newContext(profile);
-  const page = await context.newPage();
+  let page = await context.newPage();
   const errors = [];
-  page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
-  page.on('requestfailed', (request) => errors.push(`requestfailed: ${request.url()} :: ${request.failure()?.errorText}`));
-  page.on('dialog', async (dialog) => {
-    errors.push(`dialog:${dialog.type()}: ${dialog.message()}`);
-    await dialog.dismiss();
-  });
+  attachDiagnostics(page, errors);
 
   await enterAndOpenChamber(page);
 
@@ -78,10 +82,12 @@ async function runProfile(browser, profile) {
 
   if (swBefore.supported) {
     await page.evaluate(() => navigator.serviceWorker.ready.then(() => true));
-    await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForSelector('[data-temple-entry="guided"]', { timeout: 30000 });
-    await page.locator('[data-temple-entry="guided"]').click();
-    await page.waitForSelector('#tm2-artifact.open .tm2-wallpaper', { timeout: 30000 });
+    // A controllerchange can replace/abort the currently loaded frame on the deployed PWA.
+    // Open a fresh page in the same context instead of forcing page.reload().
+    await page.close();
+    page = await context.newPage();
+    attachDiagnostics(page, errors);
+    await enterAndOpenChamber(page);
   }
 
   const swAfter = await page.evaluate(() => ({
