@@ -4,11 +4,9 @@
 
   const VERSION = '5.2.5';
   const STATE_KEY = 'temple_v525_pilgrim_journey';
-  const WEB_CHANT_SRC = './assets/audio/maat-forty-two-declarations-web.opus';
   const SOURCE_MP3_SHA256 = '3e40ba7d0b60c3a04f7edf3022fc98f9daf2fcc3ca9e7900c87bb2b62f02fbe6';
-  const WEB_AUDIO_SHA256 = '60f73465d4f6022e6054a1be1c228cfeba04be7947344e4e7a43537400db7782';
-  const WEB_AUDIO_BYTES = 1336596;
-  const WEB_AUDIO_DURATION = 1013.072229;
+  const SOURCE_MP3_BYTES = 16210172;
+  const SOURCE_MP3_DURATION = 1013.106939;
   let manifestPromise = null;
   let journeyLayer = null;
   let dossierLayer = null;
@@ -512,24 +510,11 @@
   function upgradeChant() {
     const chant = document.getElementById('tm524-chant');
     const audio = chant?.querySelector('audio');
-    const content = chant?.querySelector('.tm524-chant-content');
-    if (!audio || !content) return false;
-    if (!audio.dataset.tm525Bundled) {
-      audio.dataset.tm525Bundled = 'true';
-      audio.preload = 'metadata';
-      audio.src = WEB_CHANT_SRC;
-      audio.load();
-    }
-    if (!content.querySelector('.tm525-audio-source')) {
-      const source = el('div', 'tm525-audio-source');
-      source.append(
-        el('strong', '', 'Bundled Ma’at chant'),
-        el('span', '', 'Web Opus · 16:53 · user-controlled playback'),
-        el('small', '', `Web SHA-256 ${WEB_AUDIO_SHA256.slice(0, 12)}… · source MP3 ${SOURCE_MP3_SHA256.slice(0, 12)}…`)
-      );
-      const audioNode = content.querySelector('audio');
-      content.insertBefore(source, audioNode);
-    }
+    if (!audio) return false;
+    // v5.2.5 deliberately leaves source ownership to TempleMediaVault.
+    // The exact MP3 is verified and installed locally; no unpublished network asset is implied.
+    audio.preload = 'metadata';
+    audio.removeAttribute('autoplay');
     return true;
   }
 
@@ -586,11 +571,11 @@
       download: downloadJourney,
       reset: resetJourney,
       audio: Object.freeze({
-        source: WEB_CHANT_SRC,
-        webSha256: WEB_AUDIO_SHA256,
-        webBytes: WEB_AUDIO_BYTES,
-        durationSeconds: WEB_AUDIO_DURATION,
-        originalMp3Sha256: SOURCE_MP3_SHA256
+        distribution: 'indexeddb-device-install',
+        originalMp3Sha256: SOURCE_MP3_SHA256,
+        originalMp3Bytes: SOURCE_MP3_BYTES,
+        durationSeconds: SOURCE_MP3_DURATION,
+        autoplay: false
       })
     });
 
