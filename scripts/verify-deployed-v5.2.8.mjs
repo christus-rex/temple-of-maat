@@ -44,14 +44,19 @@ async function inspectMobile(browser, width, height) {
   const chamber = await page.evaluate(() => {
     const artifact = document.querySelector('#tm2-artifact.open');
     const image = artifact?.querySelector('.tm2-parental-section img');
+    const launcher = document.querySelector('[data-temple-library-launcher="artifact-mobile"]');
     const a = artifact?.getBoundingClientRect();
     const i = image?.getBoundingClientRect();
+    const l = launcher?.getBoundingClientRect();
+    const headerClearance = a ? Math.min(180, Math.max(120, a.height * 0.2)) : 180;
     return {
       doc: document.documentElement.scrollWidth,
       body: document.body.scrollWidth,
       width: innerWidth,
-      artifact: a ? { left: a.left, right: a.right, width: a.width } : null,
-      image: i ? { left: i.left, right: i.right, width: i.width, height: i.height } : null
+      artifact: a ? { left: a.left, right: a.right, top: a.top, bottom: a.bottom, width: a.width, height: a.height } : null,
+      image: i ? { left: i.left, right: i.right, width: i.width, height: i.height } : null,
+      launcher: l ? { left: l.left, right: l.right, top: l.top, bottom: l.bottom, width: l.width, height: l.height } : null,
+      launcherClearOfHeader: Boolean(a && l && l.top >= a.top + headerClearance)
     };
   });
   await page.screenshot({ path: path.join(outDir, `deployed-mobile-${width}-chamber-13.png`), fullPage: false });
@@ -79,7 +84,9 @@ async function inspectMobile(browser, width, height) {
   const result = {
     width, height, before,
     chamberInside: chamber.doc <= width + 1 && chamber.body <= width + 1 && within(chamber.artifact, width) && within(chamber.image, width),
+    artifactLauncherClear: chamber.launcherClearOfHeader,
     overlaysInside: overlayChecks.every((item) => item.inside),
+    chamber,
     overlayChecks,
     errors
   };
@@ -99,6 +106,7 @@ try {
   await page.goto(deepUrl.href, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await runtime(page);
   await page.waitForSelector('[data-temple-entry="continue"]', { state: 'attached', timeout: 30000 });
+  await page.waitForSelector('[data-temple-portal-version]:not([hidden])', { state: 'visible', timeout: 30000 });
 
   const version = await page.evaluate(async () => fetch(`./version.json?verify=${Date.now()}`, { cache: 'no-store' }).then((response) => response.json()));
   const before = await page.evaluate(() => ({
@@ -107,7 +115,9 @@ try {
     hidden: document.getElementById('root')?.getAttribute('aria-hidden') === 'true',
     continueText: document.querySelector('[data-temple-entry="continue"]')?.textContent?.trim(),
     continueHref: document.querySelector('[data-temple-entry="continue"]')?.getAttribute('href'),
-    controller: navigator.serviceWorker.controller?.scriptURL || ''
+    controller: navigator.serviceWorker.controller?.scriptURL || '',
+    portalVersion: document.querySelector('[data-temple-portal-version]')?.textContent?.trim() || '',
+    portalVersionLabel: document.querySelector('[data-temple-portal-version]')?.getAttribute('aria-label') || ''
   }));
   await page.screenshot({ path: path.join(outDir, 'deployed-desktop-threshold-chamber-42.png'), fullPage: false });
   await page.locator('[data-temple-entry="continue"]').click();
@@ -115,16 +125,22 @@ try {
   const after = await page.evaluate(() => ({ ready: document.body.classList.contains('temple-app-ready'), inert: document.getElementById('root')?.hasAttribute('inert'), hash: location.hash }));
   await context.close();
 
-  const mobile = [await inspectMobile(browser, 360, 800), await inspectMobile(browser, 412, 915)];
+  const mobile = [
+    await inspectMobile(browser, 320, 740),
+    await inspectMobile(browser, 360, 800),
+    await inspectMobile(browser, 412, 915)
+  ];
   const assertions = {
     httpsOrigin: base.protocol === 'https:',
     releaseIdentity: version.version === expectedVersion && version.build === expectedBuild,
+    portalVersionVisible: before.portalVersion === `PORTAL v${expectedVersion}` && before.portalVersionLabel === `Temple portal version ${expectedVersion}`,
     serviceWorkerControlled: before.controller.endsWith('/sw.js'),
     thresholdHeld: before.ready === false && before.inert === true && before.hidden === true,
     deepLinkHeld: before.continueText === 'Continue at Chamber 42' && before.continueHref === '#chamber-42',
     explicitEntry: after.ready === true && after.inert === false && after.hash === '#chamber-42',
     mobileThresholdHeld: mobile.every((item) => item.before.ready === false && item.before.inert === true),
     mobileChamberGeometry: mobile.every((item) => item.chamberInside),
+    mobileArtifactLauncherClear: mobile.every((item) => item.artifactLauncherClear),
     mobileOverlayGeometry: mobile.every((item) => item.overlaysInside),
     noPageErrors: errors.length === 0 && mobile.every((item) => item.errors.length === 0)
   };
