@@ -7,6 +7,7 @@
   let enhancementQueued = false;
   let hasEntered = false;
   let artifactInteractionObserver = null;
+  const enhancementScopes = new Set();
 
   function loadEnhancement(src, key) {
     if (document.querySelector(`script[data-temple-enhancement="${key}"]`)) return;
@@ -85,6 +86,22 @@
           body.temple-artifact-open .tm524-chamber-tools,
           body.temple-artifact-open .temple-shem-gateway {
             display: none !important;
+          }
+
+          /* Keep Library access available without covering the chamber identity header.
+             The previous top-left pill visibly crossed the Chamber 13 title on deployed
+             360/412px captures. A compact edge tab leaves the artifact header clear. */
+          body.temple-app-ready.temple-artifact-open:not(.temple-library-open) .tm528-artifact-launcher {
+            left: max(0px, env(safe-area-inset-left)) !important;
+            right: auto !important;
+            top: 50% !important;
+            bottom: auto !important;
+            transform: translateY(-50%) !important;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            border-radius: 0 999px 999px 0 !important;
+            padding: 9px 7px !important;
+            max-height: 112px;
           }
         }
       `;
@@ -190,31 +207,36 @@
     if (labels[symbol]) control.setAttribute('aria-label', labels[symbol]);
   }
 
+  function matchingNodes(base, selector) {
+    const nodes = [];
+    if (base?.matches?.(selector)) nodes.push(base);
+    if (base?.querySelectorAll) nodes.push(...base.querySelectorAll(selector));
+    return nodes;
+  }
+
   function enhanceControls(scope) {
     const base = scope && scope.querySelectorAll ? scope : document;
 
-    base.querySelectorAll('button, [role="button"]').forEach((control) => {
+    matchingNodes(base, 'button, [role="button"]').forEach((control) => {
       inferControlLabel(control);
       if (!control.hasAttribute('type') && control.tagName === 'BUTTON') {
         control.setAttribute('type', 'button');
       }
     });
 
-    base.querySelectorAll('audio').forEach((audio, index) => {
-      if (!audio.hasAttribute('aria-label')) {
-        audio.setAttribute('aria-label', index === 0 ? 'Temple ritual soundscape' : `Temple audio ${index + 1}`);
-      }
+    matchingNodes(base, 'audio').forEach((audio) => {
+      if (!audio.hasAttribute('aria-label')) audio.setAttribute('aria-label', 'Temple ritual audio');
     });
 
-    base.querySelectorAll('img').forEach((image) => {
+    matchingNodes(base, 'img').forEach((image) => {
       if (!image.hasAttribute('alt') && image.getAttribute('role') === 'presentation') image.setAttribute('alt', '');
     });
 
-    base.querySelectorAll('[aria-live], [role="status"]').forEach((node) => {
+    matchingNodes(base, '[aria-live], [role="status"]').forEach((node) => {
       if (!node.hasAttribute('aria-live')) node.setAttribute('aria-live', 'polite');
     });
 
-    base.querySelectorAll('div, p, span').forEach((node) => {
+    matchingNodes(base, 'div, p, span').forEach((node) => {
       const text = (node.textContent || '').replace(/\s+/g, ' ').trim();
       if (text && text.length < 40 && statusPhrases.test(text) && !node.hasAttribute('role')) {
         node.setAttribute('role', 'status');
@@ -223,13 +245,32 @@
     });
   }
 
-  function queueEnhancement() {
+  function queueEnhancement(mutations) {
+    for (const mutation of mutations || []) {
+      if (mutation.type === 'attributes' && mutation.target?.nodeType === Node.ELEMENT_NODE) {
+        enhancementScopes.add(mutation.target);
+        continue;
+      }
+      if (mutation.type !== 'childList') continue;
+      let addedElement = false;
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        addedElement = true;
+        enhancementScopes.add(node);
+      });
+      if (!addedElement && mutation.target?.nodeType === Node.ELEMENT_NODE) enhancementScopes.add(mutation.target);
+    }
+
     if (enhancementQueued) return;
     enhancementQueued = true;
     requestAnimationFrame(() => {
       enhancementQueued = false;
       noteApplicationMounted();
-      enhanceControls(document);
+      const scopes = [...enhancementScopes];
+      enhancementScopes.clear();
+      scopes.forEach((scope) => {
+        if (scope.isConnected) enhanceControls(scope);
+      });
     });
   }
 
