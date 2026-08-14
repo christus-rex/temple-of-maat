@@ -3,6 +3,8 @@ name: Smoke Journey import v5.2.8
 on:
   pull_request:
     paths:
+      - 'version.json'
+      - 'sw.js'
       - 'scripts/v5.2.8-journey-import.js'
       - 'styles/v5.2.8-journey-import.css'
       - 'docs/JOURNEY_PORTABILITY.md'
