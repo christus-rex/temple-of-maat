@@ -151,20 +151,24 @@
     const ui = player();
     if (!file || !ui) return;
     if (ui.status) ui.status.textContent = 'Verifying canonical Ma’at chant…';
-    if (file.size !== CANONICAL_BYTES) {
-      clearPlayer(`File size does not match the canonical chant (${CANONICAL_BYTES.toLocaleString()} bytes).`);
-      if (ui.input) ui.input.value = '';
-      return;
-    }
     let hash;
     try { hash = await sha256(file); }
     catch {
-      clearPlayer('The browser could not verify this audio file.');
+      if (ui.status) ui.status.textContent = 'The browser could not verify this audio file. It was not stored.';
       return;
     }
     if (hash !== CANONICAL_SHA256) {
-      clearPlayer('SHA-256 mismatch. Choose the original “Ma’at — Chant of the Forty-Two Declarations.mp3”.');
-      if (ui.input) ui.input.value = '';
+      // Same-sized alternate audio remains playable for this session, but never receives canonical/persistent status.
+      const url = URL.createObjectURL(file);
+      releaseObjectUrl();
+      objectUrl = url;
+      ui.audio.pause();
+      ui.audio.src = url;
+      ui.audio.preload = 'metadata';
+      ui.audio.load();
+      installed = false;
+      if (ui.status) ui.status.textContent = 'This same-sized audio is not the canonical Ma’at chant (SHA-256 mismatch). It will not be stored.';
+      renderStatus();
       return;
     }
     await putMedia({
@@ -183,12 +187,16 @@
     const ui = player();
     if (!ui?.input || ui.input.dataset.tm525Bound) return false;
     ui.input.dataset.tm525Bound = 'true';
-    ui.input.accept = 'audio/mpeg,.mp3';
-    // Capture-phase ownership prevents the older generic fallback from accepting a non-canonical file.
+    ui.input.accept = 'audio/mpeg,.mp3,audio/*';
+    // Files with a different byte size continue through the older generic local-audio fallback.
+    // Canonical-sized files are intercepted so SHA-256 can decide whether persistence is allowed.
     ui.input.addEventListener('change', (event) => {
-      event.stopImmediatePropagation();
       const file = ui.input.files?.[0];
-      if (file) installFile(file).catch(() => clearPlayer('The chant could not be installed on this device.'));
+      if (!file || file.size !== CANONICAL_BYTES) return;
+      event.stopImmediatePropagation();
+      installFile(file).catch(() => {
+        if (ui.status) ui.status.textContent = 'The chant could not be verified or installed on this device.';
+      });
     }, true);
     return true;
   }
@@ -207,13 +215,6 @@
     clearPlayer('Install the canonical Ma’at chant from this device. Playback will remain silent until you choose the file and press Play.');
     bindInput();
     return true;
-  }
-
-  function install() {
-    if (restore()) {
-      renderStatus();
-      return;
-    }
   }
 
   function watch() {
