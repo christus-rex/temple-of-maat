@@ -25,6 +25,7 @@
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
     loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library');
     loadEnhancement('./scripts/v5.2.8-journey-import.js', 'journey-import');
+    loadEnhancement('./scripts/v5.2.8-offline-controls.js', 'offline-controls');
   }
 
   function syncArtifactInteractionState() {
