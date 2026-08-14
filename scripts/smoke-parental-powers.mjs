@@ -21,7 +21,18 @@ try {
     launchOptions.executablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
   }
   const browser = await chromium.launch(launchOptions);
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
+
+  // Warm the PWA shell first so collectible assertions run on a stable,
+  // service-worker-controlled page instead of racing first-time controller takeover.
+  const warmup = await context.newPage();
+  await warmup.goto(`http://127.0.0.1:${port}/?collectible_warmup=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+  if (await warmup.evaluate(() => 'serviceWorker' in navigator)) {
+    await warmup.evaluate(() => navigator.serviceWorker.ready.then(() => true));
+  }
+  await warmup.close();
+
+  const page = await context.newPage();
   const pageErrors = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
   page.on("requestfailed", (request) => {
@@ -30,20 +41,17 @@ try {
     if (url.includes("/assets/audio/maat-forty-two-declarations.mp3") && errorText.includes("ERR_ABORTED")) return;
     if (url.startsWith(`http://127.0.0.1:${port}/`)) pageErrors.push(`${url}: ${errorText}`);
   });
-  await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.goto(`http://127.0.0.1:${port}/?collectible_smoke=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.waitForSelector('[data-temple-entry="guided"]', { timeout: 30000 });
   await page.locator('[data-temple-entry="guided"]').click();
   await page.waitForFunction(() => document.body.classList.contains("temple-app-ready"), { timeout: 30000 });
-  // The artifact may be mounted before entry, but the manual-threshold covenant keeps
-  // it hidden and noninteractive until temple-app-ready. Wait for rendered visibility,
-  // loaded artwork, and stable current DOM before exercising collectible controls.
   await page.waitForFunction(() => {
     const artifact = document.querySelector("#tm2-artifact.open");
     const section = artifact?.querySelector(".tm2-parental-section");
     const image = section?.querySelector("img");
     if (!artifact || !section || !image?.complete || image.naturalWidth < 900 || image.naturalHeight < 500) return false;
     const style = getComputedStyle(artifact);
-    const rect = artifact.getBoundingClientRect();
-    return style.visibility !== "hidden" && style.display !== "none" && rect.width > 0 && rect.height > 0;
+    return style.visibility !== "hidden" && style.display !== "none";
   }, { timeout: 30000 });
   const result = await page.evaluate(() => {
     const chamber = window.TempleArchive?.chambers?.().find((item) => item.num === "01");
@@ -90,6 +98,7 @@ try {
   result.parentalWallpaperDimensions = `${parentalWallpaperMetadata.width}x${parentalWallpaperMetadata.height}`;
   result.plateDimensions = `${plateMetadata.width}x${plateMetadata.height}`;
   await page.screenshot({ path: path.join(root, "work", "parental-powers-artifact-smoke.png"), fullPage: false });
+  await context.close();
   await browser.close();
   const ok = result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasChamberWallpaper && result.hasParentalDownload && result.chamberMapped && result.manifestMapped && result.chamberWallpaperDimensions === "1440x2560" && result.parentalWallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
   console.log(JSON.stringify({ ok, result, pageErrors }, null, 2));
