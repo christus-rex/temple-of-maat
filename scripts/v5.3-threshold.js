@@ -1,4 +1,4 @@
-/* Temple of Ma'at v5.2.4 — progressive enhancement and manual threshold gate */
+/* Temple of Ma'at v5.2.5 — progressive enhancement and manual threshold gate */
 (function () {
   'use strict';
 
@@ -19,6 +19,8 @@
   function loadLivingCodex() {
     loadEnhancement('./scripts/v5.2.4-living-codex.js', 'living-codex');
     loadEnhancement('./scripts/v5.2.4-chant-fallback.js', 'chant-fallback');
+    loadEnhancement('./scripts/v5.2.5-living-temple.js', 'living-temple');
+    loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
   }
 
   function noteApplicationMounted() {
