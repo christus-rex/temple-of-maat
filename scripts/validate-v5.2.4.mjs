@@ -11,6 +11,7 @@ if (version.version !== '5.2.4') fail(`Expected Living Codex version 5.2.4, foun
 
 for (const relative of [
   'scripts/v5.2.4-living-codex.js',
+  'scripts/v5.2.4-chant-fallback.js',
   'styles/v5.2.4-living-codex.css',
   'scripts/v5.3-threshold.js',
   'scripts/validate-v5.mjs',
@@ -20,14 +21,19 @@ for (const relative of [
 }
 
 const codex = fs.readFileSync(file('scripts/v5.2.4-living-codex.js'), 'utf8');
+const chantFallback = fs.readFileSync(file('scripts/v5.2.4-chant-fallback.js'), 'utf8');
 const threshold = fs.readFileSync(file('scripts/v5.3-threshold.js'), 'utf8');
 const sw = fs.readFileSync(file('sw.js'), 'utf8');
 const css = fs.readFileSync(file('styles/v5.2.4-living-codex.css'), 'utf8');
 
-try { new vm.Script(codex, { filename: 'scripts/v5.2.4-living-codex.js' }); }
-catch (error) { fail(`Living Codex JavaScript does not parse: ${error.message}`); }
-try { new vm.Script(threshold, { filename: 'scripts/v5.3-threshold.js' }); }
-catch (error) { fail(`Threshold JavaScript does not parse: ${error.message}`); }
+for (const [name, source] of [
+  ['Living Codex', codex],
+  ['chant fallback', chantFallback],
+  ['threshold', threshold]
+]) {
+  try { new vm.Script(source, { filename: name }); }
+  catch (error) { fail(`${name} JavaScript does not parse: ${error.message}`); }
+}
 
 const rawMatch = codex.match(/const RAW = `([\s\S]*?)`;/);
 if (!rawMatch) fail('Living Codex 72-record source table is missing');
@@ -82,14 +88,18 @@ for (const selector of ['.tm2-wallpaper', '.tm2-parental-download', '.tm2-plate-
 if (!codex.includes('Open Codex Record') || !codex.includes('Continue at Chamber')) fail('Living Codex navigation controls are incomplete');
 if (!codex.includes("const LAST_CHAMBER_KEY = 'temple_last_chamber'")) fail('Continue Journey persistence key is missing');
 if (!codex.includes("audio.preload = 'metadata'")) fail('Ma’at chant player must use metadata-only preload');
-if (/\bautoplay\b\s*=|setAttribute\(\s*['\"]autoplay/i.test(codex)) fail('Ma’at chant player must never enable autoplay');
+if (/\bautoplay\b\s*=|setAttribute\(\s*['\"]autoplay/i.test(codex + chantFallback)) fail('Ma’at chant player must never enable autoplay');
 if (!codex.includes("button('Play'") || !codex.includes("button('Pause'") || !codex.includes("button('Stop'")) fail('Ma’at chant Play/Pause/Stop transport is incomplete');
+if (!chantFallback.includes("input.type = 'file'")) fail('Local Ma’at chant fallback is missing its file loader');
+if (!chantFallback.includes('The file stays on this device and is never uploaded by the Temple.')) fail('Local chant privacy notice is missing');
+if (!chantFallback.includes('URL.createObjectURL(file)')) fail('Local chant fallback is not using a device-local media object URL');
 
-if (!threshold.includes("script.src = './scripts/v5.2.4-living-codex.js'")) fail('Threshold layer does not load the Living Codex');
+if (!threshold.includes("loadEnhancement('./scripts/v5.2.4-living-codex.js', 'living-codex')")) fail('Threshold layer does not load the Living Codex');
+if (!threshold.includes("loadEnhancement('./scripts/v5.2.4-chant-fallback.js', 'chant-fallback')")) fail('Threshold layer does not load the chant fallback');
 if (!threshold.includes("root.setAttribute('inert', '')") || !threshold.includes("event.target.closest('a[data-temple-entry]')")) fail('Manual entrance gate protections were not preserved');
 if (!threshold.includes("document.body.classList.add('temple-app-ready')")) fail('Manual entry reveal state is missing');
 
-for (const asset of ['./styles/v5.2.4-living-codex.css', './scripts/v5.2.4-living-codex.js']) {
+for (const asset of ['./styles/v5.2.4-living-codex.css', './scripts/v5.2.4-living-codex.js', './scripts/v5.2.4-chant-fallback.js']) {
   if (!sw.includes(`'${asset}'`)) fail(`Service worker does not cache ${asset}`);
 }
 if (!sw.includes('temple-maat-pwa-v5.2.4-living-codex')) fail('Service worker cache namespace was not bumped for v5.2.4');
@@ -98,4 +108,4 @@ for (const marker of ['.tm524-codex-body', '.tm524-vault-grid', '.tm524-transpor
   if (!css.includes(marker)) fail(`Living Codex CSS marker is missing: ${marker}`);
 }
 
-console.log(`Validated Temple ${version.version} Living Codex: ${rows.length} records; strengths ${JSON.stringify(strengthCounts)}; manual entry, collectibles, return journey, and no-autoplay chant controls preserved.`);
+console.log(`Validated Temple ${version.version} Living Codex: ${rows.length} records; strengths ${JSON.stringify(strengthCounts)}; manual entry, collectibles, return journey, no-autoplay chant controls, and local media fallback preserved.`);
