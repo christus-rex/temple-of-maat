@@ -25,10 +25,15 @@ try {
 
   // Warm the PWA shell first so collectible assertions run on a stable,
   // service-worker-controlled page instead of racing first-time controller takeover.
+  // Never wait forever: a worker that cannot become ready is a release failure with
+  // a bounded, actionable error rather than a CI slot that can hang indefinitely.
   const warmup = await context.newPage();
   await warmup.goto(`http://127.0.0.1:${port}/?collectible_warmup=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
   if (await warmup.evaluate(() => 'serviceWorker' in navigator)) {
-    await warmup.evaluate(() => navigator.serviceWorker.ready.then(() => true));
+    await warmup.evaluate(() => Promise.race([
+      navigator.serviceWorker.ready.then(() => true),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Collectible smoke service worker did not become ready within 30 seconds.')), 30000))
+    ]));
   }
   await warmup.close();
 
