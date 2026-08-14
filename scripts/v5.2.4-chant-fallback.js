@@ -5,12 +5,15 @@
   const WEB_SRC = './assets/audio/maat-forty-two-declarations.web.opus';
   let localObjectUrl = null;
   let sourceObserver = null;
+  let panelObserver = null;
   let webRepairQueued = false;
 
   function player() {
-    const content = document.querySelector('#tm524-chant .tm524-chant-content');
-    if (!content) return null;
+    const chant = document.getElementById('tm524-chant');
+    const content = chant?.querySelector('.tm524-chant-content');
+    if (!chant || !content) return null;
     return {
+      chant,
       content,
       audio: content.querySelector('audio'),
       status: content.querySelector('.tm524-chant-status'),
@@ -35,7 +38,7 @@
 
   function ensureWebSource(message = 'Loading the compact web chant rendition…') {
     const ui = player();
-    if (!ui?.audio || localObjectUrl || canonicalInstalled(ui.audio)) return false;
+    if (!ui?.audio || ui.chant.hidden || localObjectUrl || canonicalInstalled(ui.audio)) return false;
     if (isWebSource(ui.audio) && ui.audio.getAttribute('src')) return true;
 
     ui.audio.pause();
@@ -74,6 +77,17 @@
     });
   }
 
+  function watchPanel(chant) {
+    if (!chant || panelObserver) return;
+    panelObserver = new MutationObserver(() => {
+      if (!chant.hidden) queueWebRepair();
+    });
+    panelObserver.observe(chant, {
+      attributes: true,
+      attributeFilter: ['hidden']
+    });
+  }
+
   function bindStreamingEvents(ui) {
     if (!ui?.audio || ui.audio.dataset.tm524StreamingBound === 'true') return;
     ui.audio.dataset.tm524StreamingBound = 'true';
@@ -100,7 +114,7 @@
 
       const note = document.createElement('p');
       note.className = 'tm524-note';
-      note.textContent = 'The compact web rendition streams immediately. To keep the exact canonical Ma’at chant offline, choose the original MP3 once; the Temple verifies and stores it privately on this device. The file stays on this device and is never uploaded by the Temple.';
+      note.textContent = 'The compact web rendition streams immediately when you open the Chant. To keep the exact canonical Ma’at chant offline, choose the original MP3 once; the Temple verifies and stores it privately on this device. The file stays on this device and is never uploaded by the Temple.';
 
       const input = document.createElement('input');
       input.type = 'file';
@@ -130,6 +144,7 @@
 
     bindStreamingEvents(ui);
     watchSource(ui.audio);
+    watchPanel(ui.chant);
     ensureWebSource();
     return true;
   }
@@ -149,7 +164,9 @@
 
   window.addEventListener('pagehide', () => {
     sourceObserver?.disconnect();
+    panelObserver?.disconnect();
     sourceObserver = null;
+    panelObserver = null;
     releaseLocalObjectUrl();
   }, { once: true });
 })();
