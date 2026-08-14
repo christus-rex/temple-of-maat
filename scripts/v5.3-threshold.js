@@ -23,6 +23,7 @@
     loadEnhancement('./scripts/v5.2.5-living-temple.js', 'living-temple');
     loadEnhancement('./scripts/v5.2.6-shem-dossiers.js', 'shem-dossiers');
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
+    loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library');
   }
 
   function syncArtifactInteractionState() {
