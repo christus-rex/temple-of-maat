@@ -75,8 +75,6 @@ try {
   await page.evaluate(() => window.TempleLivingCodex.open(13));
   await page.waitForSelector('#tm524-codex:not([hidden]) #tm524-record-detail');
   const codexText = await page.locator('#tm524-record-detail').innerText();
-  // The discernment body intentionally lives inside a collapsed <details> element.
-  // textContent validates the source payload without changing the visitor-facing disclosure state.
   const sourceDetail = await page.locator('#tm524-record-detail .tm524-details').textContent();
 
   await page.keyboard.press('Escape');
@@ -113,35 +111,51 @@ try {
     status: document.querySelector('.tm524-chant-status')?.textContent || ''
   }));
 
-  const ok =
-    beforeEntry.appReady === false &&
-    beforeEntry.rootInert === true &&
-    beforeEntry.rootHiddenFromAT === true &&
-    beforeEntry.dockDisplay === 'none' &&
-    beforeEntry.continueText === 'Continue at Chamber 42' &&
-    beforeEntry.continueHref === '#chamber-42' &&
-    record.total === 72 &&
-    record.hebrew === 'יזל' &&
-    record.angel === 'Iezalel' &&
-    record.twin === 'Focalor' &&
-    record.strength === 'Tetrad exact' &&
-    record.exactCiphers === 'EO,FR,RO,RFR' &&
-    codexText.includes('Iezalel') &&
-    codexText.includes('Focalor') &&
-    codexText.includes('Tetrad exact') &&
-    sourceDetail.includes('Reversal, not gematria, creates the 72.') &&
-    ['Seal PNG', 'Plate PNG', 'Wallpaper 1440×2560', 'Parental Powers Wallpaper 3840×2160', 'Living Codex Record JSON'].every((label) => vaultLabels.includes(label)) &&
-    audioState.autoplay === false &&
-    audioState.hasAutoplayAttribute === false &&
-    audioState.preload === 'metadata' &&
-    audioState.paused === true &&
-    audioState.localInput === true &&
-    audioState.localAccept.includes('audio/') &&
-    localAudioState.srcIsBlob === true &&
-    localAudioState.paused === true &&
-    pageErrors.length === 0;
+  const requiredVaultLabels = ['Seal PNG', 'Plate PNG', 'Wallpaper 1440×2560', 'Parental Powers Wallpaper 3840×2160', 'Living Codex Record JSON'];
+  const assertions = {
+    thresholdNotReady: beforeEntry.appReady === false,
+    thresholdRootInert: beforeEntry.rootInert === true,
+    thresholdRootHidden: beforeEntry.rootHiddenFromAT === true,
+    thresholdDockHidden: beforeEntry.dockDisplay === 'none',
+    continueText: beforeEntry.continueText === 'Continue at Chamber 42',
+    continueHref: beforeEntry.continueHref === '#chamber-42',
+    recordCount: record.total === 72,
+    recordHebrew: record.hebrew === 'יזל',
+    recordAngel: record.angel === 'Iezalel',
+    recordTwin: record.twin === 'Focalor',
+    recordStrength: record.strength === 'Tetrad exact',
+    recordCiphers: record.exactCiphers === 'EO,FR,RO,RFR',
+    visibleAngel: codexText.includes('Iezalel'),
+    visibleTwin: codexText.includes('Focalor'),
+    visibleStrength: codexText.includes('Tetrad exact'),
+    sourceDiscernment: sourceDetail.includes('Reversal, not gematria, creates the 72.'),
+    vaultLabels: requiredVaultLabels.every((label) => vaultLabels.includes(label)),
+    noAutoplayProperty: audioState.autoplay === false,
+    noAutoplayAttribute: audioState.hasAutoplayAttribute === false,
+    metadataPreload: audioState.preload === 'metadata',
+    audioInitiallyPaused: audioState.paused === true,
+    localAudioInput: audioState.localInput === true,
+    localAudioAccept: audioState.localAccept.includes('audio/'),
+    localBlobLoaded: localAudioState.srcIsBlob === true,
+    localAudioStillPaused: localAudioState.paused === true,
+    noPageErrors: pageErrors.length === 0
+  };
+  const failedAssertions = Object.entries(assertions).filter(([, passed]) => !passed).map(([name]) => name);
+  const ok = failedAssertions.length === 0;
 
-  console.log(JSON.stringify({ ok, beforeEntry, record, vaultLabels, audioState, localAudioState, pageErrors }, null, 2));
+  console.log(JSON.stringify({
+    ok,
+    failedAssertions,
+    assertions,
+    beforeEntry,
+    record,
+    codexText,
+    sourceDetail,
+    vaultLabels,
+    audioState,
+    localAudioState,
+    pageErrors
+  }, null, 2));
   await browser.close();
   if (!ok) process.exitCode = 1;
 } finally {
