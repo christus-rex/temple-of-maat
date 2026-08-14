@@ -19,7 +19,30 @@ try {
   const pageErrors = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
   page.on("requestfailed", (request) => { if (request.url().startsWith(`http://127.0.0.1:${port}/`)) pageErrors.push(`${request.url()}: ${request.failure()?.errorText}`); });
-  await page.goto(`http://127.0.0.1:${port}/#chamber-01`, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.waitForSelector("#tm2-wallpaper-rail .tm2-wallpaper-card", { timeout: 30000 });
+  await page.waitForFunction(() => {
+    const image = document.querySelector("#tm2-wallpaper-rail .tm2-wallpaper-card img");
+    return Boolean(image?.complete && image?.naturalWidth >= 900 && image?.naturalHeight >= 500);
+  }, { timeout: 30000 });
+  const railResult = await page.evaluate(async () => {
+    const rail = document.getElementById("tm2-wallpaper-rail");
+    const track = rail?.querySelector(".tm2-wallpaper-track");
+    const gallery = document.querySelector(".masonry-item")?.parentElement;
+    const before = track?.scrollLeft || 0;
+    rail?.querySelector(".tm2-wallpaper-next")?.click();
+    await new Promise((resolve) => setTimeout(resolve, 650));
+    const after = track?.scrollLeft || 0;
+    return {
+      followsHeroGallery: rail?.previousElementSibling === gallery,
+      cardCount: rail?.querySelectorAll(".tm2-wallpaper-card").length,
+      overflowX: track ? getComputedStyle(track).overflowX : "",
+      horizontalMovement: after > before,
+      title: rail?.querySelector(".tm2-wallpaper-rail-title")?.textContent?.trim(),
+    };
+  });
+  await page.locator("#tm2-wallpaper-rail").screenshot({ path: path.join(root, "work", "parental-powers-horizontal-rail-smoke.png") });
+  await page.evaluate(() => document.querySelector("#tm2-wallpaper-rail .tm2-wallpaper-card")?.click());
   await page.waitForSelector("#tm2-artifact.open .tm2-parental-section", { timeout: 30000 });
   await page.locator("#tm2-artifact.open .tm2-parental-section").scrollIntoViewIfNeeded();
   await page.waitForFunction(() => {
@@ -59,8 +82,8 @@ try {
   result.plateDimensions = `${plateMetadata.width}x${plateMetadata.height}`;
   await page.screenshot({ path: path.join(root, "work", "parental-powers-artifact-smoke.png"), fullPage: false });
   await browser.close();
-  const ok = result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasDownload && result.chamberMapped && result.manifestMapped && result.wallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
-  console.log(JSON.stringify({ ok, result, pageErrors }, null, 2));
+  const ok = railResult.followsHeroGallery && railResult.cardCount === 72 && railResult.overflowX === "auto" && railResult.horizontalMovement && result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasDownload && result.chamberMapped && result.manifestMapped && result.wallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
+  console.log(JSON.stringify({ ok, railResult, result, pageErrors }, null, 2));
   if (!ok) process.exitCode = 1;
 } finally {
   server.kill();
