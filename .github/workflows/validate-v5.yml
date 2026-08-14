@@ -17,4 +17,4 @@ jobs:
         with:
           node-version: 24
       - run: node scripts/validate-v5.mjs --release
-      - run: node scripts/validate-v5.2.4.mjs
+      - run: node scripts/validate-v5.2.5.mjs
