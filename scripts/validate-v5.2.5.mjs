@@ -5,9 +5,19 @@ import vm from 'node:vm';
 const root = process.cwd();
 const file = (relative) => path.join(root, ...relative.split('/'));
 const fail = (message) => { throw new Error(message); };
+const atLeast = (actual, minimum) => {
+  const left = String(actual).split('.').map(Number);
+  const right = String(minimum).split('.').map(Number);
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const a = left[index] || 0;
+    const b = right[index] || 0;
+    if (a !== b) return a > b;
+  }
+  return true;
+};
 
 const version = JSON.parse(fs.readFileSync(file('version.json'), 'utf8'));
-if (version.version !== '5.2.5') fail(`Expected Living Temple version 5.2.5, found ${version.version}`);
+if (!atLeast(version.version, '5.2.5')) fail(`Living Temple invariants require Temple >= 5.2.5, found ${version.version}`);
 
 const required = [
   'scripts/v5.2.4-living-codex.js',
@@ -144,7 +154,7 @@ for (const asset of [
 ]) {
   if (!sw.includes(`'${asset}'`)) fail(`Service worker does not cache v5.2.5 shell asset ${asset}`);
 }
-if (!sw.includes('temple-maat-pwa-v5.2.5-living-temple-2026-08-14')) fail('Service worker cache namespace was not bumped to v5.2.5');
+if (!sw.includes(`temple-maat-pwa-v${version.version}`)) fail(`Service worker cache namespace does not match current Temple ${version.version}`);
 if (!sw.includes('Canonical ritual audio lives in IndexedDB only after explicit visitor installation.')) fail('Service-worker audio boundary comment is missing');
 
 for (const marker of [
@@ -158,4 +168,4 @@ for (const marker of [
   if (!css.includes(marker)) fail(`Living Temple CSS marker missing: ${marker}`);
 }
 
-console.log(`Validated Temple ${version.version}: 72 Codex records ${JSON.stringify(strengthCounts)}, legacy collectible relays, 72-node journey, unified dossiers, favorites/reflections, manual threshold, and SHA-verified IndexedDB ritual-media vault.`);
+console.log(`Validated Temple ${version.version} Living Temple invariants: 72 Codex records ${JSON.stringify(strengthCounts)}, legacy collectible relays, 72-node journey, unified dossiers, favorites/reflections, manual threshold, and SHA-verified IndexedDB ritual-media vault.`);
