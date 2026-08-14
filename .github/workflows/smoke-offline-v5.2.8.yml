@@ -1,0 +1,31 @@
+name: Smoke Offline ownership v5.2.8
+
+on:
+  pull_request:
+    paths:
+      - 'sw.js'
+      - 'scripts/v5.2.8-offline-controls.js'
+      - 'styles/v5.2.8-offline-controls.css'
+      - 'scripts/v5.3-threshold.js'
+      - 'scripts/smoke-offline-controls-v5.2.8.mjs'
+      - '.github/workflows/smoke-offline-v5.2.8.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-ownership:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify full visual cache, offline fetches, privacy, and visual-only cleanup
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-offline-controls-v5.2.8.mjs

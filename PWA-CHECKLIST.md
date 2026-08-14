@@ -20,6 +20,12 @@ This file distinguishes **automated release guarantees** from checks that still 
 - [x] Ritual media does not autoplay.
 - [x] Play / Pause / Stop ritual controls are preserved.
 - [x] Device-local Ma'at media integrity metadata is retained.
+- [x] Binary ritual media bypasses service-worker Cache Storage; only integrity metadata is part of the shell cache.
+- [x] Visitor-facing **Offline** controls expose full optional visual download, progress/status, cancellation, browser storage estimates, and visual-only cleanup.
+- [x] Full optional visual caching covers 72 chamber hero displays, 72 seal displays, and 72 Parental Powers displays.
+- [x] Service-worker-controlled browser smoke proves representative chamber, seal, and Parental Powers assets can be fetched after the browser is switched offline.
+- [x] Optional visual-cache cleanup leaves the app shell cached and preserves Pilgrim Journey favorites/reflections.
+- [x] Offline shell reload remains behind the manual threshold after optional visual cleanup.
 - [x] Archive Console hide/minimize behavior remains part of the public application contract.
 - [x] `COPYRIGHT.md` is present in the repository.
 - [x] Site administrator and contact information are documented in the repository.
@@ -32,6 +38,9 @@ Run these after every production promotion when the release affects the shell, s
 - [ ] `manifest.webmanifest` returns successfully from the deployed origin.
 - [ ] `sw.js` registers without browser-console errors.
 - [ ] A deep link such as `#chamber-01` pauses at the threshold, then opens the intended chamber after explicit entry.
+- [ ] **Offline** panel opens after explicit Temple entry and reports storage/cache status from the deployed service worker.
+- [ ] Full optional visual download completes or reports a clear recoverable failure without breaking the normal shell.
+- [ ] Clearing optional offline visuals does not erase Journey state or reflections.
 - [ ] Seal PNG download works from the deployed origin.
 - [ ] Plate PNG download works from the deployed origin.
 - [ ] 1440×2560 chamber wallpaper download works from the deployed origin.
@@ -49,6 +58,7 @@ These require an actual installable browser/device environment and should not be
 - [ ] iOS/iPadOS Add to Home Screen launches the Temple correctly.
 - [ ] Desktop Chromium installation completes.
 - [ ] Installed app launches in standalone mode.
+- [ ] **Download Temple for Offline Use** completes on an installed build with representative chamber, seal, and Parental Powers visuals available offline.
 - [ ] Open online once, switch device offline, and reload successfully.
 - [ ] Offline reload opens the cached Temple or the offline fallback as intended.
 - [ ] Chamber/Journey state remains after closing and reopening the installed PWA.
@@ -60,7 +70,7 @@ These require an actual installable browser/device environment and should not be
 
 - [ ] Common phone widths keep hero faces / central subjects visible.
 - [ ] Primary controls maintain usable touch targets.
-- [ ] Codex, Journey, Dossier, Collect, and Chant overlays remain closable without horizontal overflow.
+- [ ] Codex, Journey, Dossier, Collect, Chant, Library, and Offline overlays remain closable without horizontal overflow.
 - [ ] Keyboard focus is visible on supported desktop browsers.
 - [ ] Reduced-motion preference suppresses nonessential ceremonial animation.
 - [ ] Forced-colors/high-contrast mode retains understandable controls.
