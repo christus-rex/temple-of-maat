@@ -1,0 +1,67 @@
+name: Promote approved v5.3 release
+
+on:
+  push:
+    branches:
+      - 'review/v5.3-threshold-refinement'
+    paths:
+      - '.github/workflows/promote-v5.3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: review/v5.3-threshold-refinement
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Promote release metadata and validator
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          version_path = Path('version.json')
+          version = json.loads(version_path.read_text(encoding='utf-8'))
+          version.update({
+              'version': '5.3.0',
+              'build': '2026-08-14-v5.3.0-threshold-refinement',
+              'source': "Temple v5.2.0 with Threshold, progressive caching, accessibility, and mobile refinements"
+          })
+          version_path.write_text(json.dumps(version, indent=2) + '\n', encoding='utf-8')
+
+          validator_path = Path('scripts/validate-v5.mjs')
+          validator = validator_path.read_text(encoding='utf-8')
+          old = r"if (/^5\.(?:1|2)\./.test(version.version)) {"
+          new = r"if (/^5\.(?:1|2|3)\./.test(version.version)) {"
+          if validator.count(old) != 1:
+              raise SystemExit(f'validator release gate: expected 1 occurrence, found {validator.count(old)}')
+          validator = validator.replace(old, new, 1)
+          validator_path.write_text(validator, encoding='utf-8')
+
+          readme_path = Path('README.md')
+          readme = readme_path.read_text(encoding='utf-8')
+          old_title = "# Temple of Ma'at — GitHub Pages PWA v5.2"
+          new_title = "# Temple of Ma'at — GitHub Pages PWA v5.3"
+          if readme.count(old_title) != 1:
+              raise SystemExit(f'README version title: expected 1 occurrence, found {readme.count(old_title)}')
+          readme = readme.replace(old_title, new_title, 1)
+          readme_path.write_text(readme, encoding='utf-8')
+          PY
+      - name: Validate promoted release
+        run: |
+          node scripts/validate-v5.mjs --release
+          node --check sw.js
+          node --check scripts/v5.3-threshold.js
+      - name: Commit approved release metadata
+        run: |
+          git config user.name "Temple Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add version.json scripts/validate-v5.mjs README.md
+          git commit -m "release: promote Temple to v5.3.0"
+          git push origin HEAD:review/v5.3-threshold-refinement
