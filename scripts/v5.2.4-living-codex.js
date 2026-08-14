@@ -281,7 +281,8 @@
     layer.addEventListener('temple:codex-open', () => {
       search.value = '';
       renderList();
-      selectRecord(currentNumber(), false);
+      // Honor an explicitly requested record; openCodex(number) sets selectedNumber first.
+      selectRecord(selectedNumber || currentNumber(), false);
     });
     renderList();
   }
