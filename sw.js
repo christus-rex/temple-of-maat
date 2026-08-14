@@ -40,6 +40,10 @@ function assetUrl(asset) {
   return new URL(asset, self.registration.scope).href;
 }
 
+function isBinaryRitualMedia(url) {
+  return url.origin === self.location.origin && /\/assets\/audio\/.*\.(?:mp3|opus|ogg|m4a|wav)$/i.test(url.pathname);
+}
+
 async function cacheInBatches(cache, assets, batchSize = 12) {
   const unique = uniqueAssets(assets);
   for (let index = 0; index < unique.length; index += batchSize) {
@@ -282,6 +286,13 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
+
+  // Binary ritual media must never enter Cache Storage. Canonical ritual media is
+  // installed separately in IndexedDB only after explicit visitor selection.
+  if (isBinaryRitualMedia(url)) {
+    event.respondWith(fetch(request).catch(() => new Response('', { status: 504, statusText: 'Offline' })));
+    return;
+  }
 
   // Navigation: network-first, then the cached app shell, then offline fallback.
   if (request.mode === 'navigate') {
