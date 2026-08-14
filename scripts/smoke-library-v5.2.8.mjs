@@ -15,10 +15,44 @@ const server = spawn(python, ['-m','http.server',String(port),'--bind','127.0.0.
 const base = `http://127.0.0.1:${port}/`;
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+async function entryDiagnostic(page) {
+  return page.evaluate(() => {
+    const launcher = document.querySelector('[data-temple-library-launcher="dock"]');
+    const dock = document.getElementById('tm524-dock');
+    const launcherStyle = launcher ? getComputedStyle(launcher) : null;
+    const dockStyle = dock ? getComputedStyle(dock) : null;
+    return {
+      href: location.href,
+      bodyClasses: document.body.className,
+      templeReady: document.body.classList.contains('temple-app-ready'),
+      artifactOpen: Boolean(document.querySelector('#tm2-artifact.open')),
+      artifactVisibility: document.querySelector('#tm2-artifact.open') ? getComputedStyle(document.querySelector('#tm2-artifact.open')).visibility : null,
+      launcherExists: Boolean(launcher),
+      launcherOffsetParent: Boolean(launcher?.offsetParent),
+      launcherDisplay: launcherStyle?.display || null,
+      launcherVisibility: launcherStyle?.visibility || null,
+      dockExists: Boolean(dock),
+      dockOffsetParent: Boolean(dock?.offsetParent),
+      dockDisplay: dockStyle?.display || null,
+      dockVisibility: dockStyle?.visibility || null,
+      viewport: { width: innerWidth, height: innerHeight }
+    };
+  });
+}
+
 async function enter(page) {
   await page.waitForSelector('[data-temple-entry="guided"]', { timeout: 30000 });
   await page.locator('[data-temple-entry="guided"]').click();
-  await page.waitForSelector('[data-temple-library-launcher="dock"]', { timeout: 30000 });
+  try {
+    await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 15000 });
+  } catch {
+    throw new Error(`Manual entry did not reach temple-app-ready: ${JSON.stringify(await entryDiagnostic(page))}`);
+  }
+  try {
+    await page.waitForFunction(() => Boolean(document.querySelector('[data-temple-library-launcher="dock"]')?.offsetParent), { timeout: 15000 });
+  } catch {
+    throw new Error(`Library dock launcher did not become visible after entry: ${JSON.stringify(await entryDiagnostic(page))}`);
+  }
 }
 
 async function openLibrary(page) {
