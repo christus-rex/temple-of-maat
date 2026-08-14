@@ -118,9 +118,10 @@ async function runProfile(browser, profile) {
   let vaultParental = null;
   if (state.vaultApi) {
     await page.evaluate(() => window.TempleLivingCodex.openVault(1));
-    await page.waitForSelector('#tm524-vault:not([hidden])', { timeout: 10000 });
-    const chamberButton = page.getByRole('button', { name: 'Wallpaper 1440×2560' });
-    const parentalButton = page.getByRole('button', { name: 'Parental Powers Wallpaper 3840×2160' });
+    const vault = page.locator('#tm524-vault:not([hidden])');
+    await vault.waitFor({ state: 'visible', timeout: 10000 });
+    const chamberButton = vault.getByRole('button', { name: 'Wallpaper 1440×2560', exact: true });
+    const parentalButton = vault.getByRole('button', { name: 'Parental Powers Wallpaper 3840×2160', exact: true });
     vaultChamber = await downloadAndInspect(page, chamberButton, `${profile.name}-vault-chamber.png`);
     vaultParental = await downloadAndInspect(page, parentalButton, `${profile.name}-vault-parental.png`);
   }
