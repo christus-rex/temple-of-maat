@@ -1,0 +1,27 @@
+{
+  "title": "Ma’at — Chant of the Forty-Two Declarations",
+  "release": "5.2.5",
+  "source": {
+    "fileName": "Ma’at — Chant of the Forty-Two Declarations.mp3",
+    "mimeType": "audio/mpeg",
+    "bytes": 16210172,
+    "durationSeconds": 1013.106939,
+    "bitRate": 128003,
+    "sha256": "3e40ba7d0b60c3a04f7edf3022fc98f9daf2fcc3ca9e7900c87bb2b62f02fbe6"
+  },
+  "webRendition": {
+    "fileName": "maat-forty-two-declarations-web.opus",
+    "path": "assets/audio/maat-forty-two-declarations-web.opus",
+    "mimeType": "audio/ogg; codecs=opus",
+    "bytes": 1336596,
+    "durationSeconds": 1013.072229,
+    "sha256": "60f73465d4f6022e6054a1be1c228cfeba04be7947344e4e7a43537400db7782",
+    "encoding": "libopus mono web rendition derived from the canonical uploaded MP3"
+  },
+  "playbackPolicy": {
+    "autoplay": false,
+    "preload": "metadata",
+    "userGestureRequired": true,
+    "localOriginalFallback": true
+  }
+}
