@@ -1,11 +1,14 @@
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const work = path.join(root, 'work');
+fs.mkdirSync(work, { recursive: true });
 const port = 41787;
 const python = process.env.TEMPLE_PYTHON || 'python3';
 const server = spawn(python, ['-m','http.server',String(port),'--bind','127.0.0.1'], { cwd: root, stdio: 'ignore' });
@@ -28,11 +31,12 @@ try {
   await wait(900);
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-  await context.addInitScript(() => localStorage.removeItem('temple_library_personal_state_v1'));
   let page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.evaluate(() => localStorage.removeItem('temple_library_personal_state_v1'));
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
 
   const threshold = await page.evaluate(() => ({
     ready: document.body.classList.contains('temple-app-ready'),
@@ -75,11 +79,13 @@ try {
   await page.locator('#tm528-corr-note').fill('Private thematic correspondence.');
   await page.getByRole('button', { name: 'Save Private Correspondence' }).click();
 
+  const exportPath = path.join(work, 'library-personal-state-smoke.json');
   const [download] = await Promise.all([
     page.waitForEvent('download', { timeout: 10000 }),
     page.getByRole('button', { name: 'Export Personal Library JSON' }).click()
   ]);
-  const exported = JSON.parse(await (await download.createReadStream()).read().then((chunk) => chunk?.toString() || '{}'));
+  await download.saveAs(exportPath);
+  const exported = JSON.parse(fs.readFileSync(exportPath, 'utf8'));
   if (exported.schema !== 'temple-of-maat/library-personal-state-v1') throw new Error('Personal Library export schema drifted');
 
   const beforeReload = await page.evaluate(() => window.TempleLibrary.state());
@@ -88,12 +94,11 @@ try {
   if (!beforeReload.notes.some((note) => note.recordId === 'source.quran-tanzil-pickthall-edition' && /Private source-study/.test(note.text))) throw new Error('Private note missing');
   if (!beforeReload.privateCorrespondences.some((item) => item.fromRecordId === 'source.quran-tanzil-pickthall-edition' && item.target?.chamberId === '42' && item.provenanceLayer === 'L4' && item.identityClaim === false)) throw new Error('Private chamber correspondence missing');
 
-  await context.removeInitScript?.();
   await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
   await enter(page);
   await openLibrary(page);
   const afterReload = await page.evaluate(() => window.TempleLibrary.state());
-  if (JSON.stringify(afterReload.bookmarks.sort()) !== JSON.stringify(beforeReload.bookmarks.sort())) throw new Error('Bookmarks did not persist across reload');
+  if (JSON.stringify([...afterReload.bookmarks].sort()) !== JSON.stringify([...beforeReload.bookmarks].sort())) throw new Error('Bookmarks did not persist across reload');
   if (!afterReload.notes.some((note) => /Private source-study/.test(note.text))) throw new Error('Note did not persist across reload');
   if (!afterReload.privateCorrespondences.some((item) => item.target?.chamberId === '42')) throw new Error('Correspondence did not persist across reload');
   await context.close();
