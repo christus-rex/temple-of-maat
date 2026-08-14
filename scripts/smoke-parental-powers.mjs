@@ -14,7 +14,13 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 try {
   await wait(900);
-  const browser = await chromium.launch({ executablePath: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", headless: true });
+  const launchOptions = { headless: true };
+  if (process.env.TEMPLE_BROWSER_PATH) {
+    launchOptions.executablePath = process.env.TEMPLE_BROWSER_PATH;
+  } else if (process.platform === "win32") {
+    launchOptions.executablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
+  }
+  const browser = await chromium.launch(launchOptions);
   const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
   const pageErrors = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
@@ -37,18 +43,29 @@ try {
       parentalTitle: section?.querySelector(".tm2-parental-title")?.textContent?.trim(),
       thirdName: section?.querySelector(".tm2-parental-third")?.textContent?.trim(),
       imageLoaded: Boolean(image?.complete && image?.naturalWidth >= 900 && image?.naturalHeight >= 500),
-      hasDownload: Boolean(section?.querySelector(".tm2-parental-download")),
+      hasChamberWallpaper: Boolean(document.querySelector("#tm2-artifact.open .tm2-wallpaper")),
+      hasParentalDownload: Boolean(section?.querySelector(".tm2-parental-download")),
       chamberMapped: Boolean(chamber?.parental?.masterPath && chamber?.parental?.displayPath),
       manifestMapped: Boolean(window.TempleArchive?.manifest?.().chambers?.every((item) => item.parentalPowers?.displayPath)),
     };
   });
-  const wallpaperPath = path.join(root, "work", "parental-powers-wallpaper-smoke.png");
-  const [wallpaperDownload] = await Promise.all([
+
+  const chamberWallpaperPath = path.join(root, "work", "chamber-wallpaper-smoke.png");
+  const [chamberWallpaperDownload] = await Promise.all([
+    page.waitForEvent("download", { timeout: 120000 }),
+    page.locator("#tm2-artifact.open .tm2-wallpaper").click(),
+  ]);
+  await chamberWallpaperDownload.saveAs(chamberWallpaperPath);
+  const chamberWallpaperMetadata = await sharp(chamberWallpaperPath).metadata();
+
+  const parentalWallpaperPath = path.join(root, "work", "parental-powers-wallpaper-smoke.png");
+  const [parentalWallpaperDownload] = await Promise.all([
     page.waitForEvent("download", { timeout: 120000 }),
     page.locator(".tm2-parental-download").click(),
   ]);
-  await wallpaperDownload.saveAs(wallpaperPath);
-  const wallpaperMetadata = await sharp(wallpaperPath).metadata();
+  await parentalWallpaperDownload.saveAs(parentalWallpaperPath);
+  const parentalWallpaperMetadata = await sharp(parentalWallpaperPath).metadata();
+
   const platePath = path.join(root, "work", "parental-powers-plate-smoke.png");
   const [plateDownload] = await Promise.all([
     page.waitForEvent("download", { timeout: 120000 }),
@@ -56,11 +73,13 @@ try {
   ]);
   await plateDownload.saveAs(platePath);
   const plateMetadata = await sharp(platePath).metadata();
-  result.wallpaperDimensions = `${wallpaperMetadata.width}x${wallpaperMetadata.height}`;
+
+  result.chamberWallpaperDimensions = `${chamberWallpaperMetadata.width}x${chamberWallpaperMetadata.height}`;
+  result.parentalWallpaperDimensions = `${parentalWallpaperMetadata.width}x${parentalWallpaperMetadata.height}`;
   result.plateDimensions = `${plateMetadata.width}x${plateMetadata.height}`;
   await page.screenshot({ path: path.join(root, "work", "parental-powers-artifact-smoke.png"), fullPage: false });
   await browser.close();
-  const ok = result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasDownload && result.chamberMapped && result.manifestMapped && result.wallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
+  const ok = result.chamberCount === 72 && result.runtimeCount === 72 && result.imageLoaded && result.hasChamberWallpaper && result.hasParentalDownload && result.chamberMapped && result.manifestMapped && result.chamberWallpaperDimensions === "1440x2560" && result.parentalWallpaperDimensions === "3840x2160" && result.plateDimensions === "1200x2420" && pageErrors.length === 0;
   console.log(JSON.stringify({ ok, result, pageErrors }, null, 2));
   if (!ok) process.exitCode = 1;
 } finally {
