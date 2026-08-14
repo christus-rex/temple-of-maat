@@ -302,12 +302,12 @@
     restoring = true;
     try {
       const next = normalizePayload(plan.result);
+      // Remove any stale chamber hash without firing hashchange before writing the
+      // imported archive. The next manual entrance will use temple_last_chamber.
+      history.replaceState(null, '', `${location.pathname}${location.search}`);
       localStorage.setItem(STATE_KEY, JSON.stringify(next));
       localStorage.setItem(LAST_CHAMBER_KEY, String(next.current));
       sessionStorage.setItem(RESULT_KEY, JSON.stringify({ strategy: plan.strategy, chamber: next.current, restoredAt: new Date().toISOString() }));
-      // replaceState updates the URL without firing the old Journey hash handler, so
-      // the imported state cannot be overwritten by the pre-reload in-memory state.
-      history.replaceState(null, '', `${location.pathname}${location.search}#chamber-${String(next.current).padStart(2, '0')}`);
       location.reload();
     } catch (error) {
       restoring = false;

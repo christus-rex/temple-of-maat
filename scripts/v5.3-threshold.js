@@ -24,6 +24,7 @@
     loadEnhancement('./scripts/v5.2.6-shem-dossiers.js', 'shem-dossiers');
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
     loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library');
+    loadEnhancement('./scripts/v5.2.8-journey-import.js', 'journey-import');
   }
 
   function syncArtifactInteractionState() {
