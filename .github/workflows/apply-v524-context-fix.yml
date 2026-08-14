@@ -1,0 +1,35 @@
+name: Apply v5.2.4 context-tools fix
+
+on:
+  push:
+    branches: [feature/v5.2.4-living-codex]
+    paths:
+      - '.github/workflows/apply-v524-context-fix.yml'
+      - 'scripts/patch-v524-context-tools.py'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Move context tools outside React subtree
+        run: python scripts/patch-v524-context-tools.py
+      - name: Validate patched release
+        run: |
+          node scripts/validate-v5.mjs --release
+          node scripts/validate-v5.2.4.mjs
+          node --check scripts/v5.2.4-living-codex.js
+      - name: Commit fix
+        run: |
+          git config user.name "Temple Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add scripts/v5.2.4-living-codex.js styles/v5.2.4-living-codex.css
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: keep v5.2.4 controls outside React artifact"
+          git push origin HEAD:feature/v5.2.4-living-codex
