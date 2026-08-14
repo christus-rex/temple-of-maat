@@ -6,62 +6,37 @@ This file is the durable planning source for the Temple of Ma'at project. Conver
 
 ## Current release
 
-### v5.2.6 — Shem Dossiers
+### v5.2.8 — Temple Library & Portable Practice
 
-Current production state includes the 72-chamber archive, manual threshold entry, Living Codex, unified chamber dossiers, Parental Powers imagery, collectible exports, Pilgrim Journey state, favorites/reflections, PWA/offline support, and device-local ritual media handling.
+v5.2.8 completes the stewardship-to-library release line with four integrated capabilities:
 
-The release line must not be retroactively renamed. New stewardship work begins at v5.2.7.
+1. **Temple Library** — provenance-aware research records using the hierarchy `Library → Tradition → Source → Study → Discernment → Correspondences`.
+2. **Portable Pilgrim Journey** — local JSON export/import with strict schema/version validation, preview-before-apply Replace, and non-destructive Merge.
+3. **Offline ownership** — explicit full visual caching, progress/cancellation, storage status, and visual-only cleanup that preserves private Journey/reflection/study state.
+4. **Release hardening** — repeatable service-worker upgrade, deep-link threshold, narrow-phone overlay/geometry, screenshot-evidence, and deployed-origin verification paths.
 
----
+The release preserves the existing 72-chamber archive, Living Codex, unified dossiers, Parental Powers, collectible exports, manual threshold, private local study state, and device-local no-autoplay ritual media.
 
-## NOW — v5.2.7 Stewardship & Governance
+### v5.2.8 completed scope
 
-Goal: give the expanding Temple a durable operating structure before adding another major research surface.
+- [x] Search across Library traditions, sources, studies, themes, and provenance layers.
+- [x] Open source-linked study records while keeping source and interpretation distinct.
+- [x] Bookmark Library records/passages locally.
+- [x] Save private Library notes locally.
+- [x] Attach a Library record to a chamber as an explicit Layer-4 correspondence rather than a historical identity claim.
+- [x] Export personal Library state.
+- [x] Keep large research indexes progressively loaded rather than bloating the initial PWA shell.
+- [x] Preserve attribution/licensing/provenance metadata in the canonical Library schema.
+- [x] Import/restore Pilgrim Journey JSON locally with preview and safe conflict handling.
+- [x] Expose `Download Temple for Offline Use`, storage status, cancellation, and optional-visual cleanup.
+- [x] Keep ritual audio outside service-worker Cache Storage.
+- [x] Preserve private Journey/reflection/Library state when optional visual caches are cleared.
+- [x] Add repeatable PR-head hardening and a post-deploy production-origin verifier.
+- [x] Keep real Android/iOS/Desktop installed-device checks explicitly separate from browser emulation.
 
-### Documentation and release truth
+### Initial Library collections
 
-- [ ] Keep `README.md` synchronized with the canonical `version.json` release.
-- [ ] Maintain this `ROADMAP.md` as the authoritative Now / Next / Later plan.
-- [ ] Maintain `GOVERNANCE.md` for provenance, source integrity, ethical interpretation, release control, and ritual-media rules.
-- [ ] Convert unresolved work into GitHub issues with explicit acceptance criteria.
-- [ ] Replace stale checklist assumptions with verified / pending / manual states.
-
-### Regression and stewardship
-
-- [ ] Preserve manual entrance on every load unless a future release explicitly changes the rule.
-- [ ] Preserve all verified collectible exports: Seal PNG, Plate PNG, chamber wallpaper, and Parental Powers wallpaper.
-- [ ] Preserve 72 canonical chamber records and Shem source layers.
-- [ ] Preserve Journey state, favorites, reflections, and exportability.
-- [ ] Preserve no-autoplay for ritual media.
-- [ ] Keep device-local media private unless the visitor explicitly chooses another storage model.
-- [ ] Require source-level validation and browser regression testing before release promotion.
-
-### Planning deliverable
-
-v5.2.7 is complete when the repository itself answers four questions without relying on chat history:
-
-1. What is currently canonical?
-2. What is being built next?
-3. What evidence and interpretation rules govern additions?
-4. What tests must pass before publication?
-
----
-
-## NEXT — v5.2.8 Temple Library
-
-Goal: create a scholarly and contemplative library that expands beyond the 72 chambers without forcing external traditions into chamber identities.
-
-### Library architecture
-
-Use the hierarchy:
-
-`Library → Tradition → Source → Study → Discernment → Correspondences`
-
-Every library object should retain a stable identifier and provenance layer.
-
-### Initial research collections
-
-Candidate collections already developed outside the repository include:
+The v5.2.8 Library foundation includes indexed research drawn from developed collections such as:
 
 - Buddhist studies — *The Buddha's Path of Awakening*.
 - Dead Sea Scrolls — comprehensive historical analysis.
@@ -70,56 +45,54 @@ Candidate collections already developed outside the repository include:
 - Qur'an — computational Abjad study.
 - Biblia de Ferrara — primary facsimile/source tradition.
 - Biblia de Ferrara — Spanish gematria/discernment study.
-- Future Enoch, Pistis Sophia, Jung, Egyptian, Mesopotamian, Ifá, and related research collections.
 
-### Required source layers
-
-Each Library item must visibly distinguish:
-
-1. **Primary / Historical Source** — source text, artifact, manuscript, translation, or preserved edition.
-2. **Scholarly / Computational Analysis** — historical analysis, linguistic method, tables, calculations, reproducible transformations.
-3. **Comparative Interpretation** — cross-tradition comparison where similarities and differences remain visible.
-4. **Temple / Personal Symbolism** — contemplative or personal correspondence that never overrides the first three layers.
-
-### Library interface scope
-
-- [ ] Search across traditions, sources, titles, themes, and provenance layers.
-- [ ] Open source-linked study records.
-- [ ] Bookmark passages or study records.
-- [ ] Attach a Library record to a chamber as a correspondence without claiming historical identity.
-- [ ] Save private study notes locally.
-- [ ] Export notes and Library bookmarks.
-- [ ] Keep large source corpora progressively loaded rather than bloating the initial PWA shell.
-- [ ] Preserve attribution and licensing metadata for every imported source.
+Future Enoch, Pistis Sophia, Jung, Egyptian, Mesopotamian, Ifá, and related collections can be prepared independently under the same provenance contract.
 
 ---
 
-## LATER — v5.3.0 Integrated Research Temple
+## NEXT — v5.3.0 Integrated Research Temple
 
-Goal: integrate chamber practice, the Living Codex, Journey state, and the Temple Library into a coherent research-and-practice environment.
+Goal: integrate Chambers, Living Codex, Dossiers, Library, Journey state, and selected private study state into a coherent research-and-practice environment without collapsing provenance.
 
-### Major architectural work
+### Foundation first — canonical relationship edges
 
-- [ ] 72-node Temple Map showing current, visited, bookmarked, and completed chambers.
-- [ ] Cross-source theme graph connecting chambers to Library records without collapsing provenance.
-- [ ] Unified search across Chambers, Codex, Dossiers, Library, reflections, and bookmarks.
-- [ ] Research workspace for comparing two or more records side by side.
-- [ ] Exportable research bundles with source citations and interpretation-layer labels.
-- [ ] Public/private boundary controls for personal notes and ritual state.
-- [ ] Rich social preview and public discovery layer where appropriate.
-- [ ] Sitemap / robots / structured metadata review.
+Before building the major visual interfaces, define one shared relationship model for all cross-record connections. A relationship should carry enough information to answer:
+
+`source record → relationship type → target record → provenance layer → authority/confidence → source identifiers`
+
+Relationship types may include thematic parallel, comparative similarity, methodological parallel, source-derived relation, and explicit Temple/personal correspondence. A visual edge must never imply direct historical influence or metaphysical identity merely because two records are connected.
+
+### Comparative Reading / Research Workspace
+
+- [ ] Unified search across chamber metadata, Codex records, dossiers, Library records, bookmarks, and explicitly selected private notes.
+- [ ] Show result type and provenance before opening a result.
+- [ ] Compare source text, scholarly/computational analysis, comparative interpretation, and Temple/personal symbolism side by side without merging them into one record.
+- [ ] Support tablet/desktop comparison with a usable stacked mobile fallback.
+- [ ] Export research bundles with stable source identifiers, citations, and provenance labels.
+- [ ] Exclude private notes/reflections from exports unless the visitor explicitly selects them.
+
+### 72-node Temple Map
+
+- [ ] Show all 72 chambers as optional navigable nodes.
+- [ ] Distinguish current, visited, favorite/bookmarked, and unvisited state.
+- [ ] Open the chamber/dossier from a node.
+- [ ] Connect chambers to Library/Codex records only through explicit provenance-bearing relationship edges.
+- [ ] Filter by tradition, source layer, theme, and chamber.
+- [ ] Provide keyboard-accessible non-graph navigation.
+- [ ] Remain usable under reduced-motion settings without requiring force-directed animation.
+- [ ] Progressively load large Library graph data.
 
 ### Major-version rule
 
-v5.3.0 should represent an architectural change, not merely visual polish. It should only ship when the Library and governance foundations are stable.
+v5.3.0 is an architectural release, not visual polish. It should begin only after v5.2.8 release identity, service-worker upgrade behavior, deployed-origin verification, and the Library provenance foundation are stable.
 
 ---
 
-## Research backlog
+## RESEARCH — independent content maturation
 
-Research can advance independently of UI releases. A study can be prepared, verified, and indexed before it becomes visible in the public Temple.
+Research can advance without forcing a UI release. A study may be prepared, verified, and indexed before it becomes publicly navigable.
 
-Priority research themes:
+Priority themes:
 
 - Ma'at as ethical and cosmological order.
 - Shem HaMephorash source history and later angelological layers.
@@ -130,27 +103,42 @@ Priority research themes:
 - Qur'anic source text and transparent Abjad computation.
 - Sephardic/Ferrara textual transmission.
 - Jungian psychology and symbolic interpretation.
-- Comparative ritual, divination, and contemplative systems with explicit provenance boundaries.
+- Egyptian and Mesopotamian textual/cosmological studies.
+- Ifá and other comparative contemplative/divinatory systems with explicit provenance boundaries.
+
+---
+
+## Canonical provenance layers
+
+Every research-facing feature must keep these layers distinguishable:
+
+1. **Layer 1 — Primary / Historical Source** — source text, artifact, manuscript, translation, preserved edition, or direct data record.
+2. **Layer 2 — Scholarly / Computational Analysis** — historical analysis, linguistic method, tables, calculations, reproducible transformations.
+3. **Layer 3 — Comparative Interpretation** — cross-tradition comparison where both similarities and differences remain visible.
+4. **Layer 4 — Temple / Personal Symbolism** — contemplative or personal correspondence that never overrides Layers 1–3.
+
+The governing rule remains: **compare without collapsing**.
 
 ---
 
 ## Release gates
 
-Every production release should satisfy all applicable gates:
+Every production release should satisfy all applicable gates.
 
 ### Source integrity
 
-- Canonical records have stable counts and IDs.
+- Canonical records retain stable counts and IDs.
 - Source-derived facts are not silently replaced by interpretive claims.
-- Gematria / numerological matches remain labeled as correspondences, not proof of identity, destiny, authorship, or historical causation.
-- Primary-source wording, normalization rules, and computational assumptions are documented where relevant.
+- Gematria/numerological equality is described as equality under the stated method, not proof of identity, destiny, authorship, supernatural rank, or historical causation.
+- Primary-source wording, normalization rules, computational assumptions, attribution, and licensing remain visible where applicable.
 
 ### UX and accessibility
 
-- Manual threshold behavior is preserved when required by the release.
+- Manual threshold behavior remains intact unless a future approved release explicitly changes it.
+- Deep links do not expose chamber artifacts before explicit entry.
 - Mobile navigation remains usable.
-- Hero faces and core visual subjects remain visible on small screens.
-- Keyboard and focus behavior remain functional.
+- Hero faces/core visual subjects remain visible on small screens.
+- Keyboard/focus behavior remains functional.
 - Reduced-motion behavior remains respected.
 
 ### Collectibles
@@ -160,28 +148,36 @@ Every production release should satisfy all applicable gates:
 - 1440×2560 chamber wallpaper export works.
 - 3840×2160 Parental Powers wallpaper export works.
 
-### PWA and persistence
+### PWA, persistence, and offline ownership
 
-- Service-worker namespace changes with releases that alter the shell.
+- Shell-changing releases use a new service-worker namespace.
+- A prior installed worker can update without bypassing the manual threshold.
 - Offline fallback remains valid.
-- Journey state survives reload.
-- Favorites and reflections survive reload.
-- Update flow does not silently trap users on stale assets.
+- Journey state, favorites, and reflections survive reload.
+- Optional visual-cache clearing never erases private study state.
+- Binary ritual media remains outside service-worker Cache Storage.
+- Deployed-origin verification is run after Pages promotion.
+- Real installed-device checks are never inferred from Chromium emulation.
 
 ### Ritual media
 
 - No autoplay.
 - Play / Pause / Stop remain explicit visitor actions.
 - Device-local media stays local unless the visitor explicitly changes that model.
-- Canonical media fingerprints are retained when integrity verification is used.
+- Canonical media fingerprints remain intact when integrity verification is used.
 
 ### Release process
 
 - Work lands on a feature branch.
-- Validators pass.
-- Browser smoke tests pass for affected behavior.
-- Pull request describes source and UX implications.
-- Production promotion occurs only after the exact release head is green.
+- Source validators pass.
+- Affected browser regression suites pass on the exact PR head.
+- Failure logs/screenshots are preserved before fixing regressions.
+- Pull requests describe source, privacy, PWA, and UX implications.
+- Production promotion uses the exact verified head SHA.
+- `main` validation and GitHub Pages build/deploy/report succeed after merge.
+- The repeatable deployed-origin verifier succeeds before the release is declared published.
+
+See `PWA-CHECKLIST.md` and `docs/RELEASE_VERIFICATION.md` for the executable verification process.
 
 ---
 
@@ -189,9 +185,9 @@ Every production release should satisfy all applicable gates:
 
 When a new idea appears, classify it before implementation:
 
-- **Now** — necessary for the current release.
-- **Next** — already approved for the next release.
-- **Later** — valuable, but not required yet.
-- **Research** — content or methodology work that can mature independently of UI implementation.
+- **Current** — already part of the released/promotion candidate contract.
+- **Next** — approved work for the next architectural release.
+- **Later** — valuable, but not required by the next release.
+- **Research** — content/methodology work that can mature independently.
 
-Avoid growing `index.html` or runtime complexity merely because a new study exists. The Temple should remain navigable as its archive grows.
+Avoid growing `index.html`, the service-worker shell, or runtime complexity merely because a new study exists. The Temple should become easier—not harder—to navigate, verify, preserve, and understand as its archive grows.

@@ -1,0 +1,44 @@
+name: Smoke Release hardening v5.2.8
+
+on:
+  pull_request:
+    paths:
+      - 'version.json'
+      - 'sw.js'
+      - 'README.md'
+      - 'ROADMAP.md'
+      - 'PWA-CHECKLIST.md'
+      - 'docs/RELEASE_VERIFICATION.md'
+      - 'styles/v5.3-threshold.css'
+      - 'scripts/v5.3-threshold.js'
+      - 'scripts/smoke-release-hardening-v5.2.8.mjs'
+      - 'scripts/validate-v5.2.8-release.mjs'
+      - '.github/workflows/smoke-release-hardening-v5.2.8.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-hardening:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Simulate v5.2.7 update, deep link, and narrow mobile surfaces
+        run: node scripts/smoke-release-hardening-v5.2.8.mjs
+      - name: Preserve release screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5.2.8-release-hardening-screenshots
+          path: work/release-hardening/
+          if-no-files-found: warn
+          retention-days: 30

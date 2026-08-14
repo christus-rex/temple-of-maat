@@ -1,0 +1,48 @@
+name: Verify Deployed Temple v5.2.8
+
+on:
+  workflow_dispatch:
+    inputs:
+      live_url:
+        description: 'Deployed Temple origin to verify'
+        required: true
+        default: 'https://christus-rex.github.io/temple-of-maat/'
+      expected_version:
+        description: 'Expected version.json version'
+        required: true
+        default: '5.2.8'
+      expected_build:
+        description: 'Expected version.json build'
+        required: true
+        default: '2026-08-14-v5.2.8-library-journey-offline-hardening'
+
+permissions:
+  contents: read
+
+jobs:
+  deployed-origin:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify exact deployed release
+        env:
+          TEMPLE_LIVE_URL: ${{ inputs.live_url }}
+          TEMPLE_EXPECTED_VERSION: ${{ inputs.expected_version }}
+          TEMPLE_EXPECTED_BUILD: ${{ inputs.expected_build }}
+        run: node scripts/verify-deployed-v5.2.8.mjs
+      - name: Preserve deployed-origin screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5.2.8-deployed-origin-screenshots
+          path: work/deployed-verification/
+          if-no-files-found: warn
+          retention-days: 30
