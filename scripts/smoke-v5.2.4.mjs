@@ -75,7 +75,9 @@ try {
   await page.evaluate(() => window.TempleLivingCodex.open(13));
   await page.waitForSelector('#tm524-codex:not([hidden]) #tm524-record-detail');
   const codexText = await page.locator('#tm524-record-detail').innerText();
-  const sourceDetail = await page.locator('#tm524-record-detail .tm524-details').innerText();
+  // The discernment body intentionally lives inside a collapsed <details> element.
+  // textContent validates the source payload without changing the visitor-facing disclosure state.
+  const sourceDetail = await page.locator('#tm524-record-detail .tm524-details').textContent();
 
   await page.keyboard.press('Escape');
   await page.evaluate(() => window.TempleLivingCodex.openVault(42));
