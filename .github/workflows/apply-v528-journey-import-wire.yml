@@ -1,0 +1,37 @@
+name: Apply v5.2.8 Journey portability wiring
+
+on:
+  push:
+    branches:
+      - feature/v5.2.8-journey-import
+    paths:
+      - 'scripts/patch-v528-journey-import-wire.py'
+      - '.github/workflows/apply-v528-journey-import-wire.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/v5.2.8-journey-import
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/patch-v528-journey-import-wire.py
+      - name: Commit durable wiring if changed
+        run: |
+          if git diff --quiet -- scripts/v5.3-threshold.js scripts/v5.2.8-journey-import.js .github/workflows/validate-v5.yml; then
+            echo 'Journey portability wiring already applied.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/v5.3-threshold.js scripts/v5.2.8-journey-import.js .github/workflows/validate-v5.yml
+          git commit -m 'feat: wire Journey portability enhancement and validation'
+          git push origin HEAD:feature/v5.2.8-journey-import
