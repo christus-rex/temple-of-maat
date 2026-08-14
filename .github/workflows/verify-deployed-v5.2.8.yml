@@ -1,6 +1,13 @@
 name: Verify Deployed Temple v5.2.8
 
 on:
+  workflow_run:
+    workflows:
+      - 'pages build and deployment'
+    branches:
+      - main
+    types:
+      - completed
   workflow_dispatch:
     inputs:
       live_url:
@@ -21,10 +28,13 @@ permissions:
 
 jobs:
   deployed-origin:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -34,9 +44,9 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Verify exact deployed release
         env:
-          TEMPLE_LIVE_URL: ${{ inputs.live_url }}
-          TEMPLE_EXPECTED_VERSION: ${{ inputs.expected_version }}
-          TEMPLE_EXPECTED_BUILD: ${{ inputs.expected_build }}
+          TEMPLE_LIVE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.live_url || 'https://christus-rex.github.io/temple-of-maat/' }}
+          TEMPLE_EXPECTED_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.expected_version || '5.2.8' }}
+          TEMPLE_EXPECTED_BUILD: ${{ github.event_name == 'workflow_dispatch' && inputs.expected_build || '2026-08-14-v5.2.8-library-journey-offline-hardening' }}
         run: node scripts/verify-deployed-v5.2.8.mjs
       - name: Preserve deployed-origin screenshot evidence
         if: always()

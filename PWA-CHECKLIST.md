@@ -38,13 +38,15 @@ Repeatable procedures and failure-evidence rules live in `docs/RELEASE_VERIFICAT
 - [x] Hardening checks reject horizontal document overflow and require chamber-artifact/image geometry to remain inside those phone viewports.
 - [x] Library, Journey, and Offline panels are checked for narrow-phone horizontal usability.
 - [x] Hardening screenshots are preserved by CI even when the hardening job fails.
+- [x] A successful `pages build and deployment` run on `main` automatically triggers the exact-SHA `Verify Deployed Temple v5.2.8` workflow.
+- [x] The deployed verifier checks out `workflow_run.head_sha` rather than a later moving `main` ref.
 - [x] Archive Console hide/minimize behavior remains part of the public application contract.
 - [x] `COPYRIGHT.md` is present in the repository.
 - [x] Site administrator and contact information are documented in the repository.
 
 ## Deployed-origin checks
 
-Run these after every production promotion when the release affects the shell, service worker, manifest, routing, or critical interaction behavior. The v5.2.8 deployed-origin subset can be executed through the manual **Verify Deployed Temple v5.2.8** workflow after GitHub Pages finishes deploying the exact `main` SHA.
+Run these after every production promotion when the release affects the shell, service worker, manifest, routing, or critical interaction behavior. For v5.2.8, a successful GitHub Pages deployment automatically launches **Verify Deployed Temple v5.2.8** against the exact deployed SHA; `workflow_dispatch` remains available as a manual fallback/re-check path.
 
 - [ ] GitHub Pages URL loads over HTTPS on the exact v5.2.8 release SHA.
 - [ ] `version.json` on production reports `5.2.8 / 2026-08-14-v5.2.8-library-journey-offline-hardening`.
@@ -97,4 +99,4 @@ Automated Chromium geometry is evidence for layout regressions, not a substitute
 
 ## Release rule
 
-A source-level or emulated-browser check can prevent regressions, but it is not a substitute for installed-device testing. For v5.2.8, merge only after the exact PR head passes every applicable automated workflow; then require `main` validation, GitHub Pages build/deploy/report, and the repeatable deployed-origin verifier before declaring the production release published. Physical-device items that were not actually performed remain unchecked.
+A source-level or emulated-browser check can prevent regressions, but it is not a substitute for installed-device testing. For v5.2.8, merge only after the exact PR head passes every applicable automated workflow; then require `main` validation, GitHub Pages build/deploy/report, and the exact-SHA deployed-origin verifier before declaring the production release published. Physical-device items that were not actually performed remain unchecked.

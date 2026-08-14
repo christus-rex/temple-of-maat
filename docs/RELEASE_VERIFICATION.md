@@ -39,8 +39,10 @@ After the exact release candidate is merged to `main`:
 
 1. Wait for `Validate Temple v5` on `main` to succeed.
 2. Wait for GitHub Pages **build**, **deploy**, and **report-build-status** to succeed for the same `main` SHA.
-3. Run the `Verify Deployed Temple v5.2.8` workflow manually from GitHub Actions.
-4. Keep its screenshot artifact with the release evidence.
+3. A successful `pages build and deployment` run on `main` automatically triggers `Verify Deployed Temple v5.2.8`.
+4. The verifier checks out the exact `workflow_run.head_sha` that Pages deployed, so later changes to `main` cannot change the verifier code used to judge that deployment.
+5. Keep the deployed-origin screenshot artifact with the release evidence.
+6. `workflow_dispatch` remains available as an explicit fallback or re-check path.
 
 Default production origin:
 
@@ -134,7 +136,7 @@ Promote only when:
 4. the merge uses the verified head SHA;
 5. `main` validation succeeds after merge;
 6. GitHub Pages build/deploy/report succeeds for the merge SHA;
-7. the deployed-origin verification run succeeds;
+7. the automatically triggered exact-SHA deployed-origin verification run succeeds (or the manual fallback is deliberately run and succeeds);
 8. real-device checks are recorded when a suitable device is available, and any unperformed device checks remain visibly unchecked rather than being inferred from emulation.
 
 The v5.2.8 release must preserve the governance covenant: manual entry, no autoplay, private local study state, provenance boundaries, canonical chamber counts, and verified collectible dimensions.
