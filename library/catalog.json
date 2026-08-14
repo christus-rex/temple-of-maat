@@ -21,6 +21,16 @@
       "provenanceLayers": ["L2"],
       "languages": ["Hebrew", "Aramaic", "Greek", "English"],
       "tags": ["dead-sea-scrolls", "qumran", "second-temple-judaism", "judean-desert", "manuscripts", "textual-history"]
+    },
+    {
+      "id": "tradition.islamic-scripture",
+      "type": "tradition",
+      "title": "Qur'anic Scripture and Islamic Textual Study",
+      "summary": "A Library tradition for Qur'anic source editions and transparent linguistic or computational studies that remain subordinate to the source text, attribution, context, and living interpretive traditions of Islam.",
+      "status": "reviewed",
+      "provenanceLayers": ["L2"],
+      "languages": ["Arabic", "English"],
+      "tags": ["quran", "arabic", "islam", "scripture", "textual-study", "abjad"]
     }
   ],
   "sources": [
@@ -48,6 +58,36 @@
       "integrity": {
         "integrityNote": "This is a source-family metadata record. The historical study describes roughly 900–950 manuscripts and many more fragments; no exact corpus file count is asserted here."
       }
+    },
+    {
+      "id": "source.quran-tanzil-pickthall-edition",
+      "type": "source",
+      "title": "The Qur'an — Arabic Source Text with Pickthall Translation",
+      "summary": "The 2026 source edition used by the Abjad study: a 6,236-verse Tanzil Arabic corpus reproduced without analytical normalization and aligned verse-for-verse with 6,236 Pickthall translation records.",
+      "status": "reviewed",
+      "provenanceLayers": ["L1", "L2"],
+      "traditionIds": ["tradition.islamic-scripture"],
+      "languages": ["Arabic", "English"],
+      "tags": ["quran", "tanzil", "pickthall", "arabic-source", "translation", "6236-verses"],
+      "sourceMetadata": {
+        "sourceKind": "edition",
+        "edition": "Source Edition for the Abjad Study — 2026",
+        "corpus": "Tanzil simple-script Arabic corpus aligned with Marmaduke Pickthall English translation",
+        "language": "Arabic with English translation",
+        "repository": "Arabic source attributed to Tanzil Project; English source Project Gutenberg eBook #16955"
+      },
+      "rights": {
+        "attribution": "Arabic: Tanzil Project, Copyright © 2007–2021 Tanzil Project, Creative Commons Attribution 3.0; English: M. M. Pickthall via Project Gutenberg eBook #16955, public domain in the United States.",
+        "license": "Tanzil Quran Text: CC BY 3.0 with source attribution and verbatim/no-change terms; Pickthall Gutenberg source: public domain in the United States.",
+        "publicExposure": "metadata-only",
+        "notes": "Where a substantial portion of the Tanzil Arabic text is exposed, preserve the Tanzil attribution/copyright notice and source-link requirement. The Library metadata layer does not republish the 466-page source volume."
+      },
+      "integrity": {
+        "sha256": "7628eeb5456a994b6aca2336d316e6cf37dd4a9aec118de6553552d49c2f10ca",
+        "recordCount": 6236,
+        "integrityNote": "Arabic corpus SHA-256 above; Pickthall/Gutenberg source SHA-256 3b96fa3ad318ab9d91db53b25100d5169fafe3a1ecb993e7c36ffff55bf9d8bc. Both aligned corpora audit to 6,236 verse records. Structured dual-hash provenance is stored in the source index."
+      },
+      "contentLocation": "library/sources/quran-tanzil-pickthall.index.json"
     }
   ],
   "studies": [
@@ -131,6 +171,40 @@
         "reproducibilityNote": "Report the spelling and all four English totals rather than selecting only favorable matches. The companion grades exact four-cipher matches above exact single-cipher matches above shared root patterns; none establishes historical or supernatural identity."
       },
       "contentLocation": "library/studies/dead-sea-scrolls-gematria.index.json"
+    },
+    {
+      "id": "study.quran-abjad-gematria",
+      "type": "study",
+      "title": "The Qur'an in Abjad — Number, Structure, and Discernment",
+      "summary": "A transparent computational study of the 6,236-verse Arabic source corpus using Eastern Abjad values, declared normalization and sensitivity rules, verse/surah/title/vocabulary totals, and explicit interpretive restraint. Arithmetic patterns are not independent proof of doctrine, prophecy, divine intention, miracle, or hidden code.",
+      "status": "reviewed",
+      "provenanceLayers": ["L2"],
+      "traditionIds": ["tradition.islamic-scripture"],
+      "sourceIds": ["source.quran-tanzil-pickthall-edition"],
+      "languages": ["Arabic", "English"],
+      "tags": ["quran", "abjad", "computation", "normalization", "surah-audit", "digital-roots", "discernment"],
+      "normalizationProfile": {
+        "name": "Qur'an in Abjad — primary Arabic normalization",
+        "preservesOriginal": true,
+        "rules": [
+          "Remove harakat and recitation marks; they are not independent Abjad letters.",
+          "Unify graphic alif forms أ إ آ ٱ to ا with value 1.",
+          "Treat alif maqsura ى as ي with value 10 in the primary method.",
+          "For hamza carriers ؤ and ئ, count the carrier letter و or ي.",
+          "Treat ta marbuta ة as ه with value 5 in the primary method; sensitivity analysis also tests ت = 400.",
+          "Treat standalone hamza ء as 0 in the primary method; sensitivity analysis tests hamza as alif = 1.",
+          "Spaces and punctuation contribute 0; only Arabic letters contribute."
+        ],
+        "sourcePolicy": "The source edition remains unchanged apart from trimming outer whitespace. Analytical normalization is applied only inside the Abjad study."
+      },
+      "computationalMethod": {
+        "name": "Eastern Abjad additive analysis",
+        "method": "Assign Eastern Abjad values from 1 through 1000 to normalized Arabic letters and add letter values for phrases, verses, surahs, titles, and vocabulary; also report token and normalized-letter counts, exact repeated verse strings, and modern digital-root reductions where used.",
+        "implementationVersion": "quran-abjad-research-edition-2026",
+        "inputFields": ["surah number", "ayah number", "source Arabic", "normalized Arabic"],
+        "reproducibilityNote": "Results are corpus- and normalization-dependent. Keep the source hashes and normalization profile visible; arithmetic identity proves arithmetic identity, while theological conclusions require independent historical, linguistic, and interpretive support."
+      },
+      "contentLocation": "library/studies/quran-abjad.index.json"
     }
   ],
   "discernments": [

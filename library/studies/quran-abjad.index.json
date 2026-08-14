@@ -1,0 +1,74 @@
+{
+  "schema": "temple-of-maat/library-study-index-v1",
+  "studyId": "study.quran-abjad-gematria",
+  "title": "The Qur'an in Abjad — Number, Structure, and Discernment",
+  "sourceBasis": {
+    "format": "41-page computational and symbolic study",
+    "pageCount": 41,
+    "sourceEditionId": "source.quran-tanzil-pickthall-edition",
+    "sourceTextKeptSeparate": true,
+    "fullSourceTextBundled": false
+  },
+  "corpusAudit": {
+    "surahs": 114,
+    "ayahs": 6236,
+    "whitespaceTokens": 77796,
+    "normalizedLetters": 329112,
+    "primaryAbjadTotal": 23385724,
+    "primaryDigitalRoot": 7,
+    "countingNote": "The whitespace-token count is for this exact file, not a universal canonical word count. Letter and total values are corpus- and method-dependent."
+  },
+  "hashes": {
+    "arabicCorpusSha256": "7628eeb5456a994b6aca2336d316e6cf37dd4a9aec118de6553552d49c2f10ca",
+    "gutenbergSourceSha256": "3b96fa3ad318ab9d91db53b25100d5169fafe3a1ecb993e7c36ffff55bf9d8bc",
+    "analysisDataSha256": "f713bda3d9280a05f42c4c7cd892a47ae39495e4a0f7aa12e73a06a03f600a66"
+  },
+  "abjadValues": {
+    "system": "Eastern Abjad",
+    "range": "1–1000",
+    "additive": true,
+    "positionChangesValue": false
+  },
+  "normalizationProfile": {
+    "name": "Primary normalization",
+    "rules": [
+      {"feature":"Harakat / recitation marks","treatment":"removed","consequence":"not independent Abjad letters"},
+      {"feature":"Graphic alif forms أ إ آ ٱ","treatment":"unify to ا","value":1},
+      {"feature":"Alif maqsura ى","treatment":"treat as ي","value":10},
+      {"feature":"Hamza carriers ؤ / ئ","treatment":"count carrier letter","carrierValues":"و / ي"},
+      {"feature":"Ta marbuta ة","treatment":"treat as ه","value":5,"sensitivity":"also test ت = 400"},
+      {"feature":"Standalone hamza ء","treatment":"value 0","sensitivity":"also test hamza as alif = 1"},
+      {"feature":"Spaces / punctuation","treatment":"value 0","consequence":"only Arabic letters contribute"}
+    ]
+  },
+  "claimsPolicy": [
+    "This numerical-literary study is not a substitute for tafsir, Arabic philology, recitation, jurisprudence, or the living interpretive traditions of Islam.",
+    "Abjad cannot by itself prove doctrine, prophecy, divine intention, or a hidden code.",
+    "Numbers do not replace context or ethics; coincidence alone is not a miracle.",
+    "Digital roots are a modern reflection device.",
+    "Code claims are tested, not assumed.",
+    "Arithmetic identity proves arithmetic identity; a theological conclusion needs independent historical, linguistic, and interpretive support."
+  ],
+  "measured": [
+    "Eastern Abjad values 1–1000",
+    "phrase, verse, surah, title, and vocabulary totals",
+    "token and normalized-letter counts",
+    "exact repeated verse strings",
+    "complete surah audit"
+  ],
+  "selectedAddresses": [
+    {"address":"24:35","label":"The Light Verse","words":48,"normalizedLetters":200,"abjad":13444,"digitalRoot":7},
+    {"address":"36:58","label":"Peace","words":5,"normalizedLetters":16,"abjad":818,"digitalRoot":8},
+    {"address":"55:13","label":"Repeated refrain example","words":4,"normalizedLetters":18,"abjad":1561,"digitalRoot":4},
+    {"address":"96:1","label":"Read","words":5,"normalizedLetters":18,"abjad":2098,"digitalRoot":1},
+    {"address":"112:1","label":"Al-Ikhlas 1","words":4,"normalizedLetters":11,"abjad":220,"digitalRoot":4},
+    {"address":"112:2","label":"Al-Ikhlas 2","words":2,"normalizedLetters":9,"abjad":231,"digitalRoot":6},
+    {"address":"112:3","label":"Al-Ikhlas 3","words":4,"normalizedLetters":12,"abjad":240,"digitalRoot":6},
+    {"address":"112:4","label":"Al-Ikhlas 4","words":5,"normalizedLetters":15,"abjad":311,"digitalRoot":5}
+  ],
+  "interpretiveControls": [
+    "Long verses usually have larger additive totals; totals do not measure relative sanctity.",
+    "The literary imagery of a verse remains primary; Abjad adds an analytical layer rather than replacing language or context.",
+    "The observation that Qur'an 74:30 mentions nineteen, 114 = 6 × 19, and the conventional undiacritized Basmala has 19 normalized letters is reproducible arithmetic, not automatic proof of every modern nineteen-code claim."
+  ]
+}
