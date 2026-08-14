@@ -117,7 +117,7 @@ if (releaseBaseline) {
 }
 
 let externalAssetSummary = '';
-if (/^5\.(?:1|2)\./.test(version.version)) {
+if (/^5\.(?:1|2|3)\./.test(version.version)) {
   const assetManifestPath = 'scripts/v5.1-asset-manifest.json';
   if (!fs.existsSync(filePath(assetManifestPath))) fail('Missing v5.1 asset manifest');
   const assetManifest = JSON.parse(fs.readFileSync(filePath(assetManifestPath), 'utf8'));
