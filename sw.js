@@ -1,5 +1,5 @@
-const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14';
-// Shell refresh: recache the welcome threshold so the canonical portal version is visible on existing installs.
+const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r2';
+// Shell revision r2: strict core install, fresh release identity, and isolated cache promotion.
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -47,6 +47,17 @@ function assetUrl(asset) {
 
 function isBinaryRitualMedia(url) {
   return url.origin === self.location.origin && /\/assets\/audio\/.*\.(?:mp3|opus|ogg|m4a|wav)$/i.test(url.pathname);
+}
+
+function isReleaseIdentity(url) {
+  return url.origin === self.location.origin && /\/version\.json$/i.test(url.pathname);
+}
+
+async function cacheStrictInBatches(cache, assets, batchSize = 12) {
+  const unique = uniqueAssets(assets);
+  for (let index = 0; index < unique.length; index += batchSize) {
+    await Promise.all(unique.slice(index, index + batchSize).map((asset) => cache.add(asset)));
+  }
 }
 
 async function cacheInBatches(cache, assets, batchSize = 12) {
@@ -236,7 +247,7 @@ async function clearOptionalVisualCache(requestId, clientId) {
       type: 'TEMPLE_OFFLINE_CLEAR_RESULT',
       requestId,
       ok: false,
-      error: error?.message || 'Unable to clear optional offline visuals.'
+      error: error?.message || 'Unable to clear optional visuals.'
     });
   }
 }
@@ -244,9 +255,15 @@ async function clearOptionalVisualCache(requestId, clientId) {
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
-    // Keep installation light: app shell + support visuals. Canonical ritual audio lives in IndexedDB only after explicit visitor installation.
-    await cacheInBatches(cache, CORE_ASSETS);
-    await cacheInBatches(cache, await supportDisplayAssets());
+    try {
+      // Core shell is atomic: a missing required asset rejects this worker rather
+      // than promoting a partially offline-capable release. Support art remains optional.
+      await cacheStrictInBatches(cache, CORE_ASSETS);
+      await cacheInBatches(cache, await supportDisplayAssets());
+    } catch (error) {
+      await caches.delete(STATIC_CACHE);
+      throw error;
+    }
   })());
 });
 
@@ -311,6 +328,24 @@ self.addEventListener('fetch', (event) => {
         return response;
       } catch {
         return (await caches.match('./index.html')) || (await caches.match('./')) || (await caches.match('./offline.html'));
+      }
+    })());
+    return;
+  }
+
+  // Release identity is network-first so the welcome badge and update diagnostics
+  // cannot be held on an older semantic version by the general cache-first policy.
+  if (isReleaseIdentity(url)) {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response && response.ok) {
+          const cache = await caches.open(RUNTIME_CACHE);
+          await cache.put('./version.json', response.clone());
+        }
+        return response;
+      } catch {
+        return (await caches.match('./version.json')) || new Response('', { status: 504, statusText: 'Offline' });
       }
     })());
     return;
