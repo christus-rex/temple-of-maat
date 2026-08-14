@@ -19,7 +19,8 @@ const CORE_ASSETS = [
   './scripts/parental-powers-assets.json',
   './scripts/v5.1-asset-manifest.json',
   './scripts/v5.3-threshold.js',
-  './scripts/v5.2.4-living-codex.js'
+  './scripts/v5.2.4-living-codex.js',
+  './scripts/v5.2.4-chant-fallback.js'
 ];
 
 async function cacheInBatches(cache, assets, batchSize = 12) {
