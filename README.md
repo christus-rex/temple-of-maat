@@ -1,4 +1,4 @@
-# Temple of Ma'at — GitHub Pages PWA v5
+# Temple of Ma'at — GitHub Pages PWA v5.2
 
 This folder is ready to publish from the root of a GitHub Pages repository.
 
@@ -30,6 +30,10 @@ The manifest and service worker deliberately use relative `./` URLs, so the PWA 
 - `icon-maskable-512.png` — maskable icon for adaptive launchers
 - `apple-touch-icon.png` — iOS home-screen icon
 - `chambers.json` — canonical chamber data
+- `assets/parental/` — 72 Parental Powers masters and display renditions
+- `scripts/parental-powers.js` — chamber-to-wallpaper runtime map
+- `scripts/parental-powers-assets.json` — image dimensions, sizes, and integrity hashes
+- `scripts/parental-powers-generation-manifest.json` — names, references, and generation provenance
 - `version.json` — build identifier
 - `.nojekyll` — prevents Jekyll processing on GitHub Pages
 - `COPYRIGHT.md` — copyright and third-party rights notice

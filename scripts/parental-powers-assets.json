@@ -1,0 +1,2529 @@
+{
+  "schema": "temple-of-maat/parental-powers-assets-v1",
+  "version": "1.0.0",
+  "chamberCount": 72,
+  "completeMasters": 72,
+  "completeDisplays": 72,
+  "records": [
+    {
+      "number": 1,
+      "id": "01",
+      "thirdName": "Bifruiah",
+      "angel": "Vehuiah",
+      "daemon": "Bifrons",
+      "office": "Keeper of Remembered Beginnings",
+      "law": "INITIATE WITHOUT ERASURE",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/ac60db416b52fe5d012520800ab33b31c266d49332d6f37057a48d0264493ac0.webp",
+      "familyMotif": "a dawn archive-garden of blue remembrance, luminous water, carved memory stones, and one threshold",
+      "masterPath": "assets/parental/master/01-bifruiah.webp",
+      "displayPath": "assets/parental/display/01-bifruiah.webp",
+      "master": {
+        "path": "assets/parental/master/01-bifruiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 666060,
+        "sha256": "d0df50424796346e5901f943107e09eb1c6966016e1b6a01776d770bd78eb998"
+      },
+      "display": {
+        "path": "assets/parental/display/01-bifruiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 134846,
+        "sha256": "39fe0c6d7146a94636fb29bceef8032f6d3f6375d1edaa26fb02bd0283913c10"
+      }
+    },
+    {
+      "number": 2,
+      "id": "02",
+      "thirdName": "Orialiel",
+      "angel": "Jeliel",
+      "daemon": "Orias",
+      "office": "Steward of Concordant Authority",
+      "law": "AUTHORITY SERVES HARMONY",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/5bf0152ecb3cdea9fc200615554fbd307f6286f07322184246d7c37bb583be3e.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/02-orialiel.webp",
+      "displayPath": "assets/parental/display/02-orialiel.webp",
+      "master": {
+        "path": "assets/parental/master/02-orialiel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 678300,
+        "sha256": "4bc341ec5d12b1b9060b91dd6043accfa2ae4e45ed991853ce3433467c4bb577"
+      },
+      "display": {
+        "path": "assets/parental/display/02-orialiel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 145982,
+        "sha256": "76f0707498b9a1ab5293893eb36be64da1b3d9aacdfbfbb0bbd9e16b929fd561"
+      }
+    },
+    {
+      "number": 3,
+      "id": "03",
+      "thirdName": "Andritael",
+      "angel": "Sitael",
+      "daemon": "Andras",
+      "office": "Warden of Necessary Endings",
+      "law": "END WHAT DEVOURS LIFE",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/604cf23cc70171b357a7792f0e71b11cdfb7bb6ceee4aa698113e0ae08a11589.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/03-andritael.webp",
+      "displayPath": "assets/parental/display/03-andritael.webp",
+      "master": {
+        "path": "assets/parental/master/03-andritael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 698712,
+        "sha256": "bc069e3aa48247913c5a8559831b53ee7a6a969850c092cc2b1fd3021455bdf6"
+      },
+      "display": {
+        "path": "assets/parental/display/03-andritael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 143936,
+        "sha256": "e074c57d551e9eb0807d53919dbb7b0ddcb584f15990e6fe96e446ee0c3df03f"
+      }
+    },
+    {
+      "number": 4,
+      "id": "04",
+      "thirdName": "Berelmiah",
+      "angel": "Elemiah",
+      "daemon": "Berith",
+      "office": "Keeper of Revalued Direction",
+      "law": "POWER BOWS TO RIGHT ORDER",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/581d63c5ba7dafb1010a3db3e6a619f222d7b58264ede54f93b60ca6e2b6aaef.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/04-berelmiah.webp",
+      "displayPath": "assets/parental/display/04-berelmiah.webp",
+      "master": {
+        "path": "assets/parental/master/04-berelmiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 683144,
+        "sha256": "5b8a0a79a15158dd32cc4f79f20433b364d6f729b586db117ed61e6f4f52652f"
+      },
+      "display": {
+        "path": "assets/parental/display/04-berelmiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 152184,
+        "sha256": "bb04a3dac9b1501e1fc9fee016bb1969400a7d52e7027614203d2d6b1215f9a2"
+      }
+    },
+    {
+      "number": 5,
+      "id": "05",
+      "thirdName": "Gamiasiah",
+      "angel": "Mahasiah",
+      "daemon": "Gamigin",
+      "office": "Curator of Healing Memory",
+      "law": "MEMORY HEALS WHEN WITNESSED",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/e4252bd8d140d608c5d90d0231fefac39b59f3dca1eae26248b99e4e22959be7.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/05-gamiasiah.webp",
+      "displayPath": "assets/parental/display/05-gamiasiah.webp",
+      "master": {
+        "path": "assets/parental/master/05-gamiasiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 703386,
+        "sha256": "2103fbdce6f2ab0bf0a104aabfb1d9f7e1661825275dc1cd8c14a4354a656ed9"
+      },
+      "display": {
+        "path": "assets/parental/display/05-gamiasiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 153908,
+        "sha256": "74a0fb8bd6157d5ad3ff4ab45c4e316b1f38ded76ec61e791100a33d2aaa9fb5"
+      }
+    },
+    {
+      "number": 6,
+      "id": "06",
+      "thirdName": "Vapulahel",
+      "angel": "Lelahel",
+      "daemon": "Vapula",
+      "office": "Artificer of Beneficent Craft",
+      "law": "CRAFT WITHOUT DOMINION",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/a3a5c25daa66ca45601b59ca660008c07e8d5933043b4524926e9a0e10c2766c.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/06-vapulahel.webp",
+      "displayPath": "assets/parental/display/06-vapulahel.webp",
+      "master": {
+        "path": "assets/parental/master/06-vapulahel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 639538,
+        "sha256": "a88440e59cc438ed436dc4772cf67edd757464e9f22cb09b8f3005f356acee7f"
+      },
+      "display": {
+        "path": "assets/parental/display/06-vapulahel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 133794,
+        "sha256": "4e43d1e6919a76b2ca2213566e426fcffa9aae18ff856551c2eae7897ff25824"
+      }
+    },
+    {
+      "number": 7,
+      "id": "07",
+      "thirdName": "Allochiah",
+      "angel": "Achaiah",
+      "daemon": "Alloces",
+      "office": "Keeper of Patient Understanding",
+      "law": "UNDERSTAND BEFORE NAMING",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/62ebb043bff94fc3a78800997a4f80e75e045bc265653859b7fd8ce9cbba14a7.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/07-allochiah.webp",
+      "displayPath": "assets/parental/display/07-allochiah.webp",
+      "master": {
+        "path": "assets/parental/master/07-allochiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 719802,
+        "sha256": "395e9082bab5d4d4bd36e89fd70475da4e1e7271964a35e3684c11d2741eca9b"
+      },
+      "display": {
+        "path": "assets/parental/display/07-allochiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 155594,
+        "sha256": "14ef9eaa133cbfae0542aaf59ab0d9f75781ca5d1818d1c31764865b686dd92d"
+      }
+    },
+    {
+      "number": 8,
+      "id": "08",
+      "thirdName": "Bathietel",
+      "angel": "Cahetel",
+      "daemon": "Bathin",
+      "office": "Blesser of Sacred Work",
+      "law": "WORK AS OFFERING",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/18ca64fe5fdf60999dd0413068e6cf005149074fbe0aa7b317bfb202523ded72.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/08-bathietel.webp",
+      "displayPath": "assets/parental/display/08-bathietel.webp",
+      "master": {
+        "path": "assets/parental/master/08-bathietel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 690822,
+        "sha256": "2638b8d1bcfc5f264bbc293e80f32eb244e8d7d79036b97fe8e36d33d11afc60"
+      },
+      "display": {
+        "path": "assets/parental/display/08-bathietel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 151364,
+        "sha256": "56fccb8207447327f47d9194f66a3a7a8bf161507a1b2483ec9ea2dc11f623b1"
+      }
+    },
+    {
+      "number": 9,
+      "id": "09",
+      "thirdName": "Belehaziel",
+      "angel": "Haziel",
+      "daemon": "Beleth",
+      "office": "Sovereign of Merciful Intensity",
+      "law": "INTENSITY TEMPERED BY MERCY",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/f9018d6c786b0e841e4adb2c9a0c8a46b7aa3b316fc9dd95e1c4bb5ce1a7279d.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/09-belehaziel.webp",
+      "displayPath": "assets/parental/display/09-belehaziel.webp",
+      "master": {
+        "path": "assets/parental/master/09-belehaziel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 655872,
+        "sha256": "d3337a8d428a26144c04a0d52240ba6c1dd74438ecff045136e4ad0e99dc37be"
+      },
+      "display": {
+        "path": "assets/parental/display/09-belehaziel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 129632,
+        "sha256": "f6a63923c4d4f544c7a2008b249f5e05579fb8db47bd6a592d5e81af54b9e23f"
+      }
+    },
+    {
+      "number": 10,
+      "id": "10",
+      "thirdName": "Bathiadiah",
+      "angel": "Aladiah",
+      "daemon": "Bathin",
+      "office": "Restorer of Second Paths",
+      "law": "SECOND PATH IS NOT FAILURE",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/a711510fe94f00ef6cd53c6350010b46d2f71ac102399e990cb48ce7b9ff751b.webp",
+      "familyMotif": "an ivory-gold landscape of return, a spiral road, a reopened gate, and dusk becoming a second dawn",
+      "masterPath": "assets/parental/master/10-bathiadiah.webp",
+      "displayPath": "assets/parental/display/10-bathiadiah.webp",
+      "master": {
+        "path": "assets/parental/master/10-bathiadiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 671418,
+        "sha256": "1a18b54e703295c1da79201ecf6bc18b58fd9b50c31b5e22ac35159e0a3dc24a"
+      },
+      "display": {
+        "path": "assets/parental/display/10-bathiadiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 144988,
+        "sha256": "48cb34ab5b4a1376aa9b43c6f46746aea91ed808c70879d3decce31aa9b830d9"
+      }
+    },
+    {
+      "number": 11,
+      "id": "11",
+      "thirdName": "Valelauviah",
+      "angel": "Lauviah",
+      "daemon": "Valefar",
+      "office": "Guide of Cunning to Wisdom",
+      "law": "CUNNING TRANSMUTED",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/c33ff0d43f07058fbde7eb69b676246a0643c480d4b354cdd745d00c176ddc14.webp",
+      "familyMotif": "an ivory-gold landscape of return, a spiral road, a reopened gate, and dusk becoming a second dawn",
+      "masterPath": "assets/parental/master/11-valelauviah.webp",
+      "displayPath": "assets/parental/display/11-valelauviah.webp",
+      "master": {
+        "path": "assets/parental/master/11-valelauviah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 631954,
+        "sha256": "8d294c25233c60353c53999e5233a136ecbd9eebad308ac9c6197a1ea7a3b649"
+      },
+      "display": {
+        "path": "assets/parental/display/11-valelauviah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 125048,
+        "sha256": "cbd1b5c626071b281f3a30a8cb066578f11fd1fa6e0f2dcdbf7cf2e48310c698"
+      }
+    },
+    {
+      "number": 12,
+      "id": "12",
+      "thirdName": "Dantahaiah",
+      "angel": "Hahaiah",
+      "daemon": "Dantalion",
+      "office": "Sanctuary of True Thoughts",
+      "law": "THOUGHT WITHOUT ENSLAVEMENT",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/6ab445d87a129440fe4c788faadf11aaffbbefe2dea612db769cbe6f3b354065.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/12-dantahaiah.webp",
+      "displayPath": "assets/parental/display/12-dantahaiah.webp",
+      "master": {
+        "path": "assets/parental/master/12-dantahaiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 623668,
+        "sha256": "f1f52f889a754d8f6ab7f8d493949fff83a2b2f00759e1fac504c4c7ef6af682"
+      },
+      "display": {
+        "path": "assets/parental/display/12-dantahaiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 124734,
+        "sha256": "e1dfdda79b94bd071b8f3a0c5c0ed0c01a60a8cb419ee6ee83dd3db583158b98"
+      }
+    },
+    {
+      "number": 13,
+      "id": "13",
+      "thirdName": "Focazalel",
+      "angel": "Iezalel",
+      "daemon": "Focalor",
+      "office": "Keeper of Deep Covenants",
+      "law": "DEPTH KEEPS ITS WORD",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/173e8859e40a366543dfc9fac9b9a7dab091e7e0db7da405ad105514d529dec5.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/13-focazalel.webp",
+      "displayPath": "assets/parental/display/13-focazalel.webp",
+      "master": {
+        "path": "assets/parental/master/13-focazalel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 748616,
+        "sha256": "5663f68291263a4f108bce0e98e18d9865236f34f4cd3cfd2215c549fb3bd56f"
+      },
+      "display": {
+        "path": "assets/parental/display/13-focazalel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 157532,
+        "sha256": "978675476b3e5c953d690ce3a40b9bba97c47212379ec1d4ed548189f5377e31"
+      }
+    },
+    {
+      "number": 14,
+      "id": "14",
+      "thirdName": "Vapubahel",
+      "angel": "Mebahel",
+      "daemon": "Vapula",
+      "office": "Liberator Through Truthful Craft",
+      "law": "TRUTH LIBERATES CRAFT",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/387858dd6c459328f8731d3caf27033710c60ab978ecec6f2db3c0585908da2f.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/14-vapubahel.webp",
+      "displayPath": "assets/parental/display/14-vapubahel.webp",
+      "master": {
+        "path": "assets/parental/master/14-vapubahel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 670254,
+        "sha256": "fc3dcd4efaf6deca9c4152966000de45fa75e3dbd5be6ff4123a9ca74a8ab4cb"
+      },
+      "display": {
+        "path": "assets/parental/display/14-vapubahel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 139204,
+        "sha256": "f33cee75eb1722d328c2cccdc25847c19e1fcf4f89d1a5674e2f8e41fc8dfd47"
+      }
+    },
+    {
+      "number": 15,
+      "id": "15",
+      "thirdName": "Berihariel",
+      "angel": "Hariel",
+      "daemon": "Berith",
+      "office": "Purifier of Worth",
+      "law": "WORTH BEYOND PRICE",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/0d3ff5ab39c5f083f4424230417d98ee94a0ce4275960a149fd0681287813334.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/15-berihariel.webp",
+      "displayPath": "assets/parental/display/15-berihariel.webp",
+      "master": {
+        "path": "assets/parental/master/15-berihariel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 689518,
+        "sha256": "fd29747ae70ed5fb52b144e9f9a4cbdc5a613aa2a93b67e51cd44473e3d5a7c6"
+      },
+      "display": {
+        "path": "assets/parental/display/15-berihariel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 147414,
+        "sha256": "2f51551565165b844c782aec86d8a9c3e3d10069e1a38c5c90c9f8cd23b07d81"
+      }
+    },
+    {
+      "number": 16,
+      "id": "16",
+      "thirdName": "Haagakamiah",
+      "angel": "Hekamiah",
+      "daemon": "Haagenti",
+      "office": "Noble Transmuter",
+      "law": "TRANSMUTE WITHOUT DENIAL",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/056fb25eabf076cbfe99dbf91921b41259ed28d45666b0bc39c957e29d0dbe17.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/16-haagakamiah.webp",
+      "displayPath": "assets/parental/display/16-haagakamiah.webp",
+      "master": {
+        "path": "assets/parental/master/16-haagakamiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 690096,
+        "sha256": "144ac87c2096badf4527d39b582bca6de9c027c51501032af120c4ad6624271e"
+      },
+      "display": {
+        "path": "assets/parental/display/16-haagakamiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 151022,
+        "sha256": "9e0c5b61f36bbad0ccc157306b709c59b793b9ef33063265f2529977b71bb887"
+      }
+    },
+    {
+      "number": 17,
+      "id": "17",
+      "thirdName": "Valelauviah II",
+      "angel": "Lauviah II",
+      "daemon": "Valefar",
+      "office": "Recurrence Doorway",
+      "law": "RETURN IS NOT REPETITION",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/7725c2b763c08a9ed08689c1a91622163a694035d9e406cb1a520ebdbce3d9bd.webp",
+      "familyMotif": "an ivory-gold landscape of return, a spiral road, a reopened gate, and dusk becoming a second dawn",
+      "masterPath": "assets/parental/master/17-valelauviah-ii.webp",
+      "displayPath": "assets/parental/display/17-valelauviah-ii.webp",
+      "master": {
+        "path": "assets/parental/master/17-valelauviah-ii.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 657362,
+        "sha256": "7d7bba644a4c00ac0c2748c524561ea80e86d3647341fa588765efae81d30240"
+      },
+      "display": {
+        "path": "assets/parental/display/17-valelauviah-ii.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 141798,
+        "sha256": "c5d68f029b839fa83c4723211f97667555733fc5a5cc16b7b3d53b99d667f1f2"
+      }
+    },
+    {
+      "number": 18,
+      "id": "18",
+      "thirdName": "Agacaliel",
+      "angel": "Caliel",
+      "daemon": "Agares",
+      "office": "Swift Justice",
+      "law": "JUSTICE WITHOUT VENGEANCE",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/1ad0c11a88f97c0e1d6ccd4ff9844bd11e69c2773b807b601f2db185f77971ac.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/18-agacaliel.webp",
+      "displayPath": "assets/parental/display/18-agacaliel.webp",
+      "master": {
+        "path": "assets/parental/master/18-agacaliel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 690172,
+        "sha256": "033f142b500de4d8635dd88acee9a8d0d145e689f259b2e929e3b6430be58646"
+      },
+      "display": {
+        "path": "assets/parental/display/18-agacaliel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 140316,
+        "sha256": "f3231946f007f247c9142de33946af858cc75ea8a8c70d4188343714ecb0aab8"
+      }
+    },
+    {
+      "number": 19,
+      "id": "19",
+      "thirdName": "Asmoleuviah",
+      "angel": "Leuviah",
+      "daemon": "Asmoday",
+      "office": "Keeper of Expansive Craft",
+      "law": "EXPAND WITHOUT CONSUMING",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/44ebcca0db89f2464a51d1aa1ab3692823acd22df3f035f09f78dcdc57b0c99f.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/19-asmoleuviah.webp",
+      "displayPath": "assets/parental/display/19-asmoleuviah.webp",
+      "master": {
+        "path": "assets/parental/master/19-asmoleuviah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 679042,
+        "sha256": "92d7f1aaa06db190f5ac3f3e91f5e00e8da657988594c5c155dd467de0a3d7fd"
+      },
+      "display": {
+        "path": "assets/parental/display/19-asmoleuviah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 140994,
+        "sha256": "500c0735fe24bbd951c201ec958e42b1daf992237fe692e57cd5307f64ed0c00"
+      }
+    },
+    {
+      "number": 20,
+      "id": "20",
+      "thirdName": "Haagpahaliah",
+      "angel": "Pahaliah",
+      "daemon": "Haagenti",
+      "office": "Redeemer of Sacred Purpose",
+      "law": "PURPOSE REDEEMED",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/7ef46e3f85e1d97b874f3a04a21041bfae90a5d0de7d5407d58892d731f31dc2.webp",
+      "familyMotif": "a dawn archive-garden of blue remembrance, luminous water, carved memory stones, and one threshold",
+      "masterPath": "assets/parental/master/20-haagpahaliah.webp",
+      "displayPath": "assets/parental/display/20-haagpahaliah.webp",
+      "master": {
+        "path": "assets/parental/master/20-haagpahaliah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 703744,
+        "sha256": "bff0e2eca43b0b8a7cc8d331870361ae47d9bb352a9e2dc3670d40aaa1514d10"
+      },
+      "display": {
+        "path": "assets/parental/display/20-haagpahaliah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 158974,
+        "sha256": "7f067080b831f6e4eb789b632972872c1e3e049c7ce9463b683ac1dcf180a87b"
+      }
+    },
+    {
+      "number": 21,
+      "id": "21",
+      "thirdName": "Paimelkhael",
+      "angel": "Nelkhael",
+      "daemon": "Paimon",
+      "office": "Teacher of Unyielding Learning",
+      "law": "LEARNING AS DEVOTION",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/5daf20e176756b9b321b3f415f6fd02f1fba137e0bf5c77e33fa2506bae9b6bc.webp",
+      "familyMotif": "a dawn archive-garden of blue remembrance, luminous water, carved memory stones, and one threshold",
+      "masterPath": "assets/parental/master/21-paimelkhael.webp",
+      "displayPath": "assets/parental/display/21-paimelkhael.webp",
+      "master": {
+        "path": "assets/parental/master/21-paimelkhael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 659576,
+        "sha256": "fccbad69d49ed4340a1923e443c7b62e8f18edbecf71da59e8a3968dc968fc4c"
+      },
+      "display": {
+        "path": "assets/parental/display/21-paimelkhael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 142608,
+        "sha256": "1edb76cb4f857ef3e229792cc068674257aa099cfa9a4ec584eae53c4e78c786"
+      }
+    },
+    {
+      "number": 22,
+      "id": "22",
+      "thirdName": "Vapuyeiayel",
+      "angel": "Yeiayel",
+      "daemon": "Vapula",
+      "office": "Crafter of Right Renown",
+      "law": "RENOWN WITHOUT INFLATION",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/ecd9e322a953956f1a666e839e4a38c83019d729b3b52cb3973932a73dbf0d4c.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/22-vapuyeiayel.webp",
+      "displayPath": "assets/parental/display/22-vapuyeiayel.webp",
+      "master": {
+        "path": "assets/parental/master/22-vapuyeiayel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 610214,
+        "sha256": "80847335e7773422791f51531d3d38d0347739f57324c3a812399abf0092c4ef"
+      },
+      "display": {
+        "path": "assets/parental/display/22-vapuyeiayel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 119240,
+        "sha256": "4ce184e0f1b9f981873599d370d062479cd7cd9110a19753b6172a138c8f7b4a"
+      }
+    },
+    {
+      "number": 23,
+      "id": "23",
+      "thirdName": "Halmelahel",
+      "angel": "Melahel",
+      "daemon": "Halphas",
+      "office": "Fortified Healer",
+      "law": "HEALING NEEDS BOUNDARY",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/9d6d891ade4a12467f8000536b033b5308dbf369749f8412fcfb6dd5900311c8.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/23-halmelahel.webp",
+      "displayPath": "assets/parental/display/23-halmelahel.webp",
+      "master": {
+        "path": "assets/parental/master/23-halmelahel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 721494,
+        "sha256": "6e5c16f739e3b303cae2521568fb6c4ba3e0c520aea44bbb03decfd6e6cedf0f"
+      },
+      "display": {
+        "path": "assets/parental/display/23-halmelahel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 155484,
+        "sha256": "8eab150a9417bfc70d658a79fc54b6f750795be893124b005e6376650d99cbfe"
+      }
+    },
+    {
+      "number": 24,
+      "id": "24",
+      "thirdName": "Halhahuiah",
+      "angel": "Hahuiah",
+      "daemon": "Halphas",
+      "office": "Hidden Refuge Fortress",
+      "law": "REFUGE WITHOUT ISOLATION",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/ac1f0f135dc48ad1f0827187f007c878b39aad4918d39012db36c712fdbf5348.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/24-halhahuiah.webp",
+      "displayPath": "assets/parental/display/24-halhahuiah.webp",
+      "master": {
+        "path": "assets/parental/master/24-halhahuiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 701636,
+        "sha256": "26d7b6e714a8d64b3f5498c5202ff31579cf7a7c83e4f13f405884d18c140651"
+      },
+      "display": {
+        "path": "assets/parental/display/24-halhahuiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 154224,
+        "sha256": "11f102056c9c1f2ddd442085e42cee70e918d09e1178d6f45b4f197b874402c0"
+      }
+    },
+    {
+      "number": 25,
+      "id": "25",
+      "thirdName": "Focanithaiah",
+      "angel": "Nithaiah",
+      "daemon": "Focalor",
+      "office": "Depth Keeper",
+      "law": "DEPTH GUARDS THE LIVING",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/9fa23b4f5f2bcaa221eac8386ea5554c046fa024c364c671ddffe461ca0a93e8.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/25-focanithaiah.webp",
+      "displayPath": "assets/parental/display/25-focanithaiah.webp",
+      "master": {
+        "path": "assets/parental/master/25-focanithaiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 674402,
+        "sha256": "f77d63954b287072eaeced39ef5db423823c7eb34cc3c9c5d855ad29a2b2a6d4"
+      },
+      "display": {
+        "path": "assets/parental/display/25-focanithaiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 131290,
+        "sha256": "e742cfb20b8e8ce7199d03cd1af615900cbb9fff985f5f546594645bb2fce856"
+      }
+    },
+    {
+      "number": 26,
+      "id": "26",
+      "thirdName": "Vapuhaaiah",
+      "angel": "Haaiah",
+      "daemon": "Vapula",
+      "office": "Artisan of Just Governance",
+      "law": "GOVERNANCE AS CRAFT",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/39c1c0f22a004342f1e53f48030fc28b4834be7d90bc9127e44668c5dcbddab0.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/26-vapuhaaiah.webp",
+      "displayPath": "assets/parental/display/26-vapuhaaiah.webp",
+      "master": {
+        "path": "assets/parental/master/26-vapuhaaiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 678570,
+        "sha256": "76834c0742a94b48efd99a8f718adad750997a06b18163512c10bd47545064da"
+      },
+      "display": {
+        "path": "assets/parental/display/26-vapuhaaiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 135434,
+        "sha256": "590ccc9ed9420150b6a3afba96db326f3c0d11816176f9b55f435c8a78ea3ebf"
+      }
+    },
+    {
+      "number": 27,
+      "id": "27",
+      "thirdName": "Alloyerathel",
+      "angel": "Yerathel",
+      "daemon": "Alloces",
+      "office": "Sower of Light",
+      "law": "LIGHT SOWN, NOT IMPOSED",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/cc49cc6fb2d3d977b01130f1d0c26bcc0e9d45e256f0894d9767dd5d476c52d4.webp",
+      "familyMotif": "a dawn archive-garden of blue remembrance, luminous water, carved memory stones, and one threshold",
+      "masterPath": "assets/parental/master/27-alloyerathel.webp",
+      "displayPath": "assets/parental/display/27-alloyerathel.webp",
+      "master": {
+        "path": "assets/parental/master/27-alloyerathel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 689350,
+        "sha256": "a8ddc6e4f58d47d488ff80673f0c3253a5e1178b8edcaff968dd7684087e4c59"
+      },
+      "display": {
+        "path": "assets/parental/display/27-alloyerathel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 153038,
+        "sha256": "996bb4449daae8731fcfbf86b5f5c853366148bac59e2867ba797e1230e6c0fd"
+      }
+    },
+    {
+      "number": 28,
+      "id": "28",
+      "thirdName": "Vapuseheiah",
+      "angel": "Seheiah",
+      "daemon": "Vapula",
+      "office": "Weaver of Longevity",
+      "law": "LONGEVITY THROUGH BALANCE",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/9968b1f3f2a0a8ca12899b1e8f60b7d38caf228da218509004a4db331ed52c82.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/28-vapuseheiah.webp",
+      "displayPath": "assets/parental/display/28-vapuseheiah.webp",
+      "master": {
+        "path": "assets/parental/master/28-vapuseheiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 686432,
+        "sha256": "61518ac2e3b397a75b4b2b13267bf4848a3b79c3b1f57fd9d818e06be49000d7"
+      },
+      "display": {
+        "path": "assets/parental/display/28-vapuseheiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 145856,
+        "sha256": "6b47037ec7717320bd9d32a24c04ea9fec6b0d382bcaae97deafac330a59f53e"
+      }
+    },
+    {
+      "number": 29,
+      "id": "29",
+      "thirdName": "Gremoreyiel",
+      "angel": "Reyiel",
+      "daemon": "Gremory",
+      "office": "Liberator of Treasure",
+      "law": "TREASURE FREED, NOT HOARDED",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/228aabe9197a1a2193f68ad1997783661ae5d2921a8953aa1f9667d0621c308c.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/29-gremoreyiel.webp",
+      "displayPath": "assets/parental/display/29-gremoreyiel.webp",
+      "master": {
+        "path": "assets/parental/master/29-gremoreyiel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 638532,
+        "sha256": "fb573acb94df4b34ec528a33fe471217b53a89137cbb3f41ef932fd6b959adef"
+      },
+      "display": {
+        "path": "assets/parental/display/29-gremoreyiel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 124552,
+        "sha256": "e72efe673677a75e00b95f50e7b7f48163785409fdd4cddcc9801daa18dcbeef"
+      }
+    },
+    {
+      "number": 30,
+      "id": "30",
+      "thirdName": "Buromael",
+      "angel": "Omael",
+      "daemon": "Buer",
+      "office": "Healer of Gestation",
+      "law": "GESTATION REQUIRES SAFETY",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/7fa1c04ae835270c353af71974bbd20a30c5c4a3355f60542b941183f8840d76.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/30-buromael.webp",
+      "displayPath": "assets/parental/display/30-buromael.webp",
+      "master": {
+        "path": "assets/parental/master/30-buromael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 683692,
+        "sha256": "8e165b3b2f9efde9a4d1edb0ba934b605a6a8da44973517ea83a70643c632fec"
+      },
+      "display": {
+        "path": "assets/parental/display/30-buromael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 153838,
+        "sha256": "95b9ef274373fd08b2899ce3afa5d9b373f101556d5d34a130849b1b6f3c24fa"
+      }
+    },
+    {
+      "number": 31,
+      "id": "31",
+      "thirdName": "Allolecabel",
+      "angel": "Lecabel",
+      "daemon": "Alloces",
+      "office": "Brilliance Tempered",
+      "law": "BRILLIANCE SERVES WHOLESOMENESS",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/92f95eba8d124dc7d827f1630c970a01acd0627350fdf1447e26e5cac1b362da.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/31-allolecabel.webp",
+      "displayPath": "assets/parental/display/31-allolecabel.webp",
+      "master": {
+        "path": "assets/parental/master/31-allolecabel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 651070,
+        "sha256": "652a785b9e047728156fde7b9c9f405f435b077e44e662b752d7cfb2c5ca190d"
+      },
+      "display": {
+        "path": "assets/parental/display/31-allolecabel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 141206,
+        "sha256": "7c311cc14c603e5be7f8a2245b2ca6ca28351153e7bc9c7faf701b7fd1954af9"
+      }
+    },
+    {
+      "number": 32,
+      "id": "32",
+      "thirdName": "Focavasariah",
+      "angel": "Vasariah",
+      "daemon": "Focalor",
+      "office": "Clemency in Depths",
+      "law": "CLEMENCY EVEN IN ABYSS",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/7969717384b7708e4ad05080f2e2e9a8d21e0cca80c5d3d70ff73cf9c35472db.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/32-focavasariah.webp",
+      "displayPath": "assets/parental/display/32-focavasariah.webp",
+      "master": {
+        "path": "assets/parental/master/32-focavasariah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 572062,
+        "sha256": "af609b4811873853d0989aacc64b0ece0bf26b4ed2d5f2c3b85d898b4bd140a7"
+      },
+      "display": {
+        "path": "assets/parental/display/32-focavasariah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 110686,
+        "sha256": "5c7c6acfbc3e5313364bf483853bd6391b905cbac3dafd35f078f2822c3e164f"
+      }
+    },
+    {
+      "number": 33,
+      "id": "33",
+      "thirdName": "Paiyehuiah",
+      "angel": "Yehuiah",
+      "daemon": "Paimon",
+      "office": "Right Order Voice",
+      "law": "VOICE ALIGNS ORDER",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/172a7139d63e1b94511c7a73a8f8a5a0d2beb9a64e7aa937457e590b990a2470.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/33-paiyehuiah.webp",
+      "displayPath": "assets/parental/display/33-paiyehuiah.webp",
+      "master": {
+        "path": "assets/parental/master/33-paiyehuiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 641438,
+        "sha256": "ea8f5d0d1083bfe6113a856771e8292191ed756f332a5cc37407c0d0fb0b4a10"
+      },
+      "display": {
+        "path": "assets/parental/display/33-paiyehuiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 133872,
+        "sha256": "1edc847c427a3e7a661bd066fc40b6fff089956f10bbaa97122cb6d9b88b06f3"
+      }
+    },
+    {
+      "number": 34,
+      "id": "34",
+      "thirdName": "Marcholehahiah",
+      "angel": "Lehahiah",
+      "daemon": "Marchosias",
+      "office": "Disciplined Courage",
+      "law": "COURAGE WITH DISCIPLINE",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/db88bd7474a2f5b6a2ea9fe4874698c0465ac578c27005514e527988bf87313a.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/34-marcholehahiah.webp",
+      "displayPath": "assets/parental/display/34-marcholehahiah.webp",
+      "master": {
+        "path": "assets/parental/master/34-marcholehahiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 636774,
+        "sha256": "541146b6a98a7b5a033e8371cb26819c79b183c1174baba26b9165b89ae4052c"
+      },
+      "display": {
+        "path": "assets/parental/display/34-marcholehahiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 123574,
+        "sha256": "b95a04dc5285e701775548711ed6b1357b693860c93abfb110fd24404f0019f5"
+      }
+    },
+    {
+      "number": 35,
+      "id": "35",
+      "thirdName": "Glasyavakiah",
+      "angel": "Chavakiah",
+      "daemon": "Glasya Labolas",
+      "office": "Reconciler After Bloodshed",
+      "law": "AFTER BLOOD, RECONCILE",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/cb9db448e02ea52ed632c06dc0b9c62857907075d20d26f4b99321978ae97e2f.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/35-glasyavakiah.webp",
+      "displayPath": "assets/parental/display/35-glasyavakiah.webp",
+      "master": {
+        "path": "assets/parental/master/35-glasyavakiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 654540,
+        "sha256": "1bfbfdcc1d116388cb6a88167f43bf2b505fd8d12873da6fe059484a4f1ffcd4"
+      },
+      "display": {
+        "path": "assets/parental/display/35-glasyavakiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 140852,
+        "sha256": "4b6335163ad25a9400ceed898ea1190303cbdd8bf862cd65089463f0246b2267"
+      }
+    },
+    {
+      "number": 36,
+      "id": "36",
+      "thirdName": "Bathimenadel",
+      "angel": "Menadel",
+      "daemon": "Bathin",
+      "office": "Pilgrim of Sacred Labor",
+      "law": "LABOR AS PILGRIMAGE",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/b0624c8da2282e842c7c8057c1bbe856c349dee9fcf9b2bf81c3f7554866e3b1.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/36-bathimenadel.webp",
+      "displayPath": "assets/parental/display/36-bathimenadel.webp",
+      "master": {
+        "path": "assets/parental/master/36-bathimenadel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 679492,
+        "sha256": "a3663df78ed01e58f123695ecace3d4fd6b77d0cce705e2bccb07cf07738beea"
+      },
+      "display": {
+        "path": "assets/parental/display/36-bathimenadel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 140292,
+        "sha256": "9b7b7c46d2f05efba67933c0f86aa9e40d26f3bc932326791deecc0317eaaa5e"
+      }
+    },
+    {
+      "number": 37,
+      "id": "37",
+      "thirdName": "Camianiel",
+      "angel": "Aniel",
+      "daemon": "Camio",
+      "office": "Keeper of Living Signal",
+      "law": "SIGNAL REMAINS LIVING",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/4fb4cc70cc3ba9eb684036c2573e42b2351df723e5814e220be8b7aea1ca26d9.webp",
+      "familyMotif": "a dawn archive-garden of blue remembrance, luminous water, carved memory stones, and one threshold",
+      "masterPath": "assets/parental/master/37-camianiel.webp",
+      "displayPath": "assets/parental/display/37-camianiel.webp",
+      "master": {
+        "path": "assets/parental/master/37-camianiel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 712204,
+        "sha256": "1599b5aafb63a9b18501634a0a379ce3966343e541d4e21e77a3dc8f15252978"
+      },
+      "display": {
+        "path": "assets/parental/display/37-camianiel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 153692,
+        "sha256": "6f6b9bcec2fa3c7107b15491329f204745fa781136428f1ae4bf2d838f3da87c"
+      }
+    },
+    {
+      "number": 38,
+      "id": "38",
+      "thirdName": "Belhaamiah",
+      "angel": "Haamiah",
+      "daemon": "Belial",
+      "office": "Sovereign Ritual",
+      "law": "RITUAL WITHOUT COERCION",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/d0e6b76d90e06630e749cf6b22bc1f6ec4812fee79ddda0aff5923897568539b.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/38-belhaamiah.webp",
+      "displayPath": "assets/parental/display/38-belhaamiah.webp",
+      "master": {
+        "path": "assets/parental/master/38-belhaamiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 620162,
+        "sha256": "de3e32c93f4d4fa5db7adb605a03d11087973ff75b7e0c53035da89777174f56"
+      },
+      "display": {
+        "path": "assets/parental/display/38-belhaamiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 118376,
+        "sha256": "1ab5570393d705ecd8edc2ca5fef58b878f498fbf0db70341d0f7cc8b55b54a1"
+      }
+    },
+    {
+      "number": 39,
+      "id": "39",
+      "thirdName": "Gusorehael",
+      "angel": "Rehael",
+      "daemon": "Gusoin",
+      "office": "Healer of Lineage",
+      "law": "LINEAGE HEALED FORWARD",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/29f8104e38d81fe9e0f794a1da9f9d5838cd56323d5ca43b89fc437f9121457a.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/39-gusorehael.webp",
+      "displayPath": "assets/parental/display/39-gusorehael.webp",
+      "master": {
+        "path": "assets/parental/master/39-gusorehael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 727522,
+        "sha256": "51157b34f75a55aaf3181cebc72c5a9e3187f8c52730860813737a3a7a014fa4"
+      },
+      "display": {
+        "path": "assets/parental/display/39-gusorehael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 156818,
+        "sha256": "abdbc5896d84923e843ef295402814dc60267ddf36591ee39309724bd780d6e6"
+      }
+    },
+    {
+      "number": 40,
+      "id": "40",
+      "thirdName": "Bifroyeiazel",
+      "angel": "Yeiazel",
+      "daemon": "Bifrons",
+      "office": "Consoler at Threshold",
+      "law": "THRESHOLD HELD WITH CARE",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/7dcac60b5b1f81fd58508e1e1e0844c583d20226c545c4253a01947bcd3faaa5.webp",
+      "familyMotif": "an ivory-gold landscape of return, a spiral road, a reopened gate, and dusk becoming a second dawn",
+      "masterPath": "assets/parental/master/40-bifroyeiazel.webp",
+      "displayPath": "assets/parental/display/40-bifroyeiazel.webp",
+      "master": {
+        "path": "assets/parental/master/40-bifroyeiazel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 702214,
+        "sha256": "6393478f66c8994c81b7d556b27534e90da70f5f8127e77ff40dd9970e85b56b"
+      },
+      "display": {
+        "path": "assets/parental/display/40-bifroyeiazel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 142970,
+        "sha256": "2a4b6d10f73719d33b43af88c6038ae02aedacd3231001f27c0c206dae06c2ab"
+      }
+    },
+    {
+      "number": 41,
+      "id": "41",
+      "thirdName": "Belehahahel",
+      "angel": "Hahahel",
+      "daemon": "Beleth",
+      "office": "Mission of Fierce Calling",
+      "law": "FIERCENESS IN SERVICE",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/faf2b2a7a487b32dd17d1d88cb22faacab3d30541ed53ebba2eb38ac68f96a68.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/41-belehahahel.webp",
+      "displayPath": "assets/parental/display/41-belehahahel.webp",
+      "master": {
+        "path": "assets/parental/master/41-belehahahel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 642260,
+        "sha256": "b527ba7a09ae89f4fe31a63d211b812ecf842c1f5326dca8e7c8d0eaf1e12ed4"
+      },
+      "display": {
+        "path": "assets/parental/display/41-belehahahel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 136838,
+        "sha256": "df7dd3ac3821d4d2624280857a74cef937c4214983474c542a8413f7673b3980"
+      }
+    },
+    {
+      "number": 42,
+      "id": "42",
+      "thirdName": "Agamikael",
+      "angel": "Mikael",
+      "daemon": "Agares",
+      "office": "Marshal of Right Movement",
+      "law": "MOVEMENT WITHOUT INVASION",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/34fb60d11c8917a478e5e7efe5d196fd974a6091f10dd9b7b21e2880ac3d8f9c.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/42-agamikael.webp",
+      "displayPath": "assets/parental/display/42-agamikael.webp",
+      "master": {
+        "path": "assets/parental/master/42-agamikael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 661936,
+        "sha256": "625622f4b4e62f6c0d9bb0f5b11bc0fe502592095d48206e5f442c1043462535"
+      },
+      "display": {
+        "path": "assets/parental/display/42-agamikael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 137176,
+        "sha256": "828a995b59384220d7734f9d3f00bf36f58a0b5a94d00336fe7c54561aab3aaa"
+      }
+    },
+    {
+      "number": 43,
+      "id": "43",
+      "thirdName": "Asmoveuliah",
+      "angel": "Veuliah",
+      "daemon": "Asmoday",
+      "office": "Abundance Through Hidden Craft",
+      "law": "ABUNDANCE THROUGH SUBTLETY",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/7690bc6acc629188c85678d10c02d324ac65b6db78bf47d0dae6a1e38144cd33.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/43-asmoveuliah.webp",
+      "displayPath": "assets/parental/display/43-asmoveuliah.webp",
+      "master": {
+        "path": "assets/parental/master/43-asmoveuliah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 693240,
+        "sha256": "97606f030d960c1d8ceb1d21f7e46601b9e857fb75d3de523dfe0afdca991c6c"
+      },
+      "display": {
+        "path": "assets/parental/display/43-asmoveuliah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 154020,
+        "sha256": "c0fe4b03e28556864c4282d27dfc4583d1a294f5ce212e8c82528f5b9525e9a9"
+      }
+    },
+    {
+      "number": 44,
+      "id": "44",
+      "thirdName": "Gamiyelahiah",
+      "angel": "Yelahiah",
+      "daemon": "Gamigin",
+      "office": "Karmic Memory Warrior",
+      "law": "KARMA REMEMBERED, NOT REPEATED",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/93ed0a49fef720a2828ffc08010e658a2f4313e28ecdc8547ffc26701513c555.webp",
+      "familyMotif": "a dawn archive-garden of blue remembrance, luminous water, carved memory stones, and one threshold",
+      "masterPath": "assets/parental/master/44-gamiyelahiah.webp",
+      "displayPath": "assets/parental/display/44-gamiyelahiah.webp",
+      "master": {
+        "path": "assets/parental/master/44-gamiyelahiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 677038,
+        "sha256": "a3d0c380353c064956ce25208c7e5f441a42dddbde42f5549b32e2cea456b9b6"
+      },
+      "display": {
+        "path": "assets/parental/display/44-gamiyelahiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 149248,
+        "sha256": "84d6859422d13d731b62416dc048fbe1fcec02555e8db19ddcf6b7bb1fac62d4"
+      }
+    },
+    {
+      "number": 45,
+      "id": "45",
+      "thirdName": "Cimisehaliah",
+      "angel": "Sehaliah",
+      "daemon": "Cimeies",
+      "office": "Purifier Through Rhetoric",
+      "law": "RHETORIC PURIFIES, NOT MANIPULATES",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/936ddf06b284ec7df91973bda136ed99ad1893ed4c87054243829b82d2f2cbdb.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/45-cimisehaliah.webp",
+      "displayPath": "assets/parental/display/45-cimisehaliah.webp",
+      "master": {
+        "path": "assets/parental/master/45-cimisehaliah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 643706,
+        "sha256": "9ceea2b2ac83852429c2117737c3238eb76261d57ca416df64bb424c8b979477"
+      },
+      "display": {
+        "path": "assets/parental/display/45-cimisehaliah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 130372,
+        "sha256": "99c6096bc9c1d4aaa6c0caacc4ae7aeb7989dc7dc1fbf68b01bde96a5b966aa3"
+      }
+    },
+    {
+      "number": 46,
+      "id": "46",
+      "thirdName": "Hauariel",
+      "angel": "Ariel",
+      "daemon": "Haures",
+      "office": "Revealer Through Fire",
+      "law": "FIRE REVEALS, DOES NOT CONSUME WHOLESOME",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/8fcf9a8d0b90c2f6b2b0d126aa0dc1fc6dc26469c870b056b967721b527a7a4f.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/46-hauariel.webp",
+      "displayPath": "assets/parental/display/46-hauariel.webp",
+      "master": {
+        "path": "assets/parental/master/46-hauariel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 616904,
+        "sha256": "4bfd69a8b8c3f5f0a2582777c7c395deb372c28bf28e63f711857ee5345f9bb2"
+      },
+      "display": {
+        "path": "assets/parental/display/46-hauariel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 127850,
+        "sha256": "5a61f4ffea8d628efa400197606c50756469667ff01adcea3c9dde990cfc2f78"
+      }
+    },
+    {
+      "number": 47,
+      "id": "47",
+      "thirdName": "Agaresaliah",
+      "angel": "Asaliah",
+      "daemon": "Agares",
+      "office": "Contemplative Movement",
+      "law": "MOVE CONTEMPLATIVELY",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/0c39970152e868a28bfcf2ea01958771b9918e2156385929a64fe99c7856f7bd.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/47-agaresaliah.webp",
+      "displayPath": "assets/parental/display/47-agaresaliah.webp",
+      "master": {
+        "path": "assets/parental/master/47-agaresaliah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 724034,
+        "sha256": "40012848d07dcb649f17fb441434f6a1726a2cff059255f298e25227f86e4b33"
+      },
+      "display": {
+        "path": "assets/parental/display/47-agaresaliah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 151240,
+        "sha256": "ed8f2b13d0bed2ffe606f719af0f9432207acb006479c80b889721783c186754"
+      }
+    },
+    {
+      "number": 48,
+      "id": "48",
+      "thirdName": "Leramihael",
+      "angel": "Mihael",
+      "daemon": "Leraye",
+      "office": "Peaceful Arrow",
+      "law": "ARROW WITHOUT WAR",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/f95abd0cd714b2f17acd28877dc049eb5ac1f336fa1b1a34306fd40e854ea212.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/48-leramihael.webp",
+      "displayPath": "assets/parental/display/48-leramihael.webp",
+      "master": {
+        "path": "assets/parental/master/48-leramihael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 672086,
+        "sha256": "83744505b3f093c6ca38e1cf8507ac34bcea99a304512ff48f6f5d360cfa6419"
+      },
+      "display": {
+        "path": "assets/parental/display/48-leramihael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 149012,
+        "sha256": "5ef777c4df8fe09cdf8b8bade0f637a63b15c7d4b9a455ada45dde308f39301a"
+      }
+    },
+    {
+      "number": 49,
+      "id": "49",
+      "thirdName": "Vapuvehuel",
+      "angel": "Vehuel",
+      "daemon": "Vapula",
+      "office": "Elevated Craft",
+      "law": "CRAFT ELEVATED, NOT ELEVATING EGO",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/a7cdb07179837c33840162276f1f3b5b6a1c07f5b091c6efd6b1e02cf4c1ea52.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/49-vapuvehuel.webp",
+      "displayPath": "assets/parental/display/49-vapuvehuel.webp",
+      "master": {
+        "path": "assets/parental/master/49-vapuvehuel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 670172,
+        "sha256": "86766fd404bfbd63cd1397868c2d0a4e4f2c8048aa86af9e1bf24f7f6519054c"
+      },
+      "display": {
+        "path": "assets/parental/display/49-vapuvehuel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 143838,
+        "sha256": "486641509a149c6993755f41be514dc6032cdb69fbfb609c5323a9c123eab27c"
+      }
+    },
+    {
+      "number": 50,
+      "id": "50",
+      "thirdName": "Bathidaniel",
+      "angel": "Daniel",
+      "daemon": "Bathin",
+      "office": "Eloquent Traveler",
+      "law": "TRAVEL WITH ELOQUENCE",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/14ff1c48a226ebf8a181dca80ff5c348a0ba0ec9e30da82d65c746f27c533b0b.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/50-bathidaniel.webp",
+      "displayPath": "assets/parental/display/50-bathidaniel.webp",
+      "master": {
+        "path": "assets/parental/master/50-bathidaniel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 672668,
+        "sha256": "6335fbab7ff7b0c058afe9ba760028fcaa6fd5a9644ec68a3675741fc5473758"
+      },
+      "display": {
+        "path": "assets/parental/display/50-bathidaniel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 133362,
+        "sha256": "974ac85e451e1ed1886a487775b9a205eeb557b501bf33221dd407e74087ae9e"
+      }
+    },
+    {
+      "number": 51,
+      "id": "51",
+      "thirdName": "Glasyahasiah",
+      "angel": "Hahasiah",
+      "daemon": "Glasya Labolas",
+      "office": "Alchemist of Hidden Mysteries",
+      "law": "MYSTERY KEPT, NOT WITHHELD",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/9777cddff00cc73e0a12de65fb0edf7e9b77a17f2fec5209849f68ab44f996a3.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/51-glasyahasiah.webp",
+      "displayPath": "assets/parental/display/51-glasyahasiah.webp",
+      "master": {
+        "path": "assets/parental/master/51-glasyahasiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 736690,
+        "sha256": "ae43a3e579578d13dc2a36865b6ac73aa820aab073621d327ecf2ce03b772e69"
+      },
+      "display": {
+        "path": "assets/parental/display/51-glasyahasiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 160346,
+        "sha256": "ad3665e53e25aef5351bfde21cf2bb298a8597c2b9266ea2e616970f2d839dba"
+      }
+    },
+    {
+      "number": 52,
+      "id": "52",
+      "thirdName": "Cimimamiah",
+      "angel": "Imamiah",
+      "daemon": "Cimeies",
+      "office": "Atonement Through Logic",
+      "law": "LOGIC ATONES",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/68c307f1e9880027ea534e2daefdcea385841752045faafc6470c134b0d5e0f4.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/52-cimimamiah.webp",
+      "displayPath": "assets/parental/display/52-cimimamiah.webp",
+      "master": {
+        "path": "assets/parental/master/52-cimimamiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 691926,
+        "sha256": "86991e9758f251d582178ee6a0e8257edfa12c072db91394d725b22ae57f9ba3"
+      },
+      "display": {
+        "path": "assets/parental/display/52-cimimamiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 144810,
+        "sha256": "4c3aaf0f933bb99ab8e3dffe5aeaacd8bef311ea06196737dcc0375a91ff2d19"
+      }
+    },
+    {
+      "number": 53,
+      "id": "53",
+      "thirdName": "Botinanael",
+      "angel": "Nanael",
+      "daemon": "Botis",
+      "office": "Reconciler of Friends and Foes",
+      "law": "RECONCILE WITHOUT FALSE PEACE",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/df5322d08ce49c6cbd5a2931a32312c85bd9b2accb954d05b64fd3a9b03fa46c.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/53-botinanael.webp",
+      "displayPath": "assets/parental/display/53-botinanael.webp",
+      "master": {
+        "path": "assets/parental/master/53-botinanael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 667694,
+        "sha256": "945700cb62d0da0fc48930cb6db7993730a34bded84c1f9a1e28130ed365aa96"
+      },
+      "display": {
+        "path": "assets/parental/display/53-botinanael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 135814,
+        "sha256": "16b7980ad05f803dc704c66759c1b28470e6775c523a8e46ef2d3ff508aa9dc2"
+      }
+    },
+    {
+      "number": 54,
+      "id": "54",
+      "thirdName": "Procnithael",
+      "angel": "Nithael",
+      "daemon": "Procel",
+      "office": "Youthful Storm Keeper",
+      "law": "STORM KEPT YOUNG, NOT SUPPRESSED",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/fb83cd23d4851eef40062292a18cfd07a6b7c6677ace3ab5af3b39895e612168.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/54-procnithael.webp",
+      "displayPath": "assets/parental/display/54-procnithael.webp",
+      "master": {
+        "path": "assets/parental/master/54-procnithael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 583144,
+        "sha256": "fd136abae5be74739f5d16afc30be962e15c66da51f8f7b6ba36242b68b339ff"
+      },
+      "display": {
+        "path": "assets/parental/display/54-procnithael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 111382,
+        "sha256": "b53bd6d053ae35be4cfeaeef5050397a022ec7316f967e40ed9b84bbea27b118"
+      }
+    },
+    {
+      "number": 55,
+      "id": "55",
+      "thirdName": "Haagmebahiah",
+      "angel": "Mebahiah",
+      "daemon": "Haagenti",
+      "office": "Lucid Transmuter",
+      "law": "LUCID TRANSMUTATION",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/faa609e00659e84b37f1c409be9db23097475c99873cf28b5afbae293b3c019c.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/55-haagmebahiah.webp",
+      "displayPath": "assets/parental/display/55-haagmebahiah.webp",
+      "master": {
+        "path": "assets/parental/master/55-haagmebahiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 696936,
+        "sha256": "c552d6fd13ff5fb333e84e7158259f8f07a7eaf0c99aff98e416fe214f639136"
+      },
+      "display": {
+        "path": "assets/parental/display/55-haagmebahiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 154172,
+        "sha256": "693ea2edbda9e7b0692241f3a54bd09fd7ace164c3fdecff4a688d64fdfd026b"
+      }
+    },
+    {
+      "number": 56,
+      "id": "56",
+      "thirdName": "Buropoyel",
+      "angel": "Poyel",
+      "daemon": "Buer",
+      "office": "Fortune Through Healing",
+      "law": "FORTUNE FOLLOWS HEALING",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/c10ce22f4029a719f4e9743943a0cf18e0beee3cafda8ea3ac96e78c6f8adb56.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/56-buropoyel.webp",
+      "displayPath": "assets/parental/display/56-buropoyel.webp",
+      "master": {
+        "path": "assets/parental/master/56-buropoyel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 683364,
+        "sha256": "408f9120fbc6d8f92118d03fb7b5cf8ae2eb30872f0e1242129867709ddb7ca7"
+      },
+      "display": {
+        "path": "assets/parental/display/56-buropoyel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 152914,
+        "sha256": "2fe470c498ab6ee4a49ce8d4e621d33a71784e19b913631014d4660a350458dc"
+      }
+    },
+    {
+      "number": 57,
+      "id": "57",
+      "thirdName": "Glasnemamiah",
+      "angel": "Nemamiah",
+      "daemon": "Glasya Labolas",
+      "office": "Discerner in Battle",
+      "law": "DISCERN IN CONFLICT",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/f4e6601b458d0a0a5e5125dab7f250959f8864ae3c99b409e796c0eb42e12471.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/57-glasnemamiah.webp",
+      "displayPath": "assets/parental/display/57-glasnemamiah.webp",
+      "master": {
+        "path": "assets/parental/master/57-glasnemamiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 613140,
+        "sha256": "7c8a5d2f4ae1a4a62701761be2aca186865937fd5835f97e09ce56e8e4aac11a"
+      },
+      "display": {
+        "path": "assets/parental/display/57-glasnemamiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 131842,
+        "sha256": "b1a7e2bfbb0a19a4d2438d3e514db990e6f8dc68298d2feb568aa10f15882bba"
+      }
+    },
+    {
+      "number": 58,
+      "id": "58",
+      "thirdName": "Procyeialel",
+      "angel": "Yeialel",
+      "daemon": "Procel",
+      "office": "Healer of Mental Storm",
+      "law": "MIND STORM CALMED",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/4a3e8179b5c53ccf3e96e6f69810833fd4dc8bf321432498d3958c9def637c5d.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/58-procyeialel.webp",
+      "displayPath": "assets/parental/display/58-procyeialel.webp",
+      "master": {
+        "path": "assets/parental/master/58-procyeialel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 602010,
+        "sha256": "d7ca8bec2faeb824b77c6a633d93e9a68fad27dafd07d0bbce589a6033fbedb0"
+      },
+      "display": {
+        "path": "assets/parental/display/58-procyeialel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 125662,
+        "sha256": "09581548972ed35097a1e5424c2f3d99d1d7512bc1ea5ef6fcdd8236ac9947ca"
+      }
+    },
+    {
+      "number": 59,
+      "id": "59",
+      "thirdName": "Beriharahel",
+      "angel": "Harahel",
+      "daemon": "Berith",
+      "office": "Wealth of Intellect",
+      "law": "INTELLECT WEALTH SHARED",
+      "fire": {
+        "id": 1,
+        "name": "Fire of Remembering",
+        "color": "#2563eb",
+        "pillar": "Jachin",
+        "description": "Initiatory memory"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/1a40a6da62589932b7da13b0d45ce58632b4fe0c56a52aab020219bf73968f83.webp",
+      "familyMotif": "a dawn archive-garden of blue remembrance, luminous water, carved memory stones, and one threshold",
+      "masterPath": "assets/parental/master/59-beriharahel.webp",
+      "displayPath": "assets/parental/display/59-beriharahel.webp",
+      "master": {
+        "path": "assets/parental/master/59-beriharahel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 630538,
+        "sha256": "9261f907b4b6d15c56f308d9f68b065929fc65364853ddc532cec29b3c3ca5c3"
+      },
+      "display": {
+        "path": "assets/parental/display/59-beriharahel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 133530,
+        "sha256": "86da0176b2e78450a258f1c53e8f27b221b2d80e87f9779012a9162b54091497"
+      }
+    },
+    {
+      "number": 60,
+      "id": "60",
+      "thirdName": "Murmitzrael",
+      "angel": "Mitzrael",
+      "daemon": "Murmur",
+      "office": "Reparative Music",
+      "law": "MUSIC REPAIRS",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/0b214edea7cc35e05baf5c68219a7823f8af8187efb2b0c6488ac91240be4366.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/60-murmitzrael.webp",
+      "displayPath": "assets/parental/display/60-murmitzrael.webp",
+      "master": {
+        "path": "assets/parental/master/60-murmitzrael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 760650,
+        "sha256": "a8e7abe72a0107c07b060262058100b22909dac2d5c57243aee6edd1a9daabd3"
+      },
+      "display": {
+        "path": "assets/parental/display/60-murmitzrael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 162868,
+        "sha256": "0c0f775361d7704eb0f10f36001b9f5f06a1de781e63e1b4f1db56fa970e413e"
+      }
+    },
+    {
+      "number": 61,
+      "id": "61",
+      "thirdName": "Marbumabel",
+      "angel": "Umabel",
+      "daemon": "Marbas",
+      "office": "Friend of Hidden Mechanisms",
+      "law": "MECHANISM FRIEND, NOT MASTER",
+      "fire": {
+        "id": 5,
+        "name": "Fire of Craft",
+        "color": "#d4af37",
+        "pillar": "Middle",
+        "description": "Right work"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/f3eac31ebadc5d8c16380178acf17bd2a7ebadcb7f9baaaf28993e93f8e4c802.webp",
+      "familyMotif": "a golden sacred workshop-observatory, precise instruments, living geometry, and materials transformed by right work",
+      "masterPath": "assets/parental/master/61-marbumabel.webp",
+      "displayPath": "assets/parental/display/61-marbumabel.webp",
+      "master": {
+        "path": "assets/parental/master/61-marbumabel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 716778,
+        "sha256": "9fd3b6a67c2a00e23f463a4485f52696f915772a5cb1d0bd42143fd5c2e805f9"
+      },
+      "display": {
+        "path": "assets/parental/display/61-marbumabel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 148902,
+        "sha256": "c48111ca9fb2ecead7782a43611b90aaed4c58ac562e735598ef3bf1dbc26f80"
+      }
+    },
+    {
+      "number": 62,
+      "id": "62",
+      "thirdName": "Fociahhel",
+      "angel": "Iahhel",
+      "daemon": "Focalor",
+      "office": "Seeker in Depths",
+      "law": "SEEK WITHOUT DROWNING",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/6503e18c80688ac710fccc6eb5ac75755c5110bcc698b0f0e804554df93a19c7.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/62-fociahhel.webp",
+      "displayPath": "assets/parental/display/62-fociahhel.webp",
+      "master": {
+        "path": "assets/parental/master/62-fociahhel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 612562,
+        "sha256": "33b85425a2dfb0efe84a3a38bb73455676ee2d86f5f9751e1fe41d9f99fe6de2"
+      },
+      "display": {
+        "path": "assets/parental/display/62-fociahhel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 113290,
+        "sha256": "8b009e4991524410a0ce97cbd29aff635b49000cce632a9f767751e60abee955"
+      }
+    },
+    {
+      "number": 63,
+      "id": "63",
+      "thirdName": "Marbanauel",
+      "angel": "Anauel",
+      "daemon": "Marbas",
+      "office": "Connector of Unity",
+      "law": "UNITY THROUGH CONNECTION",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/ccc4c0db3e5cf0c7b44175a81b074fea33dbb4195aac5a10105be63225b96a63.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/63-marbanauel.webp",
+      "displayPath": "assets/parental/display/63-marbanauel.webp",
+      "master": {
+        "path": "assets/parental/master/63-marbanauel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 633254,
+        "sha256": "f20842997bcfe4ca0f9019e8f081d3b47a9811bb8c1630e1646b349b481cafc9"
+      },
+      "display": {
+        "path": "assets/parental/display/63-marbanauel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 133706,
+        "sha256": "301e4620156a1fea898fe05a6bedc6d6cbb371dd42e576e9d114660df421abd3"
+      }
+    },
+    {
+      "number": 64,
+      "id": "64",
+      "thirdName": "Belemehiel",
+      "angel": "Mehiel",
+      "daemon": "Beleth",
+      "office": "Vivifier of Intense Love",
+      "law": "LOVE INTENSE, NOT POSSESSIVE",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/02bfd535f9acd46c14890220eb50ec318170cefbf380587b5f0aebc196162f20.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/64-belemehiel.webp",
+      "displayPath": "assets/parental/display/64-belemehiel.webp",
+      "master": {
+        "path": "assets/parental/master/64-belemehiel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 655408,
+        "sha256": "e3e75a28488c6c4603b45c61526cbca34f729ce090e77ceb1aef0e98a462bda1"
+      },
+      "display": {
+        "path": "assets/parental/display/64-belemehiel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 135104,
+        "sha256": "884e0ad6176d3e87f3ef72c877d07257c0e36df2a9c993c2dee58c02fb8de3d7"
+      }
+    },
+    {
+      "number": 65,
+      "id": "65",
+      "thirdName": "Astadamabiah",
+      "angel": "Damabiah",
+      "daemon": "Astaroth",
+      "office": "Treasurer of Sea Wisdom",
+      "law": "SEA WISDOM TREASURED",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/b4b6e65a5106ee3ed9a983209a69197d8636321ba74821c77e51f3b9b301ed68.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/65-astadamabiah.webp",
+      "displayPath": "assets/parental/display/65-astadamabiah.webp",
+      "master": {
+        "path": "assets/parental/master/65-astadamabiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 628232,
+        "sha256": "8138d8dc1e88f7090e5d579fd5b1697b40f9aa60ca20329e44ac36861c57da3c"
+      },
+      "display": {
+        "path": "assets/parental/display/65-astadamabiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 130400,
+        "sha256": "1badd1410f343892f520c10781d45beb64ecb4513f08ba683a669b937928d718"
+      }
+    },
+    {
+      "number": 66,
+      "id": "66",
+      "thirdName": "Andramanakel",
+      "angel": "Manakel",
+      "daemon": "Andras",
+      "office": "Healer of Necessary Severance",
+      "law": "SEVER TO HEAL",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/9e6853511fe52782da17a2599120845519217fde292cf7776e04ce81a584e60c.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/66-andramanakel.webp",
+      "displayPath": "assets/parental/display/66-andramanakel.webp",
+      "master": {
+        "path": "assets/parental/master/66-andramanakel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 661794,
+        "sha256": "820a1444ef08e669dfff7e672d63473c7e81c9a579d5eccb05f93ed4b5f2c35e"
+      },
+      "display": {
+        "path": "assets/parental/display/66-andramanakel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 137192,
+        "sha256": "846a11fc76d4a0ee67a6e458bbb804865511a7dc919bd088b7f033409fc9e30d"
+      }
+    },
+    {
+      "number": 67,
+      "id": "67",
+      "thirdName": "Andraeyael",
+      "angel": "Eyael",
+      "daemon": "Andras",
+      "office": "Alchemist of Ending",
+      "law": "ENDING AS ALCHEMY",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/c48abff1badb8e2fcc5f7e2323ffb47b1fb51b4d4f451f12cb794ae503c869a7.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/67-andraeyael.webp",
+      "displayPath": "assets/parental/display/67-andraeyael.webp",
+      "master": {
+        "path": "assets/parental/master/67-andraeyael.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 677324,
+        "sha256": "7d5bf75e04fd083283e35413aa97529508c06b9ea3b8aa4ed83a9a459e6fa80a"
+      },
+      "display": {
+        "path": "assets/parental/display/67-andraeyael.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 138542,
+        "sha256": "b5267e501388e12c4b7d51bf8cc558b5abf73d57dd2480d79da2cdc5b445cadb"
+      }
+    },
+    {
+      "number": 68,
+      "id": "68",
+      "thirdName": "Allohabuhiah",
+      "angel": "Habuhiah",
+      "daemon": "Alloces",
+      "office": "Preserver Through Expertise",
+      "law": "EXPERTISE PRESERVES LIFE",
+      "fire": {
+        "id": 4,
+        "name": "Fire of Healing",
+        "color": "#10b981",
+        "pillar": "Jachin",
+        "description": "Revalued direction"
+      },
+      "pillar": "Jachin",
+      "heroReference": "assets/embedded/ed1566d3b3ed69ef85d3bee9510a453a2be08139640600f81123c539955ddfb5.webp",
+      "familyMotif": "an emerald healing sanctuary, medicinal gardens, restored water, and architecture returning to wholeness",
+      "masterPath": "assets/parental/master/68-allohabuhiah.webp",
+      "displayPath": "assets/parental/display/68-allohabuhiah.webp",
+      "master": {
+        "path": "assets/parental/master/68-allohabuhiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 762788,
+        "sha256": "54569da4f55b6ade9000c64bcd3cfbb1622329792f1feeb1601957979e2787ff"
+      },
+      "display": {
+        "path": "assets/parental/display/68-allohabuhiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 171696,
+        "sha256": "4630b6be2e22ea3dfafbe78f3d5a3406a907996193b297328c653efc21ff64e3"
+      }
+    },
+    {
+      "number": 69,
+      "id": "69",
+      "thirdName": "Belerochel",
+      "angel": "Rochel",
+      "daemon": "Beleth",
+      "office": "Restitution Through Intensity",
+      "law": "RESTITUTION THROUGH FIERCE TRUTH",
+      "fire": {
+        "id": 3,
+        "name": "Fire of Severance",
+        "color": "#ef4444",
+        "pillar": "Boaz",
+        "description": "Necessary ending"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/deaa46fd1a1fdc880ec1ec2afb3b835211442a3d7a665285f02564ed4d36596d.webp",
+      "familyMotif": "a copper-red landscape of clean severance, parted veils, a decisive path, and a radiant horizon without violence",
+      "masterPath": "assets/parental/master/69-belerochel.webp",
+      "displayPath": "assets/parental/display/69-belerochel.webp",
+      "master": {
+        "path": "assets/parental/master/69-belerochel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 638202,
+        "sha256": "77632c2f47a73098bd655040bd06f3040f84463318bffa6c4581fbad806b0583"
+      },
+      "display": {
+        "path": "assets/parental/display/69-belerochel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 134092,
+        "sha256": "d0d410c29f3f57f36aadd5cf304d7bfd23fd0a9107c15612b4da139dc6c2a89a"
+      }
+    },
+    {
+      "number": 70,
+      "id": "70",
+      "thirdName": "Dantajabamiah",
+      "angel": "Jabamiah",
+      "daemon": "Dantalion",
+      "office": "Alchemist of Thoughts",
+      "law": "THOUGHT ALCHEMIZED",
+      "fire": {
+        "id": 6,
+        "name": "Fire of Depth",
+        "color": "#7c3aed",
+        "pillar": "Boaz",
+        "description": "Covenant keeper"
+      },
+      "pillar": "Boaz",
+      "heroReference": "assets/embedded/1de9e7893f88bde97e95d7adda93a390d146f46206b1c12c2565398ef941a8da.webp",
+      "familyMotif": "a violet nocturnal sanctuary of depth, cavernous water, distant stars, and a guarded covenant at the horizon",
+      "masterPath": "assets/parental/master/70-dantajabamiah.webp",
+      "displayPath": "assets/parental/display/70-dantajabamiah.webp",
+      "master": {
+        "path": "assets/parental/master/70-dantajabamiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 655700,
+        "sha256": "224bed55e4c29c475c0d9c12d72bdac2ab31e2ceb983e4064804bee86613cc7d"
+      },
+      "display": {
+        "path": "assets/parental/display/70-dantajabamiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 127546,
+        "sha256": "22237cfa7dce7e1dfdc4b780539ad529bb455969c81cfecd76871b242ed4da22"
+      }
+    },
+    {
+      "number": 71,
+      "id": "71",
+      "thirdName": "Cimihaiaiel",
+      "angel": "Haiaiel",
+      "daemon": "Cimeies",
+      "office": "Divine Warrior of Rhetoric",
+      "law": "WARRIOR OF RIGHT SPEECH",
+      "fire": {
+        "id": 2,
+        "name": "Fire of Concord",
+        "color": "#40e0d0",
+        "pillar": "Middle",
+        "description": "Bridging polarity"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/248eacea3fa5a5c123b454f72c5d9c12d2f6cd0b8e68061ba079f547c7143bc9.webp",
+      "familyMotif": "a turquoise sanctuary of concord, twin waterways and bridges resolving into one harmonious axis",
+      "masterPath": "assets/parental/master/71-cimihaiaiel.webp",
+      "displayPath": "assets/parental/display/71-cimihaiaiel.webp",
+      "master": {
+        "path": "assets/parental/master/71-cimihaiaiel.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 703112,
+        "sha256": "5bba7850f6c4b243dfa8bc2b9732a3d68d8949b2a450e742722e675925cb7da6"
+      },
+      "display": {
+        "path": "assets/parental/display/71-cimihaiaiel.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 150314,
+        "sha256": "8497069bb8071e443840603e46a8316ac000745aefc076d1f64f63d131bf4922"
+      }
+    },
+    {
+      "number": 72,
+      "id": "72",
+      "thirdName": "Halmumiah",
+      "angel": "Mumiah",
+      "daemon": "Halphas",
+      "office": "Final Fortress of Rebirth",
+      "law": "REBIRTH FORTIFIED",
+      "fire": {
+        "id": 7,
+        "name": "Fire of Return",
+        "color": "#f5f1e8",
+        "pillar": "Middle",
+        "description": "Second path"
+      },
+      "pillar": "Middle",
+      "heroReference": "assets/embedded/22c05f254e06dbfdb7957739b48ed59f21daaa593ad6eccfba4f1a436644177e.webp",
+      "familyMotif": "an ivory-gold landscape of return, a spiral road, a reopened gate, and dusk becoming a second dawn",
+      "masterPath": "assets/parental/master/72-halmumiah.webp",
+      "displayPath": "assets/parental/display/72-halmumiah.webp",
+      "master": {
+        "path": "assets/parental/master/72-halmumiah.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 672696,
+        "sha256": "7f3ad33af403eaa02bb0e3415ddd734c87cba7ce84897ab2bf9d10f5ef6a78a4"
+      },
+      "display": {
+        "path": "assets/parental/display/72-halmumiah.webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 139114,
+        "sha256": "2bf70cd331c175fb0ad46f2976e083930b03c6e63bf35e7c2bff5804825481e5"
+      }
+    }
+  ]
+}
