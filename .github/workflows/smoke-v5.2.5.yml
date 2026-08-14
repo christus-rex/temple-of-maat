@@ -15,14 +15,20 @@ on:
       - 'scripts/smoke-parental-powers.mjs'
       - 'scripts/smoke-v5.2.4.mjs'
       - 'scripts/smoke-v5.2.5.mjs'
+      - '.github/workflows/smoke-v5.2.5.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: smoke-v525-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   smoke:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
