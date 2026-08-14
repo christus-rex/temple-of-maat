@@ -1,5 +1,5 @@
-const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r2';
-// Shell revision r2: strict core install, fresh release identity, and isolated cache promotion.
+const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r3';
+// Shell revision r3: chant web fallback, strict core install, fresh release identity, and isolated cache promotion.
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -257,6 +257,7 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open(STATIC_CACHE);
     try {
       // Canonical ritual audio lives in IndexedDB only after explicit visitor installation.
+      // The published compact chant rendition remains network-only and never enters Cache Storage.
       // Core shell is atomic: a missing required asset rejects this worker rather
       // than promoting a partially offline-capable release. Support art remains optional.
       await cacheStrictInBatches(cache, CORE_ASSETS);
