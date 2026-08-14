@@ -1,0 +1,27 @@
+name: Validate Knowledge Kernel v1
+
+on:
+  push:
+    paths:
+      - 'research/knowledge-kernel/**'
+      - 'docs/KNOWLEDGE_KERNEL.md'
+      - 'scripts/validate-knowledge-kernel-v1.mjs'
+      - 'chambers.json'
+      - '.github/workflows/validate-knowledge-kernel-v1.yml'
+  pull_request:
+    paths:
+      - 'research/knowledge-kernel/**'
+      - 'docs/KNOWLEDGE_KERNEL.md'
+      - 'scripts/validate-knowledge-kernel-v1.mjs'
+      - 'chambers.json'
+      - '.github/workflows/validate-knowledge-kernel-v1.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/validate-knowledge-kernel-v1.mjs
