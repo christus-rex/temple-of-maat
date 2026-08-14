@@ -17,22 +17,35 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function entryDiagnostic(page) {
   return page.evaluate(() => {
-    const launcher = document.querySelector('[data-temple-library-launcher="dock"]');
+    const visible = (node) => {
+      if (!node) return false;
+      const style = getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) !== 0 && rect.width > 0 && rect.height > 0;
+    };
     const dock = document.getElementById('tm524-dock');
-    const launcherStyle = launcher ? getComputedStyle(launcher) : null;
     const dockStyle = dock ? getComputedStyle(dock) : null;
+    const launchers = [...document.querySelectorAll('[data-temple-library-launcher]')].map((node) => {
+      const style = getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      return {
+        kind: node.dataset.templeLibraryLauncher,
+        visible: visible(node),
+        display: style.display,
+        visibility: style.visibility,
+        position: style.position,
+        rect: { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
+      };
+    });
     return {
       href: location.href,
       bodyClasses: document.body.className,
       templeReady: document.body.classList.contains('temple-app-ready'),
       artifactOpen: Boolean(document.querySelector('#tm2-artifact.open')),
       artifactVisibility: document.querySelector('#tm2-artifact.open') ? getComputedStyle(document.querySelector('#tm2-artifact.open')).visibility : null,
-      launcherExists: Boolean(launcher),
-      launcherOffsetParent: Boolean(launcher?.offsetParent),
-      launcherDisplay: launcherStyle?.display || null,
-      launcherVisibility: launcherStyle?.visibility || null,
+      launchers,
+      anyLauncherVisible: launchers.some((item) => item.visible),
       dockExists: Boolean(dock),
-      dockOffsetParent: Boolean(dock?.offsetParent),
       dockDisplay: dockStyle?.display || null,
       dockVisibility: dockStyle?.visibility || null,
       viewport: { width: innerWidth, height: innerHeight }
@@ -49,13 +62,19 @@ async function enter(page) {
     throw new Error(`Manual entry did not reach temple-app-ready: ${JSON.stringify(await entryDiagnostic(page))}`);
   }
   try {
-    await page.waitForFunction(() => [...document.querySelectorAll('[data-temple-library-launcher]')].some((node) => node.offsetParent), { timeout: 15000 });
+    await page.waitForFunction(() => [...document.querySelectorAll('[data-temple-library-launcher]')].some((node) => {
+      const style = getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) !== 0 && rect.width > 0 && rect.height > 0;
+    }), { timeout: 15000 });
   } catch {
-    throw new Error(`Library dock launcher did not become visible after entry: ${JSON.stringify(await entryDiagnostic(page))}`);
+    throw new Error(`No Library launcher became visibly rendered after entry: ${JSON.stringify(await entryDiagnostic(page))}`);
   }
 }
 
 async function openLibrary(page) {
+  const launcher = page.locator('[data-temple-library-launcher]').filter({ visible: true });
+  // Playwright's :visible engine correctly handles fixed-position controls.
   await page.locator('[data-temple-library-launcher]:visible').first().click();
   await page.waitForSelector('#tm528-library:not([hidden])', { timeout: 15000 });
   await page.waitForFunction(() => /Ready/.test(document.querySelector('#tm528-status')?.textContent || ''), { timeout: 15000 });
@@ -72,11 +91,18 @@ try {
   await page.evaluate(() => localStorage.removeItem('temple_library_personal_state_v1'));
   await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
 
-  const threshold = await page.evaluate(() => ({
-    ready: document.body.classList.contains('temple-app-ready'),
-    layerHidden: document.getElementById('tm528-library')?.hidden !== false,
-    launcherVisible: [...document.querySelectorAll('[data-temple-library-launcher]')].some((node) => node.offsetParent)
-  }));
+  const threshold = await page.evaluate(() => {
+    const visible = (node) => {
+      const style = getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) !== 0 && rect.width > 0 && rect.height > 0;
+    };
+    return {
+      ready: document.body.classList.contains('temple-app-ready'),
+      layerHidden: document.getElementById('tm528-library')?.hidden !== false,
+      launcherVisible: [...document.querySelectorAll('[data-temple-library-launcher]')].some(visible)
+    };
+  });
   if (threshold.ready || !threshold.layerHidden || threshold.launcherVisible) throw new Error(`Library threshold leak: ${JSON.stringify(threshold)}`);
 
   await enter(page);
