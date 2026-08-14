@@ -224,8 +224,11 @@
       }
     });
 
+    const allAudio = [...document.querySelectorAll('audio')];
     matchingNodes(base, 'audio').forEach((audio) => {
-      if (!audio.hasAttribute('aria-label')) audio.setAttribute('aria-label', 'Temple ritual audio');
+      if (audio.hasAttribute('aria-label')) return;
+      const index = Math.max(0, allAudio.indexOf(audio));
+      audio.setAttribute('aria-label', index === 0 ? 'Temple ritual soundscape' : `Temple audio ${index + 1}`);
     });
 
     matchingNodes(base, 'img').forEach((image) => {
