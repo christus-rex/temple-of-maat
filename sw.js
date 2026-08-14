@@ -1,4 +1,4 @@
-const VERSION = 'temple-maat-pwa-v5.2.3-manual-entry-2026-08-14';
+const VERSION = 'temple-maat-pwa-v5.2.4-living-codex-2026-08-14';
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -13,11 +13,14 @@ const CORE_ASSETS = [
   './offline.html',
   './version.json',
   './styles/v5.3-threshold.css',
+  './styles/v5.2.4-living-codex.css',
   './scripts/persistent-data.js',
   './scripts/parental-powers.js',
   './scripts/parental-powers-assets.json',
   './scripts/v5.1-asset-manifest.json',
-  './scripts/v5.3-threshold.js'
+  './scripts/v5.3-threshold.js',
+  './scripts/v5.2.4-living-codex.js',
+  './scripts/v5.2.4-chant-fallback.js'
 ];
 
 async function cacheInBatches(cache, assets, batchSize = 12) {
