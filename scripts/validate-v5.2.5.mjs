@@ -25,6 +25,7 @@ const required = [
   'scripts/v5.2.5-media-vault.js',
   'styles/v5.2.5-living-temple.css',
   'assets/audio/maat-forty-two-declarations.json',
+  'assets/audio/maat-forty-two-declarations.web.opus',
   'scripts/v5.3-threshold.js',
   'sw.js'
 ];
@@ -131,8 +132,11 @@ if (!mediaVault.includes('putMedia({') || !mediaVault.includes('getMedia()')) {
 
 if (audioMeta.source?.bytes !== 16210172) fail(`Canonical MP3 byte count drifted: ${audioMeta.source?.bytes}`);
 if (audioMeta.source?.sha256 !== '3e40ba7d0b60c3a04f7edf3022fc98f9daf2fcc3ca9e7900c87bb2b62f02fbe6') fail('Canonical MP3 SHA-256 drifted');
-if (audioMeta.distribution?.mode !== 'indexeddb-device-install') fail('Audio distribution mode must remain device-local IndexedDB installation');
-if (audioMeta.distribution?.networkUpload !== false) fail('Audio metadata must not claim a network upload');
+if (audioMeta.distribution?.mode !== 'web-rendition-plus-indexeddb-canonical') fail('Audio distribution mode must expose web streaming plus canonical IndexedDB installation');
+if (audioMeta.distribution?.webStreaming !== true || audioMeta.distribution?.canonicalRepoUpload !== false) fail('Audio distribution boundary drifted');
+if (audioMeta.preparedWebRendition?.status !== 'published' || audioMeta.preparedWebRendition?.path !== 'assets/audio/maat-forty-two-declarations.web.opus') fail('Published chant web rendition metadata is incomplete');
+if (audioMeta.preparedWebRendition?.bytes !== 1336596 || audioMeta.preparedWebRendition?.sha256 !== 'b82360e17adf2240ca8ac8071a8d20ce295bfb6c38f143a4b3367ab90afee94b') fail('Published chant web rendition fingerprint drifted');
+if (fs.statSync(file('assets/audio/maat-forty-two-declarations.web.opus')).size !== 1336596) fail('Published chant web rendition byte count drifted');
 if (audioMeta.playbackPolicy?.autoplay !== false || audioMeta.playbackPolicy?.userGestureRequired !== true) fail('Audio playback policy drifted');
 
 for (const marker of [
@@ -168,4 +172,4 @@ for (const marker of [
   if (!css.includes(marker)) fail(`Living Temple CSS marker missing: ${marker}`);
 }
 
-console.log(`Validated Temple ${version.version} Living Temple invariants: 72 Codex records ${JSON.stringify(strengthCounts)}, legacy collectible relays, 72-node journey, unified dossiers, favorites/reflections, manual threshold, and SHA-verified IndexedDB ritual-media vault.`);
+console.log(`Validated Temple ${version.version} Living Temple invariants: 72 Codex records ${JSON.stringify(strengthCounts)}, legacy collectible relays, 72-node journey, unified dossiers, favorites/reflections, manual threshold, web-streamed no-autoplay chant fallback, and SHA-verified IndexedDB canonical ritual-media vault.`);

@@ -1,0 +1,50 @@
+name: Smoke Chant Streaming v5.2.8
+
+on:
+  push:
+    branches:
+      - main
+      - fix/chant-streaming-drive-archive
+    paths:
+      - 'assets/audio/**'
+      - 'scripts/v5.2.4-chant-fallback.js'
+      - 'scripts/v5.2.5-media-vault.js'
+      - 'scripts/smoke-chant-streaming-v5.2.8.mjs'
+      - '.github/workflows/smoke-chant-streaming-v5.2.8.yml'
+      - 'sw.js'
+  pull_request:
+    paths:
+      - 'assets/audio/**'
+      - 'scripts/v5.2.4-chant-fallback.js'
+      - 'scripts/v5.2.5-media-vault.js'
+      - 'scripts/smoke-chant-streaming-v5.2.8.mjs'
+      - '.github/workflows/smoke-chant-streaming-v5.2.8.yml'
+      - 'sw.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chant-streaming:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify no-autoplay chant streaming and transport
+        run: node scripts/smoke-chant-streaming-v5.2.8.mjs
+      - name: Preserve chant streaming evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5.2.8-chant-streaming-screenshot
+          path: work/chant-streaming-smoke/
+          if-no-files-found: warn
+          retention-days: 30

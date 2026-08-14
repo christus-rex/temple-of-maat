@@ -1,51 +1,172 @@
-/* Temple of Ma'at v5.2.4 — local chant media fallback */
+/* Temple of Ma'at v5.2.8 — web-streamed chant + local/canonical fallback */
 (function () {
   'use strict';
 
+  const WEB_SRC = './assets/audio/maat-forty-two-declarations.web.opus';
   let localObjectUrl = null;
+  let sourceObserver = null;
+  let panelObserver = null;
+  let webRepairQueued = false;
+  let openTriggerBound = false;
 
-  function installLocalChantLoader() {
-    const content = document.querySelector('#tm524-chant .tm524-chant-content');
-    if (!content || content.querySelector('.tm524-local-chant')) return false;
+  function player() {
+    const chant = document.getElementById('tm524-chant');
+    const content = chant?.querySelector('.tm524-chant-content');
+    if (!chant || !content) return null;
+    return {
+      chant,
+      content,
+      audio: content.querySelector('audio'),
+      status: content.querySelector('.tm524-chant-status'),
+      play: [...content.querySelectorAll('button')].find((node) => /^play$/i.test(node.textContent.trim()))
+    };
+  }
 
-    const audio = content.querySelector('audio');
-    const status = content.querySelector('.tm524-chant-status');
+  function canonicalInstalled(audio) {
+    return audio?.dataset?.tm525MediaVault === 'canonical' || window.TempleMediaVault?.installed?.() === true;
+  }
+
+  function isWebSource(audio) {
     if (!audio) return false;
+    const attr = audio.getAttribute('src') || '';
+    return audio.dataset.tm524StreamingFallback === 'web' || attr.endsWith('maat-forty-two-declarations.web.opus');
+  }
 
-    const wrap = document.createElement('div');
-    wrap.className = 'tm524-local-chant';
+  function releaseLocalObjectUrl() {
+    if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+    localObjectUrl = null;
+  }
 
-    const note = document.createElement('p');
-    note.className = 'tm524-note';
-    note.textContent = 'Media fallback: if the packaged chant is unavailable, load your exact local Ma’at chant MP3 here. The file stays on this device and is never uploaded by the Temple.';
+  function ensureWebSource(message = 'Loading the compact web chant rendition…', options = {}) {
+    const ui = player();
+    const force = options?.force === true;
+    if (!ui?.audio || (!force && ui.chant.hidden) || localObjectUrl || canonicalInstalled(ui.audio)) return false;
+    if (isWebSource(ui.audio) && ui.audio.getAttribute('src')) return true;
 
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'audio/mpeg,audio/mp3,audio/*';
-    input.setAttribute('aria-label', 'Load local Ma’at chant audio');
+    ui.audio.pause();
+    ui.audio.preload = 'metadata';
+    ui.audio.removeAttribute('data-tm525-media-vault');
+    ui.audio.dataset.tm524StreamingFallback = 'web';
+    ui.audio.src = WEB_SRC;
+    ui.audio.removeAttribute('autoplay');
+    ui.audio.load();
+    if (ui.status) ui.status.textContent = message;
+    return true;
+  }
 
-    input.addEventListener('change', () => {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      if (!file.type.startsWith('audio/') && !/\.mp3$/i.test(file.name)) {
-        if (status) status.textContent = 'Choose an MP3 or another browser-supported audio file.';
-        input.value = '';
+  function queueWebRepair() {
+    if (webRepairQueued) return;
+    webRepairQueued = true;
+    queueMicrotask(() => {
+      webRepairQueued = false;
+      ensureWebSource();
+    });
+  }
+
+  function watchSource(audio) {
+    if (!audio || sourceObserver) return;
+    sourceObserver = new MutationObserver(() => {
+      if (canonicalInstalled(audio)) {
+        releaseLocalObjectUrl();
+        delete audio.dataset.tm524StreamingFallback;
         return;
       }
-      if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
-      localObjectUrl = URL.createObjectURL(file);
-      audio.pause();
-      audio.src = localObjectUrl;
-      audio.load();
-      if (status) status.textContent = `Local chant loaded: ${file.name}. Awaiting Play.`;
+      if (!localObjectUrl && !audio.getAttribute('src')) queueWebRepair();
+    });
+    sourceObserver.observe(audio, {
+      attributes: true,
+      attributeFilter: ['src', 'data-tm525-media-vault']
+    });
+  }
+
+  function watchPanel(chant) {
+    if (!chant || panelObserver) return;
+    panelObserver = new MutationObserver(() => {
+      if (!chant.hidden) queueWebRepair();
+    });
+    panelObserver.observe(chant, {
+      attributes: true,
+      attributeFilter: ['hidden']
+    });
+  }
+
+  function bindOpenTrigger() {
+    if (openTriggerBound) return;
+    openTriggerBound = true;
+    document.addEventListener('click', (event) => {
+      const button = event.target?.closest?.('button');
+      if (!button || !/^chant$/i.test(button.textContent.trim())) return;
+      setTimeout(() => {
+        const assigned = ensureWebSource('Loading the compact web chant rendition…', { force: true });
+        if (!assigned) requestAnimationFrame(() => ensureWebSource('Loading the compact web chant rendition…', { force: true }));
+      }, 0);
+    }, true);
+  }
+
+  function bindStreamingEvents(ui) {
+    if (!ui?.audio || ui.audio.dataset.tm524StreamingBound === 'true') return;
+    ui.audio.dataset.tm524StreamingBound = 'true';
+
+    ui.audio.addEventListener('loadedmetadata', () => {
+      if (!isWebSource(ui.audio)) return;
+      if (ui.status) ui.status.textContent = 'Web chant ready. Awaiting Play.';
+      if (ui.play) ui.play.disabled = false;
     });
 
-    wrap.append(note, input);
-    content.insertBefore(wrap, audio);
+    ui.audio.addEventListener('error', () => {
+      if (!isWebSource(ui.audio)) return;
+      if (ui.status) ui.status.textContent = 'The web chant could not be reached. You can still choose the canonical MP3 from this device.';
+    });
+  }
+
+  function installLocalChantLoader() {
+    const ui = player();
+    if (!ui?.content || !ui.audio) return false;
+
+    if (!ui.content.querySelector('.tm524-local-chant')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'tm524-local-chant';
+
+      const note = document.createElement('p');
+      note.className = 'tm524-note';
+      note.textContent = 'The compact web rendition streams immediately when you open the Chant. To keep the exact canonical Ma’at chant offline, choose the original MP3 once; the Temple verifies and stores it privately on this device. The file stays on this device and is never uploaded by the Temple.';
+
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'audio/mpeg,audio/mp3,audio/*';
+      input.setAttribute('aria-label', 'Load local Ma’at chant audio');
+
+      input.addEventListener('change', () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('audio/') && !/\.mp3$/i.test(file.name)) {
+          if (ui.status) ui.status.textContent = 'Choose an MP3 or another browser-supported audio file.';
+          input.value = '';
+          return;
+        }
+        releaseLocalObjectUrl();
+        localObjectUrl = URL.createObjectURL(file);
+        ui.audio.pause();
+        delete ui.audio.dataset.tm524StreamingFallback;
+        ui.audio.src = localObjectUrl;
+        ui.audio.load();
+        if (ui.status) ui.status.textContent = `Local chant loaded: ${file.name}. Awaiting Play.`;
+      });
+
+      wrap.append(note, input);
+      ui.content.insertBefore(wrap, ui.audio);
+    }
+
+    bindStreamingEvents(ui);
+    watchSource(ui.audio);
+    watchPanel(ui.chant);
+    bindOpenTrigger();
+    ensureWebSource();
     return true;
   }
 
   function installWhenReady() {
+    bindOpenTrigger();
     if (installLocalChantLoader()) return;
     const observer = new MutationObserver(() => {
       if (installLocalChantLoader()) observer.disconnect();
@@ -54,11 +175,22 @@
     setTimeout(() => observer.disconnect(), 30000);
   }
 
+  window.TempleChantStreaming = Object.freeze({
+    version: '5.2.8',
+    source: WEB_SRC,
+    ensure: ensureWebSource,
+    usingWebSource: () => isWebSource(player()?.audio)
+  });
+
   document.addEventListener('temple:living-codex-ready', installWhenReady, { once: true });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installWhenReady, { once: true });
   else installWhenReady();
 
   window.addEventListener('pagehide', () => {
-    if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+    sourceObserver?.disconnect();
+    panelObserver?.disconnect();
+    sourceObserver = null;
+    panelObserver = null;
+    releaseLocalObjectUrl();
   }, { once: true });
 })();
