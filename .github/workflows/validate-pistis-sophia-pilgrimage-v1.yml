@@ -6,11 +6,14 @@ on:
       - 'pilgrimages/**'
       - 'scripts/v5.3-pilgrimage-navigation.js'
       - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'scripts/v5.3.1-pilgrimage-hardening.js'
       - 'styles/v5.3-pilgrimage-routes.css'
       - 'scripts/validate-enoch-pilgrimage-v1.mjs'
       - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
       - 'scripts/validate-pistis-sophia-pilgrimage-v1.mjs'
       - 'scripts/smoke-pistis-sophia-pilgrimage-v1.mjs'
+      - 'scripts/validate-pilgrimage-hardening-v5.3.1.mjs'
+      - 'scripts/smoke-pilgrimage-hardening-v5.3.1.mjs'
       - 'docs/PISTIS_SOPHIA_PILGRIMAGE.md'
       - '.github/workflows/validate-pistis-sophia-pilgrimage-v1.yml'
       - '.github/workflows/validate-v5.yml'
@@ -19,11 +22,14 @@ on:
       - 'pilgrimages/**'
       - 'scripts/v5.3-pilgrimage-navigation.js'
       - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'scripts/v5.3.1-pilgrimage-hardening.js'
       - 'styles/v5.3-pilgrimage-routes.css'
       - 'scripts/validate-enoch-pilgrimage-v1.mjs'
       - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
       - 'scripts/validate-pistis-sophia-pilgrimage-v1.mjs'
       - 'scripts/smoke-pistis-sophia-pilgrimage-v1.mjs'
+      - 'scripts/validate-pilgrimage-hardening-v5.3.1.mjs'
+      - 'scripts/smoke-pilgrimage-hardening-v5.3.1.mjs'
       - 'docs/PISTIS_SOPHIA_PILGRIMAGE.md'
       - '.github/workflows/validate-pistis-sophia-pilgrimage-v1.yml'
       - '.github/workflows/validate-v5.yml'
@@ -44,6 +50,8 @@ jobs:
         run: node scripts/validate-pistis-sophia-pilgrimage-v1.mjs
       - name: Preserve Enoch route compatibility contract
         run: node scripts/validate-enoch-pilgrimage-v1.mjs
+      - name: Validate persistence and modal hardening contract
+        run: node scripts/validate-pilgrimage-hardening-v5.3.1.mjs
 
   browser-smoke:
     runs-on: ubuntu-24.04
@@ -60,6 +68,8 @@ jobs:
         run: TEMPLE_PYTHON=python3 node scripts/smoke-pistis-sophia-pilgrimage-v1.mjs
       - name: Exercise Enoch route after multi-route generalization
         run: TEMPLE_PYTHON=python3 node scripts/smoke-enoch-pilgrimage-v1.mjs
+      - name: Exercise persistence, transition-scroll, and modal-lock hardening
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-pilgrimage-hardening-v5.3.1.mjs
       - name: Preserve pilgrimage screenshots
         if: always()
         uses: actions/upload-artifact@v4
