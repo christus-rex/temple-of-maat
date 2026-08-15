@@ -55,7 +55,7 @@ try {
 
     await page.goto(`http://127.0.0.1:${port}/?enoch_pilgrimage_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
     await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
-    await page.waitForFunction(() => window.TemplePilgrimageRoutes?.version === '1.0.0', null, { timeout: 30000 });
+    await page.waitForFunction(() => window.TemplePilgrimageRoutes?.version === '1.1.0', null, { timeout: 30000 });
 
     const beforeEntry = await page.evaluate(() => ({
       ready: document.body.classList.contains('temple-app-ready'),
@@ -73,6 +73,7 @@ try {
 
     const journeyBefore = await page.evaluate(() => ({
       nodeCount: document.querySelectorAll('#tm525-journey .tm525-node-grid .tm525-node').length,
+      routeCardCount: document.querySelectorAll('[data-pilgrimage-route-gallery] [data-temple-pilgrimage-card]').length,
       cardTitle: document.querySelector('[data-enoch-route-card] h3')?.textContent || '',
       cardText: document.querySelector('[data-enoch-route-card]')?.textContent || ''
     }));
@@ -101,7 +102,7 @@ try {
     for (const [key, value] of Object.entries(values)) {
       await page.fill(`[data-reality-field="${key}"]`, value);
     }
-    await page.getByRole('button', { name: 'Save Reality Record' }).click();
+    await page.getByRole('button', { name: 'Save Private Record' }).click();
     await page.getByRole('button', { name: /Complete Gate & Continue/ }).click();
     await page.waitForFunction(() => document.querySelector('.tm53-route-gate h3')?.textContent?.includes('Archive'));
 
@@ -141,6 +142,7 @@ try {
     const assertions = {
       manualThresholdPreserved: beforeEntry.ready === false && beforeEntry.routeHidden && !beforeEntry.routeCardPresent && beforeEntry.routeOpenResult === false,
       existingJourneyPreserved: journeyBefore.nodeCount === 72,
+      multiRouteGalleryPresent: journeyBefore.routeCardCount >= 2,
       enochLauncherVisible: /Enoch — The Angelic Mirror/.test(journeyBefore.cardTitle) && /DEVICE-LOCAL RECORD/.test(journeyBefore.cardText),
       eightGateRoute: initialRoute.gateButtons === 8,
       firstGatePersonalModern: initialRoute.authorities.includes('MODERN') && initialRoute.authorities.includes('PERSONAL') && !initialRoute.authorities.includes('HISTORICAL'),
