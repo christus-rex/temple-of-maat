@@ -23,7 +23,7 @@ assert(moduleText.includes('Evidence basis') && moduleText.includes('Evidence no
 assert(moduleText.includes("privacy: 'public-canonical-only'"), 'Comparative Reading privacy declaration missing.');
 assert(!/localStorage\.|indexedDB\.|TemplePilgrimJourney\.state|TempleLibrary\.state/.test(moduleText), 'Comparative Reading must not read private state APIs.');
 assert(!/fetch\([^\n]*method\s*:\s*['\"](?:POST|PUT|PATCH|DELETE)/i.test(moduleText), 'Comparative Reading must not issue write requests.');
-assert(moduleText.includes("data.templeComparativeLauncher = 'library'"), 'Comparative Reading must integrate inside Library rather than add a dock control.');
+assert(moduleText.includes("launch.dataset.templeComparativeLauncher = 'library'"), 'Comparative Reading must integrate inside Library rather than add a dock control.');
 assert(!moduleText.includes('tm524-dock'), 'Comparative Reading must not add another bottom-dock control.');
 assert(css.includes('@media(max-width:760px)'), 'Comparative Reading requires narrow-screen layout.');
 assert(css.includes('min-height:48px') || css.includes('height:44px'), 'Comparative Reading controls require touch-target sizing.');
