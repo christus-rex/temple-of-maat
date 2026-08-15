@@ -86,6 +86,7 @@ try {
     const opened = await page.evaluate(() => ({
       title: document.querySelector('.tm53-route-title')?.textContent || '',
       firstStation: document.querySelector('.tm53-route-gate h3')?.textContent || '',
+      unitEyebrow: document.querySelector('.tm53-route-gate > .tm53-route-eyebrow')?.textContent || '',
       unitButtons: document.querySelectorAll('.tm53-route-gate-button').length,
       privateFields: [...document.querySelectorAll('[data-reality-field]')].map((node) => node.dataset.realityField),
       recordHeading: document.querySelector('.tm53-route-record h3')?.textContent || '',
@@ -103,7 +104,7 @@ try {
     };
     for (const [key, value] of Object.entries(values)) await page.fill(`[data-reality-field="${key}"]`, value);
     await page.getByRole('button', { name: 'Save Private Record' }).click();
-    await page.getByRole('button', { name: /Complete Gate & Continue/ }).click();
+    await page.getByRole('button', { name: /Complete Station & Continue/ }).click();
     await page.waitForFunction(() => document.querySelector('.tm53-route-gate h3')?.textContent?.includes('Desire'));
 
     const persisted = await page.evaluate(() => {
@@ -147,9 +148,9 @@ try {
       manualThresholdPreserved: beforeEntry.ready === false && beforeEntry.cardPresent === false && beforeEntry.openResult === false,
       existingJourneyPreserved: journey.chamberNodes === 72,
       bothRoutesVisible: journey.routeCards.some((title) => /Enoch/.test(title)) && journey.routeCards.some((title) => /Pistis Sophia/.test(title)),
-      sophiaLauncher: /Pistis Sophia — The Descent and Return/.test(journey.sophiaText) && /DEVICE-LOCAL RECORD/.test(journey.sophiaText),
+      sophiaLauncher: /Pistis Sophia — The Descent and Return/.test(journey.sophiaText) && /13 STATIONS/.test(journey.sophiaText) && /DEVICE-LOCAL RECORD/.test(journey.sophiaText),
       enochLauncherStillPresent: /Enoch — The Angelic Mirror/.test(journey.enochText),
-      correctRouteOpened: /Pistis Sophia — The Descent and Return/.test(opened.title) && opened.firstStation === 'The Glimpse',
+      correctRouteOpened: /Pistis Sophia — The Descent and Return/.test(opened.title) && opened.firstStation === 'The Glimpse' && /Station 01 of 13/.test(opened.unitEyebrow),
       thirteenStations: opened.unitButtons === 13,
       fivePartRecord: JSON.stringify(opened.privateFields) === JSON.stringify(expectedFields) && opened.recordHeading.includes('What drew me downward') && opened.recordHeading.includes('What wisdom returns with me'),
       authorityBoundaryVisible: opened.authorities.includes('HISTORICAL') && opened.authorities.includes('MODERN') && opened.authorities.includes('PERSONAL') && /Source & authority boundary/.test(opened.sourceBoundary),
