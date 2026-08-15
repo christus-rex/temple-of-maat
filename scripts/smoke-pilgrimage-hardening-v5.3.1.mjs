@@ -106,6 +106,7 @@ try {
     const lockClosed = await page.evaluate(() => ({
       bodyClass: document.body.classList.contains('tm53-pilgrimage-open'),
       htmlClass: document.documentElement.classList.contains('tm53-pilgrimage-scroll-lock'),
+      journeyVisible: document.getElementById('tm525-journey')?.hidden === false,
       bodyOverflow: getComputedStyle(document.body).overflow,
       htmlOverflow: getComputedStyle(document.documentElement).overflow
     }));
@@ -119,7 +120,8 @@ try {
       failedWriteNotOnDisk: failedSave.diskContainsMarker === false,
       failedWriteDetectedDespiteMemoryMutation: failedSave.apiContainsMarker === true,
       retryPersistsRecord: recoveredSave.status?.state === 'ok' && recoveredSave.diskContainsMarker && recoveredSave.apiMatchesDisk,
-      modalUnlocksDocument: !lockClosed.bodyClass && !lockClosed.htmlClass && lockClosed.bodyOverflow !== 'hidden' && lockClosed.htmlOverflow !== 'hidden',
+      routeSpecificScrollLockReleased: !lockClosed.bodyClass && !lockClosed.htmlClass,
+      parentJourneyRestored: lockClosed.journeyVisible,
       noUnexpectedWrites: badRequests.length === 0,
       noPageErrors: pageErrors.length === 0
     };
