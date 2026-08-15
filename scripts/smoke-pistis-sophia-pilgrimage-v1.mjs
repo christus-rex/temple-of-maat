@@ -24,8 +24,9 @@ async function geometry(page, width) {
     const fields = [...(layer?.querySelectorAll('[data-reality-field]') || [])];
     const rects = buttons.map((node) => {
       const rect = node.getBoundingClientRect();
-      return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height };
+      return { left: rect.left, right: rect.right, width: rect.width, height: rect.height };
     });
+    const minHeights = buttons.map((node) => Number.parseFloat(getComputedStyle(node).minHeight) || 0);
     const panelRect = panel?.getBoundingClientRect();
     return {
       width: innerWidth,
@@ -34,7 +35,9 @@ async function geometry(page, width) {
       stationCount: buttons.length,
       fieldCount: fields.length,
       panelInsideViewport: Boolean(panelRect && panelRect.left >= -1 && panelRect.right <= innerWidth + 1),
-      controlsInsideViewport: rects.every((rect) => rect.left >= -1 && rect.right <= innerWidth + 1 && rect.width > 0 && rect.height >= 44),
+      controlsInsideViewport: rects.every((rect) => rect.left >= -1 && rect.right <= innerWidth + 1 && rect.width > 0),
+      touchTargetsDeclared: minHeights.length === buttons.length && minHeights.every((height) => height >= 44),
+      minimumDeclaredTouchTarget: minHeights.length ? Math.min(...minHeights) : 0,
       noHorizontalOverflow: document.documentElement.scrollWidth <= innerWidth + 1
     };
   });
@@ -161,8 +164,8 @@ try {
       apiMatchesState: persisted.api?.currentGate === 2 && persisted.api?.completedGates?.includes(1),
       enochStateUntouched: persisted.enochState === null,
       noPublicLeakKey: leakKeys.length === 0,
-      mobile360: at360.visible && at360.stationCount === 13 && at360.fieldCount === 5 && at360.panelInsideViewport && at360.controlsInsideViewport && at360.noHorizontalOverflow,
-      mobile412: at412.visible && at412.stationCount === 13 && at412.fieldCount === 5 && at412.panelInsideViewport && at412.controlsInsideViewport && at412.noHorizontalOverflow,
+      mobile360: at360.visible && at360.stationCount === 13 && at360.fieldCount === 5 && at360.panelInsideViewport && at360.controlsInsideViewport && at360.touchTargetsDeclared && at360.noHorizontalOverflow,
+      mobile412: at412.visible && at412.stationCount === 13 && at412.fieldCount === 5 && at412.panelInsideViewport && at412.controlsInsideViewport && at412.touchTargetsDeclared && at412.noHorizontalOverflow,
       closeRestoresJourney: closed.journeyVisible && closed.chamberNodes === 72 && closed.sophiaCardVisible && closed.stateStillPresent,
       reopenRestoresProgress: reopened.current === 2 && reopened.completed?.includes(1) && reopened.currentTitle === 'The Desire' && reopened.fieldCount === 5,
       noUnexpectedWrites: badRequests.length === 0,
