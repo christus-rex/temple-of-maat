@@ -175,6 +175,15 @@
     document.head.appendChild(style);
   }
 
+  function loadNamedPilgrimageRoutes() {
+    if (document.querySelector('script[data-temple-pilgrimage-routes]')) return;
+    const script = document.createElement('script');
+    script.src = './scripts/v5.3-pilgrimage-routes.js';
+    script.async = false;
+    script.dataset.templePilgrimageRoutes = 'true';
+    document.head.appendChild(script);
+  }
+
   function installKeyboardNavigation() {
     document.addEventListener('keydown', (event) => {
       if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
@@ -201,6 +210,7 @@
   function init() {
     installStyles();
     enhance();
+    loadNamedPilgrimageRoutes();
     installKeyboardNavigation();
 
     if (!observer) {

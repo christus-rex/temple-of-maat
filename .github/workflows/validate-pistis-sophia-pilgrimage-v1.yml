@@ -1,0 +1,59 @@
+name: Validate Pistis Sophia Pilgrimage v1
+
+on:
+  pull_request:
+    paths:
+      - 'pilgrimages/**'
+      - 'scripts/v5.3-pilgrimage-navigation.js'
+      - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'styles/v5.3-pilgrimage-routes.css'
+      - 'scripts/validate-enoch-pilgrimage-v1.mjs'
+      - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
+      - 'scripts/validate-pistis-sophia-pilgrimage-v1.mjs'
+      - 'scripts/smoke-pistis-sophia-pilgrimage-v1.mjs'
+      - 'docs/PISTIS_SOPHIA_PILGRIMAGE.md'
+      - '.github/workflows/validate-pistis-sophia-pilgrimage-v1.yml'
+      - '.github/workflows/validate-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-route:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate source and route contract
+        run: node scripts/validate-pistis-sophia-pilgrimage-v1.mjs
+      - name: Preserve Enoch route compatibility contract
+        run: node scripts/validate-enoch-pilgrimage-v1.mjs
+
+  browser-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise Pistis Sophia pilgrimage at mobile widths
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-pistis-sophia-pilgrimage-v1.mjs
+      - name: Exercise Enoch route after multi-route generalization
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-enoch-pilgrimage-v1.mjs
+      - name: Preserve pilgrimage screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pistis-sophia-pilgrimage-v1
+          path: |
+            work/pistis-sophia-pilgrimage-smoke/*.png
+            work/enoch-pilgrimage-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,0 +1,322 @@
+{
+  "schema": "temple-of-maat/pilgrimage-route-v1",
+  "version": "1.0.0",
+  "routeId": "route.pistis-sophia-descent-return",
+  "title": "Pistis Sophia — The Descent and Return",
+  "subtitle": "Thirteen stations of discernment, repentance, restoration, and embodied wisdom",
+  "privacy": "personal-state-device-local",
+  "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+  "structureNote": "The route uses thirteen stations because the Pistis Sophia narrative presents thirteen repentances, while the station titles and psychological-ethical applications follow the Temple's modern Returning Light study. The ancient text does not assign a universal psychological meaning to each repentance, and the thirteen-station retelling is not presented as an ancient ritual sequence.",
+  "vow": "May faith become discerning. May wisdom become compassionate. May the returning light become right action.",
+  "routeLaw": "I will not call intensity truth, suffering initiation, dependence devotion, or recovered power permission to dominate. I will test light by reality, freedom, compassion, repair, and conduct.",
+  "recordTitle": "Private Record of the Returning Light",
+  "recordSequence": "What drew me downward → What I mistook for light → What was lost → What I recognized → What wisdom returns with me",
+  "recordNote": "Record the descent without self-erasure, the counterfeit without romanticizing it, the losses without exaggeration, the recognition without claiming certainty beyond evidence, and the returning wisdom as conduct that can be observed in ordinary life.",
+  "recordFields": [
+    { "key": "downward-draw", "label": "What drew me downward" },
+    { "key": "mistaken-light", "label": "What I mistook for light" },
+    { "key": "what-was-lost", "label": "What was lost" },
+    { "key": "recognition", "label": "What I recognized" },
+    { "key": "returning-wisdom", "label": "What wisdom returns with me" }
+  ],
+  "sourceRefs": [
+    {
+      "id": "source.pistis-sophia-mead-1921",
+      "title": "Pistis Sophia: A Gnostic Miscellany — G. R. S. Mead, 1921",
+      "authority": "HISTORICAL",
+      "locators": [
+        "Askew Codex / British Library Add MS 5114",
+        "First and Second Books",
+        "Sophia narrative and repentances, commonly referenced in Mead chapters 30–64"
+      ],
+      "limitations": [
+        "Mead's public-domain English is a historical translation and not a modern critical edition.",
+        "The composition and relationship of textual strata remain scholarly questions; older scholarship even debated whether some later repentances were secondary additions."
+      ]
+    },
+    {
+      "id": "source.pistis-sophia-returning-light-2026",
+      "title": "Pistis Sophia — The Arithmetic of the Returning Light",
+      "authority": "MODERN",
+      "locators": [
+        "Reader's Note",
+        "Part I, chapters 1–5",
+        "Part III, The Thirteen Stations of the Returning Light",
+        "Part IV, chapters 13–15",
+        "Endnotes on Method and Interpretation"
+      ],
+      "limitations": [
+        "The thirteen-station retelling is original to this modern volume and follows the broad narrative sequence rather than paraphrasing every repentance line by line.",
+        "Greek isopsephy and digital-root symbolism in the volume are disclosed contemplative methods, not proof of ancient authorship, prophecy, or encoded intention."
+      ]
+    },
+    {
+      "id": "source.pistis-sophia-faith-wisdom-2026",
+      "title": "Pistis Sophia — Faith-Wisdom, Repentance, and the Ascent of Light",
+      "authority": "MODERN",
+      "locators": [
+        "A Truthful Way to Enter the Text",
+        "Sophia and the Counterfeit Light",
+        "The Thirteen Repentances",
+        "Grace, Rescue, and Restoration",
+        "Appendix A — The Thirteen Repentances"
+      ],
+      "limitations": [
+        "The companion distinguishes ancient claims from modern evidence and marks symbolic interpretations as interpretations.",
+        "Its ethical synthesis is intended for discernment and practice rather than as a replacement for the Askew Codex."
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "pistis-sophia-gate-01",
+      "ordinal": 1,
+      "title": "The Glimpse",
+      "subtitle": "Longing is holy; untested interpretation is not",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026"],
+      "sourceAnchor": "The modern Returning Light study begins its thirteen-station retelling with the glimpse of radiance and explicitly cautions that intensity can be data without becoming command.",
+      "teaching": "The first movement is not to suppress longing but to separate the experience of longing from certainty about its object. A glimpse can open a real question without proving the interpretation attached to it.",
+      "practice": "Write the initiating glimpse in one sentence without explaining it. Then name several possible readings — sacred, psychological, relational, situational, or ordinary — and leave them open long enough for evidence and ethical fruit to appear.",
+      "journalPrompts": {
+        "downward-draw": "What desire, wound, beauty, injustice, dream, need, or promise first drew my attention beyond the ordinary?",
+        "mistaken-light": "What conclusion did I attach to the glimpse before it had been tested?",
+        "what-was-lost": "What did urgency cost before I had enough information?",
+        "recognition": "What can I now state as observation rather than interpretation?",
+        "returning-wisdom": "How will I protect wonder without surrendering critical judgment?"
+      },
+      "completionCondition": "Record the glimpse and preserve at least two plausible interpretations without forcing a verdict."
+    },
+    {
+      "id": "pistis-sophia-gate-02",
+      "ordinal": 2,
+      "title": "The Desire",
+      "subtitle": "What we want reveals us, but it does not automatically guide us",
+      "authorityLevels": ["MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-returning-light-2026"],
+      "sourceAnchor": "Station 2 of the Returning Light retelling treats spiritual desire as meaningful but not self-validating and asks for the need beneath the desired object.",
+      "teaching": "Desire often points toward a genuine need while misidentifying the thing that will satisfy it. Belonging can be confused with control, healing with grandiose promises, certainty with safety, and recognition with superiority.",
+      "practice": "Complete the sentence several times: 'I think I want ___, but beneath that I may be seeking ___.' Prefer the answer that increases honesty and options rather than the one that protects identity.",
+      "journalPrompts": {
+        "downward-draw": "What need was I actually trying to meet?",
+        "mistaken-light": "What person, system, belief, role, or promise did I mistake for the only answer?",
+        "what-was-lost": "What alternatives became invisible while desire narrowed?",
+        "recognition": "What need beneath the desire can now be named more accurately?",
+        "returning-wisdom": "What healthier ways can meet the need without requiring self-abandonment or domination?"
+      },
+      "completionCondition": "Name the need beneath one compelling desire and identify at least two alternative ways of meeting it."
+    },
+    {
+      "id": "pistis-sophia-gate-03",
+      "ordinal": 3,
+      "title": "The Counterfeit Radiance",
+      "subtitle": "Not every brightness comes from the highest Light",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026", "source.pistis-sophia-faith-wisdom-2026"],
+      "sourceAnchor": "Both modern companions center the narrative's counterfeit-light motif: Sophia is drawn toward an imitation associated with Self-willed/Authades and learns to distinguish source from imitation.",
+      "teaching": "A counterfeit light does not have to be total falsehood. It can borrow enough truth to recruit desire while increasing grandiosity, dependency, contempt, secrecy, fear, or inability to distinguish evidence from wish.",
+      "practice": "Choose one compelling belief and make four columns: evidence for it, evidence against it, what would falsify it, and the cost if it is wrong. Apply the Four-Fruit Test: reality, freedom, compassion, and repair.",
+      "journalPrompts": {
+        "downward-draw": "What made this radiance persuasive to me?",
+        "mistaken-light": "Which qualities felt luminous, special, inevitable, or beyond ordinary checking?",
+        "what-was-lost": "Did the belief reduce agency, relationships, health, judgment, money, sleep, compassion, or openness to correction?",
+        "recognition": "What evidence or consequence now changes how I see it?",
+        "returning-wisdom": "What test will I use before granting a future claim extraordinary authority?"
+      },
+      "completionCondition": "Complete the evidence and Four-Fruit tests for one high-impact belief or interpretation."
+    },
+    {
+      "id": "pistis-sophia-gate-04",
+      "ordinal": 4,
+      "title": "The Descent",
+      "subtitle": "A wrong turn is an event, not an identity",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026"],
+      "sourceAnchor": "The ancient narrative places Sophia's descent in a layered cosmology; the modern station translates descent into a chronology that can be examined without turning history into identity.",
+      "teaching": "Accountability and dignity must remain together. A truthful account can say what I chose, what happened to me, what pressures existed, who was harmed, and what can now change without declaring the descent to be my permanent essence.",
+      "practice": "Draw a timeline without moral adjectives. Mark decisions, pressures, warnings, harms, turning points, and moments when help or another option was available.",
+      "journalPrompts": {
+        "downward-draw": "Which sequence of choices and pressures moved me deeper?",
+        "mistaken-light": "At each major step, what did I believe I was gaining or protecting?",
+        "what-was-lost": "What capacities or relationships narrowed as the descent continued?",
+        "recognition": "Which parts are my responsibility, and which contextual forces also belong in an accurate account?",
+        "returning-wisdom": "What next step proves that the descent is history rather than destiny?"
+      },
+      "completionCondition": "Create the descent timeline with both agency and context visible."
+    },
+    {
+      "id": "pistis-sophia-gate-05",
+      "ordinal": 5,
+      "title": "The Loss of Power",
+      "subtitle": "What drains agency is part of the diagnosis",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026", "source.pistis-sophia-faith-wisdom-2026"],
+      "sourceAnchor": "The narrative repeatedly depicts Sophia's light-power being drained; both modern studies translate restoration as the recovery of agency, voice, trust, practical resources, and capacity to participate.",
+      "teaching": "A path can sound exalted while consuming sleep, attention, money, health, creativity, relationships, and freedom. Practical losses are evidence and deserve ordinary explanations before extraordinary ones.",
+      "practice": "Make two columns: what this path gives and what this path takes. Include measurable effects on body, calendar, finances, work, relationships, sleep, and ability to choose. Ask a trusted person to review the inventory.",
+      "journalPrompts": {
+        "downward-draw": "What did I keep pursuing even as capacity declined?",
+        "mistaken-light": "What story made the losses seem necessary, sacred, temporary, or proof of commitment?",
+        "what-was-lost": "What concrete capacities, resources, relationships, or choices were reduced?",
+        "recognition": "Which losses need medical, psychological, financial, legal, relational, or practical attention rather than symbolic explanation alone?",
+        "returning-wisdom": "What stabilizing action restores the vessel through which discernment happens?"
+      },
+      "completionCondition": "Complete the measurable gain/loss inventory and choose one stabilization action.",
+      "stopCondition": "If there is immediate danger, severe sleep loss, inability to care for basic needs, coercion, or acute loss of reality-testing, pause the pilgrimage and prioritize timely practical or professional support."
+    },
+    {
+      "id": "pistis-sophia-gate-06",
+      "ordinal": 6,
+      "title": "The First Cry",
+      "subtitle": "Truthful speech begins where performance ends",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026"],
+      "sourceAnchor": "Sophia's repentances repeatedly turn toward the Light in direct speech; the modern station emphasizes accurate naming over polished spiritual performance.",
+      "teaching": "The first liberating sentence is often ordinary: I am afraid; I was wrong; I am being harmed; I harmed someone; I need help. Prayer and practical human help do not have to compete.",
+      "practice": "Say one exact sentence to a trustworthy person capable of practical response. Remove symbolic language if it obscures what another person needs to understand or do.",
+      "journalPrompts": {
+        "downward-draw": "What truth became difficult to say as the descent deepened?",
+        "mistaken-light": "What identity, loyalty, or fear required silence or performance?",
+        "what-was-lost": "What did concealment prevent me or others from addressing?",
+        "recognition": "What exact sentence can I now say without ornament?",
+        "returning-wisdom": "Who needs to hear it, and what practical response would be appropriate?"
+      },
+      "completionCondition": "Write and, where safe and appropriate, communicate one exact sentence that makes the practical reality clearer."
+    },
+    {
+      "id": "pistis-sophia-gate-07",
+      "ordinal": 7,
+      "title": "The Delay",
+      "subtitle": "Delay is not always rejection, but danger still deserves response",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026", "source.pistis-sophia-faith-wisdom-2026"],
+      "sourceAnchor": "Sophia's repeated prayers are not immediately followed by complete rescue. The modern studies distinguish perseverance from the dangerous romanticization of preventable suffering.",
+      "teaching": "Some restoration is slow; some delay is neglect or avoidable indecision. Waiting is not a command to remain in danger. Partial rescue, stabilization, and intermediate liberation count as real progress.",
+      "practice": "Name one outcome you cannot control and three actions you can take soon. Separate what must be endured from what can be changed, documented, treated, bounded, or requested now.",
+      "journalPrompts": {
+        "downward-draw": "What did delay tempt me to conclude about myself, the Light, or the possibility of help?",
+        "mistaken-light": "Did I mistake endurance for a duty to remain in preventable harm?",
+        "what-was-lost": "What deteriorated while I waited without sufficient stabilization?",
+        "recognition": "Which part of the delay is unavoidable and which part is actionable?",
+        "returning-wisdom": "What small concrete step can I take without pretending to control the whole outcome?"
+      },
+      "completionCondition": "Identify the uncontrollable outcome and complete the smallest available stabilizing action.",
+      "stopCondition": "Do not use spiritual patience to postpone emergency care, safety planning, legal protection, medical treatment, or other time-sensitive assistance."
+    },
+    {
+      "id": "pistis-sophia-gate-08",
+      "ordinal": 8,
+      "title": "The Mocking Powers",
+      "subtitle": "Humiliation is a weapon of systems that fear your return",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026"],
+      "sourceAnchor": "The Sophia narrative includes mockery from surrounding powers before complete deliverance; the modern station separates corrective truth from contempt.",
+      "teaching": "Useful correction identifies behavior and a path of repair. Contempt converts a low moment into a total verdict about worth. Recovery does not require proving that the descent never happened, and it does not justify becoming a mocker in reverse.",
+      "practice": "Write the humiliating verdict you carry. Under it, write a correction that includes responsibility, context, and a path forward without contempt.",
+      "journalPrompts": {
+        "downward-draw": "Which judgments or mockeries kept me attached to the descent because leaving would require admitting vulnerability?",
+        "mistaken-light": "Did I confuse shame with accountability or cruelty with initiation?",
+        "what-was-lost": "What repair became harder because I was defending identity rather than changing behavior?",
+        "recognition": "What is the accurate correction to the mocker's totalizing verdict?",
+        "returning-wisdom": "How can I practice accountability without using humiliation on myself or others?"
+      },
+      "completionCondition": "Replace one contempt-based verdict with an accountable, non-humiliating correction."
+    },
+    {
+      "id": "pistis-sophia-gate-09",
+      "ordinal": 9,
+      "title": "The Witnesses",
+      "subtitle": "Healing becomes durable when truth is held in community",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026"],
+      "sourceAnchor": "In Pistis Sophia, disciples repeatedly interpret Sophia's repentances through inherited sacred texts. The modern station treats this as an interpretive community rather than solitary certainty.",
+      "teaching": "A healthy witness neither silences nor flatters. Testimony can be honored while conclusions remain open to clarification, textual memory, reason, ethical accountability, and correction.",
+      "practice": "Tell one part of the story in three columns: what happened, what I concluded then, what I know now. Invite a trustworthy witness to ask clarifying questions rather than appointing themselves owner of the meaning.",
+      "journalPrompts": {
+        "downward-draw": "Who witnessed the beginning of the descent, and whose perspective did I ignore?",
+        "mistaken-light": "Which witnesses reinforced certainty without sufficient challenge?",
+        "what-was-lost": "What happened when chaos became the only narrator?",
+        "recognition": "Who can now help me distinguish experience from conclusion without shaming me?",
+        "returning-wisdom": "What kind of community practice keeps insight open, accountable, and non-coercive?"
+      },
+      "completionCondition": "Share one three-column account with a trustworthy witness or prepare it for such a conversation."
+    },
+    {
+      "id": "pistis-sophia-gate-10",
+      "ordinal": 10,
+      "title": "The Turning",
+      "subtitle": "Repentance is a change of direction made visible in action",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026", "source.pistis-sophia-faith-wisdom-2026"],
+      "sourceAnchor": "The companions describe repentance as repeated turning toward the Light — involving confession, lament, petition, resistance, trust, and praise — and translate metanoia as changed orientation rather than humiliation.",
+      "teaching": "Insight without altered behavior can become another intoxicating light. Repair must be proportionate to harm and must not become a demand for forgiveness, renewed access, or emotional caretaking by the person harmed.",
+      "practice": "Identify one reversible harm and one irreversible harm. Repair what can be repaired. For what cannot be undone, choose an ongoing responsibility that reduces recurrence and supports better conditions.",
+      "journalPrompts": {
+        "downward-draw": "What behavior kept the old direction in place even after I understood more?",
+        "mistaken-light": "What insight or apology felt transformative without changing the surrounding pattern?",
+        "what-was-lost": "Who or what carried the cost of my unchanged behavior?",
+        "recognition": "What repair is actually mine to make, and what outcome is not mine to demand?",
+        "returning-wisdom": "What observable action makes the new direction real?"
+      },
+      "completionCondition": "Complete or schedule one proportionate act of repair and define an ongoing responsibility where repair cannot erase the past."
+    },
+    {
+      "id": "pistis-sophia-gate-11",
+      "ordinal": 11,
+      "title": "The Two Powers of Help",
+      "subtitle": "Compassion protects; wisdom restores agency",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026", "source.pistis-sophia-faith-wisdom-2026"],
+      "sourceAnchor": "The modern Returning Light station draws on the narrative's multiple light-powers and the companion's account of cooperative rescue involving the First Mystery, Jesus, Michael, Gabriel, interpreters, and Sophia's continuing response.",
+      "teaching": "Good help combines compassion with structure and should return capacity rather than create a cult of the rescuer. Receiving help does not surrender sovereignty when the help respects consent and rebuilds authorship.",
+      "practice": "Name two forms of help: one that reduces immediate suffering and one that changes the underlying pattern. Ask for each specifically and prefer helpers who explain limits, collaborate, document, and refer when needed.",
+      "journalPrompts": {
+        "downward-draw": "Where did I try to solve alone what required relationship, expertise, protection, or community?",
+        "mistaken-light": "Did any helper increase dependence, secrecy, debt, fear, or exemption from accountability?",
+        "what-was-lost": "What capacities need to be rebuilt rather than permanently outsourced?",
+        "recognition": "What forms of mercy and structure are both needed now?",
+        "returning-wisdom": "How can I receive support while increasing rather than decreasing my capacity to choose and act?"
+      },
+      "completionCondition": "Identify and request one form of immediate help and one form of structural help, where appropriate."
+    },
+    {
+      "id": "pistis-sophia-gate-12",
+      "ordinal": 12,
+      "title": "The Restoration",
+      "subtitle": "Recovered power is for service, not revenge",
+      "authorityLevels": ["HISTORICAL", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-mead-1921", "source.pistis-sophia-returning-light-2026", "source.pistis-sophia-faith-wisdom-2026"],
+      "sourceAnchor": "The Sophia narrative proceeds through rescue and restoration of light-power. The modern studies define restoration by recovered agency, voice, trust, resources, and capacity rather than spectacle.",
+      "teaching": "The shadow of recovered power is retaliation or the need to prove exceptional destiny. Restoration is better measured by capacity: rest, choice, work, love, apology, boundaries, ambiguity tolerance, participation, and service.",
+      "practice": "List several capacities that have returned or still need to return. For each, choose a quiet daily behavior that strengthens the capacity without requiring performance or dominance.",
+      "journalPrompts": {
+        "downward-draw": "Which capacities were most diminished during the descent?",
+        "mistaken-light": "What would a performative or retaliatory version of restoration look like?",
+        "what-was-lost": "Which losses remain and need continued care rather than triumphal language?",
+        "recognition": "What capacity has genuinely returned in observable form?",
+        "returning-wisdom": "How can recovered strength become shelter, creativity, truth, or service rather than revenge?"
+      },
+      "completionCondition": "Name five capacities and attach one sustainable behavior to each."
+    },
+    {
+      "id": "pistis-sophia-gate-13",
+      "ordinal": 13,
+      "title": "The Commission",
+      "subtitle": "The proof of ascent is how you live among others",
+      "authorityLevels": ["MODERN", "PERSONAL"],
+      "sourceRefs": ["source.pistis-sophia-returning-light-2026", "source.pistis-sophia-faith-wisdom-2026"],
+      "sourceAnchor": "The Returning Light study makes its thirteenth station a return to ordinary responsibility and explicitly warns against becoming the false light for someone else. The companion similarly ends its ethical synthesis in service, repair, and humility before the Ineffable.",
+      "teaching": "The route does not end in a claim of spiritual rank. It ends in conduct. Recovered insight must not be used to demand submission, sexual access, money, secrecy, exceptional treatment, or exemption from accountability.",
+      "practice": "Write a personal rule of life in thirteen lines. Every line must describe an observable behavior rather than a title, cosmic identity, or metaphysical claim. Include truth, consent, repair, service, teachability, and protection of freedom.",
+      "journalPrompts": {
+        "downward-draw": "What pattern must I remember so that return does not become repetition?",
+        "mistaken-light": "What form of counterfeit radiance am I now most capable of reproducing for others if I become careless?",
+        "what-was-lost": "What losses should remain part of my moral memory rather than being erased by a victory story?",
+        "recognition": "What did the descent teach that I can state without glorifying the descent itself?",
+        "returning-wisdom": "What thirteen observable commitments will govern how I use knowledge, influence, love, power, and spiritual language?"
+      },
+      "completionCondition": "Write the thirteen-line rule of life and choose one commitment to enact within twenty-four hours.",
+      "stopCondition": "If the route is being used to justify domination, dependency, cruelty, isolation, reckless behavior, or exemption from ordinary accountability, pause and return to source review, grounded relationships, and practical support."
+    }
+  ]
+}

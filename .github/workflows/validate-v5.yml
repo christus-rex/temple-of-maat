@@ -26,6 +26,8 @@ jobs:
       - run: node scripts/validate-library-ui.mjs
       - run: node scripts/validate-journey-import-v1.mjs
       - run: node scripts/validate-offline-controls-v1.mjs
+      - run: node scripts/validate-enoch-pilgrimage-v1.mjs
+      - run: node scripts/validate-pistis-sophia-pilgrimage-v1.mjs
       - run: node scripts/validate-relationship-graph-v1.mjs
       - run: node scripts/test-relationship-resolver-v5.3.0.mjs
       - run: node scripts/test-relationship-browser-adapter-v5.3.0.mjs
