@@ -264,7 +264,9 @@ export async function installTempleScribeWorkspaceUI(options = {}) {
     const related = el('select');
     related.id = 'tm530-scribe-ledger-related';
     related.dataset.scribeLedgerRelated = 'true';
-    related.append(el('option', '', 'None'));
+    const noneOption = el('option', '', 'None');
+    noneOption.value = '';
+    related.append(noneOption);
     thread.ledger.forEach((event, index) => {
       const option = el('option', '', `${index + 1}. ${eventLabel(event.kind)} · ${event.text.slice(0, 70)}`);
       option.value = event.id;
