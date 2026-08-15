@@ -97,7 +97,7 @@ for (let index = 0; index < route.gates.length; index += 1) {
 
 const [s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13] = route.gates;
 assert(/sacred, psychological, relational, situational, or ordinary/i.test(s1.practice), 'Station 1 must preserve multiple interpretations rather than premature certainty.');
-assert(/need beneath/i.test(s2.teaching) && /alternative/i.test(s2.practice), 'Station 2 must distinguish need from object.');
+assert(/genuine need|need while/i.test(s2.teaching) && /options|alternative/i.test(s2.practice), 'Station 2 must distinguish need from object.');
 assert(/reality, freedom, compassion, and repair/i.test(s3.practice), 'Station 3 must preserve the Four-Fruit Test.');
 assert(/without moral adjectives/i.test(s4.practice), 'Station 4 must preserve the non-totalizing descent timeline.');
 assert(/body, calendar, finances, work, relationships, sleep/i.test(s5.practice), 'Station 5 must inventory measurable ordinary-life effects.');
