@@ -12,7 +12,8 @@
       stateKey: 'temple_pilgrimage_enoch_v1',
       cardMarker: 'enochRouteCard',
       openMarker: 'enochRouteOpen',
-      closeLabel: 'Close Enoch pilgrimage'
+      closeLabel: 'Close Enoch pilgrimage',
+      unitLabel: 'Gate'
     }),
     Object.freeze({
       routeId: 'route.pistis-sophia-descent-return',
@@ -21,41 +22,43 @@
       stateKey: 'temple_pilgrimage_pistis_sophia_v1',
       cardMarker: 'pistisSophiaRouteCard',
       openMarker: 'pistisSophiaRouteOpen',
-      closeLabel: 'Close Pistis Sophia pilgrimage'
+      closeLabel: 'Close Pistis Sophia pilgrimage',
+      unitLabel: 'Station'
     })
   ]);
 
   const routes = new Map();
   const states = new Map();
   const routePromises = new Map();
+  let activeRouteId = ROUTE_CONFIGS[0].routeId;
   let layer = null;
   let layerBody = null;
   let layerTitle = null;
   let layerClose = null;
   let layerScrim = null;
-  let activeRouteId = 'route.enoch-angelic-mirror';
   let currentFocus = null;
   let hiddenParent = null;
   let observer = null;
+  let keyboardInstalled = false;
 
-  function clone(value) {
-    return JSON.parse(JSON.stringify(value));
+  const clone = (value) => JSON.parse(JSON.stringify(value));
+  const now = () => new Date().toISOString();
+  const configFor = (routeId) => ROUTE_CONFIGS.find((item) => item.routeId === routeId) || null;
+  const activeRoute = () => routes.get(activeRouteId) || null;
+  const activeState = () => states.get(activeRouteId) || null;
+
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
   }
 
-  function now() {
-    return new Date().toISOString();
-  }
-
-  function configFor(routeId) {
-    return ROUTE_CONFIGS.find((item) => item.routeId === routeId) || null;
-  }
-
-  function activeRoute() {
-    return routes.get(activeRouteId) || null;
-  }
-
-  function activeState() {
-    return states.get(activeRouteId) || null;
+  function button(label, handler, className = '') {
+    const node = el('button', className, label);
+    node.type = 'button';
+    node.addEventListener('click', handler);
+    return node;
   }
 
   function defaultRecordFields(route) {
@@ -75,17 +78,15 @@
   }
 
   function recordSequence(route) {
-    if (route?.recordSequence) return route.recordSequence;
-    return 'Observation → Interpretation → Verification → Conduct';
+    return route?.recordSequence || 'Observation → Interpretation → Verification → Conduct';
   }
 
   function recordNote(route) {
-    if (route?.recordNote) return route.recordNote;
-    return 'Record the experience first, then its meaning. Verification and conduct remain separate so personal testimony can stay meaningful without being silently promoted to historical or metaphysical certainty.';
+    return route?.recordNote || 'Record the experience first, then its meaning. Verification and conduct remain separate so personal testimony can stay meaningful without being silently promoted to historical or metaphysical certainty.';
   }
 
   function unitLabel(route) {
-    return String(route?.unitLabel || 'Gate');
+    return String(configFor(route?.routeId)?.unitLabel || route?.unitLabel || 'Gate');
   }
 
   function unitPlural(route) {
@@ -100,6 +101,63 @@
     link.href = './styles/v5.3-pilgrimage-routes.css';
     link.dataset.templePilgrimageRoutes = 'true';
     document.head.appendChild(link);
+  }
+
+  function gateNumber(route, value) {
+    const number = Number(value);
+    return Number.isInteger(number) && number >= 1 && number <= route.gates.length ? number : null;
+  }
+
+  function cleanRecord(route, value) {
+    const input = value && typeof value === 'object' ? value : {};
+    const output = {};
+    defaultRecordFields(route).forEach(({ key }) => {
+      output[key] = typeof input[key] === 'string' ? input[key].slice(0, MAX_TEXT) : '';
+    });
+    return output;
+  }
+
+  function emptyState(route) {
+    return {
+      schema: STATE_SCHEMA,
+      routeId: route.routeId,
+      routeVersion: route.version,
+      started: false,
+      startedAt: null,
+      updatedAt: null,
+      currentGate: 1,
+      completedGates: [],
+      records: {}
+    };
+  }
+
+  function loadState(route, config) {
+    const fresh = emptyState(route);
+    try {
+      const raw = JSON.parse(localStorage.getItem(config.stateKey) || 'null');
+      if (!raw || typeof raw !== 'object') return fresh;
+      if (raw.schema !== STATE_SCHEMA || raw.routeId !== route.routeId || raw.routeVersion !== route.version) return fresh;
+      const completedGates = [...new Set((Array.isArray(raw.completedGates) ? raw.completedGates : [])
+        .map((value) => gateNumber(route, value)).filter(Boolean))].sort((a, b) => a - b);
+      const records = {};
+      if (raw.records && typeof raw.records === 'object') {
+        Object.entries(raw.records).forEach(([key, value]) => {
+          const number = gateNumber(route, key);
+          if (number) records[number] = cleanRecord(route, value);
+        });
+      }
+      return {
+        ...fresh,
+        started: Boolean(raw.started),
+        startedAt: typeof raw.startedAt === 'string' ? raw.startedAt : null,
+        updatedAt: typeof raw.updatedAt === 'string' ? raw.updatedAt : null,
+        currentGate: gateNumber(route, raw.currentGate) || 1,
+        completedGates,
+        records
+      };
+    } catch {
+      return fresh;
+    }
   }
 
   async function loadRoute(config) {
@@ -125,72 +183,23 @@
 
   async function loadRoutes() {
     const results = await Promise.allSettled(ROUTE_CONFIGS.map((config) => loadRoute(config)));
-    const loaded = results.filter((result) => result.status === 'fulfilled').length;
-    if (!loaded) throw new Error('No Temple pilgrimage routes could be loaded.');
-    return [...routes.values()];
-  }
-
-  function emptyState(route) {
-    return {
-      schema: STATE_SCHEMA,
-      routeId: route.routeId,
-      routeVersion: route.version,
-      started: false,
-      startedAt: null,
-      updatedAt: null,
-      currentGate: 1,
-      completedGates: [],
-      records: {}
-    };
-  }
-
-  function gateNumber(route, value) {
-    const number = Number(value);
-    return Number.isInteger(number) && number >= 1 && number <= route.gates.length ? number : null;
-  }
-
-  function cleanRecord(route, value) {
-    const input = value && typeof value === 'object' ? value : {};
-    const result = {};
-    defaultRecordFields(route).forEach(({ key }) => {
-      result[key] = typeof input[key] === 'string' ? input[key].slice(0, MAX_TEXT) : '';
-    });
-    return result;
-  }
-
-  function loadState(route, config) {
-    const fresh = emptyState(route);
-    try {
-      const raw = JSON.parse(localStorage.getItem(config.stateKey) || 'null');
-      if (!raw || typeof raw !== 'object') return fresh;
-      if (raw.schema !== STATE_SCHEMA || raw.routeId !== route.routeId || raw.routeVersion !== route.version) return fresh;
-      const completed = [...new Set((Array.isArray(raw.completedGates) ? raw.completedGates : [])
-        .map((value) => gateNumber(route, value)).filter(Boolean))].sort((a, b) => a - b);
-      const records = {};
-      if (raw.records && typeof raw.records === 'object') {
-        Object.entries(raw.records).forEach(([key, value]) => {
-          const number = gateNumber(route, key);
-          if (number) records[number] = cleanRecord(route, value);
-        });
-      }
-      return {
-        ...fresh,
-        started: Boolean(raw.started),
-        startedAt: typeof raw.startedAt === 'string' ? raw.startedAt : null,
-        updatedAt: typeof raw.updatedAt === 'string' ? raw.updatedAt : null,
-        currentGate: gateNumber(route, raw.currentGate) || 1,
-        completedGates: completed,
-        records
-      };
-    } catch {
-      return fresh;
-    }
+    if (!results.some((result) => result.status === 'fulfilled')) throw new Error('No Temple pilgrimage routes could be loaded.');
+    return ROUTE_CONFIGS.map((config) => routes.get(config.routeId)).filter(Boolean);
   }
 
   function publicState(routeId = activeRouteId) {
     const route = routes.get(routeId);
     const state = states.get(routeId);
     return route && state ? clone(state) : null;
+  }
+
+  function gallerySignature() {
+    return ROUTE_CONFIGS.map((config) => {
+      const route = routes.get(config.routeId);
+      const state = states.get(config.routeId);
+      if (!route || !state) return `${config.routeId}:missing`;
+      return `${config.routeId}:${route.version}:${state.started ? 1 : 0}:${state.currentGate}:${state.completedGates.join('.')}`;
+    }).join('|');
   }
 
   function persist(routeId = activeRouteId, render = true) {
@@ -201,9 +210,7 @@
     state.routeVersion = route.version;
     state.updatedAt = now();
     try { localStorage.setItem(config.stateKey, JSON.stringify(state)); } catch {}
-    document.dispatchEvent(new CustomEvent('temple:pilgrimage-route-change', {
-      detail: { routeId, state: publicState(routeId) }
-    }));
+    document.dispatchEvent(new CustomEvent('temple:pilgrimage-route-change', { detail: { routeId, state: publicState(routeId) } }));
     renderJourneyCards();
     if (render && layer && !layer.hidden && activeRouteId === routeId) renderRoute();
     return true;
@@ -215,24 +222,6 @@
     state.started = true;
     state.startedAt = state.startedAt || now();
     persist(routeId, false);
-  }
-
-  function sourceById(route, id) {
-    return route.sourceRefs.find((item) => item.id === id) || null;
-  }
-
-  function el(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text != null) node.textContent = text;
-    return node;
-  }
-
-  function button(label, handler, className = '') {
-    const node = el('button', className, label);
-    node.type = 'button';
-    node.addEventListener('click', handler);
-    return node;
   }
 
   function createLayer() {
@@ -299,7 +288,7 @@
       layer.hidden = false;
       layer.setAttribute('aria-hidden', 'false');
       document.body.classList.add('tm53-pilgrimage-open');
-      requestAnimationFrame(() => layer.querySelector('.tm53-route-close')?.focus({ preventScroll: true }));
+      requestAnimationFrame(() => layerClose?.focus({ preventScroll: true }));
     }).catch((error) => console.error('[Temple pilgrimage]', error));
     return true;
   }
@@ -320,17 +309,13 @@
   }
 
   function renderAuthority(level) {
-    const name = String(level).toLowerCase();
-    return el('span', `tm53-route-authority tm53-route-authority--${name}`, level);
+    return el('span', `tm53-route-authority tm53-route-authority--${String(level).toLowerCase()}`, level);
   }
 
   function renderIntro(route, state) {
     const wrap = el('div', 'tm53-route-intro');
     const main = el('section', 'tm53-route-intro__card');
-    main.append(
-      el('p', 'tm53-route-card__eyebrow', route.subtitle),
-      el('p', '', route.structureNote)
-    );
+    main.append(el('p', 'tm53-route-card__eyebrow', route.subtitle), el('p', '', route.structureNote));
     const vow = el('div', 'tm53-route-vow', route.vow);
     vow.setAttribute('aria-label', `Route vow: ${route.vow}`);
     main.append(vow);
@@ -376,18 +361,15 @@
 
   function renderSourceDetails(route, gate) {
     const details = el('details', 'tm53-route-source');
-    details.append(el('summary', '', 'Source & authority boundary'));
-    details.append(el('p', '', gate.sourceAnchor));
+    details.append(el('summary', '', 'Source & authority boundary'), el('p', '', gate.sourceAnchor));
     gate.sourceRefs.forEach((id) => {
-      const source = sourceById(route, id);
+      const source = route.sourceRefs.find((item) => item.id === id);
       if (!source) return;
       const line = el('p');
-      const strong = el('strong', '', `${source.authority} · ${source.title}`);
-      line.append(strong, document.createTextNode(` — ${source.locators.join('; ')}`));
+      line.append(el('strong', '', `${source.authority} · ${source.title}`), document.createTextNode(` — ${source.locators.join('; ')}`));
       details.append(line);
       if (Array.isArray(source.limitations) && source.limitations.length) {
-        const limits = el('p', 'tm53-route-source__limitations', `Limitations: ${source.limitations.join(' ')}`);
-        details.append(limits);
+        details.append(el('p', 'tm53-route-source__limitations', `Limitations: ${source.limitations.join(' ')}`));
       }
     });
     return details;
@@ -395,8 +377,7 @@
 
   function fieldLabel(route, key) {
     const match = defaultRecordFields(route).find((item) => item.key === key);
-    if (match?.label) return match.label;
-    return key.split('-').map((part) => part ? part[0].toUpperCase() + part.slice(1) : part).join(' ');
+    return match?.label || key.split('-').map((part) => part ? part[0].toUpperCase() + part.slice(1) : '').join(' ');
   }
 
   function field(route, state, config, key, prompt, value) {
@@ -404,14 +385,13 @@
     const label = el('label', '', fieldLabel(route, key));
     const id = `tm53-${config.slug}-${state.currentGate}-${key}`;
     label.htmlFor = id;
-    const small = el('small', '', prompt);
     const area = el('textarea');
     area.id = id;
     area.dataset.realityField = key;
     area.maxLength = MAX_TEXT;
     area.rows = 4;
     area.value = value || '';
-    wrap.append(label, small, area);
+    wrap.append(label, el('small', '', prompt), area);
     return wrap;
   }
 
@@ -438,9 +418,7 @@
     const state = activeState();
     if (!route || !state) return;
     saveCurrentRecord(false);
-    if (!state.completedGates.includes(state.currentGate)) {
-      state.completedGates = [...state.completedGates, state.currentGate].sort((a, b) => a - b);
-    }
+    if (!state.completedGates.includes(state.currentGate)) state.completedGates = [...state.completedGates, state.currentGate].sort((a, b) => a - b);
     if (state.currentGate < route.gates.length) state.currentGate += 1;
     persist(route.routeId);
   }
@@ -460,15 +438,15 @@
     card.append(renderSourceDetails(route, gate));
 
     const record = cleanRecord(route, state.records[gate.ordinal]);
-    const reality = el('section', 'tm53-route-record');
-    reality.append(
+    const privateRecord = el('section', 'tm53-route-record');
+    privateRecord.append(
       el('p', 'tm53-route-eyebrow', recordTitle(route)),
       el('h3', '', recordSequence(route)),
       el('p', 'tm53-route-record__note', recordNote(route))
     );
     defaultRecordFields(route).forEach(({ key }) => {
       const prompt = gate.journalPrompts?.[key];
-      if (typeof prompt === 'string' && prompt.trim()) reality.append(field(route, state, config, key, prompt, record[key]));
+      if (typeof prompt === 'string' && prompt.trim()) privateRecord.append(field(route, state, config, key, prompt, record[key]));
     });
 
     const actions = el('div', 'tm53-route-actions');
@@ -488,8 +466,8 @@
       : `Complete ${unitLabel(route)} & Continue →`, completeCurrent);
     complete.dataset.primary = 'true';
     actions.append(previous, save, complete);
-    reality.append(actions);
-    card.append(reality);
+    privateRecord.append(actions);
+    card.append(privateRecord);
     return card;
   }
 
@@ -515,9 +493,7 @@
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = config.slug === 'enoch'
-      ? 'temple-of-maat-enoch-pilgrimage.json'
-      : `temple-of-maat-${config.slug}-pilgrimage.json`;
+    anchor.download = config.slug === 'enoch' ? 'temple-of-maat-enoch-pilgrimage.json' : `temple-of-maat-${config.slug}-pilgrimage.json`;
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
@@ -532,8 +508,8 @@
     if (!confirm(`Reset ${route.title} progress and private records on this device?`)) return false;
     states.set(routeId, emptyState(route));
     try { localStorage.removeItem(config.stateKey); } catch {}
+    renderJourneyCards(true);
     if (routeId === activeRouteId && layer && !layer.hidden) renderRoute();
-    renderJourneyCards();
     return true;
   }
 
@@ -573,7 +549,7 @@
     return card;
   }
 
-  function renderJourneyCards() {
+  function renderJourneyCards(force = false) {
     if (!document.body.classList.contains('temple-app-ready')) return;
     const journeyBody = document.querySelector('#tm525-journey .tm525-panel-body');
     if (!journeyBody) return;
@@ -584,19 +560,21 @@
       const mapHeading = journeyBody.querySelector('.tm525-map-heading');
       journeyBody.insertBefore(gallery, mapHeading || journeyBody.firstChild);
     }
-    gallery.replaceChildren();
+    const signature = gallerySignature();
+    if (!force && gallery.dataset.routeSignature === signature && gallery.children.length) return;
+    gallery.dataset.routeSignature = signature;
+    const cards = [];
     ROUTE_CONFIGS.forEach((config) => {
       const route = routes.get(config.routeId);
       const state = states.get(config.routeId);
-      if (route && state) gallery.append(routeCard(route, state, config));
+      if (route && state) cards.push(routeCard(route, state, config));
     });
-  }
-
-  function enhance() {
-    renderJourneyCards();
+    gallery.replaceChildren(...cards);
   }
 
   function installKeyboard() {
+    if (keyboardInstalled) return;
+    keyboardInstalled = true;
     document.addEventListener('keydown', (event) => {
       if (!layer || layer.hidden) return;
       if (event.key === 'Escape') {
@@ -619,6 +597,10 @@
     });
   }
 
+  function enhance() {
+    renderJourneyCards();
+  }
+
   async function init() {
     installStyles();
     try {
@@ -628,8 +610,8 @@
       return;
     }
     createLayer();
-    if (routes.has(activeRouteId)) configureLayer(activeRouteId);
-    else activeRouteId = routes.keys().next().value;
+    if (!routes.has(activeRouteId)) activeRouteId = routes.keys().next().value;
+    configureLayer(activeRouteId);
     enhance();
     installKeyboard();
     if (!observer) {
@@ -645,17 +627,12 @@
       download: (routeId = activeRouteId) => downloadState(routeId),
       reset: (routeId = activeRouteId) => resetRoute(routeId)
     });
-    document.dispatchEvent(new CustomEvent('temple:pilgrimage-routes-ready', {
-      detail: { version: '1.1.0', routeIds: [...routes.keys()] }
-    }));
+    document.dispatchEvent(new CustomEvent('temple:pilgrimage-routes-ready', { detail: { version: '1.1.0', routeIds: [...routes.keys()] } }));
   }
 
   function waitForJourney() {
-    if (window.TemplePilgrimJourney) {
-      init();
-      return;
-    }
-    document.addEventListener('temple:living-temple-ready', init, { once: true });
+    if (window.TemplePilgrimJourney) init();
+    else document.addEventListener('temple:living-temple-ready', init, { once: true });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', waitForJourney, { once: true });
