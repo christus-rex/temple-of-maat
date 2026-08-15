@@ -46,6 +46,10 @@
       },
       "allOf": [
         {
+          "if": { "properties": { "kind": { "const": "inference" } }, "required": ["kind"] },
+          "then": { "properties": { "reasoning": { "pattern": "\\S" } } }
+        },
+        {
           "if": { "properties": { "kind": { "enum": ["correction", "reply"] } }, "required": ["kind"] },
           "then": { "required": ["relatedLogId"] }
         }
