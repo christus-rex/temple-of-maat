@@ -23,7 +23,10 @@ const eventKinds = schema.$defs?.ledgerEvent?.properties?.kind?.enum || [];
 for (const kind of ['observation', 'inference', 'uncertainty', 'dissent', 'correction', 'reply']) {
   assert(eventKinds.includes(kind), `Scribe schema missing ledger kind ${kind}.`);
 }
-assert(schema.$defs?.ledgerEvent?.allOf?.length, 'Scribe schema must conditionally require related events for correction/reply.');
+const ledgerRules = schema.$defs?.ledgerEvent?.allOf || [];
+const inferenceRule = ledgerRules.find((rule) => rule.if?.properties?.kind?.const === 'inference');
+assert(inferenceRule?.then?.properties?.reasoning?.pattern === '\\S', 'Scribe schema must require non-whitespace reasoning for inference records.');
+assert(ledgerRules.some((rule) => rule.if?.properties?.kind?.enum?.includes('correction') && rule.then?.required?.includes('relatedLogId')), 'Scribe schema must conditionally require related events for correction/reply.');
 
 const backing = new Map();
 const writes = [];
@@ -237,7 +240,7 @@ const repairState = {
   schema: 'temple-of-maat/scribe-workspace-state-v1',
   version: '1.0.0',
   privacy: 'device-local-private',
-  updatedAt: new Date().toISOString(),
+  updatedAt: 'not-a-date',
   threads: [{
     id: 'thread.repair-fixture',
     title: 'Repair fixture',
@@ -249,15 +252,15 @@ const repairState = {
       { kind: 'source', id: quranSource.id }
     ],
     ledger: [
-      { id: 'scribe.first', kind: 'observation', text: 'Valid observation.', reasoning: '', sourceCitations: [{ kind: 'source', id: quranSource.id }], createdAt: new Date().toISOString() },
+      { id: 'scribe.first', kind: 'observation', text: 'Valid observation.', reasoning: '', sourceCitations: [{ kind: 'source', id: quranSource.id }], createdAt: 'not-an-event-date' },
       { id: 'scribe.bad-inference', kind: 'inference', text: 'Missing reasoning.', reasoning: '', sourceCitations: [], createdAt: new Date().toISOString() },
       { id: 'scribe.bad-correction', kind: 'correction', text: 'Missing target.', reasoning: '', sourceCitations: [], createdAt: new Date().toISOString() },
       { id: 'scribe.forward-reply', kind: 'reply', text: 'Forward reference.', reasoning: '', sourceCitations: [], relatedLogId: 'scribe.future', createdAt: new Date().toISOString() },
       { id: 'scribe.second', kind: 'reply', text: 'Valid reply.', reasoning: '', sourceCitations: [{ kind: 'claim', id: 'claim.not-real' }], relatedLogId: 'scribe.first', createdAt: new Date().toISOString() },
       { id: 'scribe.first', kind: 'observation', text: 'Duplicate identifier.', reasoning: '', sourceCitations: [], createdAt: new Date().toISOString() }
     ],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    createdAt: 'not-a-thread-date',
+    updatedAt: 'also-not-a-thread-date'
   }]
 };
 const repairStorage = {
@@ -270,11 +273,15 @@ const repairedThread = repaired.threads()[0];
 assert(repairedThread.anchors.length === 1 && repairedThread.anchors[0].id === quranSource.id, 'Reload must filter noncanonical thread anchors without dropping the valid thread.');
 assert(repairedThread.ledger.length === 2 && repairedThread.ledger[0].id === 'scribe.first' && repairedThread.ledger[1].id === 'scribe.second', 'Reload must preserve only sequential, unique ledger events that satisfy inference/correction/reply invariants.');
 assert(repairedThread.ledger[1].sourceCitations.length === 0, 'Reload must filter noncanonical ledger citations while preserving the valid ledger event.');
+assert(Number.isFinite(Date.parse(repaired.state().updatedAt)), 'Reload must normalize a malformed state timestamp to schema-valid date-time.');
+assert(Number.isFinite(Date.parse(repairedThread.createdAt)) && Number.isFinite(Date.parse(repairedThread.updatedAt)), 'Reload must normalize malformed thread timestamps to schema-valid date-times.');
+assert(repairedThread.ledger.every((event) => Number.isFinite(Date.parse(event.createdAt))), 'Reload must normalize malformed ledger timestamps to schema-valid date-times.');
 
 assert(coreText.includes("SCRIBE_WORKSPACE_KEY = 'temple_scribe_workspace_v1'"), 'Core must declare dedicated Scribe private storage key.');
 assert(coreText.includes("kind === 'inference'") && coreText.includes('require visible reasoning'), 'Core must require visible reasoning for inference.');
 assert(coreText.includes("kind === 'correction' || kind === 'reply'"), 'Core must preserve correction and reply target requirements.');
 assert(coreText.includes('function commit(nextState)'), 'Core must use transactional device-state commits.');
+assert(coreText.includes('function normalizeDateTime'), 'Core must normalize restored timestamps before private export.');
 assert(!/fetch\(/.test(coreText), 'Scribe core must not issue network requests.');
 assert(uiText.includes('Observation and inference remain distinct.'), 'UI must communicate observation/inference separation.');
 assert(uiText.includes('Nabu–Thoth is a modern Temple comparative scribe archetype'), 'UI must preserve comparative-archetype historical boundary.');
@@ -295,6 +302,7 @@ console.log(JSON.stringify({
   threadCount: reloaded.threads().length,
   ledgerCount: reloaded.threads()[0].ledger.length,
   explicitWrites: writes.filter((item) => item.op === 'set' && item.key === SCRIBE_WORKSPACE_KEY).length,
+  inferenceSchemaGuard: true,
   newThreadLedgerInjectionBlocked: true,
   unknownNotebookReferenceRejected: true,
   notebookBodyIsolation: true,
@@ -303,5 +311,6 @@ console.log(JSON.stringify({
   rightOfReply: true,
   transactionalStorageFailure: true,
   schemaValidExport: true,
-  corruptedStateRepair: true
+  corruptedStateRepair: true,
+  timestampRepair: true
 }, null, 2));
