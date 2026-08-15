@@ -9,8 +9,33 @@ const PUBLIC_CATALOGS = Object.freeze({
   graph: new URL('../research/relationship-graph.json', import.meta.url)
 });
 
+const PRIVATE_KEYS = new Set([
+  'reflection',
+  'reflections',
+  'favorite',
+  'favorites',
+  'bookmark',
+  'bookmarks',
+  'privateNote',
+  'privateNotes',
+  'localStorage',
+  'indexedDB',
+  'deviceState'
+]);
+
 function clone(value) {
   return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
+}
+
+function sanitizePublicRecord(value) {
+  if (Array.isArray(value)) return value.map(sanitizePublicRecord);
+  if (!value || typeof value !== 'object') return value;
+  const output = {};
+  for (const [key, nested] of Object.entries(value)) {
+    if (PRIVATE_KEYS.has(key)) continue;
+    output[key] = sanitizePublicRecord(nested);
+  }
+  return output;
 }
 
 function chamberNumber(value) {
@@ -67,13 +92,14 @@ export async function createTempleRelationshipBrowserAdapter(options = {}) {
       const runtime = windowRef.TempleArchive?.chambers?.();
       if (Array.isArray(runtime)) {
         const found = runtime.find((item) => Number(item?.num || item?.number || item?.id) === number);
-        if (found) return clone(found);
+        if (found) return sanitizePublicRecord(found);
       }
     } catch {}
 
     const catalog = await chamberCatalog();
     const records = Array.isArray(catalog?.chambers) ? catalog.chambers : [];
-    return clone(records.find((item) => Number(item?.number || item?.num || item?.id) === number) || null);
+    const found = records.find((item) => Number(item?.number || item?.num || item?.id) === number) || null;
+    return found ? sanitizePublicRecord(found) : null;
   }
 
   async function codexProvider(endpoint) {
@@ -81,7 +107,7 @@ export async function createTempleRelationshipBrowserAdapter(options = {}) {
     if (!number) return null;
     try {
       const record = windowRef.TempleLivingCodex?.record?.(number);
-      return record ? clone(record) : null;
+      return record ? sanitizePublicRecord(record) : null;
     } catch {
       return null;
     }
@@ -97,7 +123,7 @@ export async function createTempleRelationshipBrowserAdapter(options = {}) {
         id: String(number).padStart(2, '0'),
         number,
         recordKind: 'shem-dossier-source-layer',
-        sourceLayer: clone(record),
+        sourceLayer: sanitizePublicRecord(record),
         provenanceNote: 'Resolved from the public TempleShem72 source-preserved layer. Private Journey reflection state is intentionally excluded.'
       };
     } catch {
@@ -107,7 +133,8 @@ export async function createTempleRelationshipBrowserAdapter(options = {}) {
 
   async function libraryProvider(endpoint) {
     const catalog = await libraryCatalog();
-    return clone(libraryRecords(catalog).find((record) => record?.id === endpoint.recordId) || null);
+    const found = libraryRecords(catalog).find((record) => record?.id === endpoint.recordId) || null;
+    return found ? sanitizePublicRecord(found) : null;
   }
 
   const providers = Object.freeze({
@@ -130,8 +157,8 @@ export async function createTempleRelationshipBrowserAdapter(options = {}) {
     resolver,
     providers,
     catalogs: Object.freeze({
-      chambers: () => chamberCatalog().then(clone),
-      library: () => libraryCatalog().then(clone)
+      chambers: () => chamberCatalog().then((catalog) => sanitizePublicRecord(catalog)),
+      library: () => libraryCatalog().then((catalog) => sanitizePublicRecord(catalog))
     }),
     resolve: (endpoint, context = {}) => resolver.resolve(endpoint, context),
     resolveMany: (endpoints, context = {}) => resolver.resolveMany(endpoints, context),
