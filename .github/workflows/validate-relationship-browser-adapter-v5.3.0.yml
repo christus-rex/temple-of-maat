@@ -1,40 +1,39 @@
-name: Validate Relationship Graph v1
+name: Validate Relationship Browser Adapter v5.3.0
 
 on:
   pull_request:
     paths:
       - 'research/relationship-graph.json'
       - 'research/relationship-graph.schema.json'
-      - 'docs/RELATIONSHIP_GRAPH.md'
-      - 'docs/RELATIONSHIP_RESOLVER.md'
-      - 'docs/RELATIONSHIP_BROWSER_ADAPTER.md'
       - 'library/catalog.json'
       - 'chambers.json'
       - 'scripts/v5.2.4-living-codex.js'
       - 'scripts/v5.2.6-shem-dossiers.js'
       - 'scripts/v5.3.0-relationship-resolver.mjs'
       - 'scripts/v5.3.0-relationship-browser-adapter.mjs'
-      - 'scripts/test-relationship-resolver-v5.3.0.mjs'
       - 'scripts/test-relationship-browser-adapter-v5.3.0.mjs'
-      - 'scripts/validate-relationship-graph-v1.mjs'
-      - '.github/workflows/validate-relationship-graph-v1.yml'
+      - 'scripts/smoke-relationship-browser-adapter-v5.3.0.mjs'
+      - 'docs/RELATIONSHIP_BROWSER_ADAPTER.md'
+      - '.github/workflows/validate-relationship-browser-adapter-v5.3.0.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  validate-graph:
+  browser-adapter:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Validate endpoints, provenance, claim boundaries, and negative guardrails
-        run: node scripts/validate-relationship-graph-v1.mjs
-      - name: Exercise shared resolver/query semantics
-        run: node scripts/test-relationship-resolver-v5.3.0.mjs
-      - name: Exercise canonical browser providers and privacy boundary
+      - name: Validate canonical provider semantics
         run: node scripts/test-relationship-browser-adapter-v5.3.0.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise browser adapter against live Temple runtime
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-relationship-browser-adapter-v5.3.0.mjs

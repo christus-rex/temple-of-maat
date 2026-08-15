@@ -1,0 +1,44 @@
+name: Validate Knowledge Inspector v5.3.0
+
+on:
+  pull_request:
+    paths:
+      - 'research/knowledge-kernel/**'
+      - 'scripts/v5.3.0-knowledge-inspector.mjs'
+      - 'scripts/v5.3.0-knowledge-inspector-ui.mjs'
+      - 'styles/v5.3.0-knowledge-inspector.css'
+      - 'scripts/test-knowledge-inspector-v5.3.0.mjs'
+      - 'scripts/smoke-knowledge-inspector-v5.3.0.mjs'
+      - 'docs/KNOWLEDGE_INSPECTOR.md'
+      - '.github/workflows/validate-knowledge-inspector-v5.3.0.yml'
+      - '.github/workflows/validate-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  knowledge-inspector:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate endpoint mappings, claims, passages, and privacy
+        run: node scripts/test-knowledge-inspector-v5.3.0.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise Knowledge Inspector inside Comparative Reading
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-knowledge-inspector-v5.3.0.mjs
+      - name: Preserve Knowledge Inspector screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: knowledge-inspector-v5.3.0
+          path: work/knowledge-inspector-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7
