@@ -27,9 +27,17 @@ assert(schema.$defs?.ledgerEvent?.allOf?.length, 'Scribe schema must conditional
 
 const backing = new Map();
 const writes = [];
+let failNextSet = false;
 const storage = {
   getItem(key) { return backing.has(key) ? backing.get(key) : null; },
-  setItem(key, value) { writes.push({ op: 'set', key, value }); backing.set(key, value); },
+  setItem(key, value) {
+    if (failNextSet) {
+      failNextSet = false;
+      throw new Error('Simulated localStorage quota failure.');
+    }
+    writes.push({ op: 'set', key, value });
+    backing.set(key, value);
+  },
   removeItem(key) { writes.push({ op: 'remove', key }); backing.delete(key); }
 };
 
@@ -47,11 +55,22 @@ const notebookEntry = {
     { kind: 'source', id: quranSource.id }
   ]
 };
+const secondNotebookEntry = {
+  id: 'notebook.entry-two',
+  title: 'Private source follow-up',
+  body: 'SECOND PRIVATE NOTEBOOK BODY',
+  stage: 'note',
+  citations: [{ kind: 'source', id: quranSource.id }]
+};
+const notebookEntries = new Map([
+  [notebookEntry.id, notebookEntry],
+  [secondNotebookEntry.id, secondNotebookEntry]
+]);
 const notebook = {
   schema: 'temple-of-maat/research-notebook-state-v1',
   privacy: 'device-local-private',
-  get(id) { return id === notebookEntry.id ? structuredClone(notebookEntry) : null; },
-  entries() { return [structuredClone(notebookEntry)]; },
+  get(id) { return notebookEntries.has(id) ? structuredClone(notebookEntries.get(id)) : null; },
+  entries() { return [...notebookEntries.values()].map((entry) => structuredClone(entry)); },
   citationsFromComparison() {
     return [
       { kind: 'endpoint', id: 'library:source.quran-tanzil-pickthall-edition' },
@@ -75,7 +94,10 @@ const ids = [
   '22222222-2222-4222-8222-222222222222',
   '33333333-3333-4333-8333-333333333333',
   '44444444-4444-4444-8444-444444444444',
-  '55555555-5555-4555-8555-555555555555'
+  '55555555-5555-4555-8555-555555555555',
+  '66666666-6666-4666-8666-666666666666',
+  '77777777-7777-4777-8777-777777777777',
+  '88888888-8888-4888-8888-888888888888'
 ];
 const fixedWindow = { crypto: { randomUUID: () => ids.shift() } };
 const scribe = await createTempleScribeWorkspace({ storage, notebook, windowRef: fixedWindow });
@@ -94,15 +116,41 @@ assert(writes.length === 0, 'Preparing a Scribe thread draft must not persist it
 assert(draft.id === 'thread.11111111-1111-4111-8111-111111111111', 'Thread ID must use private device UUID factory.');
 assert(draft.anchors.length === 5, 'Thread from comparison must preserve canonical comparison anchors.');
 
+const injectedLedger = [{
+  id: 'scribe.injected-ledger-event',
+  kind: 'inference',
+  text: 'This injected event attempts to bypass appendLedger.',
+  reasoning: '',
+  sourceCitations: [],
+  createdAt: new Date().toISOString()
+}];
 const saved = scribe.save({
   ...draft,
   title: 'Qur’an / Abjad Scribe Thread',
   inquiry: 'What is source wording, what is numerical inference, and what remains uncertain?',
-  notebookEntryIds: [notebookEntry.id]
+  notebookEntryIds: [notebookEntry.id],
+  ledger: injectedLedger
 });
 assert(writes.length === 1 && writes[0].key === SCRIBE_WORKSPACE_KEY, 'Explicit Save Thread must write only the Scribe key.');
-assert(saved.notebookEntryIds[0] === notebookEntry.id && saved.ledger.length === 0, 'Saved thread must group the private Notebook entry without copying its body into public evidence.');
-assert(!backing.get(SCRIBE_WORKSPACE_KEY).includes('PRIVATE NOTEBOOK BODY'), 'Scribe state must reference Notebook IDs rather than copying private Notebook body text.');
+assert(saved.notebookEntryIds[0] === notebookEntry.id && saved.ledger.length === 0, 'New-thread Save must never seed ledger history; ledger records must enter through appendLedger.');
+assert(!backing.get(SCRIBE_WORKSPACE_KEY).includes('bypass appendLedger'), 'Injected ledger content must never reach persisted Scribe state.');
+assert(!backing.get(SCRIBE_WORKSPACE_KEY).includes('PRIVATE NOTEBOOK BODY'), 'Scribe state must reference Notebook IDs rather than copying its body into public evidence.');
+
+let unknownNotebookRejected = false;
+const unknownNotebookDraft = scribe.createThreadDraft();
+const writesBeforeUnknownNotebook = writes.length;
+try {
+  scribe.save({ ...unknownNotebookDraft, notebookEntryIds: ['notebook.missing-entry'] });
+} catch (error) {
+  unknownNotebookRejected = /Unknown Research Notebook entry/i.test(error.message);
+}
+assert(unknownNotebookRejected, 'Unknown Research Notebook references must be rejected on explicit save.');
+assert(writes.length === writesBeforeUnknownNotebook, 'Rejected Notebook references must not write Scribe state.');
+
+const attached = scribe.attachEntry(saved.id, secondNotebookEntry.id);
+assert(attached.notebookEntryIds.includes(secondNotebookEntry.id), 'attachEntry must add an existing Notebook entry reference.');
+assert(attached.anchors.some((citation) => citation.kind === 'source' && citation.id === quranSource.id), 'attachEntry must carry the Notebook entry canonical citations into thread anchors.');
+assert(!backing.get(SCRIBE_WORKSPACE_KEY).includes('SECOND PRIVATE NOTEBOOK BODY'), 'Attaching a Notebook entry must not copy its private body into Scribe state.');
 
 const observation = scribe.appendLedger(saved.id, {
   kind: 'observation',
@@ -158,7 +206,23 @@ assert(scribe.get(saved.id).ledger.length === 4, 'Scribe ledger must retain obse
 
 const reloaded = await createTempleScribeWorkspace({ storage, notebook, windowRef: fixedWindow });
 assert(reloaded.threads().length === 1 && reloaded.threads()[0].ledger.length === 4, 'Saved Scribe thread and append-only ledger must restore from device-local storage.');
-assert(reloaded.exportState().privacy === 'device-local-private', 'Private Scribe export must retain privacy classification.');
+const exported = reloaded.exportState();
+assert(exported.privacy === 'device-local-private', 'Private Scribe export must retain privacy classification.');
+assert(!Object.prototype.hasOwnProperty.call(exported, 'exportedAt'), 'Export must remain valid against the state schema rather than adding undeclared top-level properties.');
+assert(Object.keys(exported).every((key) => Object.prototype.hasOwnProperty.call(schema.properties, key)), 'Export top-level properties must be declared by the state schema.');
+
+const stateBeforeQuotaFailure = JSON.stringify(reloaded.state());
+const storageBeforeQuotaFailure = backing.get(SCRIBE_WORKSPACE_KEY);
+failNextSet = true;
+let quotaFailureSurfaced = false;
+try {
+  reloaded.appendLedger(saved.id, { kind: 'observation', text: 'This write should fail transactionally.' });
+} catch (error) {
+  quotaFailureSurfaced = /quota failure/i.test(error.message);
+}
+assert(quotaFailureSurfaced, 'Device storage write failures must surface to the caller.');
+assert(JSON.stringify(reloaded.state()) === stateBeforeQuotaFailure, 'Failed device storage writes must not mutate in-memory Scribe state.');
+assert(backing.get(SCRIBE_WORKSPACE_KEY) === storageBeforeQuotaFailure, 'Failed device storage writes must leave persisted Scribe state unchanged.');
 
 let badCitationRejected = false;
 const badDraft = reloaded.createThreadDraft();
@@ -169,9 +233,48 @@ try {
 }
 assert(badCitationRejected, 'Unknown canonical citations must be rejected before thread persistence.');
 
+const repairState = {
+  schema: 'temple-of-maat/scribe-workspace-state-v1',
+  version: '1.0.0',
+  privacy: 'device-local-private',
+  updatedAt: new Date().toISOString(),
+  threads: [{
+    id: 'thread.repair-fixture',
+    title: 'Repair fixture',
+    inquiry: '',
+    status: 'open',
+    notebookEntryIds: [],
+    anchors: [
+      { kind: 'claim', id: 'claim.not-real' },
+      { kind: 'source', id: quranSource.id }
+    ],
+    ledger: [
+      { id: 'scribe.first', kind: 'observation', text: 'Valid observation.', reasoning: '', sourceCitations: [{ kind: 'source', id: quranSource.id }], createdAt: new Date().toISOString() },
+      { id: 'scribe.bad-inference', kind: 'inference', text: 'Missing reasoning.', reasoning: '', sourceCitations: [], createdAt: new Date().toISOString() },
+      { id: 'scribe.bad-correction', kind: 'correction', text: 'Missing target.', reasoning: '', sourceCitations: [], createdAt: new Date().toISOString() },
+      { id: 'scribe.forward-reply', kind: 'reply', text: 'Forward reference.', reasoning: '', sourceCitations: [], relatedLogId: 'scribe.future', createdAt: new Date().toISOString() },
+      { id: 'scribe.second', kind: 'reply', text: 'Valid reply.', reasoning: '', sourceCitations: [{ kind: 'claim', id: 'claim.not-real' }], relatedLogId: 'scribe.first', createdAt: new Date().toISOString() },
+      { id: 'scribe.first', kind: 'observation', text: 'Duplicate identifier.', reasoning: '', sourceCitations: [], createdAt: new Date().toISOString() }
+    ],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }]
+};
+const repairStorage = {
+  getItem(key) { return key === SCRIBE_WORKSPACE_KEY ? JSON.stringify(repairState) : null; },
+  setItem() { throw new Error('Repair fixture must not write during load.'); },
+  removeItem() {}
+};
+const repaired = await createTempleScribeWorkspace({ storage: repairStorage, notebook, windowRef: fixedWindow });
+const repairedThread = repaired.threads()[0];
+assert(repairedThread.anchors.length === 1 && repairedThread.anchors[0].id === quranSource.id, 'Reload must filter noncanonical thread anchors without dropping the valid thread.');
+assert(repairedThread.ledger.length === 2 && repairedThread.ledger[0].id === 'scribe.first' && repairedThread.ledger[1].id === 'scribe.second', 'Reload must preserve only sequential, unique ledger events that satisfy inference/correction/reply invariants.');
+assert(repairedThread.ledger[1].sourceCitations.length === 0, 'Reload must filter noncanonical ledger citations while preserving the valid ledger event.');
+
 assert(coreText.includes("SCRIBE_WORKSPACE_KEY = 'temple_scribe_workspace_v1'"), 'Core must declare dedicated Scribe private storage key.');
 assert(coreText.includes("kind === 'inference'") && coreText.includes('require visible reasoning'), 'Core must require visible reasoning for inference.');
 assert(coreText.includes("kind === 'correction' || kind === 'reply'"), 'Core must preserve correction and reply target requirements.');
+assert(coreText.includes('function commit(nextState)'), 'Core must use transactional device-state commits.');
 assert(!/fetch\(/.test(coreText), 'Scribe core must not issue network requests.');
 assert(uiText.includes('Observation and inference remain distinct.'), 'UI must communicate observation/inference separation.');
 assert(uiText.includes('Nabu–Thoth is a modern Temple comparative scribe archetype'), 'UI must preserve comparative-archetype historical boundary.');
@@ -192,7 +295,13 @@ console.log(JSON.stringify({
   threadCount: reloaded.threads().length,
   ledgerCount: reloaded.threads()[0].ledger.length,
   explicitWrites: writes.filter((item) => item.op === 'set' && item.key === SCRIBE_WORKSPACE_KEY).length,
+  newThreadLedgerInjectionBlocked: true,
+  unknownNotebookReferenceRejected: true,
+  notebookBodyIsolation: true,
   inferenceReasoningGuard: true,
   appendOnlyCorrection: true,
-  rightOfReply: true
+  rightOfReply: true,
+  transactionalStorageFailure: true,
+  schemaValidExport: true,
+  corruptedStateRepair: true
 }, null, 2));
