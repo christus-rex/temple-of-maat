@@ -1,6 +1,17 @@
 name: Validate Enoch Pilgrimage v1
 
 on:
+  push:
+    paths:
+      - 'pilgrimages/**'
+      - 'scripts/v5.3-pilgrimage-navigation.js'
+      - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'styles/v5.3-pilgrimage-routes.css'
+      - 'scripts/validate-enoch-pilgrimage-v1.mjs'
+      - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
+      - 'docs/ENOCH_PILGRIMAGE.md'
+      - '.github/workflows/validate-enoch-pilgrimage-v1.yml'
+      - '.github/workflows/validate-v5.yml'
   pull_request:
     paths:
       - 'pilgrimages/**'
