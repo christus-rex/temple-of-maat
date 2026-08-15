@@ -1,0 +1,33 @@
+{
+  "schema": "temple-of-maat/knowledge-endpoint-map-v1",
+  "version": "1.0.0",
+  "updated": "2026-08-15",
+  "privacy": "public-canonical-only",
+  "mappings": [
+    {
+      "endpoint": "chamber:01",
+      "kernelRecordId": "chamber.01",
+      "basis": "Exact chamber-number identity between the public Relationship Graph endpoint and the Knowledge Kernel chamber seed.",
+      "status": "reviewed"
+    },
+    {
+      "endpoint": "chamber:02",
+      "kernelRecordId": "chamber.02",
+      "basis": "Exact chamber-number identity between the public Relationship Graph endpoint and the Knowledge Kernel chamber seed.",
+      "status": "reviewed"
+    },
+    {
+      "endpoint": "chamber:03",
+      "kernelRecordId": "chamber.03",
+      "basis": "Exact chamber-number identity between the public Relationship Graph endpoint and the Knowledge Kernel chamber seed.",
+      "status": "reviewed"
+    },
+    {
+      "endpoint": "library:source.quran-tanzil-pickthall-edition",
+      "kernelSourceId": "source.quran.tanzil-pickthall",
+      "preferredPassageId": "passage.quran.49.13",
+      "basis": "The Knowledge Kernel source registry explicitly locates this source in library/catalog.json as source.quran-tanzil-pickthall-edition; the preferred passage is the reviewed seed excerpt from Qur'an 49:13.",
+      "status": "reviewed"
+    }
+  ]
+}

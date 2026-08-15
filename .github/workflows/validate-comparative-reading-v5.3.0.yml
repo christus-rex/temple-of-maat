@@ -1,0 +1,48 @@
+name: Validate Comparative Reading v5.3.0
+
+on:
+  pull_request:
+    paths:
+      - 'research/relationship-graph.json'
+      - 'research/relationship-graph.schema.json'
+      - 'library/catalog.json'
+      - 'chambers.json'
+      - 'scripts/v5.3.0-relationship-resolver.mjs'
+      - 'scripts/v5.3.0-relationship-browser-adapter.mjs'
+      - 'scripts/v5.3.0-comparative-reading.mjs'
+      - 'styles/v5.3.0-comparative-reading.css'
+      - 'scripts/validate-comparative-reading-v5.3.0.mjs'
+      - 'scripts/smoke-comparative-reading-v5.3.0.mjs'
+      - 'docs/COMPARATIVE_READING.md'
+      - '.github/workflows/validate-comparative-reading-v5.3.0.yml'
+      - '.github/workflows/validate-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  comparative-reading:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate evidence and privacy contract
+        run: node scripts/validate-comparative-reading-v5.3.0.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise comparative workspace at mobile widths
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-comparative-reading-v5.3.0.mjs
+      - name: Preserve comparative reading screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparative-reading-v5.3.0
+          path: work/comparative-reading-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7
