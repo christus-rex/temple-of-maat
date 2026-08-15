@@ -2,18 +2,41 @@
 (function () {
   'use strict';
 
-  const ROUTE_URL = './pilgrimages/enoch.v1.json';
-  const STATE_KEY = 'temple_pilgrimage_enoch_v1';
   const STATE_SCHEMA = 'temple-of-maat/pilgrimage-state-v1';
   const MAX_TEXT = 12000;
-  let route = null;
-  let routePromise = null;
+  const ROUTE_CONFIGS = Object.freeze([
+    Object.freeze({
+      routeId: 'route.enoch-angelic-mirror',
+      slug: 'enoch',
+      url: './pilgrimages/enoch.v1.json',
+      stateKey: 'temple_pilgrimage_enoch_v1',
+      cardMarker: 'enochRouteCard',
+      openMarker: 'enochRouteOpen',
+      closeLabel: 'Close Enoch pilgrimage'
+    }),
+    Object.freeze({
+      routeId: 'route.pistis-sophia-descent-return',
+      slug: 'pistis-sophia',
+      url: './pilgrimages/pistis-sophia.v1.json',
+      stateKey: 'temple_pilgrimage_pistis_sophia_v1',
+      cardMarker: 'pistisSophiaRouteCard',
+      openMarker: 'pistisSophiaRouteOpen',
+      closeLabel: 'Close Pistis Sophia pilgrimage'
+    })
+  ]);
+
+  const routes = new Map();
+  const states = new Map();
+  const routePromises = new Map();
   let layer = null;
   let layerBody = null;
+  let layerTitle = null;
+  let layerClose = null;
+  let layerScrim = null;
+  let activeRouteId = 'route.enoch-angelic-mirror';
   let currentFocus = null;
   let hiddenParent = null;
   let observer = null;
-  let state = null;
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
@@ -21,6 +44,53 @@
 
   function now() {
     return new Date().toISOString();
+  }
+
+  function configFor(routeId) {
+    return ROUTE_CONFIGS.find((item) => item.routeId === routeId) || null;
+  }
+
+  function activeRoute() {
+    return routes.get(activeRouteId) || null;
+  }
+
+  function activeState() {
+    return states.get(activeRouteId) || null;
+  }
+
+  function defaultRecordFields(route) {
+    if (Array.isArray(route?.recordFields) && route.recordFields.length) return route.recordFields;
+    return [
+      { key: 'observation', label: 'Observation' },
+      { key: 'interpretation', label: 'Interpretation' },
+      { key: 'verification', label: 'Verification' },
+      { key: 'conduct', label: 'Conduct' }
+    ];
+  }
+
+  function recordTitle(route) {
+    if (route?.recordTitle) return route.recordTitle;
+    if (route?.routeId === 'route.enoch-angelic-mirror') return 'Private Enochian Reality Record';
+    return 'Private Pilgrimage Record';
+  }
+
+  function recordSequence(route) {
+    if (route?.recordSequence) return route.recordSequence;
+    return 'Observation → Interpretation → Verification → Conduct';
+  }
+
+  function recordNote(route) {
+    if (route?.recordNote) return route.recordNote;
+    return 'Record the experience first, then its meaning. Verification and conduct remain separate so personal testimony can stay meaningful without being silently promoted to historical or metaphysical certainty.';
+  }
+
+  function unitLabel(route) {
+    return String(route?.unitLabel || 'Gate');
+  }
+
+  function unitPlural(route) {
+    const label = unitLabel(route);
+    return label.endsWith('s') ? label : `${label}s`;
   }
 
   function installStyles() {
@@ -32,32 +102,39 @@
     document.head.appendChild(link);
   }
 
-  async function loadRoute() {
-    if (route) return route;
-    if (!routePromise) {
-      routePromise = fetch(ROUTE_URL, { cache: 'force-cache' })
+  async function loadRoute(config) {
+    if (routes.has(config.routeId)) return routes.get(config.routeId);
+    if (!routePromises.has(config.routeId)) {
+      routePromises.set(config.routeId, fetch(config.url, { cache: 'force-cache' })
         .then((response) => {
-          if (!response.ok) throw new Error(`Enoch pilgrimage route ${response.status}`);
+          if (!response.ok) throw new Error(`${config.routeId} pilgrimage route ${response.status}`);
           return response.json();
         })
         .then((payload) => {
-          if (payload?.schema !== 'temple-of-maat/pilgrimage-route-v1' || payload?.routeId !== 'route.enoch-angelic-mirror') {
-            throw new Error('Unsupported Enoch pilgrimage route payload.');
+          if (payload?.schema !== 'temple-of-maat/pilgrimage-route-v1' || payload?.routeId !== config.routeId) {
+            throw new Error(`Unsupported pilgrimage route payload for ${config.routeId}.`);
           }
-          if (!Array.isArray(payload.gates) || payload.gates.length !== 8) throw new Error('Enoch pilgrimage route must contain eight gates.');
-          route = payload;
-          state = loadState();
-          return route;
-        });
+          if (!Array.isArray(payload.gates) || payload.gates.length < 1) throw new Error(`${config.routeId} requires at least one route unit.`);
+          routes.set(config.routeId, payload);
+          states.set(config.routeId, loadState(payload, config));
+          return payload;
+        }));
     }
-    return routePromise;
+    return routePromises.get(config.routeId);
   }
 
-  function emptyState() {
+  async function loadRoutes() {
+    const results = await Promise.allSettled(ROUTE_CONFIGS.map((config) => loadRoute(config)));
+    const loaded = results.filter((result) => result.status === 'fulfilled').length;
+    if (!loaded) throw new Error('No Temple pilgrimage routes could be loaded.');
+    return [...routes.values()];
+  }
+
+  function emptyState(route) {
     return {
       schema: STATE_SCHEMA,
-      routeId: route?.routeId || 'route.enoch-angelic-mirror',
-      routeVersion: route?.version || '1.0.0',
+      routeId: route.routeId,
+      routeVersion: route.version,
       started: false,
       startedAt: null,
       updatedAt: null,
@@ -67,33 +144,33 @@
     };
   }
 
-  function gateNumber(value) {
+  function gateNumber(route, value) {
     const number = Number(value);
-    return Number.isInteger(number) && route && number >= 1 && number <= route.gates.length ? number : null;
+    return Number.isInteger(number) && number >= 1 && number <= route.gates.length ? number : null;
   }
 
-  function cleanRecord(value) {
+  function cleanRecord(route, value) {
     const input = value && typeof value === 'object' ? value : {};
-    return {
-      observation: typeof input.observation === 'string' ? input.observation.slice(0, MAX_TEXT) : '',
-      interpretation: typeof input.interpretation === 'string' ? input.interpretation.slice(0, MAX_TEXT) : '',
-      verification: typeof input.verification === 'string' ? input.verification.slice(0, MAX_TEXT) : '',
-      conduct: typeof input.conduct === 'string' ? input.conduct.slice(0, MAX_TEXT) : ''
-    };
+    const result = {};
+    defaultRecordFields(route).forEach(({ key }) => {
+      result[key] = typeof input[key] === 'string' ? input[key].slice(0, MAX_TEXT) : '';
+    });
+    return result;
   }
 
-  function loadState() {
-    const fresh = emptyState();
+  function loadState(route, config) {
+    const fresh = emptyState(route);
     try {
-      const raw = JSON.parse(localStorage.getItem(STATE_KEY) || 'null');
+      const raw = JSON.parse(localStorage.getItem(config.stateKey) || 'null');
       if (!raw || typeof raw !== 'object') return fresh;
       if (raw.schema !== STATE_SCHEMA || raw.routeId !== route.routeId || raw.routeVersion !== route.version) return fresh;
-      const completed = [...new Set((Array.isArray(raw.completedGates) ? raw.completedGates : []).map(gateNumber).filter(Boolean))].sort((a, b) => a - b);
+      const completed = [...new Set((Array.isArray(raw.completedGates) ? raw.completedGates : [])
+        .map((value) => gateNumber(route, value)).filter(Boolean))].sort((a, b) => a - b);
       const records = {};
       if (raw.records && typeof raw.records === 'object') {
         Object.entries(raw.records).forEach(([key, value]) => {
-          const number = gateNumber(key);
-          if (number) records[number] = cleanRecord(value);
+          const number = gateNumber(route, key);
+          if (number) records[number] = cleanRecord(route, value);
         });
       }
       return {
@@ -101,7 +178,7 @@
         started: Boolean(raw.started),
         startedAt: typeof raw.startedAt === 'string' ? raw.startedAt : null,
         updatedAt: typeof raw.updatedAt === 'string' ? raw.updatedAt : null,
-        currentGate: gateNumber(raw.currentGate) || 1,
+        currentGate: gateNumber(route, raw.currentGate) || 1,
         completedGates: completed,
         records
       };
@@ -110,30 +187,37 @@
     }
   }
 
-  function persist(render = true) {
-    if (!state) state = emptyState();
+  function publicState(routeId = activeRouteId) {
+    const route = routes.get(routeId);
+    const state = states.get(routeId);
+    return route && state ? clone(state) : null;
+  }
+
+  function persist(routeId = activeRouteId, render = true) {
+    const route = routes.get(routeId);
+    const config = configFor(routeId);
+    const state = states.get(routeId);
+    if (!route || !config || !state) return false;
     state.routeVersion = route.version;
     state.updatedAt = now();
-    try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch {}
+    try { localStorage.setItem(config.stateKey, JSON.stringify(state)); } catch {}
     document.dispatchEvent(new CustomEvent('temple:pilgrimage-route-change', {
-      detail: { routeId: route.routeId, state: publicState() }
+      detail: { routeId, state: publicState(routeId) }
     }));
-    enhanceJourneyLauncher();
-    if (render && layer && !layer.hidden) renderRoute();
+    renderJourneyCards();
+    if (render && layer && !layer.hidden && activeRouteId === routeId) renderRoute();
+    return true;
   }
 
-  function publicState() {
-    return clone(state || emptyState());
-  }
-
-  function startIfNeeded() {
-    if (state.started) return;
+  function startIfNeeded(routeId = activeRouteId) {
+    const state = states.get(routeId);
+    if (!state || state.started) return;
     state.started = true;
     state.startedAt = state.startedAt || now();
-    persist(false);
+    persist(routeId, false);
   }
 
-  function sourceById(id) {
+  function sourceById(route, id) {
     return route.sourceRefs.find((item) => item.id === id) || null;
   }
 
@@ -154,30 +238,40 @@
   function createLayer() {
     if (layer) return;
     layer = el('div', 'tm53-route-layer');
-    layer.id = 'tm53-enoch-route';
-    layer.dataset.templePilgrimageRoute = 'enoch';
     layer.hidden = true;
     layer.setAttribute('role', 'dialog');
     layer.setAttribute('aria-modal', 'true');
     layer.setAttribute('aria-hidden', 'true');
-    layer.setAttribute('aria-labelledby', 'tm53-enoch-route-title');
 
-    const scrim = button('', closeRoute, 'tm53-route-scrim');
-    scrim.setAttribute('aria-label', 'Close Enoch pilgrimage');
+    layerScrim = button('', closeRoute, 'tm53-route-scrim');
     const panel = el('section', 'tm53-route-panel');
     const header = el('header', 'tm53-route-header');
     const titles = el('div');
     titles.append(el('p', 'tm53-route-eyebrow', 'Temple Pilgrimage Route · PERSONAL / SOURCE-AWARE'));
-    const title = el('h2', 'tm53-route-title', 'Enoch — The Angelic Mirror');
-    title.id = 'tm53-enoch-route-title';
-    titles.append(title);
-    const close = button('×', closeRoute, 'tm53-route-close');
-    close.setAttribute('aria-label', 'Close Enoch pilgrimage');
-    header.append(titles, close);
+    layerTitle = el('h2', 'tm53-route-title', 'Temple Pilgrimage');
+    titles.append(layerTitle);
+    layerClose = button('×', closeRoute, 'tm53-route-close');
+    header.append(titles, layerClose);
     layerBody = el('div', 'tm53-route-body');
     panel.append(header, layerBody);
-    layer.append(scrim, panel);
+    layer.append(layerScrim, panel);
     document.body.appendChild(layer);
+  }
+
+  function configureLayer(routeId) {
+    createLayer();
+    const route = routes.get(routeId);
+    const config = configFor(routeId);
+    if (!route || !config) return false;
+    layer.id = `tm53-${config.slug}-route`;
+    layer.dataset.templePilgrimageRoute = config.slug;
+    const titleId = `tm53-${config.slug}-route-title`;
+    layerTitle.id = titleId;
+    layerTitle.textContent = route.title;
+    layer.setAttribute('aria-labelledby', titleId);
+    layerClose.setAttribute('aria-label', config.closeLabel);
+    layerScrim.setAttribute('aria-label', config.closeLabel);
+    return true;
   }
 
   function focusables() {
@@ -186,11 +280,14 @@
       .filter((node) => !node.hidden && node.getClientRects().length);
   }
 
-  function openRoute() {
-    if (!document.body.classList.contains('temple-app-ready')) return false;
-    loadRoute().then(() => {
-      createLayer();
-      startIfNeeded();
+  function openRoute(routeId = activeRouteId) {
+    const config = configFor(routeId);
+    if (!config || !document.body.classList.contains('temple-app-ready')) return false;
+    loadRoute(config).then(() => {
+      if (layer && !layer.hidden && activeRouteId !== routeId) saveCurrentRecord(false);
+      activeRouteId = routeId;
+      configureLayer(routeId);
+      startIfNeeded(routeId);
       currentFocus = document.activeElement;
       const journey = document.getElementById('tm525-journey');
       if (journey && !journey.hidden) {
@@ -209,6 +306,7 @@
 
   function closeRoute() {
     if (!layer || layer.hidden) return;
+    saveCurrentRecord(false);
     layer.hidden = true;
     layer.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('tm53-pilgrimage-open');
@@ -226,7 +324,7 @@
     return el('span', `tm53-route-authority tm53-route-authority--${name}`, level);
   }
 
-  function renderIntro() {
+  function renderIntro(route, state) {
     const wrap = el('div', 'tm53-route-intro');
     const main = el('section', 'tm53-route-intro__card');
     main.append(
@@ -244,15 +342,15 @@
     const fill = el('span');
     fill.style.width = `${(completed / route.gates.length) * 100}%`;
     progress.append(fill);
-    side.append(progress, el('div', 'tm53-route-progress-label', `${completed} / ${route.gates.length} gates integrated`));
-    side.append(el('p', 'tm53-route-private', 'Your Enochian Reality Record remains on this device unless you explicitly export it. Personal testimony is not written into the public Knowledge Kernel or Relationship Graph.'));
+    side.append(progress, el('div', 'tm53-route-progress-label', `${completed} / ${route.gates.length} ${unitPlural(route).toLowerCase()} integrated`));
+    side.append(el('p', 'tm53-route-private', `Your ${recordTitle(route)} remains on this device unless you explicitly export it. Personal testimony is not written into the public Knowledge Kernel or Relationship Graph.`));
     wrap.append(main, side);
     return wrap;
   }
 
-  function renderGateMap() {
+  function renderGateMap(route, state) {
     const map = el('nav', 'tm53-route-gates');
-    map.setAttribute('aria-label', 'Enoch pilgrimage gates');
+    map.setAttribute('aria-label', `${route.title} ${unitPlural(route).toLowerCase()}`);
     route.gates.forEach((gate) => {
       const number = gate.ordinal;
       const classes = ['tm53-route-gate-button'];
@@ -261,10 +359,10 @@
       const node = button(String(number).padStart(2, '0'), () => {
         saveCurrentRecord(false);
         state.currentGate = number;
-        persist();
+        persist(route.routeId);
       }, classes.join(' '));
       node.title = `${gate.title}${state.completedGates.includes(number) ? ' · Integrated' : ''}`;
-      node.setAttribute('aria-label', `Gate ${number}: ${gate.title}${state.completedGates.includes(number) ? ', integrated' : ''}`);
+      node.setAttribute('aria-label', `${unitLabel(route)} ${number}: ${gate.title}${state.completedGates.includes(number) ? ', integrated' : ''}`);
       map.append(node);
     });
     return map;
@@ -276,25 +374,35 @@
     return node;
   }
 
-  function renderSourceDetails(gate) {
+  function renderSourceDetails(route, gate) {
     const details = el('details', 'tm53-route-source');
     details.append(el('summary', '', 'Source & authority boundary'));
     details.append(el('p', '', gate.sourceAnchor));
     gate.sourceRefs.forEach((id) => {
-      const source = sourceById(id);
+      const source = sourceById(route, id);
       if (!source) return;
       const line = el('p');
       const strong = el('strong', '', `${source.authority} · ${source.title}`);
       line.append(strong, document.createTextNode(` — ${source.locators.join('; ')}`));
       details.append(line);
+      if (Array.isArray(source.limitations) && source.limitations.length) {
+        const limits = el('p', 'tm53-route-source__limitations', `Limitations: ${source.limitations.join(' ')}`);
+        details.append(limits);
+      }
     });
     return details;
   }
 
-  function field(key, prompt, value) {
+  function fieldLabel(route, key) {
+    const match = defaultRecordFields(route).find((item) => item.key === key);
+    if (match?.label) return match.label;
+    return key.split('-').map((part) => part ? part[0].toUpperCase() + part.slice(1) : part).join(' ');
+  }
+
+  function field(route, state, config, key, prompt, value) {
     const wrap = el('div', 'tm53-route-field');
-    const label = el('label', '', key[0].toUpperCase() + key.slice(1));
-    const id = `tm53-enoch-${state.currentGate}-${key}`;
+    const label = el('label', '', fieldLabel(route, key));
+    const id = `tm53-${config.slug}-${state.currentGate}-${key}`;
     label.htmlFor = id;
     const small = el('small', '', prompt);
     const area = el('textarea');
@@ -307,8 +415,8 @@
     return wrap;
   }
 
-  function readFormRecord() {
-    const result = cleanRecord(state.records[state.currentGate]);
+  function readFormRecord(route, state) {
+    const result = cleanRecord(route, state.records[state.currentGate]);
     if (!layerBody) return result;
     layerBody.querySelectorAll('[data-reality-field]').forEach((area) => {
       const key = area.dataset.realityField;
@@ -318,25 +426,30 @@
   }
 
   function saveCurrentRecord(render = false) {
-    if (!state || !route) return;
-    state.records[state.currentGate] = readFormRecord();
-    persist(render);
+    const route = activeRoute();
+    const state = activeState();
+    if (!route || !state) return false;
+    state.records[state.currentGate] = readFormRecord(route, state);
+    return persist(route.routeId, render);
   }
 
   function completeCurrent() {
+    const route = activeRoute();
+    const state = activeState();
+    if (!route || !state) return;
     saveCurrentRecord(false);
     if (!state.completedGates.includes(state.currentGate)) {
       state.completedGates = [...state.completedGates, state.currentGate].sort((a, b) => a - b);
     }
     if (state.currentGate < route.gates.length) state.currentGate += 1;
-    persist();
+    persist(route.routeId);
   }
 
-  function renderCurrentGate() {
+  function renderCurrentGate(route, state, config) {
     const gate = route.gates[state.currentGate - 1];
     const card = el('article', 'tm53-route-gate');
     card.append(
-      el('p', 'tm53-route-eyebrow', `Gate ${String(gate.ordinal).padStart(2, '0')} of ${route.gates.length}`),
+      el('p', 'tm53-route-eyebrow', `${unitLabel(route)} ${String(gate.ordinal).padStart(2, '0')} of ${route.gates.length}`),
       el('h3', '', gate.title),
       el('p', 'tm53-route-gate__subtitle', gate.subtitle)
     );
@@ -344,30 +457,35 @@
     gate.authorityLevels.forEach((level) => authorities.append(renderAuthority(level)));
     card.append(authorities, section('Teaching', gate.teaching), section('Practice', gate.practice), section('Completion condition', gate.completionCondition));
     if (gate.stopCondition) card.append(el('div', 'tm53-route-stop', `Stop / pause condition — ${gate.stopCondition}`));
-    card.append(renderSourceDetails(gate));
+    card.append(renderSourceDetails(route, gate));
 
-    const record = cleanRecord(state.records[gate.ordinal]);
+    const record = cleanRecord(route, state.records[gate.ordinal]);
     const reality = el('section', 'tm53-route-record');
     reality.append(
-      el('p', 'tm53-route-eyebrow', 'Private Enochian Reality Record'),
-      el('h3', '', 'Observation → Interpretation → Verification → Conduct'),
-      el('p', 'tm53-route-record__note', 'Record the experience first, then its meaning. Verification and conduct remain separate so personal testimony can stay meaningful without being silently promoted to historical or metaphysical certainty.')
+      el('p', 'tm53-route-eyebrow', recordTitle(route)),
+      el('h3', '', recordSequence(route)),
+      el('p', 'tm53-route-record__note', recordNote(route))
     );
-    Object.entries(gate.journalPrompts).forEach(([key, prompt]) => reality.append(field(key, prompt, record[key])));
+    defaultRecordFields(route).forEach(({ key }) => {
+      const prompt = gate.journalPrompts?.[key];
+      if (typeof prompt === 'string' && prompt.trim()) reality.append(field(route, state, config, key, prompt, record[key]));
+    });
 
     const actions = el('div', 'tm53-route-actions');
-    const previous = button('← Previous Gate', () => {
+    const previous = button(`← Previous ${unitLabel(route)}`, () => {
       saveCurrentRecord(false);
       state.currentGate = Math.max(1, state.currentGate - 1);
-      persist();
+      persist(route.routeId);
     });
     previous.disabled = state.currentGate === 1;
-    const save = button('Save Reality Record', () => {
+    const save = button('Save Private Record', () => {
       saveCurrentRecord(false);
       save.textContent = 'Saved on this device';
-      setTimeout(() => { if (document.contains(save)) save.textContent = 'Save Reality Record'; }, 1100);
+      setTimeout(() => { if (document.contains(save)) save.textContent = 'Save Private Record'; }, 1100);
     });
-    const complete = button(state.currentGate === route.gates.length ? 'Integrate Final Gate' : 'Complete Gate & Continue →', completeCurrent);
+    const complete = button(state.currentGate === route.gates.length
+      ? `Integrate Final ${unitLabel(route)}`
+      : `Complete ${unitLabel(route)} & Continue →`, completeCurrent);
     complete.dataset.primary = 'true';
     actions.append(previous, save, complete);
     reality.append(actions);
@@ -375,75 +493,107 @@
     return card;
   }
 
-  function downloadState() {
-    saveCurrentRecord(false);
+  function downloadState(routeId = activeRouteId) {
+    const route = routes.get(routeId);
+    const state = states.get(routeId);
+    const config = configFor(routeId);
+    if (!route || !state || !config) return false;
+    if (routeId === activeRouteId && layer && !layer.hidden) saveCurrentRecord(false);
     const payload = {
-      ...publicState(),
+      ...clone(state),
       exportedAt: now(),
       route: {
         routeId: route.routeId,
         version: route.version,
         title: route.title,
         authorityLevels: route.authorityLevels,
-        structureNote: route.structureNote
+        structureNote: route.structureNote,
+        recordSequence: recordSequence(route)
       }
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = 'temple-of-maat-enoch-pilgrimage.json';
+    anchor.download = config.slug === 'enoch'
+      ? 'temple-of-maat-enoch-pilgrimage.json'
+      : `temple-of-maat-${config.slug}-pilgrimage.json`;
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1200);
+    return true;
   }
 
-  function resetRoute() {
-    if (!confirm('Reset Enoch pilgrimage progress and private Reality Records on this device?')) return;
-    state = emptyState();
-    try { localStorage.removeItem(STATE_KEY); } catch {}
-    renderRoute();
-    enhanceJourneyLauncher();
+  function resetRoute(routeId = activeRouteId) {
+    const route = routes.get(routeId);
+    const config = configFor(routeId);
+    if (!route || !config) return false;
+    if (!confirm(`Reset ${route.title} progress and private records on this device?`)) return false;
+    states.set(routeId, emptyState(route));
+    try { localStorage.removeItem(config.stateKey); } catch {}
+    if (routeId === activeRouteId && layer && !layer.hidden) renderRoute();
+    renderJourneyCards();
+    return true;
   }
 
   function renderRoute() {
-    if (!layerBody || !route || !state) return;
-    layerBody.replaceChildren(renderIntro(), renderGateMap(), renderCurrentGate());
+    const route = activeRoute();
+    const state = activeState();
+    const config = configFor(activeRouteId);
+    if (!layerBody || !route || !state || !config) return;
+    layerBody.replaceChildren(renderIntro(route, state), renderGateMap(route, state), renderCurrentGate(route, state, config));
     const footer = el('footer', 'tm53-route-footer');
     footer.append(
-      button('Download Enoch Route JSON', downloadState),
-      button('Reset Enoch Route', resetRoute)
+      button(`Download ${route.title} JSON`, () => downloadState(route.routeId)),
+      button(`Reset ${route.title}`, () => resetRoute(route.routeId))
     );
     layerBody.append(footer, el('p', 'tm53-route-private', `Route law — ${route.routeLaw}`));
   }
 
-  function enhanceJourneyLauncher() {
-    if (!route || !state || !document.body.classList.contains('temple-app-ready')) return;
-    const journeyBody = document.querySelector('#tm525-journey .tm525-panel-body');
-    if (!journeyBody || journeyBody.querySelector('[data-enoch-route-card]')) return;
+  function routeCard(route, state, config) {
     const card = el('section', 'tm53-route-card');
-    card.dataset.enochRouteCard = 'true';
+    card.dataset.templePilgrimageCard = config.slug;
+    card.dataset[config.cardMarker] = 'true';
     card.append(
-      el('p', 'tm53-route-card__eyebrow', 'Pilgrimage Route · Enoch'),
+      el('p', 'tm53-route-card__eyebrow', `Pilgrimage Route · ${route.title.split('—')[0].trim()}`),
       el('h3', '', route.title),
-      el('p', '', 'Explore your Enochian realities as private testimony through eight gates of source, vision, discernment, verification, and embodied right action.')
+      el('p', '', route.subtitle)
     );
     const meta = el('div', 'tm53-route-card__meta');
     meta.append(
-      el('span', 'tm53-route-badge', '8 GATES'),
-      el('span', 'tm53-route-badge', `${state.completedGates.length}/8 INTEGRATED`),
+      el('span', 'tm53-route-badge', `${route.gates.length} ${unitPlural(route).toUpperCase()}`),
+      el('span', 'tm53-route-badge', `${state.completedGates.length}/${route.gates.length} INTEGRATED`),
       el('span', 'tm53-route-badge', 'DEVICE-LOCAL RECORD')
     );
-    const launch = button(state.started ? 'Resume Enoch Pilgrimage' : 'Begin Enoch Pilgrimage', openRoute, 'tm525-btn tm525-btn--gold tm53-route-launch');
-    launch.dataset.enochRouteOpen = 'true';
+    const launch = button(state.started ? `Resume ${route.title}` : `Begin ${route.title}`, () => openRoute(route.routeId), 'tm525-btn tm525-btn--gold tm53-route-launch');
+    launch.dataset.templePilgrimageOpen = config.slug;
+    launch.dataset[config.openMarker] = 'true';
     card.append(meta, launch);
-    const mapHeading = journeyBody.querySelector('.tm525-map-heading');
-    journeyBody.insertBefore(card, mapHeading || journeyBody.firstChild);
+    return card;
+  }
+
+  function renderJourneyCards() {
+    if (!document.body.classList.contains('temple-app-ready')) return;
+    const journeyBody = document.querySelector('#tm525-journey .tm525-panel-body');
+    if (!journeyBody) return;
+    let gallery = journeyBody.querySelector('[data-pilgrimage-route-gallery]');
+    if (!gallery) {
+      gallery = el('section', 'tm53-route-gallery');
+      gallery.dataset.pilgrimageRouteGallery = 'true';
+      const mapHeading = journeyBody.querySelector('.tm525-map-heading');
+      journeyBody.insertBefore(gallery, mapHeading || journeyBody.firstChild);
+    }
+    gallery.replaceChildren();
+    ROUTE_CONFIGS.forEach((config) => {
+      const route = routes.get(config.routeId);
+      const state = states.get(config.routeId);
+      if (route && state) gallery.append(routeCard(route, state, config));
+    });
   }
 
   function enhance() {
-    enhanceJourneyLauncher();
+    renderJourneyCards();
   }
 
   function installKeyboard() {
@@ -472,12 +622,14 @@
   async function init() {
     installStyles();
     try {
-      await loadRoute();
+      await loadRoutes();
     } catch (error) {
       console.error('[Temple pilgrimage]', error);
       return;
     }
     createLayer();
+    if (routes.has(activeRouteId)) configureLayer(activeRouteId);
+    else activeRouteId = routes.keys().next().value;
     enhance();
     installKeyboard();
     if (!observer) {
@@ -485,14 +637,17 @@
       observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] });
     }
     window.TemplePilgrimageRoutes = Object.freeze({
-      version: '1.0.0',
-      routes: () => [clone(route)],
-      state: (routeId = route.routeId) => routeId === route.routeId ? publicState() : null,
-      open: (routeId = route.routeId) => routeId === route.routeId ? openRoute() : false,
+      version: '1.1.0',
+      routes: () => ROUTE_CONFIGS.map((config) => routes.get(config.routeId)).filter(Boolean).map(clone),
+      state: (routeId = activeRouteId) => publicState(routeId),
+      open: (routeId = activeRouteId) => openRoute(routeId),
       close: closeRoute,
-      download: (routeId = route.routeId) => routeId === route.routeId ? downloadState() : false
+      download: (routeId = activeRouteId) => downloadState(routeId),
+      reset: (routeId = activeRouteId) => resetRoute(routeId)
     });
-    document.dispatchEvent(new CustomEvent('temple:pilgrimage-routes-ready', { detail: { routeId: route.routeId, version: route.version } }));
+    document.dispatchEvent(new CustomEvent('temple:pilgrimage-routes-ready', {
+      detail: { version: '1.1.0', routeIds: [...routes.keys()] }
+    }));
   }
 
   function waitForJourney() {
