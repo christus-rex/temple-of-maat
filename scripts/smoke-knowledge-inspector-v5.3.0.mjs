@@ -124,7 +124,7 @@ try {
       reviewedMappings: installed.stats?.reviewedEndpointMappings === 4,
       defaultPairPreserved: defaultState.left === 'library:source.quran-tanzil-pickthall-edition' && defaultState.right === 'library:study.quran-abjad-gematria',
       quranSourceMapped: /REVIEWED ENDPOINT MAP/.test(defaultState.leftText) && /source\.quran\.tanzil-pickthall/.test(defaultState.leftText),
-      exactPassageVisible: /Source Passage Inspection/.test(defaultState.leftText) && /Qur'an 49:13/.test(defaultState.leftText) && defaultState.passageModes.includes('EXACT-SOURCE'),
+      exactPassageVisible: /Source Passage Inspection/.test(defaultState.leftText) && /Qur'an 49:13/.test(defaultState.leftText) && defaultState.passageModes.some((item) => String(item).toLowerCase() === 'exact-source'),
       rightsAndLimitationsVisible: /Rights —/.test(defaultState.leftText) && /complete verse and Arabic text/i.test(defaultState.leftText),
       unmappedStudyExplicit: /UNMAPPED ENDPOINT/.test(defaultState.rightText) && /will not infer one/i.test(defaultState.rightText),
       chamberClaimVisible: /claim\.chamber\.01\.current-law/.test(chamberState.leftText) && /INITIATE WITHOUT ERASURE/.test(chamberState.leftText),
