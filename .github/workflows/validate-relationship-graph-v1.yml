@@ -6,10 +6,13 @@ on:
       - 'research/relationship-graph.json'
       - 'research/relationship-graph.schema.json'
       - 'docs/RELATIONSHIP_GRAPH.md'
+      - 'docs/RELATIONSHIP_RESOLVER.md'
       - 'library/catalog.json'
       - 'chambers.json'
       - 'scripts/v5.2.4-living-codex.js'
       - 'scripts/v5.2.6-shem-dossiers.js'
+      - 'scripts/v5.3.0-relationship-resolver.mjs'
+      - 'scripts/test-relationship-resolver-v5.3.0.mjs'
       - 'scripts/validate-relationship-graph-v1.mjs'
       - '.github/workflows/validate-relationship-graph-v1.yml'
   workflow_dispatch:
@@ -28,3 +31,5 @@ jobs:
           node-version: '24'
       - name: Validate endpoints, provenance, claim boundaries, and negative guardrails
         run: node scripts/validate-relationship-graph-v1.mjs
+      - name: Exercise shared resolver/query semantics
+        run: node scripts/test-relationship-resolver-v5.3.0.mjs
