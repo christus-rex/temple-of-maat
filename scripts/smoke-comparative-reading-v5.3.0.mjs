@@ -14,6 +14,13 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const outDir = path.join(root, 'work', 'comparative-reading-smoke');
 fs.mkdirSync(outDir, { recursive: true });
 
+async function waitForTemple(page) {
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+  await wait(900);
+  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+}
+
 async function geometry(page, width) {
   await page.setViewportSize({ width, height: 800 });
   await wait(120);
@@ -69,7 +76,7 @@ try {
     });
 
     await page.goto(`http://127.0.0.1:${port}/?comparative_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+    await waitForTemple(page);
 
     const beforeEntry = await page.evaluate(() => ({
       appReady: document.body.classList.contains('temple-app-ready'),
