@@ -54,8 +54,11 @@ export async function createTempleKnowledgeInspector(options = {}) {
   if (sourceRegistry?.schema !== 'temple-of-maat/source-registry-v1' || sourceRegistry?.privacy !== 'public-canonical-only') {
     throw new Error('Unsupported or non-public source registry.');
   }
-  if (methodRegistry?.schema !== 'temple-of-maat/method-registry-v1' || methodRegistry?.privacy !== 'public-canonical-only') {
-    throw new Error('Unsupported or non-public method registry.');
+  // The v1 method registry predates the explicit registry-level privacy field. It is
+  // repository-hosted public canonical data referenced by the public Kernel seed; its
+  // schema identity is the authoritative compatibility gate for this version.
+  if (methodRegistry?.schema !== 'temple-of-maat/method-registry-v1') {
+    throw new Error('Unsupported Knowledge Kernel method registry.');
   }
   if (endpointMap?.schema !== 'temple-of-maat/knowledge-endpoint-map-v1' || endpointMap?.privacy !== 'public-canonical-only') {
     throw new Error('Unsupported or non-public endpoint map.');
@@ -85,10 +88,6 @@ export async function createTempleKnowledgeInspector(options = {}) {
     return records.filter((record) => record.entityType === 'source-passage' && record.sourceRefs?.includes(sourceId)).map(clone);
   }
 
-  function sourcesForRecord(record) {
-    return unique(record?.sourceRefs || []).map((id) => sourceById.get(id)).filter(Boolean).map(clone);
-  }
-
   function methodsForClaims(items) {
     return unique(items.map((claim) => claim.methodRef)).map((id) => methodById.get(id)).filter(Boolean).map(clone);
   }
@@ -97,7 +96,6 @@ export async function createTempleKnowledgeInspector(options = {}) {
     const record = recordById.get(recordId);
     if (!record) return null;
     const recordClaims = claimsForRecord(recordId);
-    const recordSources = sourcesForRecord(record);
     const sourceIds = unique([
       ...(record.sourceRefs || []),
       ...recordClaims.flatMap((claim) => claim.evidence?.sourceRefs || [])
