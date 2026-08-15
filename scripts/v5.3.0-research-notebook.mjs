@@ -20,6 +20,12 @@ function now() {
   return new Date().toISOString();
 }
 
+function normalizeDateTime(value, fallback = now()) {
+  if (typeof value !== 'string' || !value.trim()) return fallback;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? new Date(parsed).toISOString() : fallback;
+}
+
 function publicWindow(windowRef) {
   return windowRef && typeof windowRef === 'object' ? windowRef : {};
 }
@@ -63,8 +69,8 @@ function cleanEntry(input) {
   if (!input || typeof input !== 'object') return null;
   const id = cleanText(input.id, 180).trim();
   if (!/^notebook\.[a-z0-9-]+$/.test(id)) return null;
-  const createdAt = typeof input.createdAt === 'string' ? input.createdAt : now();
-  const updatedAt = typeof input.updatedAt === 'string' ? input.updatedAt : createdAt;
+  const createdAt = normalizeDateTime(input.createdAt);
+  const updatedAt = normalizeDateTime(input.updatedAt, createdAt);
   return {
     id,
     title: cleanText(input.title, MAX_TITLE),
@@ -96,12 +102,27 @@ export async function createTempleResearchNotebook(options = {}) {
   }
   const inspector = options.inspector || await installTempleKnowledgeInspector({ windowRef, ...(options.inspectorOptions || {}) });
 
+  function citationExists(citation) {
+    if (citation.kind === 'endpoint') return Boolean(endpointValue(citation.id));
+    if (citation.kind === 'claim') return Boolean(inspector.claim(citation.id));
+    if (citation.kind === 'passage') return inspector.record(citation.id)?.entityType === 'source-passage';
+    if (citation.kind === 'source') return Boolean(inspector.source(citation.id));
+    return false;
+  }
+
+  function normalizeLoadedEntry(input) {
+    const entry = cleanEntry(input);
+    if (!entry) return null;
+    entry.citations = entry.citations.filter(citationExists);
+    return entry;
+  }
+
   function loadState() {
     try {
       const parsed = JSON.parse(storage.getItem(RESEARCH_NOTEBOOK_KEY) || 'null');
       if (!parsed || parsed.schema !== RESEARCH_NOTEBOOK_SCHEMA || parsed.version !== RESEARCH_NOTEBOOK_VERSION || parsed.privacy !== RESEARCH_NOTEBOOK_PRIVACY) return emptyState();
-      const entries = (Array.isArray(parsed.entries) ? parsed.entries : []).map(cleanEntry).filter(Boolean).slice(0, MAX_ENTRIES);
-      return { ...emptyState(), updatedAt: typeof parsed.updatedAt === 'string' ? parsed.updatedAt : now(), entries };
+      const entries = (Array.isArray(parsed.entries) ? parsed.entries : []).map(normalizeLoadedEntry).filter(Boolean).slice(0, MAX_ENTRIES);
+      return { ...emptyState(), updatedAt: normalizeDateTime(parsed.updatedAt), entries };
     } catch {
       return emptyState();
     }
@@ -109,22 +130,16 @@ export async function createTempleResearchNotebook(options = {}) {
 
   let state = loadState();
 
-  function persist() {
-    state.updatedAt = now();
-    storage.setItem(RESEARCH_NOTEBOOK_KEY, JSON.stringify(state));
+  function commit(nextState) {
+    const committed = clone(nextState);
+    committed.updatedAt = now();
+    storage.setItem(RESEARCH_NOTEBOOK_KEY, JSON.stringify(committed));
+    state = committed;
     if (typeof windowRef.document?.dispatchEvent === 'function' && typeof windowRef.CustomEvent === 'function') {
       windowRef.document.dispatchEvent(new windowRef.CustomEvent('temple:research-notebook-change', {
         detail: { schema: state.schema, privacy: state.privacy, entryCount: state.entries.length, updatedAt: state.updatedAt }
       }));
     }
-  }
-
-  function citationExists(citation) {
-    if (citation.kind === 'endpoint') return Boolean(endpointValue(citation.id));
-    if (citation.kind === 'claim') return Boolean(inspector.claim(citation.id));
-    if (citation.kind === 'passage') return inspector.record(citation.id)?.entityType === 'source-passage';
-    if (citation.kind === 'source') return Boolean(inspector.source(citation.id));
-    return false;
   }
 
   function validateCitations(citations) {
@@ -178,37 +193,41 @@ export async function createTempleResearchNotebook(options = {}) {
     const incoming = cleanEntry({ ...input, citations: validateCitations(input?.citations || []) });
     if (!incoming) throw new TypeError('Research Notebook entry is invalid.');
     const existingIndex = state.entries.findIndex((item) => item.id === incoming.id);
-    const timestamp = now();
+    if (existingIndex < 0 && state.entries.length >= MAX_ENTRIES) throw new RangeError(`Research Notebook supports at most ${MAX_ENTRIES} entries.`);
     const entry = {
       ...incoming,
       createdAt: existingIndex >= 0 ? state.entries[existingIndex].createdAt : incoming.createdAt,
-      updatedAt: timestamp
+      updatedAt: now()
     };
-    if (existingIndex >= 0) state.entries.splice(existingIndex, 1, entry);
-    else {
-      if (state.entries.length >= MAX_ENTRIES) throw new RangeError(`Research Notebook supports at most ${MAX_ENTRIES} entries.`);
-      state.entries.unshift(entry);
-    }
-    persist();
+    const next = clone(state);
+    if (existingIndex >= 0) next.entries.splice(existingIndex, 1, entry);
+    else next.entries.unshift(entry);
+    commit(next);
     return clone(entry);
   }
 
   function removeEntry(id) {
-    const before = state.entries.length;
-    state.entries = state.entries.filter((item) => item.id !== id);
-    if (state.entries.length === before) return false;
-    persist();
+    const next = clone(state);
+    const before = next.entries.length;
+    next.entries = next.entries.filter((item) => item.id !== id);
+    if (next.entries.length === before) return false;
+    commit(next);
     return true;
   }
 
   function reset() {
-    state = emptyState();
     storage.removeItem(RESEARCH_NOTEBOOK_KEY);
+    state = emptyState();
+    if (typeof windowRef.document?.dispatchEvent === 'function' && typeof windowRef.CustomEvent === 'function') {
+      windowRef.document.dispatchEvent(new windowRef.CustomEvent('temple:research-notebook-change', {
+        detail: { schema: state.schema, privacy: state.privacy, entryCount: 0, updatedAt: state.updatedAt }
+      }));
+    }
     return true;
   }
 
   function exportState() {
-    return clone({ ...state, exportedAt: now() });
+    return clone(state);
   }
 
   function resolveCitation(citation) {
