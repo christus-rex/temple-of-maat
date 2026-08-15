@@ -12,6 +12,12 @@ The Workspace is **device-local private state**. It groups saved Research Notebo
 
 “Nabu–Thoth” is a modern Temple comparative archetype for the sacred scribe: receiving, measuring, recording, correcting, and transmitting knowledge. It is not a historical claim that Mesopotamian Nabu and Egyptian Djehuty/Thoth were one ancient deity.
 
+## Staged activation
+
+The v1 Scribe module is intentionally **not auto-loaded** by the Temple threshold/startup path. Browser validation explicitly installs the governed research stack only after the visitor has crossed the manual entry threshold.
+
+When the research stack is explicitly installed, the Scribe Workspace integrates with Comparative Reading and the Research Notebook. The staged PR therefore adds the workspace capability without silently changing production startup behavior or creating private state merely because the Temple was opened.
+
 ## Scribe covenant
 
 The v1 ledger enforces several research disciplines:
@@ -93,6 +99,6 @@ Exporting is not publishing. The export remains private unless the user delibera
 
 ## UI placement
 
-The Scribe Workspace is available as a private research overlay from Comparative Reading and from the Research Notebook. It adds no global bottom-dock control.
+When the research stack is explicitly installed, the Scribe Workspace is available as a private research overlay from Comparative Reading and from the Research Notebook. It adds no global bottom-dock control.
 
 On narrow screens the thread list stacks above the editor and controls remain inside the viewport.
