@@ -28,4 +28,5 @@ jobs:
       - run: node scripts/validate-offline-controls-v1.mjs
       - run: node scripts/validate-relationship-graph-v1.mjs
       - run: node scripts/test-relationship-resolver-v5.3.0.mjs
+      - run: node scripts/test-relationship-browser-adapter-v5.3.0.mjs
       - run: node scripts/validate-knowledge-kernel-v1.mjs
