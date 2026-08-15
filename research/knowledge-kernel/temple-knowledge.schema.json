@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://christus-rex.github.io/temple-of-maat/research/knowledge-kernel/temple-knowledge.schema.json",
+  "title": "Temple of Ma'at Knowledge Kernel",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "version", "updated", "privacy", "sourceRegistry", "methodRegistry", "records", "claims"],
+  "properties": {
+    "schema": { "const": "temple-of-maat/knowledge-kernel-v1" },
+    "version": { "const": "1.0.0" },
+    "updated": { "type": "string", "format": "date" },
+    "privacy": { "const": "public-canonical-only" },
+    "sourceRegistry": { "const": "research/knowledge-kernel/source-registry.v1.json" },
+    "methodRegistry": { "const": "research/knowledge-kernel/method-registry.v1.json" },
+    "records": { "type": "array", "minItems": 10, "items": { "$ref": "#/$defs/record" } },
+    "claims": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/claim" } }
+  },
+  "$defs": {
+    "provenanceClass": {
+      "type": "string",
+      "enum": ["source", "historical-scholarship", "later-correspondence", "temple-synthesis", "current-implementation", "user-prompt-derived"]
+    },
+    "recordStatus": { "type": "string", "enum": ["current", "seed", "proposed", "review-needed", "archived", "superseded"] },
+    "historicalStatus": {
+      "type": "string",
+      "enum": ["historical-source", "historical-context", "later-tradition", "modern-synthesis", "current-implementation", "not-applicable"]
+    },
+    "confidence": { "type": "string", "enum": ["established", "supported", "provisional", "exploratory", "symbolic"] },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "text", "language"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["exact-source", "careful-paraphrase", "normalized-temple-language", "locator-only"] },
+        "text": { "type": "string" },
+        "language": { "type": "string", "minLength": 1 },
+        "rightsNote": { "type": "string" },
+        "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordId", "entityType", "displayName", "provenanceClasses", "historicalStatus", "implementationStatus", "sourceRefs", "createdAt", "reviewStatus"],
+      "properties": {
+        "recordId": { "type": "string", "pattern": "^[a-z][a-z0-9._-]+$" },
+        "entityType": { "type": "string", "enum": ["chamber", "maat-declaration", "source-passage", "concept"] },
+        "displayName": { "type": "string", "minLength": 1 },
+        "provenanceClasses": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/provenanceClass" } },
+        "historicalStatus": { "$ref": "#/$defs/historicalStatus" },
+        "implementationStatus": { "$ref": "#/$defs/recordStatus" },
+        "sourceRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^source\\." } },
+        "sourceLocator": { "type": "string" },
+        "content": { "$ref": "#/$defs/content" },
+        "attributes": { "type": "object", "additionalProperties": true },
+        "aliases": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "supersedes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "supersededBy": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "createdAt": { "type": "string", "format": "date" },
+        "reviewedAt": { "type": ["string", "null"], "format": "date" },
+        "reviewStatus": { "type": "string", "enum": ["reviewed", "provisional", "review-needed"] }
+      }
+    },
+    "claimObject": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["recordId"], "properties": { "recordId": { "type": "string", "minLength": 1 } } },
+        { "type": "object", "additionalProperties": false, "required": ["literal"], "properties": { "literal": {} } }
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claimId", "subjectId", "predicate", "object", "claimType", "provenanceClasses", "confidence", "status", "evidence", "boundaries"],
+      "properties": {
+        "claimId": { "type": "string", "pattern": "^claim\\.[a-z0-9][a-z0-9._-]*$" },
+        "subjectId": { "type": "string", "minLength": 1 },
+        "predicate": { "type": "string", "pattern": "^[a-z][a-z0-9._-]+$" },
+        "object": { "$ref": "#/$defs/claimObject" },
+        "claimType": { "type": "string", "enum": ["historical", "textual", "computational", "comparative", "symbolic", "structural", "ethical-practice"] },
+        "provenanceClasses": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/provenanceClass" } },
+        "methodRef": { "type": ["string", "null"], "pattern": "^method\\." },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "status": { "type": "string", "enum": ["draft", "reviewed", "archived"] },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sourceRefs", "rationale"],
+          "properties": {
+            "sourceRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^source\\." } },
+            "sourceLocator": { "type": "string" },
+            "rationale": { "type": "string", "minLength": 1 },
+            "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          }
+        },
+        "boundaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["historicalIdentity", "metaphysicalIdentity", "directHistoricalInfluence"],
+          "properties": {
+            "historicalIdentity": { "const": false },
+            "metaphysicalIdentity": { "const": false },
+            "directHistoricalInfluence": { "type": "string", "enum": ["not-claimed", "supported", "provisional"] }
+          }
+        }
+      }
+    }
+  }
+}

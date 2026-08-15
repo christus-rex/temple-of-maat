@@ -1,0 +1,62 @@
+{
+  "schema": "temple-of-maat/source-registry-v1",
+  "version": "1.0.0",
+  "updated": "2026-08-14",
+  "privacy": "public-canonical-only",
+  "sources": [
+    {
+      "id": "source.temple.chambers-v3",
+      "title": "Temple of Ma'at — 72 Chamber Archive",
+      "authorityType": "current-implementation",
+      "storage": "repository",
+      "locator": "chambers.json",
+      "provenanceClasses": ["current-implementation", "temple-synthesis"],
+      "notes": "Canonical live chamber record store for this implementation version. Chamber names, offices, laws, and fused identities are Temple constructs rather than ancient source claims."
+    },
+    {
+      "id": "source.egyptian.book-dead-spell-125-concordance",
+      "title": "The Egyptian Book of the Dead — Complete Spell Concordance",
+      "authorityType": "historical-scholarship",
+      "storage": "file-library",
+      "locator": "Spell 125: Hall of the Two Truths; declarations of innocence; forty-two assessors; weighing of the heart",
+      "provenanceClasses": ["historical-scholarship"],
+      "notes": "Project concordance explicitly separates historical function from modern comparative and gematria layers."
+    },
+    {
+      "id": "source.temple.maat-listening-heart",
+      "title": "Ma'at: The Listening Heart — A Wisdom and Visual Collection",
+      "authorityType": "project-study",
+      "storage": "file-library",
+      "locator": "Selected Teaching: The Justice of Listening; Ptahhotep section 20; Papyrus Prisse column 9 lines 3–7",
+      "provenanceClasses": ["historical-scholarship", "temple-synthesis"],
+      "notes": "Uses a careful paraphrase and explicitly does not present the teaching as direct speech of the goddess Ma'at."
+    },
+    {
+      "id": "source.quran.tanzil-pickthall",
+      "title": "The Qur'an — Arabic Source Text with Pickthall Translation",
+      "authorityType": "primary-source-edition",
+      "storage": "library+file-library",
+      "locator": "library/catalog.json → source.quran-tanzil-pickthall-edition; source edition verse 49:13",
+      "provenanceClasses": ["source"],
+      "notes": "Arabic corpus attributed to Tanzil; Pickthall aligned verse-for-verse. Analytical normalization belongs to the Abjad study, not the source edition."
+    },
+    {
+      "id": "source.shem.master-catalogue",
+      "title": "The 72-Fold Shem HaMephorash — Master Catalogue, Gematria & Discernment",
+      "authorityType": "computational-method+modern-comparative-synthesis",
+      "storage": "drive+file-library",
+      "locator": "Master Catalogue method section",
+      "provenanceClasses": ["historical-scholarship", "later-correspondence", "temple-synthesis"],
+      "notes": "Third Names and cross-system pairings are modern comparative constructs unless separately sourced."
+    },
+    {
+      "id": "source.solomonic.pairing-codex",
+      "title": "The Solomonic Pairing Codex — Gematria & Angelic Correspondences",
+      "authorityType": "computational-method+modern-comparative-synthesis",
+      "storage": "drive",
+      "locator": "Declared EO / FR / RO / RFR methodology and pairing disclaimers",
+      "provenanceClasses": ["historical-scholarship", "later-correspondence", "temple-synthesis"],
+      "notes": "Separates historical grimoire content, later correspondence systems, and modern gematria."
+    }
+  ]
+}
