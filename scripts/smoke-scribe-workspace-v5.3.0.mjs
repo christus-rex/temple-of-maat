@@ -14,6 +14,13 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const outDir = path.join(root, 'work', 'scribe-workspace-smoke');
 fs.mkdirSync(outDir, { recursive: true });
 
+async function waitForTemple(page) {
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+  await wait(900);
+  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+}
+
 async function geometry(page, width) {
   await page.setViewportSize({ width, height: 920 });
   await wait(140);
@@ -85,8 +92,7 @@ try {
     });
 
     await page.goto(`http://127.0.0.1:${port}/?scribe_workspace_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
-
+    await waitForTemple(page);
     const beforeEntry = await page.evaluate(() => ({
       appReady: document.body.classList.contains('temple-app-ready'),
       rootInert: document.getElementById('root')?.hasAttribute('inert'),
@@ -116,18 +122,14 @@ try {
 
     const comparativeIntegration = await page.evaluate(() => ({
       launchbarCount: document.querySelectorAll('[data-temple-scribe-launchbar]').length,
-      dockControls: document.querySelectorAll('#tm524-dock [data-temple-scribe-launchbar], #tm524-dock [data-temple-scribe-launcher]').length,
-      boundaryText: document.querySelector('[data-temple-scribe-launchbar]')?.innerText || ''
+      dockControls: document.querySelectorAll('#tm524-dock [data-temple-scribe-launchbar], #tm524-dock [data-temple-scribe-launcher]').length
     }));
 
     await page.getByRole('button', { name: 'New Thread from Comparison' }).click();
     await page.waitForSelector('#tm530-scribe-workspace:not([hidden]) [data-scribe-thread-title]', { timeout: 30000 });
-
     const draftState = await page.evaluate(() => ({
       storagePresent: Boolean(localStorage.getItem('temple_scribe_workspace_v1')),
       threadCount: window.TempleScribeWorkspace.threads().length,
-      title: document.querySelector('[data-scribe-thread-title]')?.value || '',
-      inquiry: document.querySelector('[data-scribe-thread-inquiry]')?.value || '',
       covenant: document.querySelector('.tm530-scribe-covenant')?.innerText || '',
       historicalBoundary: document.querySelector('.tm530-scribe-boundary')?.innerText || '',
       entryOptions: document.querySelectorAll('[data-scribe-entry-ref]').length,
@@ -139,51 +141,50 @@ try {
     const entryChecks = page.locator('[data-scribe-entry-ref]');
     await entryChecks.nth(0).check();
     await entryChecks.nth(1).check();
+    const beforeSave = await page.evaluate(() => ({ storagePresent: Boolean(localStorage.getItem('temple_scribe_workspace_v1')), threads: window.TempleScribeWorkspace.threads().length }));
 
-    const beforeSave = await page.evaluate(() => ({
-      storagePresent: Boolean(localStorage.getItem('temple_scribe_workspace_v1')),
-      threads: window.TempleScribeWorkspace.threads().length
-    }));
     await page.getByRole('button', { name: 'Save Thread' }).click();
     await page.waitForFunction(() => window.TempleScribeWorkspace.threads().length === 1 && localStorage.getItem('temple_scribe_workspace_v1'), null, { timeout: 30000 });
 
-    const privateObservation = 'PRIVATE SCRIBE OBSERVATION — source and study remain separate records';
-    const privateInference = 'PRIVATE SCRIBE INFERENCE — normalization choices affect numerical output';
-    const privateCorrection = 'PRIVATE SCRIBE CORRECTION — arithmetic dependence does not prove metaphysical identity';
-    const privateReply = 'PRIVATE SCRIBE REPLY — symbolic usefulness may still be explored without identity claims';
+    const markers = {
+      observation: 'PRIVATE SCRIBE OBSERVATION — source and study remain separate records',
+      inference: 'PRIVATE SCRIBE INFERENCE — normalization choices affect numerical output',
+      correction: 'PRIVATE SCRIBE CORRECTION — arithmetic dependence does not prove metaphysical identity',
+      reply: 'PRIVATE SCRIBE REPLY — symbolic usefulness may still be explored without identity claims'
+    };
 
     await page.selectOption('[data-scribe-ledger-kind]', 'observation');
-    await page.fill('[data-scribe-ledger-text]', privateObservation);
+    await page.fill('[data-scribe-ledger-text]', markers.observation);
     const citationChecks = page.locator('[data-scribe-ledger-citation]');
     if (await citationChecks.count()) await citationChecks.nth(0).check();
     await page.getByRole('button', { name: 'Add Ledger Entry' }).click();
-    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), privateObservation, { timeout: 30000 });
+    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), markers.observation, { timeout: 30000 });
 
     await page.selectOption('[data-scribe-ledger-kind]', 'inference');
-    await page.fill('[data-scribe-ledger-text]', privateInference);
+    await page.fill('[data-scribe-ledger-text]', markers.inference);
     await page.fill('[data-scribe-ledger-reasoning]', 'The study record declares normalization rules and explicitly preserves the source text separately.');
     await page.getByRole('button', { name: 'Add Ledger Entry' }).click();
-    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), privateInference, { timeout: 30000 });
+    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), markers.inference, { timeout: 30000 });
 
-    const inferenceId = await page.evaluate((marker) => window.TempleScribeWorkspace.threads()[0].ledger.find((event) => event.text === marker)?.id, privateInference);
+    const inferenceId = await page.evaluate((marker) => window.TempleScribeWorkspace.threads()[0].ledger.find((event) => event.text === marker)?.id, markers.inference);
     await page.selectOption('[data-scribe-ledger-kind]', 'correction');
-    await page.fill('[data-scribe-ledger-text]', privateCorrection);
+    await page.fill('[data-scribe-ledger-text]', markers.correction);
     await page.fill('[data-scribe-ledger-reasoning]', 'The canonical relationship boundary explicitly rejects metaphysical identity.');
     await page.selectOption('[data-scribe-ledger-related]', inferenceId);
     await page.getByRole('button', { name: 'Add Ledger Entry' }).click();
-    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), privateCorrection, { timeout: 30000 });
+    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), markers.correction, { timeout: 30000 });
 
-    const correctionId = await page.evaluate((marker) => window.TempleScribeWorkspace.threads()[0].ledger.find((event) => event.text === marker)?.id, privateCorrection);
+    const correctionId = await page.evaluate((marker) => window.TempleScribeWorkspace.threads()[0].ledger.find((event) => event.text === marker)?.id, markers.correction);
     await page.selectOption('[data-scribe-ledger-kind]', 'reply');
-    await page.fill('[data-scribe-ledger-text]', privateReply);
+    await page.fill('[data-scribe-ledger-text]', markers.reply);
     await page.selectOption('[data-scribe-ledger-related]', correctionId);
     await page.getByRole('button', { name: 'Add Ledger Entry' }).click();
-    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), privateReply, { timeout: 30000 });
+    await page.waitForFunction((marker) => window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker), markers.reply, { timeout: 30000 });
 
     const afterLedger = await page.evaluate((markers) => {
       const raw = JSON.parse(localStorage.getItem('temple_scribe_workspace_v1') || 'null');
       const thread = window.TempleScribeWorkspace.threads()[0];
-      const graphBundle = window.TempleRelationshipBrowser.exportBundle();
+      const graphText = JSON.stringify(window.TempleRelationshipBrowser.exportBundle());
       const kernelText = JSON.stringify({ records: window.TempleKnowledgeInspector.records(), claims: window.TempleKnowledgeInspector.claims() });
       return {
         raw,
@@ -193,14 +194,14 @@ try {
         correctionRelated: thread.ledger.find((event) => event.text === markers.correction)?.relatedLogId,
         replyRelated: thread.ledger.find((event) => event.text === markers.reply)?.relatedLogId,
         inferenceReasoning: thread.ledger.find((event) => event.text === markers.inference)?.reasoning || '',
-        graphContainsPrivate: JSON.stringify(graphBundle).includes('PRIVATE SCRIBE'),
+        graphContainsPrivate: graphText.includes('PRIVATE SCRIBE'),
         kernelContainsPrivate: kernelText.includes('PRIVATE SCRIBE'),
         threadCopiedNotebookBody: JSON.stringify(raw).includes('PRIVATE NOTEBOOK SOURCE OBSERVATION') || JSON.stringify(raw).includes('PRIVATE NOTEBOOK COUNTER READING'),
         notebookCount: window.TempleResearchNotebook.entries().length,
         journeyUntouched: window.TemplePilgrimJourney.state().reflections['1'] === 'PRIVATE SCRIBE JOURNEY MARKER',
         libraryUntouched: window.TempleLibrary.state().notes.some((note) => note.text === 'PRIVATE SCRIBE LIBRARY MARKER')
       };
-    }, { inference: privateInference, correction: privateCorrection, reply: privateReply });
+    }, markers);
 
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Export Private Scribe Threads JSON' }).click();
@@ -215,7 +216,7 @@ try {
     await page.getByRole('button', { name: 'Close Nabu-Thoth Scribe Workspace' }).last().click();
     await page.waitForFunction(() => document.getElementById('tm530-scribe-workspace')?.hidden === true);
     await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+    await waitForTemple(page);
     await page.click('[data-temple-entry="explore"]');
     await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 30000 });
     await page.waitForFunction(() => window.TempleShem72?.all?.().length === 72 && window.TempleLibrary?.open, null, { timeout: 30000 });
@@ -225,9 +226,9 @@ try {
       markerRestored: window.TempleScribeWorkspace.threads()[0]?.ledger?.some((event) => event.text === marker),
       privacy: window.TempleScribeWorkspace.state().privacy,
       notebookEntries: window.TempleResearchNotebook.entries().length
-    }), privateReply);
+    }), markers.reply);
 
-    const allPrivateMarkers = [privateObservation, privateInference, privateCorrection, privateReply];
+    const markerValues = Object.values(markers);
     const assertions = {
       manualThresholdPreserved: beforeEntry.appReady === false && beforeEntry.rootInert === true && beforeEntry.scribeGlobal === false && beforeEntry.scribeUiGlobal === false && beforeEntry.scribeStored === false,
       installedContract: installed.comparison === 'temple-of-maat/comparative-reading-v1' && installed.inspector === 'temple-of-maat/knowledge-inspector-v1' && installed.notebook === 'temple-of-maat/research-notebook-state-v1' && installed.scribe === 'temple-of-maat/scribe-workspace-state-v1' && installed.scribeUi === 'temple-of-maat/scribe-workspace-ui-v1' && installed.privacy === 'device-local-private',
@@ -240,7 +241,7 @@ try {
       canonicalAnchorsPresent: draftState.anchors.some((value) => /CLAIM/i.test(value)) && draftState.anchors.some((value) => /PASSAGE/i.test(value)) && draftState.anchors.some((value) => /SOURCE/i.test(value)),
       explicitSaveGroupedEntries: afterLedger.raw?.privacy === 'device-local-private' && afterLedger.thread?.notebookEntryIds?.length === 2 && afterLedger.notebookCount === 2,
       notebookBodiesNotCopied: afterLedger.threadCopiedNotebookBody === false,
-      ledgerTypesSeparated: ['observation', 'inference', 'correction', 'reply'].every((kind) => afterLedger.ledgerKinds.includes(kind)) && allPrivateMarkers.every((marker) => afterLedger.ledgerTexts.includes(marker)),
+      ledgerTypesSeparated: ['observation', 'inference', 'correction', 'reply'].every((kind) => afterLedger.ledgerKinds.includes(kind)) && markerValues.every((marker) => afterLedger.ledgerTexts.includes(marker)),
       inferenceReasoningVisible: /normalization rules/i.test(afterLedger.inferenceReasoning),
       correctionAndReplyLinked: Boolean(afterLedger.correctionRelated) && Boolean(afterLedger.replyRelated) && afterLedger.correctionRelated !== afterLedger.replyRelated,
       publicEvidenceIsolation: afterLedger.graphContainsPrivate === false && afterLedger.kernelContainsPrivate === false,
@@ -256,7 +257,6 @@ try {
     const failedAssertions = Object.entries(assertions).filter(([, passed]) => !passed).map(([name]) => name);
     console.log(JSON.stringify({ ok: failedAssertions.length === 0, failedAssertions, assertions, beforeEntry, installed, notebookSeed, comparativeIntegration, draftState, beforeSave, afterLedger, downloadName, at360, at412, restored, writes, pageErrors }, null, 2));
     if (failedAssertions.length) process.exitCode = 1;
-
     await context.close();
   } finally {
     await browser.close();
