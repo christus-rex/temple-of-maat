@@ -184,6 +184,15 @@
     document.head.appendChild(script);
   }
 
+  function loadPilgrimageHardening() {
+    if (document.querySelector('script[data-temple-pilgrimage-hardening]')) return;
+    const script = document.createElement('script');
+    script.src = './scripts/v5.3.1-pilgrimage-hardening.js';
+    script.async = false;
+    script.dataset.templePilgrimageHardening = 'true';
+    document.head.appendChild(script);
+  }
+
   function installKeyboardNavigation() {
     document.addEventListener('keydown', (event) => {
       if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
@@ -211,6 +220,7 @@
     installStyles();
     enhance();
     loadNamedPilgrimageRoutes();
+    loadPilgrimageHardening();
     installKeyboardNavigation();
 
     if (!observer) {
