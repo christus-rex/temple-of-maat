@@ -84,18 +84,35 @@ function cleanLedgerEvent(input) {
   const kind = String(input.kind || '');
   const text = cleanText(input.text, MAX_EVENT_TEXT).trim();
   if (!/^scribe\.[a-z0-9-]+$/.test(id) || !EVENT_KINDS.has(kind) || !text) return null;
+  const reasoning = cleanText(input.reasoning, MAX_REASONING);
+  if (kind === 'inference' && !reasoning.trim()) return null;
   const relatedLogId = cleanText(input.relatedLogId, 180).trim();
   if ((kind === 'correction' || kind === 'reply') && !/^scribe\.[a-z0-9-]+$/.test(relatedLogId)) return null;
   const event = {
     id,
     kind,
     text,
-    reasoning: cleanText(input.reasoning, MAX_REASONING),
+    reasoning,
     sourceCitations: uniqueCitations(input.sourceCitations, MAX_EVENT_CITATIONS),
     createdAt: typeof input.createdAt === 'string' ? input.createdAt : now()
   };
   if (relatedLogId) event.relatedLogId = relatedLogId;
   return event;
+}
+
+function cleanLedger(values) {
+  const ledger = [];
+  const seen = new Set();
+  for (const input of Array.isArray(values) ? values : []) {
+    if (ledger.length >= MAX_LEDGER) break;
+    const event = cleanLedgerEvent(input);
+    if (!event || seen.has(event.id)) continue;
+    if (event.relatedLogId && !seen.has(event.relatedLogId)) continue;
+    if ((event.kind === 'correction' || event.kind === 'reply') && !event.relatedLogId) continue;
+    ledger.push(event);
+    seen.add(event.id);
+  }
+  return ledger;
 }
 
 function cleanThread(input) {
@@ -104,7 +121,6 @@ function cleanThread(input) {
   if (!/^thread\.[a-z0-9-]+$/.test(id)) return null;
   const createdAt = typeof input.createdAt === 'string' ? input.createdAt : now();
   const updatedAt = typeof input.updatedAt === 'string' ? input.updatedAt : createdAt;
-  const ledger = (Array.isArray(input.ledger) ? input.ledger : []).map(cleanLedgerEvent).filter(Boolean).slice(0, MAX_LEDGER);
   return {
     id,
     title: cleanText(input.title, MAX_TITLE),
@@ -112,7 +128,7 @@ function cleanThread(input) {
     status: THREAD_STATUSES.has(input.status) ? input.status : 'open',
     notebookEntryIds: cleanEntryIds(input.notebookEntryIds),
     anchors: uniqueCitations(input.anchors),
-    ledger,
+    ledger: cleanLedger(input.ledger),
     createdAt,
     updatedAt
   };
@@ -144,11 +160,30 @@ export async function createTempleScribeWorkspace(options = {}) {
     return citations;
   }
 
+  function validateNotebookEntryIds(values) {
+    const ids = cleanEntryIds(values);
+    for (const id of ids) {
+      if (!notebook.get(id)) throw new RangeError(`Unknown Research Notebook entry: ${id}`);
+    }
+    return ids;
+  }
+
+  function normalizeLoadedThread(input) {
+    const thread = cleanThread(input);
+    if (!thread) return null;
+    thread.anchors = thread.anchors.filter(citationExists);
+    thread.ledger = thread.ledger.map((event) => ({
+      ...event,
+      sourceCitations: event.sourceCitations.filter(citationExists)
+    }));
+    return thread;
+  }
+
   function loadState() {
     try {
       const parsed = JSON.parse(storage.getItem(SCRIBE_WORKSPACE_KEY) || 'null');
       if (!parsed || parsed.schema !== SCRIBE_WORKSPACE_SCHEMA || parsed.version !== SCRIBE_WORKSPACE_VERSION || parsed.privacy !== SCRIBE_WORKSPACE_PRIVACY) return emptyState();
-      const threads = (Array.isArray(parsed.threads) ? parsed.threads : []).map(cleanThread).filter(Boolean).slice(0, MAX_THREADS);
+      const threads = (Array.isArray(parsed.threads) ? parsed.threads : []).map(normalizeLoadedThread).filter(Boolean).slice(0, MAX_THREADS);
       return { ...emptyState(), updatedAt: typeof parsed.updatedAt === 'string' ? parsed.updatedAt : now(), threads };
     } catch {
       return emptyState();
@@ -157,9 +192,11 @@ export async function createTempleScribeWorkspace(options = {}) {
 
   let state = loadState();
 
-  function persist() {
-    state.updatedAt = now();
-    storage.setItem(SCRIBE_WORKSPACE_KEY, JSON.stringify(state));
+  function commit(nextState) {
+    const committed = clone(nextState);
+    committed.updatedAt = now();
+    storage.setItem(SCRIBE_WORKSPACE_KEY, JSON.stringify(committed));
+    state = committed;
     if (typeof windowRef.document?.dispatchEvent === 'function' && typeof windowRef.CustomEvent === 'function') {
       windowRef.document.dispatchEvent(new windowRef.CustomEvent('temple:scribe-workspace-change', {
         detail: { schema: state.schema, privacy: state.privacy, threadCount: state.threads.length, updatedAt: state.updatedAt }
@@ -173,7 +210,7 @@ export async function createTempleScribeWorkspace(options = {}) {
       title: cleanText(seed.title || '', MAX_TITLE),
       inquiry: cleanText(seed.inquiry || '', MAX_INQUIRY),
       status: THREAD_STATUSES.has(seed.status) ? seed.status : 'open',
-      notebookEntryIds: cleanEntryIds(seed.notebookEntryIds),
+      notebookEntryIds: validateNotebookEntryIds(seed.notebookEntryIds || []),
       anchors: validateCitations(seed.anchors || []),
       ledger: [],
       createdAt: now(),
@@ -206,34 +243,37 @@ export async function createTempleScribeWorkspace(options = {}) {
   function saveThread(input) {
     const cleaned = cleanThread({ ...input, anchors: validateCitations(input?.anchors || []) });
     if (!cleaned) throw new TypeError('Scribe Workspace thread is invalid.');
+    cleaned.notebookEntryIds = validateNotebookEntryIds(cleaned.notebookEntryIds);
     const index = state.threads.findIndex((thread) => thread.id === cleaned.id);
     const existing = index >= 0 ? state.threads[index] : null;
     if (!existing && state.threads.length >= MAX_THREADS) throw new RangeError(`Scribe Workspace supports at most ${MAX_THREADS} threads.`);
-    const timestamp = now();
     const thread = {
       ...cleaned,
-      ledger: existing ? existing.ledger : [],
+      ledger: existing ? clone(existing.ledger) : [],
       createdAt: existing ? existing.createdAt : cleaned.createdAt,
-      updatedAt: timestamp
+      updatedAt: now()
     };
-    if (index >= 0) state.threads.splice(index, 1, thread);
-    else state.threads.unshift(thread);
-    persist();
+    const next = clone(state);
+    if (index >= 0) next.threads.splice(index, 1, thread);
+    else next.threads.unshift(thread);
+    commit(next);
     return clone(thread);
   }
 
   function removeThread(id) {
-    const before = state.threads.length;
-    state.threads = state.threads.filter((thread) => thread.id !== id);
-    if (state.threads.length === before) return false;
-    persist();
+    const next = clone(state);
+    const before = next.threads.length;
+    next.threads = next.threads.filter((thread) => thread.id !== id);
+    if (next.threads.length === before) return false;
+    commit(next);
     return true;
   }
 
   function appendLedger(threadId, input = {}) {
-    const index = state.threads.findIndex((thread) => thread.id === threadId);
+    const next = clone(state);
+    const index = next.threads.findIndex((thread) => thread.id === threadId);
     if (index < 0) throw new RangeError(`Unknown saved Scribe thread: ${threadId}`);
-    const thread = state.threads[index];
+    const thread = next.threads[index];
     if (thread.ledger.length >= MAX_LEDGER) throw new RangeError(`Scribe thread supports at most ${MAX_LEDGER} ledger events.`);
     const kind = EVENT_KINDS.has(input.kind) ? input.kind : 'observation';
     const text = cleanText(input.text, MAX_EVENT_TEXT).trim();
@@ -258,32 +298,36 @@ export async function createTempleScribeWorkspace(options = {}) {
     if (relatedLogId) event.relatedLogId = relatedLogId;
     thread.ledger.push(event);
     thread.updatedAt = now();
-    persist();
+    commit(next);
     return clone(event);
   }
 
   function attachEntry(threadId, entryId) {
-    const index = state.threads.findIndex((thread) => thread.id === threadId);
+    const entry = notebook.get(entryId);
+    if (!entry) throw new RangeError(`Unknown Research Notebook entry: ${entryId}`);
+    const next = clone(state);
+    const index = next.threads.findIndex((thread) => thread.id === threadId);
     if (index < 0) throw new RangeError(`Unknown saved Scribe thread: ${threadId}`);
-    if (!notebook.get(entryId)) throw new RangeError(`Unknown Research Notebook entry: ${entryId}`);
-    const thread = state.threads[index];
+    const thread = next.threads[index];
     if (thread.notebookEntryIds.includes(entryId)) return clone(thread);
     if (thread.notebookEntryIds.length >= MAX_ENTRY_REFS) throw new RangeError(`Scribe thread supports at most ${MAX_ENTRY_REFS} Notebook entry references.`);
     thread.notebookEntryIds.push(entryId);
+    thread.anchors = validateCitations([...thread.anchors, ...(entry.citations || [])]);
     thread.updatedAt = now();
-    persist();
+    commit(next);
     return clone(thread);
   }
 
   function detachEntry(threadId, entryId) {
-    const index = state.threads.findIndex((thread) => thread.id === threadId);
+    const next = clone(state);
+    const index = next.threads.findIndex((thread) => thread.id === threadId);
     if (index < 0) throw new RangeError(`Unknown saved Scribe thread: ${threadId}`);
-    const thread = state.threads[index];
+    const thread = next.threads[index];
     const before = thread.notebookEntryIds.length;
     thread.notebookEntryIds = thread.notebookEntryIds.filter((id) => id !== entryId);
     if (before === thread.notebookEntryIds.length) return clone(thread);
     thread.updatedAt = now();
-    persist();
+    commit(next);
     return clone(thread);
   }
 
@@ -298,13 +342,18 @@ export async function createTempleScribeWorkspace(options = {}) {
   }
 
   function reset() {
-    state = emptyState();
     storage.removeItem(SCRIBE_WORKSPACE_KEY);
+    state = emptyState();
+    if (typeof windowRef.document?.dispatchEvent === 'function' && typeof windowRef.CustomEvent === 'function') {
+      windowRef.document.dispatchEvent(new windowRef.CustomEvent('temple:scribe-workspace-change', {
+        detail: { schema: state.schema, privacy: state.privacy, threadCount: 0, updatedAt: state.updatedAt }
+      }));
+    }
     return true;
   }
 
   function exportState() {
-    return clone({ ...state, exportedAt: now() });
+    return clone(state);
   }
 
   const api = Object.freeze({
