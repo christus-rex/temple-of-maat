@@ -1,0 +1,58 @@
+name: Validate Scribe Workspace v5.3.0
+
+on:
+  push:
+    paths:
+      - 'research/schema/scribe-workspace-state.v1.schema.json'
+      - 'scripts/v5.3.0-scribe-workspace.mjs'
+      - 'scripts/v5.3.0-scribe-workspace-ui.mjs'
+      - 'styles/v5.3.0-scribe-workspace.css'
+      - 'scripts/test-scribe-workspace-v5.3.0.mjs'
+      - 'scripts/smoke-scribe-workspace-v5.3.0.mjs'
+      - 'docs/SCRIBE_WORKSPACE.md'
+      - 'scripts/v5.3.0-research-notebook.mjs'
+      - 'scripts/v5.3.0-research-notebook-ui.mjs'
+      - 'scripts/v5.3.0-comparative-reading.mjs'
+      - 'scripts/v5.3.0-knowledge-inspector.mjs'
+      - 'scripts/v5.3.0-knowledge-inspector-ui.mjs'
+      - '.github/workflows/validate-scribe-workspace-v5.3.0.yml'
+  pull_request:
+    paths:
+      - 'research/schema/scribe-workspace-state.v1.schema.json'
+      - 'scripts/v5.3.0-scribe-workspace.mjs'
+      - 'scripts/v5.3.0-scribe-workspace-ui.mjs'
+      - 'styles/v5.3.0-scribe-workspace.css'
+      - 'scripts/test-scribe-workspace-v5.3.0.mjs'
+      - 'scripts/smoke-scribe-workspace-v5.3.0.mjs'
+      - 'docs/SCRIBE_WORKSPACE.md'
+      - 'scripts/v5.3.0-research-notebook.mjs'
+      - 'scripts/v5.3.0-research-notebook-ui.mjs'
+      - 'scripts/v5.3.0-comparative-reading.mjs'
+      - 'scripts/v5.3.0-knowledge-inspector.mjs'
+      - 'scripts/v5.3.0-knowledge-inspector-ui.mjs'
+      - '.github/workflows/validate-scribe-workspace-v5.3.0.yml'
+
+jobs:
+  scribe-workspace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate Scribe private-state and ledger contract
+        run: node scripts/test-scribe-workspace-v5.3.0.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise Nabu-Thoth Scribe Workspace
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-scribe-workspace-v5.3.0.mjs
+      - name: Preserve Scribe Workspace screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scribe-workspace-v5.3.0
+          path: work/scribe-workspace-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7
