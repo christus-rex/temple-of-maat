@@ -28,3 +28,4 @@ jobs:
       - run: node scripts/validate-offline-controls-v1.mjs
       - run: node scripts/validate-relationship-graph-v1.mjs
       - run: node scripts/validate-knowledge-kernel-v1.mjs
+      - run: node scripts/validate-enoch-pilgrimage-v1.mjs
