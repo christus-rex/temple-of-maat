@@ -33,6 +33,7 @@ assert(route.version === '1.0.0', 'Unexpected Enoch route version.');
 assert(route.routeId === 'route.enoch-angelic-mirror', 'Unexpected Enoch route id.');
 assert(route.privacy === 'personal-state-device-local', 'Enoch route must declare device-local personal state.');
 assert(schema?.properties?.privacy?.const === 'personal-state-device-local', 'Route schema must lock the device-local privacy contract.');
+assert(schema?.$defs?.gate?.properties?.id?.pattern?.includes('gate-'), 'General pilgrimage schema must retain stable gate identifiers.');
 
 const authoritySet = new Set(route.authorityLevels);
 for (const level of ['HISTORICAL', 'RECONSTRUCTED', 'MODERN', 'PERSONAL']) {
@@ -94,15 +95,17 @@ assert(/lens, not the universe/i.test(gate7.teaching), 'Unselected-witness humil
 assert(/PROCEED, PAUSE, or STUDY FURTHER/i.test(gate8.practice), 'Final gate must require an explicit integration decision.');
 assert(/sleep|work|relationships|safety/i.test(gate8.stopCondition || ''), 'Final gate must test ordinary-life impact.');
 
-assert(runtime.includes("const STATE_KEY = 'temple_pilgrimage_enoch_v1'"), 'Runtime must use dedicated Enoch device-local state key.');
+assert(runtime.includes("routeId: 'route.enoch-angelic-mirror'"), 'Multi-route runtime must retain the Enoch route.');
+assert(runtime.includes("url: './pilgrimages/enoch.v1.json'"), 'Runtime must load the reviewed Enoch route data file.');
+assert(runtime.includes("stateKey: 'temple_pilgrimage_enoch_v1'"), 'Runtime must retain the dedicated Enoch device-local state key.');
 assert(runtime.includes("const STATE_SCHEMA = 'temple-of-maat/pilgrimage-state-v1'"), 'Runtime state schema missing.');
-assert(runtime.includes("const ROUTE_URL = './pilgrimages/enoch.v1.json'"), 'Runtime must load the reviewed Enoch route data file.');
 assert(runtime.includes("link.href = './styles/v5.3-pilgrimage-routes.css'"), 'Runtime must load pilgrimage route styles.');
-assert(runtime.includes('Observation → Interpretation → Verification → Conduct'), 'Reality Record sequence missing from runtime.');
+assert(runtime.includes('Observation → Interpretation → Verification → Conduct'), 'Default Enoch Reality Record sequence missing from runtime.');
 assert(runtime.includes('Personal testimony is not written into the public Knowledge Kernel or Relationship Graph.'), 'Runtime must state public/private boundary.');
 assert(!/localStorage\.setItem\([^\n]*(relationship|knowledge|library)/i.test(runtime), 'Runtime must not write personal route state into public graph/kernel/library keys.');
 assert(!/fetch\([^\n]*method\s*:\s*['\"](?:POST|PUT|PATCH|DELETE)/i.test(runtime), 'Pilgrimage runtime must not upload personal state.');
-assert(runtime.includes('enochRoute') || runtime.includes('data-enoch-route'), 'Runtime must expose a stable Enoch route launcher marker.');
+assert(runtime.includes("cardMarker: 'enochRouteCard'"), 'Runtime must expose the Enoch route card compatibility marker.');
+assert(runtime.includes("openMarker: 'enochRouteOpen'"), 'Runtime must expose the Enoch launch compatibility marker.');
 
 assert(styles.includes('@media(max-width:760px)'), 'Enoch route styles require narrow-screen layout.');
 assert(styles.includes('@media(max-width:430px)'), 'Enoch route styles require phone layout.');
@@ -115,4 +118,4 @@ assert(workflow.includes('node scripts/validate-enoch-pilgrimage-v1.mjs'), 'Cano
 assert(docs.includes('Observation → Interpretation → Verification → Conduct'), 'Enoch pilgrimage documentation must define the Reality Record sequence.');
 assert(docs.includes('does **not** replace the chamber journey'), 'Documentation must preserve the existing 72-chamber Journey.');
 
-console.log(`Enoch pilgrimage v1 validated: ${route.gates.length} gates, ${route.sourceRefs.length} source references, device-local Reality Record.`);
+console.log(`Enoch pilgrimage v1 validated in multi-route engine: ${route.gates.length} gates, ${route.sourceRefs.length} source references, device-local Reality Record.`);
