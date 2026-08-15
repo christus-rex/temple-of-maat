@@ -23,9 +23,17 @@ assert(schema.$defs?.citation?.properties?.kind?.enum?.includes('claim') && sche
 
 const backing = new Map();
 const writes = [];
+let failNextSet = false;
 const storage = {
   getItem(key) { return backing.has(key) ? backing.get(key) : null; },
-  setItem(key, value) { writes.push({ op: 'set', key, value }); backing.set(key, value); },
+  setItem(key, value) {
+    if (failNextSet) {
+      failNextSet = false;
+      throw new Error('Simulated localStorage quota failure.');
+    }
+    writes.push({ op: 'set', key, value });
+    backing.set(key, value);
+  },
   removeItem(key) { writes.push({ op: 'remove', key }); backing.delete(key); }
 };
 
@@ -81,7 +89,10 @@ assert(JSON.parse(backing.get(RESEARCH_NOTEBOOK_KEY)).privacy === 'device-local-
 
 const reloaded = await createTempleResearchNotebook({ storage, inspector, windowRef: fixedWindow });
 assert(reloaded.entries().length === 1 && reloaded.entries()[0].title === 'Private Qur\'an comparison', 'Saved Notebook state must restore from device-local storage.');
-assert(reloaded.exportState().entries[0].citations.length === draft.citations.length, 'Private export must preserve canonical citation IDs.');
+const exported = reloaded.exportState();
+assert(exported.entries[0].citations.length === draft.citations.length, 'Private export must preserve canonical citation IDs.');
+assert(!Object.prototype.hasOwnProperty.call(exported, 'exportedAt'), 'Private export must remain valid against the state schema.');
+assert(Object.keys(exported).every((key) => Object.prototype.hasOwnProperty.call(schema.properties, key)), 'Notebook export top-level properties must be declared by the state schema.');
 
 let invalidRejected = false;
 try {
@@ -92,11 +103,55 @@ try {
 assert(invalidRejected, 'Unknown canonical claim IDs must be rejected before persistence.');
 assert(writes.length === 1, 'Rejected invalid citation must not write storage.');
 
+const beforeQuotaState = JSON.stringify(reloaded.state());
+const beforeQuotaStorage = backing.get(RESEARCH_NOTEBOOK_KEY);
+failNextSet = true;
+let quotaFailureSurfaced = false;
+try {
+  reloaded.save({ ...reloaded.get(saved.id), title: 'This title must not survive a failed write.' });
+} catch (error) {
+  quotaFailureSurfaced = /quota failure/i.test(error.message);
+}
+assert(quotaFailureSurfaced, 'Device storage write failures must surface to the Notebook caller.');
+assert(JSON.stringify(reloaded.state()) === beforeQuotaState, 'Failed Notebook writes must not mutate in-memory state.');
+assert(backing.get(RESEARCH_NOTEBOOK_KEY) === beforeQuotaStorage, 'Failed Notebook writes must leave persisted state unchanged.');
+
+const repairState = {
+  schema: 'temple-of-maat/research-notebook-state-v1',
+  version: '1.0.0',
+  privacy: 'device-local-private',
+  updatedAt: 'not-a-date',
+  entries: [{
+    id: 'notebook.repair-entry',
+    title: 'Repair fixture',
+    body: 'Private repair fixture.',
+    stage: 'question',
+    citations: [
+      { kind: 'claim', id: 'claim.not-real' },
+      { kind: 'source', id: quranSource.id }
+    ],
+    createdAt: 'not-created-at',
+    updatedAt: 'not-updated-at'
+  }]
+};
+const repairStorage = {
+  getItem(key) { return key === RESEARCH_NOTEBOOK_KEY ? JSON.stringify(repairState) : null; },
+  setItem() { throw new Error('Repair fixture must not write during load.'); },
+  removeItem() {}
+};
+const repaired = await createTempleResearchNotebook({ storage: repairStorage, inspector, windowRef: fixedWindow });
+const repairedEntry = repaired.entries()[0];
+assert(repairedEntry.citations.length === 1 && repairedEntry.citations[0].id === quranSource.id, 'Reload must filter noncanonical Notebook citations while preserving the valid private entry.');
+assert(Number.isFinite(Date.parse(repaired.state().updatedAt)), 'Reload must normalize malformed Notebook state timestamp.');
+assert(Number.isFinite(Date.parse(repairedEntry.createdAt)) && Number.isFinite(Date.parse(repairedEntry.updatedAt)), 'Reload must normalize malformed Notebook entry timestamps.');
+
 const graphBundle = JSON.stringify({ schema: 'temple-of-maat/relationship-bundle-v1', edgeCount: 0 });
 assert(!graphBundle.includes('Private Qur\'an comparison'), 'Private Notebook content must not be part of public graph bundle fixtures.');
 
 assert(coreText.includes("RESEARCH_NOTEBOOK_KEY = 'temple_research_notebook_v1'"), 'Core must declare dedicated private storage key.');
 assert(coreText.includes('createDraftFromComparison') && coreText.includes('saveEntry'), 'Core must separate draft creation from explicit save.');
+assert(coreText.includes('function commit(nextState)'), 'Notebook core must use transactional device-state commits.');
+assert(coreText.includes('function normalizeDateTime'), 'Notebook core must normalize restored timestamps before export.');
 assert(!/fetch\(/.test(coreText), 'Notebook core must not issue network requests.');
 assert(uiText.includes('Nothing is persisted until you explicitly choose Save Entry.'), 'UI must communicate consent-before-persistence.');
 assert(uiText.includes('Draft Note from Comparison') && uiText.includes('Save Entry'), 'UI must expose draft and explicit-save actions separately.');
@@ -115,5 +170,9 @@ console.log(JSON.stringify({
   persistedEntries: reloaded.entries().length,
   comparisonCitationCount: draft.citations.length,
   explicitSaveWrites: writes.filter((item) => item.op === 'set').length,
-  invalidCitationRejected: true
+  invalidCitationRejected: true,
+  transactionalStorageFailure: true,
+  schemaValidExport: true,
+  corruptedStateRepair: true,
+  timestampRepair: true
 }, null, 2));
