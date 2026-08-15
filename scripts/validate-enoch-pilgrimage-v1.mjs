@@ -25,8 +25,7 @@ const schema = json(schemaPath);
 const runtime = read(runtimePath);
 const styles = read(stylePath);
 const docs = read(docsPath);
-const threshold = read('scripts/v5.3-threshold.js');
-const sw = read('sw.js');
+const navigation = read('scripts/v5.3-pilgrimage-navigation.js');
 const workflow = read('.github/workflows/validate-v5.yml');
 
 assert(route.schema === 'temple-of-maat/pilgrimage-route-v1', 'Unexpected pilgrimage route schema.');
@@ -97,25 +96,21 @@ assert(/sleep|work|relationships|safety/i.test(gate8.stopCondition || ''), 'Fina
 
 assert(runtime.includes("const STATE_KEY = 'temple_pilgrimage_enoch_v1'"), 'Runtime must use dedicated Enoch device-local state key.');
 assert(runtime.includes("const STATE_SCHEMA = 'temple-of-maat/pilgrimage-state-v1'"), 'Runtime state schema missing.');
+assert(runtime.includes("const ROUTE_URL = './pilgrimages/enoch.v1.json'"), 'Runtime must load the reviewed Enoch route data file.');
+assert(runtime.includes("link.href = './styles/v5.3-pilgrimage-routes.css'"), 'Runtime must load pilgrimage route styles.');
 assert(runtime.includes('Observation → Interpretation → Verification → Conduct'), 'Reality Record sequence missing from runtime.');
 assert(runtime.includes('Personal testimony is not written into the public Knowledge Kernel or Relationship Graph.'), 'Runtime must state public/private boundary.');
 assert(!/localStorage\.setItem\([^\n]*(relationship|knowledge|library)/i.test(runtime), 'Runtime must not write personal route state into public graph/kernel/library keys.');
 assert(!/fetch\([^\n]*method\s*:\s*['\"](?:POST|PUT|PATCH|DELETE)/i.test(runtime), 'Pilgrimage runtime must not upload personal state.');
-assert(runtime.includes('data-enoch-route') || runtime.includes('enochRoute'), 'Runtime must expose a stable Enoch route launcher marker.');
+assert(runtime.includes('enochRoute') || runtime.includes('data-enoch-route'), 'Runtime must expose a stable Enoch route launcher marker.');
 
 assert(styles.includes('@media(max-width:760px)'), 'Enoch route styles require narrow-screen layout.');
 assert(styles.includes('@media(max-width:430px)'), 'Enoch route styles require phone layout.');
 assert(styles.includes('min-height:44px'), 'Enoch route controls must preserve 44px touch targets.');
 
-assert(threshold.includes("loadEnhancement('./scripts/v5.3-pilgrimage-routes.js', 'pilgrimage-routes')"), 'Threshold must load pilgrimage-routes enhancement.');
-for (const asset of [
-  './pilgrimages/enoch.v1.json',
-  './pilgrimages/schema/pilgrimage-route.schema.json',
-  './styles/v5.3-pilgrimage-routes.css',
-  './scripts/v5.3-pilgrimage-routes.js'
-]) {
-  assert(sw.includes(`'${asset}'`), `Service-worker core is missing ${asset}`);
-}
+assert(navigation.includes('function loadNamedPilgrimageRoutes()'), 'Existing Pilgrim Journey navigation must progressively load named pilgrimage routes.');
+assert(navigation.includes("script.src = './scripts/v5.3-pilgrimage-routes.js'"), 'Pilgrimage route runtime must be loaded through the existing Journey enhancement.');
+assert(navigation.includes('loadNamedPilgrimageRoutes();'), 'Pilgrimage route loader must be invoked during Journey navigation initialization.');
 assert(workflow.includes('node scripts/validate-enoch-pilgrimage-v1.mjs'), 'Canonical validation must run Enoch pilgrimage validator.');
 assert(docs.includes('Observation → Interpretation → Verification → Conduct'), 'Enoch pilgrimage documentation must define the Reality Record sequence.');
 assert(docs.includes('does **not** replace the chamber journey'), 'Documentation must preserve the existing 72-chamber Journey.');
