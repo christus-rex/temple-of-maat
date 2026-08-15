@@ -105,7 +105,7 @@ assert(/reality-testing|basic needs|sleep loss/i.test(s5.stopCondition || ''), '
 assert(/exact sentence/i.test(s6.practice) && /trustworthy person/i.test(s6.practice), 'Station 6 must move truthful speech toward practical response.');
 assert(/not a command to remain in danger/i.test(s7.teaching), 'Station 7 must reject romanticizing preventable harm.');
 assert(/emergency care|safety planning|medical treatment/i.test(s7.stopCondition || ''), 'Station 7 must preserve time-sensitive support boundaries.');
-assert(/correction without contempt/i.test(s8.subtitle), 'Station 8 must distinguish correction from contempt.');
+assert(/correction/i.test(s8.teaching) && /contempt/i.test(s8.teaching), 'Station 8 must distinguish correction from contempt.');
 assert(/three columns/i.test(s9.practice) && /trustworthy witness/i.test(s9.practice), 'Station 9 must use accountable witnessing rather than solitary certainty.');
 assert(/repair/i.test(s10.teaching) && /irreversible harm/i.test(s10.practice), 'Station 10 must turn repentance into proportionate repair.');
 assert(/return capacity rather than create a cult of the rescuer/i.test(s11.teaching), 'Station 11 must reject dependency on the helper.');
