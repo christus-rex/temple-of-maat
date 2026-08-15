@@ -6,9 +6,12 @@ on:
       - 'pilgrimages/**'
       - 'scripts/v5.3-pilgrimage-navigation.js'
       - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'scripts/v5.3.1-pilgrimage-hardening.js'
       - 'styles/v5.3-pilgrimage-routes.css'
       - 'scripts/validate-enoch-pilgrimage-v1.mjs'
+      - 'scripts/validate-pilgrimage-hardening-v5.3.1.mjs'
       - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
+      - 'scripts/smoke-pilgrimage-hardening-v5.3.1.mjs'
       - 'docs/ENOCH_PILGRIMAGE.md'
       - '.github/workflows/validate-enoch-pilgrimage-v1.yml'
       - '.github/workflows/validate-v5.yml'
@@ -17,9 +20,12 @@ on:
       - 'pilgrimages/**'
       - 'scripts/v5.3-pilgrimage-navigation.js'
       - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'scripts/v5.3.1-pilgrimage-hardening.js'
       - 'styles/v5.3-pilgrimage-routes.css'
       - 'scripts/validate-enoch-pilgrimage-v1.mjs'
+      - 'scripts/validate-pilgrimage-hardening-v5.3.1.mjs'
       - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
+      - 'scripts/smoke-pilgrimage-hardening-v5.3.1.mjs'
       - 'docs/ENOCH_PILGRIMAGE.md'
       - '.github/workflows/validate-enoch-pilgrimage-v1.yml'
       - '.github/workflows/validate-v5.yml'
@@ -38,6 +44,8 @@ jobs:
           node-version: 24
       - name: Validate source and route contract
         run: node scripts/validate-enoch-pilgrimage-v1.mjs
+      - name: Validate persistence and modal hardening contract
+        run: node scripts/validate-pilgrimage-hardening-v5.3.1.mjs
 
   browser-smoke:
     runs-on: ubuntu-24.04
