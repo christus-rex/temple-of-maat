@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://christus-rex.github.io/temple-of-maat/research/schema/research-notebook-state.v1.schema.json",
+  "title": "Temple of Ma'at Private Research Notebook State v1",
+  "description": "Device-local private research notes that may cite public canonical IDs without becoming public evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "version", "privacy", "updatedAt", "entries"],
+  "properties": {
+    "schema": { "const": "temple-of-maat/research-notebook-state-v1" },
+    "version": { "const": "1.0.0" },
+    "privacy": { "const": "device-local-private" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "entries": {
+      "type": "array",
+      "maxItems": 500,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "enum": ["endpoint", "claim", "passage", "source"] },
+        "id": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "body", "stage", "citations", "createdAt", "updatedAt"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^notebook\\.[a-z0-9-]+$" },
+        "title": { "type": "string", "maxLength": 200 },
+        "body": { "type": "string", "maxLength": 20000 },
+        "stage": { "enum": ["note", "question", "hypothesis", "practice"] },
+        "citations": {
+          "type": "array",
+          "maxItems": 40,
+          "items": { "$ref": "#/$defs/citation" }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
