@@ -60,6 +60,7 @@ try {
   try {
     const context = await browser.newContext({ viewport: { width: 412, height: 900 }, acceptDownloads: true });
     await context.addInitScript(() => {
+      if (sessionStorage.getItem('tm530-notebook-smoke-seeded')) return;
       localStorage.removeItem('temple_research_notebook_v1');
       localStorage.setItem('temple_v525_pilgrim_journey', JSON.stringify({
         schema: 'temple-of-maat/pilgrim-journey-v1', version: '5.2.5', started: true, current: 1, visited: [1], favorites: [1],
@@ -69,6 +70,7 @@ try {
         schema: 'temple-of-maat/library-personal-state-v1', updatedAt: new Date().toISOString(), bookmarks: [],
         notes: [{ id: 'note.notebook-marker', recordId: 'source.quran-tanzil-pickthall-edition', text: 'PRIVATE NOTEBOOK LIBRARY MARKER', updatedAt: new Date().toISOString() }], privateCorrespondences: []
       }));
+      sessionStorage.setItem('tm530-notebook-smoke-seeded', '1');
     });
 
     const page = await context.newPage();
