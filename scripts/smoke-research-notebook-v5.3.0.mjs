@@ -14,6 +14,13 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const outDir = path.join(root, 'work', 'research-notebook-smoke');
 fs.mkdirSync(outDir, { recursive: true });
 
+async function waitForTemple(page) {
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+  await wait(900);
+  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+}
+
 async function geometry(page, width) {
   await page.setViewportSize({ width, height: 900 });
   await wait(120);
@@ -82,7 +89,7 @@ try {
     });
 
     await page.goto(`http://127.0.0.1:${port}/?research_notebook_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+    await waitForTemple(page);
 
     const beforeEntry = await page.evaluate(() => ({
       appReady: document.body.classList.contains('temple-app-ready'),
@@ -165,7 +172,7 @@ try {
     await page.waitForFunction(() => document.getElementById('tm530-research-notebook')?.hidden === true);
 
     await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+    await waitForTemple(page);
     await page.click('[data-temple-entry="explore"]');
     await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 30000 });
     await page.waitForFunction(() => window.TempleShem72?.all?.().length === 72 && window.TempleLibrary?.open, null, { timeout: 30000 });
