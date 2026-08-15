@@ -26,6 +26,12 @@ function now() {
   return new Date().toISOString();
 }
 
+function normalizeDateTime(value, fallback = now()) {
+  if (typeof value !== 'string' || !value.trim()) return fallback;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? new Date(parsed).toISOString() : fallback;
+}
+
 function publicWindow(windowRef) {
   return windowRef && typeof windowRef === 'object' ? windowRef : {};
 }
@@ -94,7 +100,7 @@ function cleanLedgerEvent(input) {
     text,
     reasoning,
     sourceCitations: uniqueCitations(input.sourceCitations, MAX_EVENT_CITATIONS),
-    createdAt: typeof input.createdAt === 'string' ? input.createdAt : now()
+    createdAt: normalizeDateTime(input.createdAt)
   };
   if (relatedLogId) event.relatedLogId = relatedLogId;
   return event;
@@ -119,8 +125,8 @@ function cleanThread(input) {
   if (!input || typeof input !== 'object') return null;
   const id = cleanText(input.id, 180).trim();
   if (!/^thread\.[a-z0-9-]+$/.test(id)) return null;
-  const createdAt = typeof input.createdAt === 'string' ? input.createdAt : now();
-  const updatedAt = typeof input.updatedAt === 'string' ? input.updatedAt : createdAt;
+  const createdAt = normalizeDateTime(input.createdAt);
+  const updatedAt = normalizeDateTime(input.updatedAt, createdAt);
   return {
     id,
     title: cleanText(input.title, MAX_TITLE),
@@ -184,7 +190,7 @@ export async function createTempleScribeWorkspace(options = {}) {
       const parsed = JSON.parse(storage.getItem(SCRIBE_WORKSPACE_KEY) || 'null');
       if (!parsed || parsed.schema !== SCRIBE_WORKSPACE_SCHEMA || parsed.version !== SCRIBE_WORKSPACE_VERSION || parsed.privacy !== SCRIBE_WORKSPACE_PRIVACY) return emptyState();
       const threads = (Array.isArray(parsed.threads) ? parsed.threads : []).map(normalizeLoadedThread).filter(Boolean).slice(0, MAX_THREADS);
-      return { ...emptyState(), updatedAt: typeof parsed.updatedAt === 'string' ? parsed.updatedAt : now(), threads };
+      return { ...emptyState(), updatedAt: normalizeDateTime(parsed.updatedAt), threads };
     } catch {
       return emptyState();
     }
