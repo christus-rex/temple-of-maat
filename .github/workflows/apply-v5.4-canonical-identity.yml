@@ -6,6 +6,7 @@ on:
       - brand/v5.4-canonical-identity
     paths:
       - '.brand-source/v5.4/APPLY'
+      - '.brand-source/v5.4/APPLY2'
   workflow_dispatch:
 
 permissions:
@@ -24,7 +25,7 @@ jobs:
         with:
           node-version: '24'
       - name: Apply canonical identity to website and PWA
-        run: node scripts/apply-v5.4-canonical-identity.mjs
+        run: node scripts/apply-v5.4-canonical-identity-r2.mjs
       - name: Commit v5.4 identity rollout
         run: |
           git config user.name "github-actions[bot]"
