@@ -1,4 +1,4 @@
-name: Smoke Release hardening v5.2.8
+name: Smoke Release hardening v5.3.6
 
 on:
   pull_request:
@@ -9,10 +9,11 @@ on:
       - 'ROADMAP.md'
       - 'PWA-CHECKLIST.md'
       - 'docs/RELEASE_VERIFICATION.md'
+      - 'docs/LOGO_VISIBILITY_V5.3.6.md'
       - 'styles/v5.3-threshold.css'
       - 'scripts/v5.3-threshold.js'
-      - 'scripts/smoke-release-hardening-v5.2.8.mjs'
-      - 'scripts/validate-v5.2.8-release.mjs'
+      - 'scripts/smoke-logo-visibility-v5.3.6.mjs'
+      - 'scripts/validate-current-release.mjs'
       - '.github/workflows/smoke-release-hardening-v5.2.8.yml'
   workflow_dispatch:
 
@@ -28,17 +29,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Validate current release cache and logo contract
+        run: node scripts/validate-current-release.mjs
       - name: Install Chromium
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
-      - name: Simulate v5.2.7 update, deep link, and narrow mobile surfaces
-        run: node scripts/smoke-release-hardening-v5.2.8.mjs
+      - name: Simulate prior-worker upgrade and verify global logo visibility
+        run: node scripts/smoke-logo-visibility-v5.3.6.mjs
       - name: Preserve release screenshot evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v5.2.8-release-hardening-screenshots
-          path: work/release-hardening/
+          name: v5.3.6-logo-visibility-screenshots
+          path: work/logo-visibility-v5.3.6/
           if-no-files-found: warn
           retention-days: 30

@@ -1,4 +1,4 @@
-/* Temple of SOL-OM-ON (Ma'at) v5.3.5 — global identity, threshold, accessibility, and mobile refinement */
+/* Temple of SOL-OM-ON (Ma'at) v5.3.6 — global identity, threshold, accessibility, and mobile refinement */
 :root {
   --temple-focus: #40e0d0;
   --temple-gold: #d9bf73;
@@ -26,6 +26,7 @@
   min-height: 100svh;
   display: grid;
   place-items: center;
+  box-sizing: border-box;
   padding: max(28px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
   background:
     radial-gradient(circle at 50% 18%, rgba(64, 224, 208, 0.12), transparent 34rem),
@@ -34,6 +35,7 @@
 }
 .temple-static-entry__panel {
   width: min(680px, 100%);
+  box-sizing: border-box;
   padding: clamp(26px, 5vw, 52px);
   border: 1px solid rgba(217, 191, 115, 0.38);
   border-radius: 24px;
@@ -42,7 +44,9 @@
   text-align: center;
 }
 
-/* Global Temple identity: the approved SOL-OM-ON / Ma'at emblem is the threshold seal. */
+/* Global Temple identity: the approved SOL-OM-ON / Ma'at emblem is the threshold seal.
+   The second image is an already-core-cached fallback so the frame never appears blank
+   while a stale service worker or delayed branding asset is being replaced. */
 .temple-static-entry__panel::before {
   content: "";
   display: block;
@@ -51,7 +55,13 @@
   margin: 0 auto 24px;
   border: 1px solid rgba(217, 191, 115, 0.34);
   border-radius: 24px;
-  background: #071019 url('../assets/branding/temple-global-logo.webp') center / cover no-repeat;
+  background-color: #071019;
+  background-image:
+    url('../assets/branding/temple-global-logo.webp'),
+    url('../icon-512.png');
+  background-position: center, center;
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
   box-shadow: 0 0 54px rgba(64, 224, 208, 0.14), 0 18px 50px rgba(0, 0, 0, 0.34);
 }
 .temple-static-entry__eyebrow {
@@ -153,7 +163,13 @@
   flex: 0 0 38px;
   border: 1px solid rgba(217, 191, 115, 0.5);
   border-radius: 50%;
-  background: #071019 url('../assets/branding/temple-global-logo.webp') center / cover no-repeat;
+  background-color: #071019;
+  background-image:
+    url('../assets/branding/temple-global-logo.webp'),
+    url('../icon-512.png');
+  background-position: center, center;
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
   box-shadow: 0 0 18px rgba(64, 224, 208, 0.2);
 }
 .temple-brand-title::after {
