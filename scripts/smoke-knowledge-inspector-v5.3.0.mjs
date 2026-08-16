@@ -14,6 +14,23 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const outDir = path.join(root, 'work', 'knowledge-inspector-smoke');
 fs.mkdirSync(outDir, { recursive: true });
 
+async function waitForTemple(page) {
+  let lastError = null;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+      await wait(900);
+      await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 2) await wait(600);
+    }
+  }
+  throw lastError;
+}
+
 async function geometry(page, width) {
   await page.setViewportSize({ width, height: 900 });
   await wait(150);
@@ -56,7 +73,7 @@ try {
     });
 
     await page.goto(`http://127.0.0.1:${port}/?kernel_inspector_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+    await waitForTemple(page);
 
     const beforeEntry = await page.evaluate(() => ({
       appReady: document.body.classList.contains('temple-app-ready'),
@@ -105,6 +122,8 @@ try {
     await page.click('.tm530-compare-action');
     await page.waitForFunction(() => document.querySelector('[data-kernel-side="left"]')?.innerText?.includes('claim.chamber.01.current-law'), null, { timeout: 30000 });
     await page.waitForFunction(() => document.querySelector('[data-kernel-side="right"]')?.innerText?.includes('UNMAPPED ENDPOINT'), null, { timeout: 30000 });
+    await wait(120);
+    await page.waitForFunction(() => document.querySelector('[data-kernel-side="left"]')?.innerText?.includes('claim.chamber.01.current-law') && document.querySelector('[data-kernel-side="right"]')?.innerText?.includes('UNMAPPED ENDPOINT'), null, { timeout: 30000 });
 
     const chamberState = await page.evaluate(() => ({
       leftText: document.querySelector('[data-kernel-side="left"]')?.innerText || '',
