@@ -14,6 +14,24 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const outDir = path.resolve(root, 'work', 'pistis-sophia-pilgrimage-smoke');
 fs.mkdirSync(outDir, { recursive: true });
 
+async function waitForTemple(page) {
+  let lastError = null;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
+      await page.waitForFunction(() => window.TemplePilgrimageRoutes?.version === '1.1.0' && window.TemplePilgrimageRoutes?.routes?.().length >= 2, null, { timeout: 30000 });
+      await wait(900);
+      await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5' && window.TemplePilgrimageRoutes?.version === '1.1.0' && window.TemplePilgrimageRoutes?.routes?.().length >= 2, null, { timeout: 30000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 2) await wait(600);
+    }
+  }
+  throw lastError;
+}
+
 async function geometry(page, width) {
   await page.setViewportSize({ width, height: 800 });
   await wait(150);
@@ -57,8 +75,7 @@ try {
     });
 
     await page.goto(`http://127.0.0.1:${port}/?pistis_sophia_pilgrimage_smoke=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-    await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.version === '5.2.5', null, { timeout: 30000 });
-    await page.waitForFunction(() => window.TemplePilgrimageRoutes?.version === '1.1.0' && window.TemplePilgrimageRoutes?.routes?.().length >= 2, null, { timeout: 30000 });
+    await waitForTemple(page);
 
     const beforeEntry = await page.evaluate(() => ({
       ready: document.body.classList.contains('temple-app-ready'),
