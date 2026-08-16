@@ -182,28 +182,41 @@ export async function installTempleKnowledgeInspectorUI(options = {}) {
   let queued = false;
   let observer = null;
 
+  function observe() {
+    if (!observer || !document.body) return;
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
   function render() {
     const body = document.querySelector('#tm530-comparative .tm530-compare-body');
     const left = document.getElementById('tm530-left')?.value;
     const right = document.getElementById('tm530-right')?.value;
     if (!body || !left || !right) return false;
 
-    body.querySelector('[data-temple-kernel-inspector]')?.remove();
-    const section = el('section', 'tm530-kernel-inspector');
-    section.dataset.templeKernelInspector = 'true';
-    const head = el('header', 'tm530-kernel-head');
-    const text = el('div');
-    text.append(el('p', 'tm530-compare-eyebrow', 'Knowledge Kernel · Claim & Source Inspector'), el('h3', '', 'Evidence beneath the relationship'));
-    head.append(text, el('p', 'tm530-kernel-covenant', 'Canonical graph connectivity and Knowledge Kernel claims remain separate layers. This inspector reveals reviewed mappings, source passages, claim boundaries, methods, and limitations. Unmapped endpoints remain explicitly unmapped.'));
-    section.append(head);
+    // Rendering replaces the inspector subtree. Disconnect during that synchronous
+    // replacement so the observer does not recursively schedule a new render from
+    // mutations produced by its own render pass.
+    observer?.disconnect();
+    try {
+      body.querySelector('[data-temple-kernel-inspector]')?.remove();
+      const section = el('section', 'tm530-kernel-inspector');
+      section.dataset.templeKernelInspector = 'true';
+      const head = el('header', 'tm530-kernel-head');
+      const text = el('div');
+      text.append(el('p', 'tm530-compare-eyebrow', 'Knowledge Kernel · Claim & Source Inspector'), el('h3', '', 'Evidence beneath the relationship'));
+      head.append(text, el('p', 'tm530-kernel-covenant', 'Canonical graph connectivity and Knowledge Kernel claims remain separate layers. This inspector reveals reviewed mappings, source passages, claim boundaries, methods, and limitations. Unmapped endpoints remain explicitly unmapped.'));
+      section.append(head);
 
-    const grid = el('div', 'tm530-kernel-grid');
-    grid.append(renderInspection(inspector.inspectEndpoint(left), 'left'), renderInspection(inspector.inspectEndpoint(right), 'right'));
-    section.append(grid);
+      const grid = el('div', 'tm530-kernel-grid');
+      grid.append(renderInspection(inspector.inspectEndpoint(left), 'left'), renderInspection(inspector.inspectEndpoint(right), 'right'));
+      section.append(grid);
 
-    const relations = body.querySelector('.tm530-relations');
-    body.insertBefore(section, relations || null);
-    return true;
+      const relations = body.querySelector('.tm530-relations');
+      body.insertBefore(section, relations || null);
+      return true;
+    } finally {
+      observe();
+    }
   }
 
   function queueRender() {
@@ -222,7 +235,7 @@ export async function installTempleKnowledgeInspectorUI(options = {}) {
     if (event.target?.matches?.('.tm530-compare-action')) setTimeout(queueRender, 0);
   });
   observer = new MutationObserver(queueRender);
-  observer.observe(document.body, { childList: true, subtree: true });
+  observe();
   queueRender();
 
   const api = Object.freeze({
