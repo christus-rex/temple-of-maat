@@ -166,9 +166,17 @@ assert(dossierRows.length === 72, `Shem Dossier must expose 72 records, found ${
 const dossierVariants = [];
 for (const row of dossierRows) {
   const record = byNumber.get(Number(row.num));
-  assert(normalizeHebrew(row.root) === normalizeHebrew(record.shem.triplet), `Shem Dossier ${row.num}: source triplet differs beyond final-letter normalization.`);
-  if (row.nameEn !== record.shem.normalizedAngel || normalizeHebrew(row.fullHe) !== normalizeHebrew(record.shem.constructedHebrew)) {
-    dossierVariants.push({ pairNumber:Number(row.num), dossierAngel:row.nameEn, authorityAngel:record.shem.normalizedAngel, dossierConstructedHebrew:row.fullHe, authorityConstructedHebrew:record.shem.constructedHebrew });
+  assert(record, `Shem Dossier contains unknown record ${row.num}`);
+  const rootExact = normalizeHebrew(row.root) === normalizeHebrew(record.shem.triplet);
+  const angelExact = row.nameEn === record.shem.normalizedAngel;
+  const constructedHebrewExact = normalizeHebrew(row.fullHe) === normalizeHebrew(record.shem.constructedHebrew);
+  if (!rootExact || !angelExact || !constructedHebrewExact) {
+    dossierVariants.push({
+      pairNumber:Number(row.num),
+      rootExact, dossierTriplet:row.root, authorityTriplet:record.shem.triplet,
+      angelExact, dossierAngel:row.nameEn, authorityAngel:record.shem.normalizedAngel,
+      constructedHebrewExact, dossierConstructedHebrew:row.fullHe, authorityConstructedHebrew:record.shem.constructedHebrew
+    });
   }
 }
 
