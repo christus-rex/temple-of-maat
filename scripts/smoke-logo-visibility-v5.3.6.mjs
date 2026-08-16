@@ -7,12 +7,12 @@ import { fileURLToPath } from 'node:url';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const outDir = path.join(root, 'work', 'logo-visibility-v5.3.6');
+const outDir = path.join(root, 'work', 'logo-visibility-v5.4');
 fs.mkdirSync(outDir, { recursive: true });
 const port = 41797;
 const base = `http://127.0.0.1:${port}/`;
 const priorNamespace = 'temple-maat-pwa-v5.2.7-logo-fixture';
-const cacheRevision = 'v5.3.6-global-logo-r1';
+const cacheRevision = 'v5.4-canonical-identity-r1';
 const mime = { '.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.mp3':'audio/mpeg','.opus':'audio/ogg','.wav':'audio/wav' };
 
 const priorWorker = `const C='${priorNamespace}-static';self.addEventListener('install',e=>e.waitUntil((async()=>{const c=await caches.open(C);await c.addAll(['./','./index.html']);self.skipWaiting()})()));self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));self.addEventListener('message',e=>{if(e.data?.type==='SKIP_WAITING')self.skipWaiting()});`;
@@ -36,7 +36,7 @@ async function readLogo(page){
     const panelStyle=panel?getComputedStyle(panel,'::before'):null;
     const header=document.querySelector('.temple-brand-title');
     const headerStyle=header?getComputedStyle(header,'::before'):null;
-    const response=await fetch('./assets/branding/temple-global-logo.webp',{cache:'no-store'});
+    const response=await fetch('./assets/branding/temple-global-logo-v5.4.webp',{cache:'no-store'});
     let decoded=false,bytes=0;
     if(response.ok){const blob=await response.blob();bytes=blob.size;const u=URL.createObjectURL(blob);decoded=await new Promise(r=>{const i=new Image();i.onload=()=>r(i.naturalWidth>0&&i.naturalHeight>0);i.onerror=()=>r(false);i.src=u;});URL.revokeObjectURL(u);}
     return {ok:response.ok,decoded,bytes,panelBg:panelStyle?.backgroundImage||'',panelW:panelStyle?parseFloat(panelStyle.width):0,panelH:panelStyle?parseFloat(panelStyle.height):0,headerBg:headerStyle?.backgroundImage||'',docW:document.documentElement.scrollWidth,viewport:innerWidth};
@@ -84,13 +84,13 @@ try{
 
   const version=JSON.parse(fs.readFileSync(path.join(root,'version.json'),'utf8'));
   const assertions={
-    release:version.version==='5.3.6',
+    release:version.version==='5.4.0',
     cacheRotated:upgrade.active.endsWith('/sw.js')&&upgrade.revision&&upgrade.priorGone,
     thresholdHeld:!threshold.ready&&threshold.inert&&threshold.hidden&&threshold.continueText==='Continue at Chamber 42',
     desktopAsset:desktopBefore.ok&&desktopBefore.decoded&&desktopBefore.bytes>10000,
-    desktopThresholdLogo:desktopBefore.panelW>100&&desktopBefore.panelH>100&&desktopBefore.panelBg.includes('temple-global-logo.webp')&&desktopBefore.panelBg.includes('icon-512.png'),
-    desktopRuntimeLogo:desktopAfter.headerBg.includes('temple-global-logo.webp')&&desktopAfter.headerBg.includes('icon-512.png'),
-    mobileLogo:mobile.every(x=>x.logo.ok&&x.logo.decoded&&x.logo.panelW>100&&x.logo.panelBg.includes('temple-global-logo.webp')&&x.logo.docW<=x.width+1),
+    desktopThresholdLogo:desktopBefore.panelW>100&&desktopBefore.panelH>100&&desktopBefore.panelBg.includes('temple-global-logo-v5.4.webp')&&desktopBefore.panelBg.includes('icon-512.png'),
+    desktopRuntimeLogo:desktopAfter.headerBg.includes('temple-app-icon-192-v5.4.png')&&desktopAfter.headerBg.includes('icon-512.png'),
+    mobileLogo:mobile.every(x=>x.logo.ok&&x.logo.decoded&&x.logo.panelW>100&&x.logo.panelBg.includes('temple-global-logo-v5.4.webp')&&x.logo.docW<=x.width+1),
     mobileThreshold:mobile.every(x=>!x.held.ready&&x.held.continueText==='Continue at Chamber 42'),
     noErrors:pageErrors.length===0&&mobile.every(x=>x.errors.length===0)
   };

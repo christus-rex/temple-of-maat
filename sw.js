@@ -1,7 +1,7 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
-// Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates the physical caches for the v5.3.6 global-logo visibility repair.
-const CACHE_REVISION = 'v5.3.6-global-logo-r1';
-const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.3.6';
+// Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates physical caches for the v5.4 canonical website/app identity rollout.
+const CACHE_REVISION = 'v5.4-canonical-identity-r1';
+const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.4';
 const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
 const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
 const CORE_ASSETS = [
@@ -14,6 +14,11 @@ const CORE_ASSETS = [
   './icon-maskable-512.png',
   './apple-touch-icon.png',
   './assets/branding/temple-global-logo.webp',
+  './assets/branding/temple-global-logo-v5.4.webp',
+  './assets/branding/temple-app-icon-192-v5.4.png',
+  './assets/branding/temple-app-icon-512-v5.4.png',
+  './assets/branding/temple-app-icon-maskable-512-v5.4.png',
+  './assets/branding/temple-app-icon-180-v5.4.png',
   './chambers.json',
   './offline.html',
   './version.json',

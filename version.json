@@ -1,5 +1,5 @@
 {
-  "version": "5.3.6",
-  "build": "2026-08-16-v5.3.6-logo-visibility-cache-rotation",
-  "source": "Temple v5.3.6 fixes global SOL-OM-ON (Ma'at) logo visibility by rotating the stale PWA cache, precaching the dedicated emblem, and adding an already-cached icon fallback for the threshold and runtime header."
+  "version": "5.4.0",
+  "build": "2026-08-16-v5.4-canonical-identity",
+  "source": "Temple v5.4 makes the user-approved SOL-OM-ON / Ma'at artwork the canonical identity for the website and installed app, replaces legacy launcher/icon assets with derivatives of that source, and rotates PWA cache ownership so existing clients receive the new identity."
 }

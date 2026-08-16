@@ -1,4 +1,4 @@
-/* Temple of SOL-OM-ON (Ma'at) v5.3.6 — global identity, threshold, accessibility, and mobile refinement */
+/* Temple of SOL-OM-ON (Ma'at) v5.4 — canonical identity, threshold, accessibility, and mobile refinement */
 :root {
   --temple-focus: #40e0d0;
   --temple-gold: #d9bf73;
@@ -44,9 +44,8 @@
   text-align: center;
 }
 
-/* Global Temple identity: the approved SOL-OM-ON / Ma'at emblem is the threshold seal.
-   The second image is an already-core-cached fallback so the frame never appears blank
-   while a stale service worker or delayed branding asset is being replaced. */
+/* Canonical Temple identity: the approved uploaded SOL-OM-ON / Ma'at artwork is the threshold seal.
+   Every fallback below is itself derived from that same approved source, so a legacy emblem can never flash. */
 .temple-static-entry__panel::before {
   content: "";
   display: block;
@@ -57,7 +56,7 @@
   border-radius: 24px;
   background-color: #071019;
   background-image:
-    url('../assets/branding/temple-global-logo.webp'),
+    url('../assets/branding/temple-global-logo-v5.4.webp'),
     url('../icon-512.png');
   background-position: center, center;
   background-size: cover, cover;
@@ -149,7 +148,7 @@
   font: 600 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* Runtime global identity. The existing React header remains the host; branding is layered without rebuilding the app bundle. */
+/* Runtime canonical identity. The existing React header remains the host; its mark is a small-size derivative of the same approved artwork. */
 .temple-brand-title {
   display: flex !important;
   align-items: center;
@@ -165,8 +164,8 @@
   border-radius: 50%;
   background-color: #071019;
   background-image:
-    url('../assets/branding/temple-global-logo.webp'),
-    url('../icon-512.png');
+    url('../assets/branding/temple-app-icon-192-v5.4.png'),
+    url('../icon-192.png');
   background-position: center, center;
   background-size: cover, cover;
   background-repeat: no-repeat, no-repeat;

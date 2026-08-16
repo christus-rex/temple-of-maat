@@ -19,19 +19,19 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "./assets/branding/temple-app-icon-192-v5.4.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./assets/branding/temple-app-icon-512-v5.4.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-maskable-512.png",
+      "src": "./assets/branding/temple-app-icon-maskable-512-v5.4.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -45,8 +45,9 @@
       "url": "./#chamber-01",
       "icons": [
         {
-          "src": "./icon-192.png",
-          "sizes": "192x192"
+          "src": "./assets/branding/temple-app-icon-192-v5.4.png",
+          "sizes": "192x192",
+          "type": "image/png"
         }
       ]
     },
@@ -57,8 +58,9 @@
       "url": "./#chamber-37",
       "icons": [
         {
-          "src": "./icon-192.png",
-          "sizes": "192x192"
+          "src": "./assets/branding/temple-app-icon-192-v5.4.png",
+          "sizes": "192x192",
+          "type": "image/png"
         }
       ]
     },
@@ -69,8 +71,9 @@
       "url": "./#chamber-42",
       "icons": [
         {
-          "src": "./icon-192.png",
-          "sizes": "192x192"
+          "src": "./assets/branding/temple-app-icon-192-v5.4.png",
+          "sizes": "192x192",
+          "type": "image/png"
         }
       ]
     }

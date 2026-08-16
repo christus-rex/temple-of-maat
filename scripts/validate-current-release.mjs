@@ -9,9 +9,9 @@ const sw = read('sw.js');
 const threshold = read('scripts/v5.3-threshold.js');
 const css = read('styles/v5.3-threshold.css');
 
-if (version.version !== '5.3.6') fail(`Expected current portal version 5.3.6, found ${version.version}`);
-if (version.build !== '2026-08-16-v5.3.6-logo-visibility-cache-rotation') fail(`Unexpected current build: ${version.build}`);
-if (!String(version.source || '').includes('logo visibility')) fail('Current release source must document the logo-visibility repair');
+if (version.version !== '5.4.0') fail(`Expected current portal version 5.4.0, found ${version.version}`);
+if (version.build !== '2026-08-16-v5.4-canonical-identity') fail(`Unexpected current build: ${version.build}`);
+if (!String(version.source || '').includes('canonical identity')) fail('Current release source must document canonical identity');
 
 for (const [name, source] of [['Service Worker', sw], ['Threshold', threshold]]) {
   try { new vm.Script(source, { filename: name }); }
@@ -20,10 +20,10 @@ for (const [name, source] of [['Service Worker', sw], ['Threshold', threshold]])
 
 const compatibilityNamespace = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
 if (!sw.includes(`const VERSION = '${compatibilityNamespace}'`)) fail('Legacy PWA compatibility namespace changed unexpectedly');
-if (!sw.includes("const CACHE_REVISION = 'v5.3.6-global-logo-r1'")) fail('v5.3.6 cache revision missing');
-if (!sw.includes('const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`')) fail('Static cache does not include the v5.3.6 revision');
-if (!sw.includes('const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`')) fail('Runtime cache does not include the v5.3.6 revision');
-if (!sw.includes("'./assets/branding/temple-global-logo.webp'")) fail('Global logo is not part of CORE_ASSETS');
+if (!sw.includes("const CACHE_REVISION = 'v5.4-canonical-identity-r1'")) fail('v5.4 cache revision missing');
+if (!sw.includes('const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`')) fail('Static cache does not include the v5.4 revision');
+if (!sw.includes('const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`')) fail('Runtime cache does not include the v5.4 revision');
+if (!sw.includes("'./assets/branding/temple-global-logo-v5.4.webp'")) fail('Canonical v5.4 logo is not part of CORE_ASSETS');
 
 for (const marker of [
   'function isBinaryRitualMedia(url)',
@@ -52,7 +52,8 @@ for (const marker of [
 for (const marker of [
   'body:not(.temple-app-ready) #root',
   'body:not(.temple-app-ready) #tm-commit-deck',
-  'assets/branding/temple-global-logo.webp',
+  'assets/branding/temple-global-logo-v5.4.webp',
+  'assets/branding/temple-app-icon-192-v5.4.png',
   "url('../icon-512.png')",
   '.temple-brand-title::before',
   '.temple-static-entry__panel::before'
@@ -60,15 +61,15 @@ for (const marker of [
   if (!css.includes(marker)) fail(`Logo/threshold styling invariant missing: ${marker}`);
 }
 
-if (!fs.existsSync('assets/branding/temple-global-logo.webp')) fail('Dedicated global logo asset is missing');
-const logoSize = fs.statSync('assets/branding/temple-global-logo.webp').size;
+if (!fs.existsSync('assets/branding/temple-global-logo-v5.4.webp')) fail('Dedicated global logo asset is missing');
+const logoSize = fs.statSync('assets/branding/temple-global-logo-v5.4.webp').size;
 if (logoSize < 10000) fail(`Global logo asset is unexpectedly small: ${logoSize} bytes`);
 
 console.log(JSON.stringify({
   ok: true,
   version: version.version,
   build: version.build,
-  cacheRevision: 'v5.3.6-global-logo-r1',
+  cacheRevision: 'v5.4-canonical-identity-r1',
   logoBytes: logoSize,
   logoPrecached: true,
   iconFallback: true,
