@@ -1,0 +1,70 @@
+name: Validate Enoch Pilgrimage v1
+
+on:
+  push:
+    paths:
+      - 'pilgrimages/**'
+      - 'scripts/v5.3-pilgrimage-navigation.js'
+      - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'scripts/v5.3.1-pilgrimage-hardening.js'
+      - 'styles/v5.3-pilgrimage-routes.css'
+      - 'scripts/validate-enoch-pilgrimage-v1.mjs'
+      - 'scripts/validate-pilgrimage-hardening-v5.3.1.mjs'
+      - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
+      - 'scripts/smoke-pilgrimage-hardening-v5.3.1.mjs'
+      - 'docs/ENOCH_PILGRIMAGE.md'
+      - '.github/workflows/validate-enoch-pilgrimage-v1.yml'
+      - '.github/workflows/validate-v5.yml'
+  pull_request:
+    paths:
+      - 'pilgrimages/**'
+      - 'scripts/v5.3-pilgrimage-navigation.js'
+      - 'scripts/v5.3-pilgrimage-routes.js'
+      - 'scripts/v5.3.1-pilgrimage-hardening.js'
+      - 'styles/v5.3-pilgrimage-routes.css'
+      - 'scripts/validate-enoch-pilgrimage-v1.mjs'
+      - 'scripts/validate-pilgrimage-hardening-v5.3.1.mjs'
+      - 'scripts/smoke-enoch-pilgrimage-v1.mjs'
+      - 'scripts/smoke-pilgrimage-hardening-v5.3.1.mjs'
+      - 'docs/ENOCH_PILGRIMAGE.md'
+      - '.github/workflows/validate-enoch-pilgrimage-v1.yml'
+      - '.github/workflows/validate-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-route:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate source and route contract
+        run: node scripts/validate-enoch-pilgrimage-v1.mjs
+      - name: Validate persistence and modal hardening contract
+        run: node scripts/validate-pilgrimage-hardening-v5.3.1.mjs
+
+  browser-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise Enoch pilgrimage at mobile widths
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-enoch-pilgrimage-v1.mjs
+      - name: Preserve Enoch pilgrimage screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: enoch-pilgrimage-v1
+          path: work/enoch-pilgrimage-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7

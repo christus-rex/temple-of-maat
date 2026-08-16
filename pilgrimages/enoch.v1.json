@@ -1,0 +1,200 @@
+{
+  "schema": "temple-of-maat/pilgrimage-route-v1",
+  "version": "1.0.0",
+  "routeId": "route.enoch-angelic-mirror",
+  "title": "Enoch — The Angelic Mirror",
+  "subtitle": "A personal pilgrimage of source, vision, discernment, and right action",
+  "privacy": "personal-state-device-local",
+  "authorityLevels": ["HISTORICAL", "RECONSTRUCTED", "MODERN", "PERSONAL"],
+  "structureNote": "The eight-gate route is a modern personal Temple structure chosen because 8 is the disclosed symbolic index used in The Angelic Mirror. It is not presented as historical Enochian architecture, a revealed mandate, or proof of spiritual rank.",
+  "vow": "Truth before power. Clarity before command. Right action before display.",
+  "routeLaw": "I do not command what I have not understood. I do not believe what I have not tested. I do not withhold right action once truth is sufficiently clear.",
+  "sourceRefs": [
+    {
+      "id": "source.angelic-mirror-2026",
+      "title": "The Angelic Mirror — A Personal Enochian Sourcebook, Ritual Compendium, Gematria and Divinatory Reading",
+      "authority": "PERSONAL",
+      "locators": [
+        "Reader's Covenant",
+        "Chapters 1–18",
+        "Chapters 22–27",
+        "Appendices"
+      ],
+      "limitations": [
+        "The sourcebook separates historical, reconstructed, modern, and personal material.",
+        "Its natal, gematria, Aethyric indexing, and personalized ritual material are interpretive tools rather than historical Enochian ciphers or objectively ordained methods."
+      ]
+    },
+    {
+      "id": "source.dee-sloane-3188",
+      "title": "British Library Sloane MS 3188",
+      "authority": "HISTORICAL",
+      "locators": ["First five books of mysteries; summarized in The Angelic Mirror, Chapter 3"],
+      "limitations": ["Primary diary witness, not a finished ritual handbook; this route does not reproduce the manuscript."]
+    },
+    {
+      "id": "source.dee-sloane-3189",
+      "title": "British Library Sloane MS 3189",
+      "authority": "HISTORICAL",
+      "locators": ["Liber Mysteriorum Sextus et Sanctus and Loagaeth; summarized in The Angelic Mirror, Chapter 3"],
+      "limitations": ["Primary but difficult and contested; this route does not claim a solved reading of Loagaeth."]
+    },
+    {
+      "id": "source.dee-sloane-3191",
+      "title": "British Library Sloane MS 3191",
+      "authority": "HISTORICAL",
+      "locators": ["Angelical Keys, Liber Scientiae, Heptarchia Mystica and related materials; summarized in The Angelic Mirror, Chapter 3"],
+      "limitations": ["Internal variants and later reorganizations must remain visible; this route does not collapse manuscript numbering into later ritual-system numbering."]
+    }
+  ],
+  "gates": [
+    {
+      "id": "enoch-gate-01",
+      "ordinal": 1,
+      "title": "The Covenant",
+      "subtitle": "Enter without surrendering discernment",
+      "authorityLevels": ["MODERN", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026"],
+      "sourceAnchor": "The Angelic Mirror, Reader's Covenant and authority-level definitions.",
+      "teaching": "Begin by distinguishing what is historically attested, later reconstructed, modern, and personally meaningful. A powerful experience may be meaningful without automatically becoming a historical or metaphysical fact.",
+      "practice": "Create four headings in your record: HISTORICAL, RECONSTRUCTED, MODERN, PERSONAL. Place every claim, image, name, synchronicity, dream, or intuition under the level that best describes what you actually know about it.",
+      "journalPrompts": {
+        "observation": "What happened, appeared, was dreamed, remembered, heard, read, or noticed — without interpretation?",
+        "interpretation": "What meaning do I currently give the experience, and what alternative meanings remain possible?",
+        "verification": "What source, repeatable observation, external record, or later review could support or challenge my interpretation?",
+        "conduct": "What proportionate action, if any, follows while preserving consent, ordinary responsibilities, and another person's freedom?"
+      },
+      "completionCondition": "Complete the four-part record and name at least one uncertainty you are willing to preserve.",
+      "stopCondition": "Do not continue if the route is being used to justify coercion, self-exemption, harm, isolation, reckless spending, loss of sleep, or abandonment of ordinary care."
+    },
+    {
+      "id": "enoch-gate-02",
+      "ordinal": 2,
+      "title": "The Archive",
+      "subtitle": "Enoch, Dee, Kelley, and the surviving witnesses",
+      "authorityLevels": ["HISTORICAL", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026", "source.dee-sloane-3188", "source.dee-sloane-3189", "source.dee-sloane-3191"],
+      "sourceAnchor": "The Angelic Mirror, Chapters 1–3: Enochian naming, Dee/Kelley witness structure, and the primary corpus map.",
+      "teaching": "The biblical/apocalyptic figure Enoch and the later Dee–Kelley material are related through an Enochic imagination of heavenly knowledge, but they are not the same corpus. The surviving Enochian papers are an archive of overlapping modules, not one seamless manual.",
+      "practice": "Choose one experience you call Enochian. Ask four questions: What early witness supports the associated claim? What did Dee and Kelley appear to mean? What did later occult schools reorganize? What am I adding personally?",
+      "journalPrompts": {
+        "observation": "Which concrete source, text, image, dream, event, or remembered experience brought this theme into my life?",
+        "interpretation": "Am I relating it to Enoch, Dee–Kelley Enochian material, a later occult system, or my own symbolic synthesis?",
+        "verification": "What would I need to read or compare before making a stronger historical claim?",
+        "conduct": "How does respecting the distinction between sources change the way I speak about this experience?"
+      },
+      "completionCondition": "Identify the provenance level of one personal Enochian claim and record what remains uncertain."
+    },
+    {
+      "id": "enoch-gate-03",
+      "ordinal": 3,
+      "title": "The Angelical Word",
+      "subtitle": "Language as disciplined speech",
+      "authorityLevels": ["HISTORICAL", "RECONSTRUCTED", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026", "source.dee-sloane-3189", "source.dee-sloane-3191"],
+      "sourceAnchor": "The Angelic Mirror, Chapter 5 and Appendix A: Angelical language, twenty-one letters, transliteration and pronunciation cautions.",
+      "teaching": "Angelical words and letter forms occur across names, tables, Loagaeth, and the Calls, while modern pronunciation systems vary. Consistency and disclosure are stronger than pretending certainty where the record remains unsettled.",
+      "practice": "Study the twenty-one letter names and compare at least two transliteration or pronunciation conventions. Do not treat unfamiliar sound as evidence of authority. Use speech as a test of precision rather than performance.",
+      "journalPrompts": {
+        "observation": "Which words, names, sounds, or language-patterns recur in my Enochian experiences?",
+        "interpretation": "What do I think they mean, and which parts of that meaning are learned versus personally inferred?",
+        "verification": "Can the written form, spelling, translation, or pronunciation be checked against a declared edition or reconstruction?",
+        "conduct": "How can I make my ordinary speech more exact, truthful, and proportionate today?"
+      },
+      "completionCondition": "Record one language claim with its spelling/source convention and one uncertainty about pronunciation or meaning."
+    },
+    {
+      "id": "enoch-gate-04",
+      "ordinal": 4,
+      "title": "Sevenfold Governance",
+      "subtitle": "Heptarchia — virtue before power",
+      "authorityLevels": ["HISTORICAL", "RECONSTRUCTED", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026", "source.dee-sloane-3191"],
+      "sourceAnchor": "The Angelic Mirror, Chapter 6: Heptarchia Mystica and sevenfold planetary governance.",
+      "teaching": "The Heptarchic material presents celestial governance as lawful administration rather than raw power. The personal Temple use is ethical: examine a planetary quality together with its distortion — courage without aggression, language without manipulation, judgment without grandiosity.",
+      "practice": "Select the planetary office most relevant to your present situation. Name its virtue, its shadow, the responsibility attached to it, and one limit you will not cross to obtain the desired outcome.",
+      "journalPrompts": {
+        "observation": "What kind of power or capacity feels active in the present situation?",
+        "interpretation": "Which virtue and which shadow does this power resemble?",
+        "verification": "What observable behavior would show that I am practicing the virtue rather than rationalizing the shadow?",
+        "conduct": "What boundary makes this power accountable to truth and service?"
+      },
+      "completionCondition": "Name one virtue, one shadow, one boundary, and one accountable action."
+    },
+    {
+      "id": "enoch-gate-05",
+      "ordinal": 5,
+      "title": "The Four Watchtowers",
+      "subtitle": "Air, Water, Earth, Fire as ethical examination",
+      "authorityLevels": ["HISTORICAL", "RECONSTRUCTED", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026", "source.dee-sloane-3191"],
+      "sourceAnchor": "The Angelic Mirror, Chapter 9 and the modern four-element ethical examination derived therefrom.",
+      "teaching": "The Great Table and later Watchtower system should not be collapsed into one historical layer. For personal discernment, the four elements can serve as a transparent modern examination: clarity, emotional honesty, feasibility, and just will.",
+      "practice": "Ask four questions about one real decision: AIR — What is known? WATER — What is felt? EARTH — What is feasible and sustainable? FIRE — What is justly required? Then ask what changes when all four must agree.",
+      "journalPrompts": {
+        "observation": "What facts, feelings, material constraints, and impulses are actually present?",
+        "interpretation": "Which element am I overvaluing or ignoring?",
+        "verification": "What evidence, conversation, timetable, or practical test could rebalance the decision?",
+        "conduct": "What action can all four modes support without one pretending to be the whole?"
+      },
+      "completionCondition": "Complete all four elemental questions for one consequential decision."
+    },
+    {
+      "id": "enoch-gate-06",
+      "ordinal": 6,
+      "title": "The Aethyric Threshold",
+      "subtitle": "Visionary geography without compulsory ascent",
+      "authorityLevels": ["HISTORICAL", "RECONSTRUCTED", "MODERN", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026", "source.dee-sloane-3191"],
+      "sourceAnchor": "The Angelic Mirror, Chapters 11, 16–18 and 26: thirty Aethyrs, ninety-one governors, scrying, verification, grounding, and first-month limits.",
+      "teaching": "The Aethyrs form a named visionary sequence later worked from TEX toward LIL. Visionary intensity is not rank, and one person's visionary reception is not an objective atlas. The first task is source literacy, self-observation, and error control rather than completing an ascent.",
+      "practice": "Study the TEX-to-LIL sequence and the difference between historical names, later visionary reports, and your own experiences. During the first month of this route, do not undertake a full Aethyr ascent. Record naturally occurring dreams, images, synchronicities, or meditative impressions without forcing repetition.",
+      "journalPrompts": {
+        "observation": "What visionary or symbolic material arose without forcing it?",
+        "interpretation": "What does it seem to suggest, and what ordinary psychological or situational explanations also fit?",
+        "verification": "Does the interpretation survive sleep, time, source comparison, and independent practical evidence?",
+        "conduct": "Does engaging this material improve honesty, sleep, work, relationships, and responsible action?"
+      },
+      "completionCondition": "Record one visionary observation without turning it into a claim of rank or external command.",
+      "stopCondition": "Pause if the practice produces compulsion, fear, escalating sleep loss, grandiose interpretation, commands to harm or isolate, or deterioration in ordinary responsibilities."
+    },
+    {
+      "id": "enoch-gate-07",
+      "ordinal": 7,
+      "title": "ZID — The Balanced Voice",
+      "subtitle": "TODNAON, PRISTAC, and the unselected witness",
+      "authorityLevels": ["MODERN", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026"],
+      "sourceAnchor": "The Angelic Mirror, Chapters 22–25: disclosed gematria, Aethyric indexing, ZID, TODNAON, PRISTAC, ZAMFRES, and the Rite of the Balanced Voice.",
+      "teaching": "The sourcebook's repeated-8 method is an auditable personal indexing device, not a historical Enochian divination rule. Within that personal lens, ZID symbolizes concentrated order; TODNAON mediates perception into balanced speech; PRISTAC requires completion and consequence; ZAMFRES is preserved as the unselected witness that reminds the pilgrim the method is a lens, not the universe.",
+      "practice": "Use the Balanced Voice sequence on one real issue: release haste, vanity, fear, anger, projection, exaggeration, avoidance, and domination; ask what is known, felt, feasible, and justly required; draft no more than eight sentences; remove claims you cannot evidence and promises you cannot keep.",
+      "journalPrompts": {
+        "observation": "What am I actually trying to say, before performance, accusation, or spiritual framing?",
+        "interpretation": "Which part is perception, which part is emotion, and which part is inference?",
+        "verification": "What claims can I support, and which should be softened, qualified, or removed?",
+        "conduct": "What truthful, proportionate message or decision can I complete within twenty-four hours?"
+      },
+      "completionCondition": "Complete one Balanced Voice record and choose one concrete action within twenty-four hours.",
+      "stopCondition": "Stop immediately if the exercise is used to justify harm, isolation, reckless spending, abandonment of care, or exceptional spiritual rank."
+    },
+    {
+      "id": "enoch-gate-08",
+      "ordinal": 8,
+      "title": "Embodied Verification",
+      "subtitle": "Let the deed test the vision",
+      "authorityLevels": ["MODERN", "PERSONAL"],
+      "sourceRefs": ["source.angelic-mirror-2026"],
+      "sourceAnchor": "The Angelic Mirror, Chapters 25–27: next-day review, thirty-day curriculum, integration, and concluding oracle.",
+      "teaching": "The route ends in conduct rather than accumulated names. Personal Enochian reality is recorded as testimony and interpretation, then tested by time, evidence, humility, consequences, and ordinary life. The measure is not how extraordinary an experience feels but whether it supports truthfulness, restraint, courage, care, accountable speech, and completed right action.",
+      "practice": "Review the route after sleep. Audit your entries for projection, repetition, contradiction, practical effects, and unresolved uncertainty. Write a one-page rule of practice and choose one of three outcomes: PROCEED, PAUSE, or STUDY FURTHER.",
+      "journalPrompts": {
+        "observation": "Looking back across the route, what patterns genuinely repeated and what appeared only once?",
+        "interpretation": "Which meanings became clearer, weaker, or more complex after time and comparison?",
+        "verification": "What changed in sleep, honesty, work, relationships, boundaries, or completed projects?",
+        "conduct": "Will I proceed, pause, or study further — and what concrete rule will govern the next phase?"
+      },
+      "completionCondition": "Write the one-page rule of practice and explicitly choose PROCEED, PAUSE, or STUDY FURTHER.",
+      "stopCondition": "If the route is worsening compulsion, fear, grandiosity, sleep, work, relationships, or safety, choose PAUSE and return to ordinary grounding and trusted support."
+    }
+  ]
+}
