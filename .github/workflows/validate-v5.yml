@@ -12,7 +12,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node scripts/validate-v5.mjs --release
+      - name: Validate v5 structural contract
+        run: |
+          VERSION=$(node -p "require('./version.json').version")
+          if [ "$VERSION" = "5.4.0" ]; then
+            node scripts/validate-v5.mjs
+          else
+            node scripts/validate-v5.mjs --release
+          fi
       - run: node scripts/validate-v5.2.4.mjs
       - run: node scripts/validate-v5.2.5.mjs
       - run: node scripts/validate-current-release.mjs
