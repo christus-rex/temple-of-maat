@@ -39,6 +39,11 @@ const server = http.createServer((req, res) => {
     res.end(priorWorker);
     return;
   }
+  if (requestUrl.pathname === '/__sw-setup.html') {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end('<!doctype html><meta charset="utf-8"><title>Temple SW setup</title><p>isolated service-worker fixture</p>');
+    return;
+  }
   let pathname = decodeURIComponent(requestUrl.pathname);
   if (pathname === '/') pathname = '/index.html';
   const resolved = path.resolve(root, `.${pathname}`);
@@ -58,7 +63,7 @@ const server = http.createServer((req, res) => {
 await new Promise((resolve) => server.listen(port, '127.0.0.1', resolve));
 
 async function installPriorWorker(page) {
-  await page.goto(`${base}?prior=${Date.now()}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${base}__sw-setup.html?prior=${Date.now()}`, { waitUntil: 'domcontentloaded' });
   await page.evaluate(async () => {
     const registrations = await navigator.serviceWorker.getRegistrations();
     await Promise.all(registrations.map((registration) => registration.unregister()));
@@ -94,21 +99,29 @@ async function upgradeWorker(page) {
     const deadline = Date.now() + 90000;
     let names = [];
     let active = '';
+    let activeState = '';
     while (Date.now() < deadline) {
       const reg = await navigator.serviceWorker.getRegistration('./');
       names = await caches.keys();
       active = reg?.active?.scriptURL || '';
-      if (reg?.active?.state === 'activated' && !names.some((name) => name.includes(priorNamespace)) && names.some((name) => name.includes(revision))) break;
+      activeState = reg?.active?.state || '';
+      if (activeState === 'activated' && !names.some((name) => name.includes(priorNamespace)) && names.some((name) => name.includes(revision))) break;
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     return {
       controller: navigator.serviceWorker.controller?.scriptURL || '',
       active,
+      activeState,
       caches: names,
       currentRevisionPresent: names.some((name) => name.includes(revision)),
       priorRemoved: !names.some((name) => name.includes(priorNamespace))
     };
   }, { priorNamespace: PRIOR_NAMESPACE, revision: CURRENT_CACHE_REVISION });
+}
+
+async function waitForTempleRuntime(page) {
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.state && window.TempleLibrary?.open, { timeout: 45000 });
 }
 
 async function inspectLogo(page) {
@@ -142,10 +155,6 @@ async function inspectLogo(page) {
       headerBackground: headerPseudo?.backgroundImage || ''
     };
   });
-}
-
-async function waitForTempleRuntime(page) {
-  await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TemplePilgrimJourney?.state && window.TempleLibrary?.open, { timeout: 45000 });
 }
 
 async function inspectMobile(browser, width, height) {
@@ -190,6 +199,8 @@ try {
 
   await installPriorWorker(page);
   const upgrade = await upgradeWorker(page);
+  fs.writeFileSync(path.join(outDir, 'service-worker-upgrade.json'), JSON.stringify(upgrade, null, 2));
+
   await page.goto(`${base}?desktop=${Date.now()}#chamber-42`, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await waitForTempleRuntime(page);
   const logoBeforeEntry = await inspectLogo(page);
@@ -207,6 +218,7 @@ try {
   await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && location.hash === '#chamber-42', { timeout: 30000 });
   await page.waitForSelector('#tm2-artifact.open', { timeout: 30000 });
   await page.keyboard.press('Escape');
+  await page.waitForSelector('.temple-brand-title', { state: 'attached', timeout: 30000 });
   const logoAfterEntry = await inspectLogo(page);
   await page.screenshot({ path: path.join(outDir, 'desktop-runtime-logo.png'), fullPage: false });
   await context.close();
@@ -217,7 +229,7 @@ try {
   const version = JSON.parse(fs.readFileSync(path.join(root, 'version.json'), 'utf8'));
   const assertions = {
     releaseIdentity: version.version === '5.3.6' && version.build === '2026-08-16-v5.3.6-logo-visibility-cache-rotation',
-    workerUpgraded: upgrade.controller.endsWith('/sw.js') && upgrade.active.endsWith('/sw.js') && upgrade.currentRevisionPresent && upgrade.priorRemoved,
+    workerUpgraded: upgrade.controller.endsWith('/sw.js') && upgrade.active.endsWith('/sw.js') && upgrade.activeState === 'activated' && upgrade.currentRevisionPresent && upgrade.priorRemoved,
     thresholdHeld: threshold.ready === false && threshold.rootInert === true && threshold.rootHidden === true && threshold.artifactVisibility === 'hidden',
     deepLinkPreserved: threshold.continueText === 'Continue at Chamber 42' && threshold.continueHref === '#chamber-42',
     logoHttpAndDecode: logoBeforeEntry.responseOk && logoBeforeEntry.decoded && logoBeforeEntry.bytes > 10000,
@@ -235,6 +247,10 @@ try {
   fs.writeFileSync(path.join(outDir, 'result.json'), JSON.stringify(result, null, 2));
   console.log(JSON.stringify(result, null, 2));
   if (!result.ok) process.exitCode = 1;
+} catch (error) {
+  fs.writeFileSync(path.join(outDir, 'fatal-error.txt'), `${error?.stack || error}\n`);
+  console.error(error);
+  process.exitCode = 1;
 } finally {
   if (browser) await browser.close();
   await new Promise((resolve) => server.close(resolve));
