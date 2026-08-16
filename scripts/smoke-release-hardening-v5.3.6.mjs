@@ -153,10 +153,23 @@ async function logoState(page) {
 async function mobileCheck(browser, width, height) {
   const context = await browser.newContext({ viewport: { width, height }, isMobile: true, hasTouch: true });
   await context.addInitScript(() => localStorage.setItem('temple_last_chamber', '42'));
+
+  // Warm the service worker to completion before opening the measured page. This
+  // avoids controller-activation navigation races in fresh mobile browser contexts.
+  const warm = await context.newPage();
+  await warm.goto(`${base}?mobile_warm=${width}-${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  if (await warm.evaluate(() => 'serviceWorker' in navigator)) {
+    await warm.evaluate(() => navigator.serviceWorker.ready.then(() => true));
+    await warm.waitForTimeout(500);
+  }
+  await warm.close();
+
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(`${base}?mobile=${width}-${Date.now()}#chamber-42`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  await waitForTemple(page);
+  await page.waitForTimeout(500);
   await waitForTemple(page);
   const logo = await logoState(page);
   const threshold = await page.evaluate(() => ({
