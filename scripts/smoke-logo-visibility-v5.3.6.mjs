@@ -89,7 +89,7 @@ try{
     thresholdHeld:!threshold.ready&&threshold.inert&&threshold.hidden&&threshold.continueText==='Continue at Chamber 42',
     desktopAsset:desktopBefore.ok&&desktopBefore.decoded&&desktopBefore.bytes>10000,
     desktopThresholdLogo:desktopBefore.panelW>100&&desktopBefore.panelH>100&&desktopBefore.panelBg.includes('temple-global-logo-v5.4.webp')&&desktopBefore.panelBg.includes('icon-512.png'),
-    desktopRuntimeLogo:desktopAfter.headerBg.includes('temple-app-icon-192-v5.4.png')&&desktopAfter.headerBg.includes('icon-512.png'),
+    desktopRuntimeLogo:desktopAfter.headerBg.includes('temple-app-icon-192-v5.4.png')&&desktopAfter.headerBg.includes('icon-192.png'),
     mobileLogo:mobile.every(x=>x.logo.ok&&x.logo.decoded&&x.logo.panelW>100&&x.logo.panelBg.includes('temple-global-logo-v5.4.webp')&&x.logo.docW<=x.width+1),
     mobileThreshold:mobile.every(x=>!x.held.ready&&x.held.continueText==='Continue at Chamber 42'),
     noErrors:pageErrors.length===0&&mobile.every(x=>x.errors.length===0)
