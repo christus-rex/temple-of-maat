@@ -1,15 +1,24 @@
-name: Smoke Release hardening v5.3.6
+name: Smoke Release hardening v5.4
 
 on:
   pull_request:
     paths:
       - 'version.json'
       - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'index.html'
+      - 'offline.html'
+      - 'icon-192.png'
+      - 'icon-512.png'
+      - 'icon-maskable-512.png'
+      - 'apple-touch-icon.png'
+      - 'assets/branding/**'
       - 'README.md'
       - 'ROADMAP.md'
       - 'PWA-CHECKLIST.md'
       - 'docs/RELEASE_VERIFICATION.md'
       - 'docs/LOGO_VISIBILITY_V5.3.6.md'
+      - 'docs/CANONICAL_IDENTITY_V5.4.md'
       - 'styles/v5.3-threshold.css'
       - 'scripts/v5.3-threshold.js'
       - 'scripts/smoke-logo-visibility-v5.3.6.mjs'
@@ -29,19 +38,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Validate current release cache and logo contract
+      - name: Validate current release cache and canonical identity contract
         run: node scripts/validate-current-release.mjs
       - name: Install Chromium
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
-      - name: Simulate prior-worker upgrade and verify global logo visibility
+      - name: Simulate prior-worker upgrade and verify canonical logo visibility
         run: node scripts/smoke-logo-visibility-v5.3.6.mjs
       - name: Preserve release screenshot evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v5.3.6-logo-visibility-screenshots
-          path: work/logo-visibility-v5.3.6/
+          name: v5.4-canonical-identity-screenshots
+          path: work/logo-visibility-v5.4/
           if-no-files-found: warn
           retention-days: 30
