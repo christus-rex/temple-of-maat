@@ -1,7 +1,8 @@
-const VERSION = 'temple-maat-pwa-v5.3.6-global-logo-2026-08-16-r1';
-// Shell revision r1: rotate the stale v5.2.8 cache, precache the global SOL-OM-ON emblem, and preserve the existing offline/media boundaries.
-const STATIC_CACHE = `${VERSION}-static`;
-const RUNTIME_CACHE = `${VERSION}-runtime`;
+const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
+// Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates the physical caches for the v5.3.6 global-logo visibility repair.
+const CACHE_REVISION = 'v5.3.6-global-logo-r1';
+const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
+const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
 const CORE_ASSETS = [
   './',
   './index.html',
