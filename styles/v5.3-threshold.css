@@ -1,4 +1,4 @@
-/* Temple of Ma'at v5.3.1 — Threshold, accessibility, and mobile refinement */
+/* Temple of SOL-OM-ON (Ma'at) v5.3.5 — global identity, threshold, accessibility, and mobile refinement */
 :root {
   --temple-focus: #40e0d0;
   --temple-gold: #d9bf73;
@@ -41,6 +41,19 @@
   box-shadow: 0 22px 80px rgba(0, 0, 0, 0.38);
   text-align: center;
 }
+
+/* Global Temple identity: the approved SOL-OM-ON / Ma'at emblem is the threshold seal. */
+.temple-static-entry__panel::before {
+  content: "";
+  display: block;
+  width: min(410px, 82vw);
+  aspect-ratio: 1;
+  margin: 0 auto 24px;
+  border: 1px solid rgba(217, 191, 115, 0.34);
+  border-radius: 24px;
+  background: #071019 url('../assets/branding/temple-global-logo.webp') center / cover no-repeat;
+  box-shadow: 0 0 54px rgba(64, 224, 208, 0.14), 0 18px 50px rgba(0, 0, 0, 0.34);
+}
 .temple-static-entry__eyebrow {
   margin: 0 0 12px;
   color: var(--temple-focus);
@@ -51,8 +64,17 @@
 .temple-static-entry__panel h1 {
   margin: 0;
   color: #fff8e8;
-  font: 800 clamp(38px, 8vw, 72px)/0.98 Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: -0.04em;
+  font: 800 clamp(30px, 6vw, 48px)/1.03 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+/* Preserve the semantic heading in the DOM while presenting the current canonical brand name visually. */
+#temple-static-title {
+  font-size: 0;
+}
+#temple-static-title::after {
+  content: "Temple of SOL-OM-ON · Ma'at";
+  font: 800 clamp(30px, 6vw, 48px)/1.03 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.03em;
 }
 .temple-static-entry__version {
   width: fit-content;
@@ -117,6 +139,31 @@
   font: 600 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* Runtime global identity. The existing React header remains the host; branding is layered without rebuilding the app bundle. */
+.temple-brand-title {
+  display: flex !important;
+  align-items: center;
+  gap: 9px;
+  font-size: 0 !important;
+}
+.temple-brand-title::before {
+  content: "";
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border: 1px solid rgba(217, 191, 115, 0.5);
+  border-radius: 50%;
+  background: #071019 url('../assets/branding/temple-global-logo.webp') center / cover no-repeat;
+  box-shadow: 0 0 18px rgba(64, 224, 208, 0.2);
+}
+.temple-brand-title::after {
+  content: "TEMPLE OF SOL-OM-ON · MA'AT — 72";
+  color: inherit;
+  font: 800 16px/1.1 Cinzel, Georgia, serif;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
 /* Manual threshold gate: React may render in the background, but the portal stays inaccessible until the visitor chooses to enter. */
 body:not(.temple-app-ready) #root {
   display: none !important;
@@ -152,12 +199,16 @@ body:not(.temple-app-ready) .temple-skip-link {
 @media (max-width: 767px) {
   .temple-static-entry__actions { grid-template-columns: 1fr; }
   .temple-static-entry__panel { border-radius: 20px; }
+  .temple-static-entry__panel::before { width: min(320px, 82vw); border-radius: 18px; margin-bottom: 20px; }
   .temple-static-entry__version { font-size: 10px; letter-spacing: 0.1em; }
   .temple-static-entry__lead::after {
     margin-top: 20px;
     padding: 16px 8px;
     line-height: 1.65;
   }
+  .temple-brand-title { gap: 7px; }
+  .temple-brand-title::before { width: 34px; height: 34px; flex-basis: 34px; }
+  .temple-brand-title::after { font-size: 12px; letter-spacing: 0.08em; white-space: normal; max-width: 220px; }
 
   /* Existing micro-labels remain compact but readable on phones. */
   .text-\[9px\], .text-\[10px\], .text-\[11px\] {
@@ -180,4 +231,6 @@ body:not(.temple-app-ready) .temple-skip-link {
   .temple-static-entry__panel,
   .temple-static-entry__action,
   .temple-static-entry__version { border: 1px solid CanvasText; }
+  .temple-static-entry__panel::before,
+  .temple-brand-title::before { border: 1px solid CanvasText; }
 }
