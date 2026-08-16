@@ -5,6 +5,8 @@ on:
     paths:
       - 'research/relationship-graph.json'
       - 'research/relationship-graph.schema.json'
+      - 'research/pair-authority.json'
+      - 'research/pair-authority-name-migration.v1.json'
       - 'library/catalog.json'
       - 'chambers.json'
       - 'scripts/v5.3.0-relationship-resolver.mjs'
@@ -13,7 +15,12 @@ on:
       - 'styles/v5.3.0-comparative-reading.css'
       - 'scripts/validate-comparative-reading-v5.3.0.mjs'
       - 'scripts/smoke-comparative-reading-v5.3.0.mjs'
+      - 'scripts/v5.3.3-living-temple-map.mjs'
+      - 'styles/v5.3.3-living-temple-map.css'
+      - 'scripts/validate-living-temple-map-v5.3.3.mjs'
+      - 'scripts/smoke-living-temple-map-v5.3.3.mjs'
       - 'docs/COMPARATIVE_READING.md'
+      - 'docs/LIVING_TEMPLE_MAP.md'
       - '.github/workflows/validate-comparative-reading-v5.3.0.yml'
       - '.github/workflows/validate-v5.yml'
   workflow_dispatch:
@@ -32,17 +39,29 @@ jobs:
           node-version: '24'
       - name: Validate evidence and privacy contract
         run: node scripts/validate-comparative-reading-v5.3.0.mjs
+      - name: Validate Living Temple Map static contract
+        run: node scripts/validate-living-temple-map-v5.3.3.mjs
       - name: Install Chromium
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
       - name: Exercise comparative workspace at mobile widths
         run: TEMPLE_PYTHON=python3 node scripts/smoke-comparative-reading-v5.3.0.mjs
+      - name: Exercise Living Temple Map at desktop and mobile widths
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-living-temple-map-v5.3.3.mjs
       - name: Preserve comparative reading screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: comparative-reading-v5.3.0
           path: work/comparative-reading-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Preserve Living Temple Map screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: living-temple-map-v5.3.3
+          path: work/living-temple-map-smoke/*.png
           if-no-files-found: ignore
           retention-days: 7
