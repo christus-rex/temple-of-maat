@@ -179,6 +179,14 @@ for (const row of dossierRows) {
     });
   }
 }
+const dossierVariantColumns = ['pairNumber','dossierTriplet','dossierAngel','dossierConstructedHebrew','authorityTriplet','authorityAngel','authorityConstructedHebrew'];
+assert(JSON.stringify(report.dossierVariantColumns) === JSON.stringify(dossierVariantColumns), 'Discrepancy report dossier-variant column contract is stale.');
+const dossierVariantRows = dossierVariants.map((variant) => [
+  variant.pairNumber, variant.dossierTriplet, variant.dossierAngel, variant.dossierConstructedHebrew,
+  variant.authorityTriplet, variant.authorityAngel, variant.authorityConstructedHebrew
+]);
+assert(report.summary.nativeDossierVariantCount === dossierVariants.length, 'Discrepancy report dossier-variant count is stale.');
+assert(JSON.stringify(report.dossierSourceVariants) === JSON.stringify(dossierVariantRows), 'Native Shem dossier source variants changed. Review and update provenance explicitly rather than silently accepting the drift.');
 
 const kernelChambers = kernel.records.filter((record) => record.entityType === 'chamber');
 for (const kernelRecord of kernelChambers) {
