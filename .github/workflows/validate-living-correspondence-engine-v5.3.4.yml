@@ -1,0 +1,47 @@
+name: Validate Living Correspondence Engine v5.3.4
+
+on:
+  pull_request:
+    paths:
+      - 'research/knowledge-kernel/**'
+      - 'research/pair-authority.json'
+      - 'research/pair-authority-name-migration.v1.json'
+      - 'research/relationship-graph.json'
+      - 'scripts/v5.3.0-relationship-browser-adapter.mjs'
+      - 'scripts/v5.3.3-living-temple-map.mjs'
+      - 'scripts/v5.3.4-living-correspondence-engine.mjs'
+      - 'styles/v5.3.4-living-correspondence-engine.css'
+      - 'scripts/validate-living-correspondence-engine-v5.3.4.mjs'
+      - 'scripts/smoke-living-correspondence-engine-v5.3.4.mjs'
+      - 'docs/LIVING_CORRESPONDENCE_ENGINE.md'
+      - '.github/workflows/validate-living-correspondence-engine-v5.3.4.yml'
+      - '.github/workflows/validate-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  correspondence-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate governed correspondence contract
+        run: node scripts/validate-living-correspondence-engine-v5.3.4.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise correspondence engine at desktop and mobile widths
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-living-correspondence-engine-v5.3.4.mjs
+      - name: Preserve correspondence screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: living-correspondence-engine-v5.3.4
+          path: work/living-correspondence-engine-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7
