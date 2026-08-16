@@ -1,0 +1,48 @@
+name: Validate Pair Authority v1
+
+on:
+  push:
+    paths:
+      - 'research/pair-authority.json'
+      - 'research/pair-authority/**'
+      - 'research/pair-authority.schema.json'
+      - 'research/pair-authority-name-migration.v1.json'
+      - 'research/pair-authority-name-migration.v1.schema.json'
+      - 'research/pair-authority-discrepancy-report.json'
+      - 'scripts/validate-pair-authority-v1.mjs'
+      - 'scripts/validate-pair-authority-audit-v1.mjs'
+      - 'docs/PAIR_AUTHORITY.md'
+      - 'chambers.json'
+      - 'scripts/v5.2.4-living-codex.js'
+      - 'scripts/v5.2.6-shem-dossiers.js'
+      - 'research/knowledge-kernel/**'
+      - '.github/workflows/validate-pair-authority-v1.yml'
+  pull_request:
+    paths:
+      - 'research/pair-authority.json'
+      - 'research/pair-authority/**'
+      - 'research/pair-authority.schema.json'
+      - 'research/pair-authority-name-migration.v1.json'
+      - 'research/pair-authority-name-migration.v1.schema.json'
+      - 'research/pair-authority-discrepancy-report.json'
+      - 'scripts/validate-pair-authority-v1.mjs'
+      - 'scripts/validate-pair-authority-audit-v1.mjs'
+      - 'docs/PAIR_AUTHORITY.md'
+      - 'chambers.json'
+      - 'scripts/v5.2.4-living-codex.js'
+      - 'scripts/v5.2.6-shem-dossiers.js'
+      - 'research/knowledge-kernel/**'
+      - '.github/workflows/validate-pair-authority-v1.yml'
+
+jobs:
+  validate-pair-authority:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate canonical pair authority
+        run: node scripts/validate-pair-authority-v1.mjs
+      - name: Audit arithmetic and Third Name migration boundary
+        run: node scripts/validate-pair-authority-audit-v1.mjs
