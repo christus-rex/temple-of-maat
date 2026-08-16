@@ -7,6 +7,7 @@ on:
     paths:
       - '.brand-source/v5.4/APPLY'
       - '.brand-source/v5.4/APPLY2'
+      - '.brand-source/v5.4/APPLY3'
   workflow_dispatch:
 
 permissions:
@@ -34,7 +35,6 @@ jobs:
                   styles/v5.3-threshold.css \
                   scripts/validate-current-release.mjs \
                   scripts/smoke-logo-visibility-v5.3.6.mjs \
-                  .github/workflows/smoke-release-hardening-v5.2.8.yml \
                   docs/CANONICAL_IDENTITY_V5.4.md
           if git diff --cached --quiet; then
             echo "Canonical identity is already applied."
