@@ -1,5 +1,5 @@
-const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
-// Shell revision r4: mobile dock alignment, chant web fallback, strict core install, fresh release identity, and isolated cache promotion.
+const VERSION = 'temple-maat-pwa-v5.3.6-global-logo-2026-08-16-r1';
+// Shell revision r1: rotate the stale v5.2.8 cache, precache the global SOL-OM-ON emblem, and preserve the existing offline/media boundaries.
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 const CORE_ASSETS = [
@@ -11,6 +11,7 @@ const CORE_ASSETS = [
   './icon-512.png',
   './icon-maskable-512.png',
   './apple-touch-icon.png',
+  './assets/branding/temple-global-logo.webp',
   './chambers.json',
   './offline.html',
   './version.json',
