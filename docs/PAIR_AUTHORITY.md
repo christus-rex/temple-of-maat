@@ -1,6 +1,6 @@
 # Canonical Pair Authority Layer v1
 
-The Pair Authority is the governed identity spine for the Temple's 72 Shem–Goetia chamber records. It exists to make pair order, source method, modern synthesis names, spelling policy, and migration status explicit before later graph, correspondence, and 72 × 42 work depends on them.
+The Pair Authority is the governed identity spine for the Temple's 72 Shem–Goetia chamber records. It makes pair order, source method, modern synthesis names, spelling policy, arithmetic inputs, and migration status explicit before later graph, correspondence, and 72 × 42 work depends on them.
 
 The authority manifest is `research/pair-authority.json`, schema `temple-of-maat/pair-authority-v1`, version `1.0.0`. The 72 governed rows are stored in eight nine-record shards under `research/pair-authority/`. The registry is public-canonical only and does not contain visitor Notebook, Scribe, Journey, Library-note, or other device-local state.
 
@@ -8,117 +8,98 @@ The authority manifest is `research/pair-authority.json`, schema `temple-of-maat
 
 For the current implementation, the authoritative Shem source layer is **The 72-Fold Shem HaMephorash — Master Catalogue, Gematria & Discernment**. Its Hebrew triplet construction and normalized angel layer remain distinct from its later computational pairing layer.
 
-The authoritative current Temple angel–daemon pair set is the Master Catalogue Section 10 **72 × 72 gematria-twin cross-match**. In that method every Shem angel is compared against the full Goetic pool using EO, FR, RO, and RFR. Repeated Goetic counterparts are permitted because the method does not impose one-to-one exclusivity.
+The authoritative current Temple angel–daemon pair set is the Master Catalogue Section 10 **72 × 72 gematria-twin cross-match**. Every Shem angel is compared against the full Goetic pool using EO, FR, RO, and RFR. Repeated Goetic counterparts are permitted because the method does not impose one-to-one exclusivity.
 
-The authoritative current Third/Wholesome Names come from **THE EFFECTIVE TEMPLE OF SOL-OM-ON**, which applies a modern fusion-naming method to those later gematria-twin pairs under Ma’at. These names are Temple synthesis, not manuscript names, revealed names, historical Hebrew, or proof of metaphysical identity.
+**THE EFFECTIVE TEMPLE OF SOL-OM-ON** contains two naming layers that must not be collapsed. **Amendment I** records the transparent-fusion Third/Wholesome Names used by the currently deployed chamber implementation. **Amendment II — Euphonic Refinement of the 72 Third Names** explicitly preserves those earlier forms as legacy aliases while making the refined forms the preferred spoken/display names for future Temple modules. The refinement changes naming only; it does not change pairings, gematria, chamber constitutions, offices, laws, or recurrence doctrine.
 
 **The Solomonic Pairing Codex — Gematria & Angelic Correspondences** remains a governed comparison source. Its 72-pair set is positional: Goetic spirit 1 is compared with Shem angel 1, spirit 2 with angel 2, and so on. Its Reunited Names are modern synthetic names for that positional set. The positional set is `COMPARISON_ONLY` for the present Temple implementation.
 
 ## No silent reconciliation
 
-The Pair Authority does **not** merge the gematria-twin method and the positional method into a hybrid roster. It does not replace one source spelling with another merely because they resemble one another. It does not rename live chambers to match positional Reunited Names.
+The Pair Authority does **not** merge the gematria-twin method and positional method into a hybrid roster. It does not replace one source spelling with another merely because they resemble one another. It does not rename live chambers to match positional Reunited Names or Amendment II refined Third Names without an explicit implementation release.
 
-Any future migration must be explicit, versioned, reviewable, and reversible. A migration must state which record is superseded, which record supersedes it, why the change is being made, which source/method version governs the change, and which aliases remain for provenance.
+Any future migration must be explicit, versioned, reviewable, reversible, and source-located. It must state the source and destination naming methods, preserve prior aliases, and record supersession rather than rewriting provenance.
 
-This implements the project rule: **do not silently merge competing methods**.
+## Third Name naming layers
+
+`temple-third-name-v1` — Amendment I transparent-fusion naming. This is the **current deployed implementation method**. It remains the authority for validating today's `chambers.json` until a separate migration release occurs.
+
+`temple-third-name-refined-v2` — Amendment II euphonic refinement. This is the **preferred future spoken/display method** recorded by the Effective Temple canon. It is not represented as ancient, revealed, manuscript-derived, or metaphysical identity.
+
+The reviewed migration overlay is `research/pair-authority-name-migration.v1.json`, schema `temple-of-maat/pair-authority-name-migration-v1`. It contains exactly 72 source-bound mappings from Amendment I legacy names to Amendment II preferred names.
+
+The audit finds **44 / 72** substantive spelling refinements and **28 / 72** forms that are equivalent ignoring case. Production migration status remains `NOT_MIGRATED`. Pair 17 therefore remains deployed as legacy `Valelauviah` / display alias `Valelauviah II`, while Amendment II records `VALAUVIAH` as the preferred future form.
 
 ## What the discrepancy scan proves — and what it does not
 
-The v1 source comparison produces these implementation facts:
+The v1 source comparison records:
 
-- 72 current gematria-twin pairs are recorded.
-- 72 positional Codex pairs are recorded for comparison.
-- **0 / 72** current Goetic counterparts equal the Codex positional Goetic counterpart at the same pair number.
-- **46 / 72** current normalized angel strings exactly equal the Codex positional angel spelling at the same pair number; the other 26 are spelling/transliteration differences or source-form differences, not evidence of a different underlying Shem position by themselves.
-- **0 / 72** current Temple Third Names exactly equal the Codex positional Reunited Name at the same number.
-- The native Shem dossier contains **23 explicitly locked source-layer variants** relative to the Master Catalogue authority. Most are transliteration or constructed-form differences. Pair 39 (`רהע` vs `רעה`) and pair 67 (`איא` vs `איע`) include literal triplet-form discrepancies; they are recorded rather than silently corrected.
-- One current display alias is explicitly documented for the recurrence doorway at pair 17: canonical source angel `Lauviah` is displayed as `Lauviah II`, and canonical Third Name `Valelauviah` is displayed as `Valelauviah II` in `chambers.json`.
+- 72 current gematria-twin pairs;
+- 72 positional Codex pairs for comparison;
+- **0 / 72** current Goetic counterparts equal the Codex positional Goetic counterpart at the same number;
+- **46 / 72** current normalized angel strings exactly equal the Codex positional spelling at the same number;
+- **0 / 72** current Amendment I Third Names equal the positional Codex Reunited Name at the same number;
+- **23** explicitly locked native Shem dossier source-layer variants relative to the Master Catalogue authority; pair 39 (`רהע` vs `רעה`) and pair 67 (`איא` vs `איע`) contain literal triplet-form differences and remain visible rather than silently corrected;
+- one deployed recurrence display alias at pair 17: `Lauviah II` / `Valelauviah II` resolves to the governed pair record rather than creating a second entity;
+- 72 Amendment I → Amendment II naming mappings, with 44 substantive refinements and 28 case-equivalent forms.
 
-The **0 / 72** daemon result is not a statement that either method is false. It demonstrates that the methods answer different questions and therefore cannot be treated as interchangeable pair-order datasets.
+The **0 / 72** daemon result is a method-divergence finding, not a declaration that either method is false. Likewise, Amendment II's naming preference is a source-governed editorial refinement, not a new numerical pairing claim.
 
 ## Historical and metaphysical boundary
 
-The Pair Authority records relationships; it does not elevate those relationships into historical or metaphysical facts.
+For every pair, `historicalIdentity`, `metaphysicalIdentity`, `pairingIsHistoricalGoetiaClaim`, and `numericalCorrespondenceProvesIdentity` remain false. The existence of 72 Goetic spirits and 72 Shem angels, their later pairing traditions, numerical similarities among selected spellings, and Temple naming syntheses remain distinguishable layers.
 
-For every pair:
+## Computational methods
 
-- `historicalIdentity` is false;
-- `metaphysicalIdentity` is false;
-- `pairingIsHistoricalGoetiaClaim` is false;
-- `numericalCorrespondenceProvesIdentity` is false.
-
-The existence of 72 Goetic spirits and 72 Shem angels, their later pairing traditions, and numerical similarities among selected spellings must remain distinguishable layers. The Goetia itself is not being represented as declaring each demon the historical twin of a specific Shem angel.
-
-## Method identities
-
-`gematria-twin-crossmatch-v1` — current pairing authority. Shared Latin-script EO / FR / RO / RFR comparison across the full 72-spirit Goetic pool for every Shem angel. Strength labels include Tetrad exact, Triple lock, Double match, and Single exact.
-
-`temple-third-name-v1` — current Temple naming authority. Modern synthesis of the current angel + daemon pair under the Temple's Ma’at-governed reconciliation framework.
+`gematria-twin-crossmatch-v1` — current pair-selection authority. Shared Latin-script EO / FR / RO / RFR comparison across the complete Goetic candidate pool for every normalized Shem angel. Strength labels are derived from exact equality count: Tetrad exact, Triple lock, Double match, or Single exact.
 
 `solomonic-positional-four-cipher-v1` — comparison pair set from the Solomonic Pairing Codex. Pair number follows positional Goetia ↔ Shem numbering and remains separate from the live Temple pair roster.
 
-`solomonic-reunited-name-v1` — modern synthetic Reunited Names attached to the positional Codex pair set. They are comparison records, not automatic aliases for live Third Names.
+`shem-triplet-hebrew-v1` — Master Catalogue source layer for Hebrew triplets, constructed Hebrew, Mispar Hechrechi totals, and digital reductions.
 
-`shem-triplet-hebrew-v1` — source layer for Hebrew triplets, normalized angel names, constructed Hebrew, and declared Hebrew gematria values.
+The Pair Authority does not overwrite the existing Knowledge Kernel gematria methods. Exact calculation input, spelling policy, and method identity must travel with every numerical result.
 
-The existing Knowledge Kernel's two gematria method records remain intact. The Pair Authority does not overwrite the Master Catalogue mixed-script compound method or the Solomonic shared-Latin four-cipher method; it adds a governed identity contract around the specific pair-selection and naming methods used by the live Temple.
+## Independent arithmetic audit
 
-## Record structure
+`scripts/validate-pair-authority-audit-v1.mjs` recomputes the numerical values independently from the stored vectors rather than merely comparing duplicated data structures.
 
-Each sharded `pair.NN` row stores the source-sensitive values that vary by pair:
+For every one of the 72 pair rows it:
 
-- Shem triplet, transliteration, normalized angel, suffix, constructed Hebrew, and declared gematria values;
-- current Temple daemon and Third Name;
-- Master Catalogue twin strength, exact cipher matches, and EO/FR/RO/RFR vectors;
-- Codex positional comparison angel, daemon, Reunited Name, vectors, and exact-cipher result;
-- explicit divergence flags and migration status.
+1. normalizes Latin-script cipher input to A–Z while ignoring spaces and punctuation;
+2. recomputes English Ordinal (A=1 … Z=26);
+3. recomputes Full Reduction letter-by-letter;
+4. recomputes Reverse Ordinal (Z=1 … A=26);
+5. recomputes Reverse Full Reduction letter-by-letter;
+6. derives the exact matching cipher list and verifies the stored twin-strength label;
+7. recomputes both current gematria-twin vectors and positional comparison vectors;
+8. recomputes Hebrew Mispar Hechrechi for the source triplet and constructed Hebrew, treating final forms at their standard base values;
+9. recomputes digital roots;
+10. validates all 72 Amendment I → Amendment II name mappings against the Pair Authority rows and confirms the live chamber archive has not silently adopted substantive Amendment II names.
 
-The manifest supplies the shared authority contract for those rows: current implementation ID, pair-selection method, naming method, historical/metaphysical claim boundaries, source IDs, field-level provenance rules and source locators, alias policy, and supersession policy. This avoids repeating identical provenance metadata 72 times while keeping every column traceable to an explicit source rule.
+The existing `scripts/validate-pair-authority-v1.mjs` continues to perform cross-module provenance and implementation checks. Both validators run in the dedicated Pair Authority workflow and the canonical Temple v5 suite.
 
-The discrepancy report separately locks the known positional differences and native dossier variants. A source-layer difference is therefore visible data, not a reason for the validator to rewrite either source.
+## Record structure and provenance
 
-## Cross-module validation
+Each sharded `pair.NN` row stores Shem source forms and declared totals, the current daemon and Amendment I Third Name, Master Catalogue twin strength and four-cipher vectors, Codex positional comparison values, divergence flags, and migration review status.
 
-`scripts/validate-pair-authority-v1.mjs` treats the Pair Authority as a contract and checks the currently published implementation without mutating it.
+The manifest supplies source IDs, field-level provenance rules, current and future naming-method identities, alias policy, supersession policy, and claim boundaries. `preferred.thirdName` points specifically to Amendment II rather than being retroactively treated as the same field as `current.thirdName`.
 
-It verifies:
-
-1. all eight shards, all 72 authority rows, and unique pair IDs;
-2. the required governed source and method identities;
-3. current `chambers.json` angel, daemon, and Third Name values, with only documented aliases accepted;
-4. the Living Codex 72-row Master Catalogue twin data, including triplets, strength labels, exact ciphers, and numerical vectors;
-5. the native Shem dossier layer against the explicitly recorded set of 23 source variants, so new drift fails validation rather than being silently accepted;
-6. Knowledge Kernel chamber seeds against the authority records;
-7. continued presence of both previously versioned Knowledge Kernel gematria methods;
-8. the discrepancy report counts and the **0 / 72** positional-daemon invariant;
-9. absence of private visitor-state keys from the public authority artifacts.
-
-A mismatch fails validation. The validator does not rewrite the source module that disagrees.
+The separate migration overlay preserves the naming transition without expanding the stable 26-column pair-row format or rewriting existing chamber records.
 
 ## Spelling policy
 
-Spellings and transliterations materially affect numerical results. Therefore the authority stores exact source forms and source locators instead of choosing one universal spelling and retroactively applying it everywhere.
-
-The Shem dossier preserves historical/project spelling variants such as I/J/Y or V/U/W forms. The current 23 known variants are explicitly recorded in the discrepancy report. A variant is not automatically a migration. If the exact spelling participates in a calculation, the method/version and exact calculation input must travel with the result.
+Spellings and transliterations materially affect numerical results. The authority therefore preserves exact source forms and locators instead of choosing one universal spelling and applying it retroactively. A variant is not automatically a migration. When a spelling participates in a calculation, exact input and method/version are part of the evidence record.
 
 ## Alias and supersession policy
 
-An **alias** is an explicitly documented display or historical variant that continues to resolve to the same governed record. Pair 17's `Lauviah II` / `Valelauviah II` recurrence display is the v1 example.
+An **alias** is a documented display, historical, or legacy form that continues to resolve to the same governed record. The deployed pair-17 recurrence suffix and Amendment I forms retained by Amendment II are provenance-preserving aliases in different contexts.
 
-A **supersession** changes which governed record or name is preferred for a future implementation version. Supersession must never delete the former record. `supersedes` and `supersededBy` remain empty in v1 because this release establishes authority and discrepancy visibility; it does not perform a migration.
+A **supersession** changes which form is preferred in a future implementation. Amendment II already establishes a future naming preference in the source canon, but this PR intentionally does **not** perform the site migration. When that migration is authorized, the implementation version must change explicitly while legacy names remain resolvable.
 
 ## Relationship to future Temple work
 
-The Pair Authority should be consulted before:
-
-- adding pair-derived Knowledge Graph edges;
-- expanding the Living Correspondence Engine;
-- changing chamber identities or Third Names;
-- creating aliases to positional Reunited Names;
-- generating the 72 × 42 / 3,024-intersection matrix.
-
-The authority layer is intentionally a data-and-validation release rather than a visual redesign. The next visual graph can therefore distinguish **source**, **later correspondence**, **computation**, and **Temple synthesis** without building on an ambiguous pair roster.
+The Pair Authority should be consulted before pair-derived Knowledge Graph edges, Living Correspondence Engine expansion, chamber identity changes, aliases to positional Reunited Names, or the 72 × 42 / 3,024-intersection matrix. A provenance-aware graph can now distinguish **source**, **later correspondence**, **computation**, **deployed Temple synthesis**, and **preferred future naming** without confusing them.
 
 ## Governing rule
 
-**Correspondence is not identity. Computation is not revelation. A current implementation is not an ancient source. Record without erasing; migrate without hiding provenance.**
+**Correspondence is not identity. Computation is not revelation. A current implementation is not an ancient source. A future preferred name is not a silent migration. Record without erasing; migrate without hiding provenance.**
