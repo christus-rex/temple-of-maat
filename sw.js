@@ -1,6 +1,7 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
 // Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates the physical caches for the v5.3.6 global-logo visibility repair.
 const CACHE_REVISION = 'v5.3.6-global-logo-r1';
+const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.3.6';
 const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
 const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
 const CORE_ASSETS = [
