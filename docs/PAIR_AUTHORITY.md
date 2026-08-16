@@ -2,7 +2,7 @@
 
 The Pair Authority is the governed identity spine for the Temple's 72 Shem–Goetia chamber records. It exists to make pair order, source method, modern synthesis names, spelling policy, and migration status explicit before later graph, correspondence, and 72 × 42 work depends on them.
 
-The authority file is `research/pair-authority.json`, schema `temple-of-maat/pair-authority-v1`, version `1.0.0`. It contains exactly 72 public-canonical records and does not contain visitor Notebook, Scribe, Journey, Library-note, or other device-local state.
+The authority manifest is `research/pair-authority.json`, schema `temple-of-maat/pair-authority-v1`, version `1.0.0`. The 72 governed rows are stored in eight nine-record shards under `research/pair-authority/`. The registry is public-canonical only and does not contain visitor Notebook, Scribe, Journey, Library-note, or other device-local state.
 
 ## Authority hierarchy
 
@@ -31,6 +31,7 @@ The v1 source comparison produces these implementation facts:
 - **0 / 72** current Goetic counterparts equal the Codex positional Goetic counterpart at the same pair number.
 - **46 / 72** current normalized angel strings exactly equal the Codex positional angel spelling at the same pair number; the other 26 are spelling/transliteration differences or source-form differences, not evidence of a different underlying Shem position by themselves.
 - **0 / 72** current Temple Third Names exactly equal the Codex positional Reunited Name at the same number.
+- The native Shem dossier contains **23 explicitly locked source-layer variants** relative to the Master Catalogue authority. Most are transliteration or constructed-form differences. Pair 39 (`רהע` vs `רעה`) and pair 67 (`איא` vs `איע`) include literal triplet-form discrepancies; they are recorded rather than silently corrected.
 - One current display alias is explicitly documented for the recurrence doorway at pair 17: canonical source angel `Lauviah` is displayed as `Lauviah II`, and canonical Third Name `Valelauviah` is displayed as `Valelauviah II` in `chambers.json`.
 
 The **0 / 72** daemon result is not a statement that either method is false. It demonstrates that the methods answer different questions and therefore cannot be treated as interchangeable pair-order datasets.
@@ -64,18 +65,17 @@ The existing Knowledge Kernel's two gematria method records remain intact. The P
 
 ## Record structure
 
-Each `pair.NN` record stores:
+Each sharded `pair.NN` row stores the source-sensitive values that vary by pair:
 
 - Shem triplet, transliteration, normalized angel, suffix, constructed Hebrew, and declared gematria values;
-- current Temple angel, daemon, Third Name, implementation ID, pair method, naming method, and status;
+- current Temple daemon and Third Name;
 - Master Catalogue twin strength, exact cipher matches, and EO/FR/RO/RFR vectors;
 - Codex positional comparison angel, daemon, Reunited Name, vectors, and exact-cipher result;
-- explicit divergence flags;
-- historical/metaphysical claim boundaries;
-- field-level provenance with source IDs and source locators;
-- review and supersession metadata.
+- explicit divergence flags and migration status.
 
-The fields are deliberately redundant where redundancy makes provenance auditable. A current implementation value and a source-layer value may look identical while remaining separate fields because they have different authority roles.
+The manifest supplies the shared authority contract for those rows: current implementation ID, pair-selection method, naming method, historical/metaphysical claim boundaries, source IDs, field-level provenance rules and source locators, alias policy, and supersession policy. This avoids repeating identical provenance metadata 72 times while keeping every column traceable to an explicit source rule.
+
+The discrepancy report separately locks the known positional differences and native dossier variants. A source-layer difference is therefore visible data, not a reason for the validator to rewrite either source.
 
 ## Cross-module validation
 
@@ -83,11 +83,11 @@ The fields are deliberately redundant where redundancy makes provenance auditabl
 
 It verifies:
 
-1. all 72 authority records and unique pair IDs;
+1. all eight shards, all 72 authority rows, and unique pair IDs;
 2. the required governed source and method identities;
 3. current `chambers.json` angel, daemon, and Third Name values, with only documented aliases accepted;
 4. the Living Codex 72-row Master Catalogue twin data, including triplets, strength labels, exact ciphers, and numerical vectors;
-5. the native Shem dossier layer, while recording legitimate source spelling / constructed-Hebrew variants rather than silently normalizing them away;
+5. the native Shem dossier layer against the explicitly recorded set of 23 source variants, so new drift fails validation rather than being silently accepted;
 6. Knowledge Kernel chamber seeds against the authority records;
 7. continued presence of both previously versioned Knowledge Kernel gematria methods;
 8. the discrepancy report counts and the **0 / 72** positional-daemon invariant;
@@ -99,7 +99,7 @@ A mismatch fails validation. The validator does not rewrite the source module th
 
 Spellings and transliterations materially affect numerical results. Therefore the authority stores exact source forms and source locators instead of choosing one universal spelling and retroactively applying it everywhere.
 
-The Shem dossier can preserve historical/project spelling variants such as I/J/Y or V/U/W forms. Such a variant is not automatically a migration. If the exact spelling participates in a calculation, the method/version and exact calculation input must travel with the result.
+The Shem dossier preserves historical/project spelling variants such as I/J/Y or V/U/W forms. The current 23 known variants are explicitly recorded in the discrepancy report. A variant is not automatically a migration. If the exact spelling participates in a calculation, the method/version and exact calculation input must travel with the result.
 
 ## Alias and supersession policy
 
