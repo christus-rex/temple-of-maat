@@ -1,0 +1,29 @@
+name: Validate Living Temple Map v5.3.3
+
+on:
+  pull_request:
+    paths:
+      - 'research/relationship-graph.json'
+      - 'research/pair-authority.json'
+      - 'research/pair-authority-name-migration.v1.json'
+      - 'scripts/v5.3.3-living-temple-map.mjs'
+      - 'styles/v5.3.3-living-temple-map.css'
+      - 'scripts/validate-living-temple-map-v5.3.3.mjs'
+      - 'scripts/smoke-living-temple-map-v5.3.3.mjs'
+      - 'docs/LIVING_TEMPLE_MAP.md'
+      - '.github/workflows/validate-living-temple-map-v5.3.3.yml'
+      - '.github/workflows/validate-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-living-temple-map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/validate-living-temple-map-v5.3.3.mjs
