@@ -44,7 +44,7 @@ assert(!/tm524-dock/.test(moduleSource), 'Living Temple Map must not add a botto
 assert(!/v5\.3\.3-living-temple-map/.test(threshold), 'Living Temple Map must remain explicitly activated and must not auto-load from threshold startup.');
 assert(/data-temple-map-launcher/.test(moduleSource) && /#tm528-library/.test(moduleSource), 'Living Temple Map should integrate only through the explicit Library research launcher after installation.');
 assert(/@media\(max-width:700px\)/.test(styleSource) && /tm533-edge-list/.test(styleSource), 'Mobile accessible-list fallback styles are required.');
-assert(/Source \/ Textual/.test(docs) && /Temple Synthesis/.test(docs) && /public canonical/i.test(docs), 'Living Temple Map documentation must explain provenance bands and public-canonical scope.');
+assert(/Source \/ Textual/.test(docs) && /Temple Synthesis/.test(docs) && /public(?:-|\s+)canonical/i.test(docs), 'Living Temple Map documentation must explain provenance bands and public-canonical scope.');
 
 assert(graph.schema === 'temple-of-maat/relationship-graph-v1' && graph.privacy === 'public-canonical-only', 'Relationship Graph contract mismatch.');
 assert(authority.schema === 'temple-of-maat/pair-authority-v1' && authority.privacy === 'public-canonical-only', 'Pair Authority contract mismatch.');
