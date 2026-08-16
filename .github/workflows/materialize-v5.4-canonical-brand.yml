@@ -1,0 +1,47 @@
+name: Materialize v5.4 Canonical Brand
+
+on:
+  push:
+    branches:
+      - brand/v5.4-canonical-identity
+    paths:
+      - '.brand-source/v5.4/READY'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: brand/v5.4-canonical-identity
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install image materializer
+        run: npm install --no-save sharp
+      - name: Materialize approved logo and app icon family
+        run: node scripts/materialize-v5.4-branding.mjs
+      - name: Commit canonical binary assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/branding/temple-global-logo.webp \
+                  assets/branding/temple-global-logo-v5.4.webp \
+                  assets/branding/temple-brand-mark-v5.4.webp \
+                  assets/branding/temple-app-icon-192-v5.4.png \
+                  assets/branding/temple-app-icon-512-v5.4.png \
+                  assets/branding/temple-app-icon-maskable-512-v5.4.png \
+                  assets/branding/temple-app-icon-180-v5.4.png \
+                  icon-192.png icon-512.png icon-maskable-512.png apple-touch-icon.png
+          if git diff --cached --quiet; then
+            echo "Canonical brand assets already materialized."
+          else
+            git commit -m "Materialize canonical v5.4 SOL-OM-ON brand assets"
+            git push origin HEAD:brand/v5.4-canonical-identity
+          fi
