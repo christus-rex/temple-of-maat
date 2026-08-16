@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Temple of Ma'at — 72 Chamber Archive",
-  "short_name": "Temple of Ma'at",
-  "description": "An interactive 72-chamber Temple of Ma'at archive with Egypto-Solomonic seals, collectibles, chamber codex, and ritual soundscape.",
+  "name": "Temple of SOL-OM-ON — Ma'at · 72 Chamber Archive",
+  "short_name": "SOL-OM-ON · Ma'at",
+  "description": "The interactive 72-chamber Temple of SOL-OM-ON (Ma'at): a provenance-aware archive of Egypto-Solomonic seals, correspondences, collectibles, chamber codex, research layers, and ritual soundscape.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
