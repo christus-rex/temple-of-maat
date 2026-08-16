@@ -1,0 +1,43 @@
+name: Apply v5.4 Canonical Identity
+
+on:
+  push:
+    branches:
+      - brand/v5.4-canonical-identity
+    paths:
+      - '.brand-source/v5.4/APPLY'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: brand/v5.4-canonical-identity
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Apply canonical identity to website and PWA
+        run: node scripts/apply-v5.4-canonical-identity.mjs
+      - name: Commit v5.4 identity rollout
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add version.json manifest.webmanifest sw.js index.html offline.html \
+                  styles/v5.3-threshold.css \
+                  scripts/validate-current-release.mjs \
+                  scripts/smoke-logo-visibility-v5.3.6.mjs \
+                  .github/workflows/smoke-release-hardening-v5.2.8.yml \
+                  docs/CANONICAL_IDENTITY_V5.4.md
+          if git diff --cached --quiet; then
+            echo "Canonical identity is already applied."
+          else
+            git commit -m "Apply v5.4 canonical SOL-OM-ON identity"
+            git push origin HEAD:brand/v5.4-canonical-identity
+          fi
