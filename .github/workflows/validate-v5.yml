@@ -12,6 +12,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Syntax-check critical runtime scripts
+        run: |
+          node --check sw.js
+          node --check scripts/v5.3-threshold.js
+          node --check scripts/v5.4.3-mobile-hardening.js
       - name: Validate v5 structural contract
         run: |
           VERSION=$(node -p "require('./version.json').version")
