@@ -26,7 +26,6 @@
     loadEnhancement('./scripts/v5.2.6-shem-dossiers.js', 'shem-dossiers');
     loadEnhancement('./scripts/v5.2.5-media-vault.js', 'media-vault');
     loadEnhancement('./scripts/v5.2.8-temple-library.js', 'temple-library');
-    loadEnhancement('./scripts/v5.4.1-poems-chamber.js', 'poems-chamber');
     loadEnhancement('./scripts/v5.2.8-journey-import.js', 'journey-import');
     loadEnhancement('./scripts/v5.2.8-offline-controls.js', 'offline-controls');
   }
@@ -333,6 +332,10 @@
         enterTemple();
       });
     }
+
+    // Poems Chamber is intentionally mounted after the established threshold gate and
+    // entry handler so archival UI cannot delay or intercept the user's entrance gesture.
+    loadEnhancement('./scripts/v5.4.1-poems-chamber.js', 'poems-chamber');
   });
 
   window.addEventListener('hashchange', cacheCurrentChamber, { passive: true });
