@@ -19,6 +19,7 @@
   }
 
   function loadLivingCodex() {
+    loadEnhancement('./scripts/v5.4.3-mobile-hardening.js', 'mobile-hardening');
     loadEnhancement('./scripts/v5.2.4-living-codex.js', 'living-codex');
     loadEnhancement('./scripts/v5.2.4-chant-fallback.js', 'chant-fallback');
     loadEnhancement('./scripts/v5.2.5-living-temple.js', 'living-temple');
