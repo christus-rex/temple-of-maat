@@ -1,0 +1,30 @@
+name: Smoke Poems Chamber Drive Embed v5.4.2
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/v5.4.1-poems-chamber.js'
+      - 'scripts/v5.4.2-poems-drive-embed.js'
+      - 'scripts/v5.2.5-media-vault.js'
+      - 'scripts/smoke-poems-drive-embed-v5.4.2.mjs'
+      - '.github/workflows/smoke-poems-drive-embed-v5.4.2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-poems-drive-embed:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser dependencies
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify Drive remap, gallery, fallbacks, search, and mobile layout
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-poems-drive-embed-v5.4.2.mjs
