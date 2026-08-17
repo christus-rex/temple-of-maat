@@ -158,7 +158,6 @@
       return;
     }
     if (hash !== CANONICAL_SHA256) {
-      // Same-sized alternate audio remains playable for this session, but never receives canonical/persistent status.
       const url = URL.createObjectURL(file);
       releaseObjectUrl();
       objectUrl = url;
@@ -188,8 +187,6 @@
     if (!ui?.input || ui.input.dataset.tm525Bound) return false;
     ui.input.dataset.tm525Bound = 'true';
     ui.input.accept = 'audio/mpeg,.mp3,audio/*';
-    // Files with a different byte size continue through the older generic local-audio fallback.
-    // Canonical-sized files are intercepted so SHA-256 can decide whether persistence is allowed.
     ui.input.addEventListener('change', (event) => {
       const file = ui.input.files?.[0];
       if (!file || file.size !== CANONICAL_BYTES) return;
@@ -211,7 +208,6 @@
       useBlob(saved.blob, 'Canonical Ma’at chant restored from this device. Awaiting Play.');
       return true;
     }
-    // Do not leave a broken network source in the player when the repository cannot stream the local upload.
     clearPlayer('Install the canonical Ma’at chant from this device. Playback will remain silent until you choose the file and press Play.');
     bindInput();
     return true;
@@ -242,4 +238,14 @@
   else init();
 
   window.addEventListener('pagehide', releaseObjectUrl, { once: true });
+})();
+
+/* Poems Chamber Drive embed extension loader. */
+(function () {
+  if (document.querySelector('script[data-temple-poems-drive-embed]')) return;
+  const script = document.createElement('script');
+  script.src = './scripts/v5.4.2-poems-drive-embed.js';
+  script.async = false;
+  script.dataset.templePoemsDriveEmbed = 'true';
+  document.head.appendChild(script);
 })();
