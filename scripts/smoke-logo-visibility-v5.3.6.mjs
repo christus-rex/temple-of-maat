@@ -12,7 +12,9 @@ fs.mkdirSync(outDir, { recursive: true });
 const port = 41797;
 const base = `http://127.0.0.1:${port}/`;
 const priorNamespace = 'temple-maat-pwa-v5.2.7-logo-fixture';
-const cacheRevision = 'v5.4-canonical-identity-r1';
+const serviceWorkerSource = fs.readFileSync(path.join(root, 'sw.js'), 'utf8');
+const cacheRevision = serviceWorkerSource.match(/const CACHE_REVISION = '([^']+)'/)?.[1] || '';
+if (!/^v5\.4-canonical-identity-r\d+(?:-[a-z0-9-]+)?$/.test(cacheRevision)) throw new Error(`Unable to resolve current v5.4 cache revision: ${cacheRevision || '(missing)'}`);
 const mime = { '.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.mp3':'audio/mpeg','.opus':'audio/ogg','.wav':'audio/wav' };
 
 const priorWorker = `const C='${priorNamespace}-static';self.addEventListener('install',e=>e.waitUntil((async()=>{const c=await caches.open(C);await c.addAll(['./','./index.html']);self.skipWaiting()})()));self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));self.addEventListener('message',e=>{if(e.data?.type==='SKIP_WAITING')self.skipWaiting()});`;
@@ -94,5 +96,5 @@ try{
     mobileThreshold:mobile.every(x=>!x.held.ready&&x.held.continueText==='Continue at Chamber 42'),
     noErrors:pageErrors.length===0&&mobile.every(x=>x.errors.length===0)
   };
-  const failed=Object.entries(assertions).filter(([,v])=>!v).map(([k])=>k);const result={ok:failed.length===0,failed,assertions,version,upgrade,threshold,desktopBefore,desktopAfter,mobile,pageErrors};fs.writeFileSync(path.join(outDir,'result.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));if(!result.ok)process.exitCode=1;
+  const failed=Object.entries(assertions).filter(([,v])=>!v).map(([k])=>k);const result={ok:failed.length===0,failed,assertions,version,cacheRevision,upgrade,threshold,desktopBefore,desktopAfter,mobile,pageErrors};fs.writeFileSync(path.join(outDir,'result.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));if(!result.ok)process.exitCode=1;
 }catch(error){fs.writeFileSync(path.join(outDir,'fatal-error.txt'),`${error?.stack||error}\n`);console.error(error);process.exitCode=1;}finally{if(browser)await browser.close();await new Promise(r=>server.close(r));setTimeout(()=>process.exit(process.exitCode||0),50);}
