@@ -30,6 +30,7 @@ jobs:
             node scripts/validate-v5.2.5.mjs
           fi
       - run: node scripts/validate-current-release.mjs
+      - run: node scripts/validate-mobile-hardening-v5.4.3.mjs
       - run: node scripts/validate-chant-web-rendition-v5.2.8.mjs
       - run: node scripts/validate-library-v1.mjs
       - run: node scripts/validate-library-buddha.mjs
