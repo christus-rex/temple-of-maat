@@ -332,6 +332,10 @@
         enterTemple();
       });
     }
+
+    // Poems Chamber is intentionally mounted after the established threshold gate and
+    // entry handler so archival UI cannot delay or intercept the user's entrance gesture.
+    loadEnhancement('./scripts/v5.4.1-poems-chamber.js', 'poems-chamber');
   });
 
   window.addEventListener('hashchange', cacheCurrentChamber, { passive: true });

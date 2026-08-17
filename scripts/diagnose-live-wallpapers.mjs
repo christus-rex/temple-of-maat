@@ -7,6 +7,7 @@ const { chromium } = require('playwright');
 const sharp = require('sharp');
 
 const BASE_URL = process.env.TEMPLE_LIVE_URL || 'https://christus-rex.github.io/temple-of-maat/';
+const EXPECTED_VERSION = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'version.json'), 'utf8')).version;
 const outDir = path.resolve(process.cwd(), 'work', 'wallpaper-live');
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -148,7 +149,7 @@ async function runProfile(browser, profile) {
   };
 
   result.ok =
-    version?.version === '5.2.8' &&
+    version?.version === EXPECTED_VERSION &&
     state.chamberWallpaperButton &&
     state.parentalWallpaperButton &&
     directChamber.dimensions === '1440x2560' &&
@@ -170,5 +171,5 @@ try {
 }
 
 const ok = results.every((result) => result.ok);
-console.log(JSON.stringify({ ok, baseUrl: BASE_URL, results }, null, 2));
+console.log(JSON.stringify({ ok, baseUrl: BASE_URL, expectedVersion: EXPECTED_VERSION, results }, null, 2));
 if (!ok) process.exitCode = 1;
