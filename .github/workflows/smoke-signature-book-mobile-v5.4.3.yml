@@ -1,0 +1,46 @@
+name: Smoke Signature Book Mobile v5.4.3
+
+on:
+  push:
+    paths:
+      - 'styles/v5.3-threshold.css'
+      - 'scripts/v5.3-threshold.js'
+      - 'scripts/v5.4.3-mobile-hardening.js'
+      - 'scripts/smoke-signature-book-mobile-v5.4.3.mjs'
+      - 'sw.js'
+      - '.github/workflows/smoke-signature-book-mobile-v5.4.3.yml'
+  pull_request:
+    paths:
+      - 'styles/v5.3-threshold.css'
+      - 'scripts/v5.3-threshold.js'
+      - 'scripts/v5.4.3-mobile-hardening.js'
+      - 'scripts/smoke-signature-book-mobile-v5.4.3.mjs'
+      - 'sw.js'
+      - '.github/workflows/smoke-signature-book-mobile-v5.4.3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  signature-book-mobile:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify Signature Book at narrow widths
+        run: TEMPLE_PYTHON=python3 node scripts/smoke-signature-book-mobile-v5.4.3.mjs
+      - name: Preserve Signature Book screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signature-book-mobile-v5.4.3
+          path: work/signature-book-mobile-smoke/*.png
+          if-no-files-found: ignore
+          retention-days: 7
