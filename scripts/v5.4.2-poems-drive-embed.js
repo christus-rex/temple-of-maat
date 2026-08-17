@@ -65,6 +65,7 @@
     const style = document.createElement('style');
     style.id = 'temple-poems-drive-embed-style';
     style.textContent = `
+      .temple-app-ready .temple-poems-gateway{bottom:max(92px,calc(env(safe-area-inset-bottom) + 92px))}
       .temple-drive-preview-fallback{display:flex;min-height:220px;align-items:center;justify-content:center;padding:28px;text-align:center;background:radial-gradient(circle at 50% 20%,rgba(67,221,208,.08),transparent 50%),#03070b;color:#c8d6d6;font:700 11px/1.6 ui-monospace,monospace;letter-spacing:.05em}
       .temple-drive-preview-fallback strong{display:block;color:#f2d27d;margin-bottom:6px}
       .temple-poems-vault-badge{margin-top:10px;color:#8debe3;font:700 9px/1.4 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
