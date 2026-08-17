@@ -1,0 +1,32 @@
+name: Validate Forty-Two Hall v5.4.1
+
+on:
+  push:
+    paths:
+      - 'research/maat-forty-two-hall.v1.json'
+      - 'scripts/v5.4.1-forty-two-hall.mjs'
+      - 'styles/v5.4.1-forty-two-hall.css'
+      - 'scripts/validate-forty-two-hall-v5.4.1.mjs'
+      - 'docs/FORTY_TWO_HALL.md'
+      - '.github/workflows/validate-forty-two-hall-v5.4.1.yml'
+      - 'scripts/v5.3-threshold.js'
+  pull_request:
+    paths:
+      - 'research/maat-forty-two-hall.v1.json'
+      - 'scripts/v5.4.1-forty-two-hall.mjs'
+      - 'styles/v5.4.1-forty-two-hall.css'
+      - 'scripts/validate-forty-two-hall-v5.4.1.mjs'
+      - 'docs/FORTY_TWO_HALL.md'
+      - '.github/workflows/validate-forty-two-hall-v5.4.1.yml'
+      - 'scripts/v5.3-threshold.js'
+
+jobs:
+  forty-two-hall:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate governed Hall registry and privacy boundaries
+        run: node scripts/validate-forty-two-hall-v5.4.1.mjs
