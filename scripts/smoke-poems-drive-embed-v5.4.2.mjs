@@ -42,7 +42,7 @@ async function inspectPoems(page) {
 }
 
 async function inspectGallery(page) {
-  await page.getByRole('button', { name: 'Depictions' }).click();
+  await page.getByRole('button', { name: 'Depictions' }).evaluate((node) => node.click());
   await page.waitForFunction(() => document.querySelectorAll('[data-depiction-grid] .temple-depiction-card').length === 31, { timeout: 15000 });
   const gallery = await page.evaluate(() => {
     const cards = [...document.querySelectorAll('[data-depiction-grid] .temple-depiction-card')];
