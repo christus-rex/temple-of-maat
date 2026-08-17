@@ -1,6 +1,6 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
 // Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates physical caches for the v5.4 canonical website/app identity rollout.
-const CACHE_REVISION = 'v5.4-canonical-identity-r2-mobile-ui';
+const CACHE_REVISION = 'v5.4-canonical-identity-r3-debug-pass';
 const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.4';
 const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
 const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
@@ -33,6 +33,7 @@ const CORE_ASSETS = [
   './scripts/parental-powers-assets.json',
   './scripts/v5.1-asset-manifest.json',
   './scripts/v5.3-threshold.js',
+  './scripts/v5.4.3-mobile-hardening.js',
   './scripts/v5.2.4-living-codex.js',
   './scripts/v5.2.4-chant-fallback.js',
   './scripts/v5.2.5-living-temple.js',
@@ -62,7 +63,7 @@ function isReleaseIdentity(url) {
 }
 
 function isCriticalUiAsset(url) {
-  return url.origin === self.location.origin && /\/(?:styles\/v5\.3-threshold\.css|scripts\/v5\.3-threshold\.js)$/i.test(url.pathname);
+  return url.origin === self.location.origin && /\/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening)\.js)$/i.test(url.pathname);
 }
 
 async function cacheStrictInBatches(cache, assets, batchSize = 12) {
@@ -367,8 +368,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Threshold CSS/JS are release-critical UI assets. Use network-first so mobile
-  // layout corrections do not remain hidden behind a stale installed-PWA cache.
+  // Threshold and mobile-hardening assets are release-critical UI. Use network-first
+  // so layout corrections do not remain hidden behind an installed-PWA cache.
   if (isCriticalUiAsset(url)) {
     event.respondWith((async () => {
       try {
