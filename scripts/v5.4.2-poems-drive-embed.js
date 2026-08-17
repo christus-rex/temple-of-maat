@@ -74,9 +74,9 @@
 
   function hardenImage(img) {
     if (!img || img.dataset.pcDriveHardened === 'true') return;
-    const match = remapUrl(img.currentSrc || img.src).match(/[?&]id=([^&]+)/);
+    const match = remapUrl(img.src).match(/[?&]id=([^&]+)/);
     const hrefMatch = img.closest('a')?.href?.match(/\/d\/([^/]+)/);
-    const id = decodeURIComponent(match?.[1] || hrefMatch?.[1] || '');
+    const id = decodeURIComponent(hrefMatch?.[1] || match?.[1] || '');
     if (!id) return;
     img.dataset.pcDriveHardened = 'true';
     img.removeAttribute('onerror');
