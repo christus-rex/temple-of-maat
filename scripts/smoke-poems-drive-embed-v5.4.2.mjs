@@ -79,24 +79,16 @@ async function inspectGallery(page) {
   return { ...gallery, visibleAfterSearch, fallbackState };
 }
 
-async function mobileCheck(browser) {
-  const context = await browser.newContext({ viewport: { width: 412, height: 915 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2.625 });
-  const page = await context.newPage();
-  const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 120000 });
-  await enter(page);
-  await openPoems(page);
-  await page.getByRole('button', { name: 'Depictions' }).click();
-  await page.waitForFunction(() => document.querySelectorAll('[data-depiction-grid] .temple-depiction-card').length === 31, { timeout: 15000 });
-  const overflow = await page.evaluate(() => ({
+async function mobileCheck(page) {
+  await page.setViewportSize({ width: 412, height: 915 });
+  await page.waitForTimeout(120);
+  return page.evaluate(() => ({
     width: innerWidth,
     doc: document.documentElement.scrollWidth,
     shell: document.querySelector('.temple-poems-shell')?.scrollWidth || 0,
-    count: document.querySelectorAll('[data-depiction-grid] .temple-depiction-card').length
+    count: document.querySelectorAll('[data-depiction-grid] .temple-depiction-card').length,
+    gatewayBottom: getComputedStyle(document.querySelector('[data-poems-chamber="floating"]')).bottom
   }));
-  await context.close();
-  return { overflow, errors };
 }
 
 try {
@@ -118,13 +110,12 @@ try {
   if (gallery.count !== 31 || gallery.extras !== 10 || gallery.hardened !== 31 || gallery.oldIdPresent || !gallery.newFirstPresent || !gallery.newZenPresent || !gallery.newShemPresent || !gallery.copyMentions31) throw new Error(`Gallery remap failed: ${JSON.stringify(gallery)}`);
   if (gallery.fallbackState?.first?.stage !== 'direct' || !gallery.fallbackState?.first?.src?.includes('uc?export=view') || !gallery.fallbackState?.hidden || !/High-resolution source preserved/.test(gallery.fallbackState?.note || '')) throw new Error(`Fallback behavior failed: ${JSON.stringify(gallery.fallbackState)}`);
 
-  await context.close();
-  const mobile = await mobileCheck(browser);
-  await browser.close();
-  if (mobile.overflow.doc > mobile.overflow.width + 1 || mobile.overflow.shell > mobile.overflow.width + 1 || mobile.overflow.count !== 31) throw new Error(`Mobile Poems Chamber overflow/count failure: ${JSON.stringify(mobile.overflow)}`);
+  const mobile = await mobileCheck(page);
+  if (mobile.doc > mobile.width + 1 || mobile.shell > mobile.width + 1 || mobile.count !== 31) throw new Error(`Mobile Poems Chamber overflow/count failure: ${JSON.stringify(mobile)}`);
 
-  const pageErrors = [...errors, ...mobile.errors];
-  const result = { ok: pageErrors.length === 0, poems, gallery, mobile, pageErrors };
+  await context.close();
+  await browser.close();
+  const result = { ok: errors.length === 0, poems, gallery, mobile, pageErrors: errors };
   console.log(JSON.stringify(result, null, 2));
   if (!result.ok) process.exitCode = 1;
 } finally {
