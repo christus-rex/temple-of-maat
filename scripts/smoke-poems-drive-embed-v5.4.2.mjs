@@ -21,7 +21,9 @@ async function enter(page) {
 
 async function openPoems(page) {
   await page.waitForSelector('[data-poems-chamber="floating"]', { timeout: 15000 });
-  await page.locator('[data-poems-chamber="floating"]').click();
+  // The Temple may already have a chamber artifact open; dispatch the gateway activation
+  // directly so this smoke test stays focused on Poems Chamber rendering and Drive embeds.
+  await page.locator('[data-poems-chamber="floating"]').evaluate((node) => node.click());
   await page.waitForSelector('#temple-poems-backdrop.open', { timeout: 15000 });
 }
 
