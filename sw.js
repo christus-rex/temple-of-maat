@@ -1,6 +1,6 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
 // Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates physical caches for the v5.4 canonical website/app identity rollout.
-const CACHE_REVISION = 'v5.4-canonical-identity-r1';
+const CACHE_REVISION = 'v5.4-canonical-identity-r2-mobile-ui';
 const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.4';
 const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
 const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
@@ -59,6 +59,10 @@ function isBinaryRitualMedia(url) {
 
 function isReleaseIdentity(url) {
   return url.origin === self.location.origin && /\/version\.json$/i.test(url.pathname);
+}
+
+function isCriticalUiAsset(url) {
+  return url.origin === self.location.origin && /\/(?:styles\/v5\.3-threshold\.css|scripts\/v5\.3-threshold\.js)$/i.test(url.pathname);
 }
 
 async function cacheStrictInBatches(cache, assets, batchSize = 12) {
@@ -270,6 +274,8 @@ self.addEventListener('install', (event) => {
       // than promoting a partially offline-capable release. Support art remains optional.
       await cacheStrictInBatches(cache, CORE_ASSETS);
       await cacheInBatches(cache, await supportDisplayAssets());
+      // UI hotfixes should take control without waiting for every existing tab to close.
+      await self.skipWaiting();
     } catch (error) {
       await caches.delete(STATIC_CACHE);
       throw error;
@@ -356,6 +362,24 @@ self.addEventListener('fetch', (event) => {
         return response;
       } catch {
         return (await caches.match('./version.json')) || new Response('', { status: 504, statusText: 'Offline' });
+      }
+    })());
+    return;
+  }
+
+  // Threshold CSS/JS are release-critical UI assets. Use network-first so mobile
+  // layout corrections do not remain hidden behind a stale installed-PWA cache.
+  if (isCriticalUiAsset(url)) {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response && response.ok) {
+          const cache = await caches.open(RUNTIME_CACHE);
+          await cache.put(request, response.clone());
+        }
+        return response;
+      } catch {
+        return (await caches.match(request)) || new Response('', { status: 504, statusText: 'Offline' });
       }
     })());
     return;
