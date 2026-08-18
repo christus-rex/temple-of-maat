@@ -88,6 +88,7 @@ jobs:
         run: node scripts/smoke-chant-streaming-v5.4.mjs
 
       - name: Publish deployed verification beacon
+        id: deployed_result
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
@@ -126,8 +127,8 @@ jobs:
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
-          echo "TEMPLE_DEPLOYED_RESULT=$RESULT" >> "$GITHUB_ENV"
-          echo "TEMPLE_DEPLOYED_UPDATED_AT=$UTC_NOW" >> "$GITHUB_ENV"
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
+          echo "updated_at=$UTC_NOW" >> "$GITHUB_OUTPUT"
 
       - name: Publish deployed state to machine-readable health record
         if: always()
@@ -136,9 +137,9 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
           TEMPLE_HEALTH_COMPONENT: deployed_visual
-          TEMPLE_HEALTH_STATUS: ${{ env.TEMPLE_DEPLOYED_RESULT }}
+          TEMPLE_HEALTH_STATUS: ${{ steps.deployed_result.outputs.result }}
           TEMPLE_HEALTH_COMMIT: ${{ github.sha }}
-          TEMPLE_HEALTH_UPDATED_AT: ${{ env.TEMPLE_DEPLOYED_UPDATED_AT }}
+          TEMPLE_HEALTH_UPDATED_AT: ${{ steps.deployed_result.outputs.updated_at }}
           TEMPLE_HEALTH_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           TEMPLE_RELEASE_VERSION: ${{ env.TEMPLE_EXPECTED_VERSION }}
           TEMPLE_RELEASE_BUILD: ${{ env.TEMPLE_EXPECTED_BUILD }}
@@ -155,6 +156,8 @@ jobs:
 
       - name: Fail when deployed release is not green
         if: always()
+        env:
+          RESULT: ${{ steps.deployed_result.outputs.result }}
         shell: bash
         run: |
-          if [ "${TEMPLE_DEPLOYED_RESULT:-failure}" != "success" ]; then exit 1; fi
+          test "$RESULT" = "success"
