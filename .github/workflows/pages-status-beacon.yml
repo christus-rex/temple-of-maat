@@ -1,0 +1,67 @@
+name: Pages Status Beacon
+
+on:
+  page_build:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  publish-pages-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish connector-readable Pages beacon
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: '68'
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_BUILD: ${{ toJSON(github.event.build) }}
+          SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          SERVER_URL: ${{ github.server_url }}
+        shell: bash
+        run: |
+          set -u
+          UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
+
+          if [ "$EVENT_NAME" = "page_build" ]; then
+            STATUS="$(jq -r '.status // "unknown"' <<<"$EVENT_BUILD")"
+            COMMIT="$(jq -r '.commit // empty' <<<"$EVENT_BUILD")"
+            UPDATED="$(jq -r '.updated_at // empty' <<<"$EVENT_BUILD")"
+            ERROR="$(jq -r '.error.message // empty' <<<"$EVENT_BUILD")"
+            [ -n "$COMMIT" ] || COMMIT="$SHA"
+            [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
+          else
+            STATUS="manual-check"
+            COMMIT="$SHA"
+            UPDATED="$UTC_NOW"
+            ERROR=""
+          fi
+
+          BODY=$(cat <<EOF
+          # Temple Pages Status Beacon
+
+          - **event:** $EVENT_NAME
+          - **pages status:** **$STATUS**
+          - **commit:** \`$COMMIT\`
+          - **updated:** \`$UPDATED\`
+          - **beacon refreshed:** \`$UTC_NOW\`
+          - **beacon workflow:** $RUN_URL
+          EOF
+          )
+
+          if [ -n "$ERROR" ]; then
+            BODY="$BODY
+
+          ## Pages error
+          $ERROR"
+          fi
+
+          BODY="$BODY
+
+          This issue is maintained automatically so connector clients can read GitHub Pages build state without relying on push workflow-run enumeration."
+          gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
