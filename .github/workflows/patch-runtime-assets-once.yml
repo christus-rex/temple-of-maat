@@ -1,0 +1,64 @@
+name: One-shot Runtime Asset Normalizer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-runtime-assets-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Normalize legacy chant source and rotate PWA shell
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          codex = Path('scripts/v5.2.4-living-codex.js')
+          text = codex.read_text()
+          old = "const CHANT_SRC = './assets/audio/maat-forty-two-declarations.mp3';"
+          new = "const CHANT_SRC = './assets/audio/maat-forty-two-declarations.web.opus';"
+          if old not in text and new not in text:
+              raise SystemExit('Unable to locate Living Codex chant source')
+          codex.write_text(text.replace(old, new))
+
+          sw = Path('sw.js')
+          text = sw.read_text()
+          old_revision = "const CACHE_REVISION = 'v5.4-canonical-identity-r3-debug-pass';"
+          new_revision = "const CACHE_REVISION = 'v5.4-canonical-identity-r4-live-green';"
+          if old_revision in text:
+              text = text.replace(old_revision, new_revision)
+          elif new_revision not in text:
+              raise SystemExit('Unexpected service-worker cache revision')
+
+          mobile = "  './scripts/v5.4.3-mobile-hardening.js',\n"
+          semantics = "  './scripts/v5.4.4-signature-book-semantics.js',\n"
+          if semantics not in text:
+              if mobile not in text:
+                  raise SystemExit('Unable to locate mobile hardening CORE_ASSETS entry')
+              text = text.replace(mobile, mobile + semantics)
+
+          old_critical = r"/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening)\.js)$/i"
+          new_critical = r"/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data)\.js)$/i"
+          if old_critical in text:
+              text = text.replace(old_critical, new_critical)
+          elif new_critical not in text:
+              raise SystemExit('Unable to locate critical UI asset matcher')
+          sw.write_text(text)
+          PY
+
+          git rm .github/workflows/patch-runtime-assets-once.yml
+          git config user.name 'Temple Release Steward'
+          git config user.email 'actions@users.noreply.github.com'
+          git add scripts/v5.2.4-living-codex.js sw.js
+          git commit -m 'Normalize chant source and promote fresh PWA shell'
+          git push origin HEAD:main
