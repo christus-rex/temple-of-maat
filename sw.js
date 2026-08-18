@@ -1,6 +1,6 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
 // Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates physical caches for the v5.4 canonical website/app identity rollout.
-const CACHE_REVISION = 'v5.4-canonical-identity-r4-live-green';
+const CACHE_REVISION = 'v5.4-canonical-identity-r5-release-status';
 const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.4';
 const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
 const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
@@ -35,6 +35,7 @@ const CORE_ASSETS = [
   './scripts/v5.3-threshold.js',
   './scripts/v5.4.3-mobile-hardening.js',
   './scripts/v5.4.4-signature-book-semantics.js',
+  './scripts/v5.4.5-release-status.js',
   './scripts/v5.2.4-living-codex.js',
   './scripts/v5.2.4-chant-fallback.js',
   './scripts/v5.2.5-living-temple.js',
@@ -64,7 +65,7 @@ function isReleaseIdentity(url) {
 }
 
 function isCriticalUiAsset(url) {
-  return url.origin === self.location.origin && /\/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data)\.js)$/i.test(url.pathname);
+  return url.origin === self.location.origin && /\/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data|v5\.4\.5-release-status)\.js)$/i.test(url.pathname);
 }
 
 async function cacheStrictInBatches(cache, assets, batchSize = 12) {
