@@ -1,0 +1,103 @@
+name: Connector Status Beacon
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Syntax check critical runtime scripts
+        id: syntax
+        continue-on-error: true
+        run: |
+          node --check sw.js
+          node --check scripts/v5.3-threshold.js
+          node --check scripts/v5.4.3-mobile-hardening.js
+          node --check scripts/persistent-data.js
+
+      - name: Validate current release contract
+        id: release
+        continue-on-error: true
+        run: node scripts/validate-current-release.mjs
+
+      - name: Validate mobile hardening contract
+        id: mobile
+        continue-on-error: true
+        run: node scripts/validate-mobile-hardening-v5.4.3.mjs
+
+      - name: Validate v5 structural contract
+        id: structural
+        continue-on-error: true
+        run: node scripts/validate-v5.mjs
+
+      - name: Publish connector-readable CI beacon
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: '67'
+          SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          SERVER_URL: ${{ github.server_url }}
+          SYNTAX: ${{ steps.syntax.outcome }}
+          RELEASE: ${{ steps.release.outcome }}
+          MOBILE: ${{ steps.mobile.outcome }}
+          STRUCTURAL: ${{ steps.structural.outcome }}
+        shell: bash
+        run: |
+          set -u
+          RESULT=success
+          for value in "$SYNTAX" "$RELEASE" "$MOBILE" "$STRUCTURAL"; do
+            if [ "$value" != "success" ]; then RESULT=failure; fi
+          done
+          SHORT_SHA="${SHA:0:12}"
+          UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
+          BODY=$(cat <<EOF
+          # Temple CI Status Beacon
+
+          - **overall:** $RESULT
+          - **commit:** \`$SHA\`
+          - **short commit:** \`$SHORT_SHA\`
+          - **branch:** \`$REF_NAME\`
+          - **updated:** \`$UTC_NOW\`
+          - **workflow run:** $RUN_URL
+          - **run attempt:** $RUN_ATTEMPT
+
+          ## Checks
+          - syntax: **$SYNTAX**
+          - current release: **$RELEASE**
+          - mobile hardening: **$MOBILE**
+          - v5 structural: **$STRUCTURAL**
+
+          This issue is maintained automatically so connector clients can read push-CI state even when workflow-run listing is unavailable.
+          EOF
+          )
+          gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
+
+      - name: Fail workflow when a beacon check failed
+        if: always()
+        env:
+          SYNTAX: ${{ steps.syntax.outcome }}
+          RELEASE: ${{ steps.release.outcome }}
+          MOBILE: ${{ steps.mobile.outcome }}
+          STRUCTURAL: ${{ steps.structural.outcome }}
+        shell: bash
+        run: |
+          for value in "$SYNTAX" "$RELEASE" "$MOBILE" "$STRUCTURAL"; do
+            if [ "$value" != "success" ]; then exit 1; fi
+          done
