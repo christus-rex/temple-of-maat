@@ -1,0 +1,87 @@
+{
+  "schema": "temple-of-maat/preservation-batch-v1",
+  "batchId": "2026-08-18-preservation-batch-01",
+  "date": "2026-08-18",
+  "release": {
+    "version": "5.5.0",
+    "build": "2026-08-18-v5.5-living-archive",
+    "productionCommit": "afffd677fe9bdd89f8a71de14c6cfa3bcba3b0b7"
+  },
+  "drive": {
+    "centralArchiveId": "1QNUBueJNt9C0ZHoMN3XBEWQTozy_3dQT",
+    "preservationRootId": "1VgD2L2qb-hxDaFvL_CyCEZuq0eu8hzle",
+    "batchFolders": {
+      "artwork": "1yvFrNT-bT3X0FaKEahB5xSJDLjfCm_yH",
+      "audio": "1USPtST1VZBYMn1UptqFylAuF8xN_oJyO",
+      "textPdf": "12kXQl4vI9MRC7xccDUL7qpQUAs9_fnFr",
+      "releaseBackups": "1PyB6fGe0hUCAlYCTykeQfk5A8aRudb2S",
+      "manifestsProvenance": "1C9HoQXhO074apC8MMtMNiLFz5tPeToup"
+    },
+    "manifest": {
+      "documentId": "1gtffF_JUU3BGiPGK3JWYAiDVNOxb8r7mscqr0obY0uA",
+      "pdfId": "1BzHZUlbgCvTeSMyqTDt3OwJEIEjWO1WX"
+    }
+  },
+  "policy": {
+    "mode": "non-destructive-copy",
+    "sourceOriginalsMoved": false,
+    "sourceOriginalsDeleted": false,
+    "notes": "Existing Drive records were copied server-side into the v5.5 preservation hierarchy. Source records and existing links remain intact."
+  },
+  "records": {
+    "textPdf": [
+      {"title":"The Buddha's Path of Awakening — Illustrated Edition.pdf","sourceId":"1zYHpthf0_YlSdLwEk1yK9IFJ_N6qfvJd","preservationId":"1enziqlbMyGIf_Whh03QehiiegsrP6mlE"},
+      {"title":"The Dead Sea Scrolls - Gematria Discernment Companion.pdf","sourceId":"1nFBPDV0rI3kTOxxZwy14iWka21Cw7JPA","preservationId":"1bIB7LBMgjqJ0-pZqkzU3Lj_HNomR7FLi"},
+      {"title":"The Dead Sea Scrolls - Comprehensive Analysis and Comparative Relevance.pdf","sourceId":"1lIGhdTcvn23vSHemW02XRBu-GaaLI9Ix","preservationId":"1i9dgZuD2YSOkPu-nGtNzdY9kgmJ-lL7f"},
+      {"title":"The Qur'an in Abjad — Gematria Study.pdf","sourceId":"1v_g6HXXo7-YrasxmWGA9P-IrJ95hQhfZ","preservationId":"1gBWMeKFLlG7rzcIot6AE8sa0s5fxyEIF"},
+      {"title":"The Qur'an — Arabic Source with Pickthall.pdf","sourceId":"1NKJbsv8H6TNbaz0lhgQJIwtX-78W-6zF","preservationId":"1IIibmXRBvH1FPRSEk_o2CGbdqxXRE6ES"},
+      {"title":"Verdad_Hebrayca_Ferrara_Gematria_Discernment_FINAL.pdf","sourceId":"1zp4FhIOJ2L7Evk812WIrPwn_zRltHING","preservationId":"1Yb9102WrTQNM1DMbbZ-_syYFtfqBv1bl"},
+      {"title":"Verdad Hebrayca — Ferrara Gematria Discernment — Marvin Alberto Ramirez-Bonilla.pdf","sourceId":"1YLup6kpHRne7z8c7RggeNbRYqZvlRJNw","preservationId":"1kmHpZsyZrFGzwp3cm1quQKmHb0D37DpT"},
+      {"title":"Biblia_de_Ferrara_Source_Facsimile_Amsterdam_1646_FINAL.pdf","sourceId":"1SxxEjXwuCmcoZ2dyz7RYWbK-UNlTT86p","preservationId":"1WFkMJPva5VRFWd01jVICnuN9r4leeBZW"},
+      {"title":"The 72-Fold Shem HaMephorash — Master Catalogue, Gematria & Discernment — Preservation Copy","sourceId":"1jegj_2-gfkw_5nbYqR5sbzCp8fEr6-WnZgvAC9-ATeA","preservationId":"1Xa0AVbXxUz6zOPaeRaU9zmUcbxE06VP9kI2M8M2o1R0"},
+      {"title":"The 72-Fold Shem HaMephorash — Master Catalogue, Gematria & Discernment.pdf","derivedFromPreservationId":"1Xa0AVbXxUz6zOPaeRaU9zmUcbxE06VP9kI2M8M2o1R0","preservationId":"1DBimA6O_8pztTh9AAtPUaTw7XZQWR9d1"}
+    ],
+    "audio": [
+      {"title":"Ma’at — Chant of the Forty-Two Declarations.mp3","sourceId":"1W8waFqQABeFRbLlSY_ryGBNyfDAP0mIA","preservationId":"1mb9muK6gdOLhO8h-OU1idecnGxq-0DYZ"}
+    ],
+    "artwork": [
+      {"title":"Temple Gnostic Seal — Transparent Cutout.png","sourceId":"18gSy7GenTLV5o-WcWAliRwApxRk09gE2","preservationId":"1HIFU0iHhQ27gssAs1ZhXaS3_bRrKdlnH"},
+      {"title":"Thoth · Christus · Ma’at — Justice Wisdom Truth Love.webp","sourceId":"1y6oBC6z3TrwqE3S9CNR3OKk2jR0NYCCe","preservationId":"1Gp1YPXe29HhwS6iHHTtOgr0iec0AuJZI"},
+      {"title":"Covenant of Two Testaments — Ma’at Feather and Scales.webp","sourceId":"1HL8nPCUwEaxSq5RaSFXVhqQwHsAi5opn","preservationId":"114ZPe6zzic8RGSWevsuS7FwmkIppOBeS"},
+      {"title":"Merkabah — Vessel of Ascending Solar Will — SOL-OM-ON in Motion.webp","sourceId":"1du026KMkr7NJfW_24jf-h6901qlRFd4V","preservationId":"1AEaNdXlab2HGLVk5NIvCvtlf17K6JO0d"},
+      {"title":"Katabasis — Descent and Remembrance Seal.webp","sourceId":"1uLW5dGZixYb74DV8pwTdQxZBLIeU5VPY","preservationId":"1A-UsHthLpX81jr1wQ8JI4aq4jGc3CApL"},
+      {"title":"Ma’at — Feather of Truth and Scales.webp","sourceId":"1la_nv8J9SWz5LnpO9FUVjmH_vAcFpYLs","preservationId":"1PK-oJ5BZ-alxFgIjdRTrb_dUexWcYtcX"},
+      {"title":"Ma’at — Feather Eye and Temple Seal.webp","sourceId":"1l3oJ1DOboO_MY0QaxuMdI2b9EINhhvYK","preservationId":"1BT_R5vJYNghfT9Dv6Dym-Dlx41eBQTZ0"},
+      {"title":"Nemamiah — 57th Angel of the Shem HaMephorash.webp","sourceId":"1E3lPj2FeJbvt_QfKBLVwHm55bo58da0a","preservationId":"19rq4MczzYCnN-stUp6HUNJQsSzKJSaA2"},
+      {"title":"Shem HaMephorash — Sacred Four-Plate Composite.webp","sourceId":"1ozRmQXqVtv2fLwWpKu8YjjtbFnD_W_Sy","preservationId":"1wmUVTzEE_EWA1g6rjY7Oa8AfJKMBGYi8"},
+      {"title":"2026-08-14 — ChatGPT Creation — image-gen-2.png","sourceId":"1tcfXS2XAd102xldOowyRIALcFeaiHQNz","preservationId":"1Kr2X6ZpnO0hmnCmLyxLLWZWd20qXbNmB"}
+    ],
+    "provenance": [
+      {"title":"Temple of SOL-OM-ON — Source Corpus & Requirement Index — 2026-08-14","sourceId":"1fqAsbEeAUbPDLOIu5zYfifkyCt5bTD3VNeBi-ptKOuM","preservationId":"158sh6h_V0aGTtppLXGBZSi8DGs-hVlgM0aCtd4l1MIU"},
+      {"title":"Temple of SOL-OM-ON — Consolidated Project Knowledge & Requirements — 2026-08-14","sourceId":"15AbXri7XFCCI6pHbvxBpLjwJM5Yxivh8n_EI6947rAo","preservationId":"1C-41SUgwQ5coHZAEj4r_T-H_yWY1cXXVvOX2fTOMCpA"},
+      {"title":"MAʿAT’S & SOL-OM-ON’S TEMPLE OF TRUTH AND LOVE — Master Archive Index — All Prior Runs & Depictions — 2026-08-04","sourceId":"1fccrPcfPjKyKCobEdmIxKnaPxVrOaYPmNJl5bgiakFE","preservationId":"1SysasZfTgY7pdlGiwp9uyX5cgsvKOZDc7L8Xt35Tgsw"},
+      {"title":"MAʿAT’S & SOL-OM-ON’S TEMPLE OF TRUTH AND LOVE — Living Architectural Record","sourceId":"13j6lWTzk24OJtlWytz4EfUxmmWOzv0FjdaXG9U0NjfQ","preservationId":"12_YlorYhg6e7pc9o4o242psdPnJG8MIaO3TNH7Qig68"},
+      {"title":"MAʿAT’S & SOL-OM-ON’S TEMPLE OF TRUTH AND LOVE — Central Run Archive","sourceId":"1hmMsL93NP5Q9lJjXsq-9n8OtPTQny61OpcnMJJSTk0U","preservationId":"1SKMNNNjH4zdKaLzjevlwMPp7OM_UQfRrcnODGB0GqLo"},
+      {"title":"MAʿAT’S & SOL-OM-ON’S TEMPLE OF TRUTH AND LOVE — Depictions & Text Master Record","sourceId":"1Gx90cchNDZU091ARcJ9p24EJrLXIeAJCQBssJxjJjYg","preservationId":"1BgPmMgXFLRymoWl-NYLzZmWZwI2_ZhbH8Zh5pVfRfMw"}
+    ],
+    "releaseEvidence": [
+      {"title":"Temple_v5.5_deployed-origin-visual-regression_afffd677.zip","githubRunId":32195197839,"githubArtifactId":9345630728,"sha256":"239a62fcf2dde6b2675ca808851d4d1105063350ee158729f156c1e8e260fa47","preservationId":"1DLlmvfr5J6va0G3V6lNqX_KSm42596T2"}
+    ]
+  },
+  "counts": {
+    "textPdf": 10,
+    "audio": 1,
+    "artwork": 10,
+    "provenance": 6,
+    "releaseEvidence": 1,
+    "preservedRecords": 28
+  },
+  "pendingLocalOnly": [
+    "Na'Tari'Kai'Lum - The Sovereign Ark Song of the Embodied Gods.opus",
+    "Elderion - Sacred Egyptian Chant ｜ Osiris Awakens Life Beneath a Black Basalt Pyramid for Inner Stillness.opus",
+    "light_upon_the_crown.mp3",
+    "The Dead Sea Scrolls - Gematria Discernment Companion.docx",
+    "The Dead Sea Scrolls - Comprehensive Analysis and Comparative Relevance.docx",
+    "Shem_HaMephorash_72_HighFidelity.zip.html"
+  ]
+}
