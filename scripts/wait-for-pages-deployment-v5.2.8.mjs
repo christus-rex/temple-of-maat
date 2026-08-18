@@ -19,9 +19,12 @@ if (!expectedVersion || !expectedBuild) {
 }
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const successStates = new Set(['success', 'succeed', 'succeeded', 'built', 'deployed']);
+const failureStates = new Set(['error', 'errored', 'failure', 'failed', 'cancelled', 'canceled']);
 
-async function githubJson(url) {
-  const response = await fetch(url, {
+async function pagesDeployment() {
+  const endpoint = `https://api.github.com/repos/${repository}/pages/deployments/${encodeURIComponent(sha)}`;
+  const response = await fetch(endpoint, {
     headers: {
       Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${token}`,
@@ -29,38 +32,40 @@ async function githubJson(url) {
     },
     cache: 'no-store'
   });
-  if (!response.ok) throw new Error(`GitHub API ${response.status} while waiting for Pages: ${await response.text()}`);
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`GitHub Pages deployment API ${response.status}: ${await response.text()}`);
   return response.json();
 }
 
-async function waitForExactPagesRun() {
+async function waitForExactPagesDeployment() {
   const deadline = Date.now() + pagesTimeoutMs;
   let last = null;
+  let lastStatus = '';
   while (Date.now() < deadline) {
-    const endpoint = `https://api.github.com/repos/${repository}/actions/runs?head_sha=${encodeURIComponent(sha)}&per_page=50`;
-    const data = await githubJson(endpoint);
-    const candidates = (data.workflow_runs || [])
-      .filter((run) => run.name === 'pages build and deployment' && run.head_sha === sha)
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    const run = candidates[0] || null;
-    last = run;
-
-    if (run?.status === 'completed') {
-      if (run.conclusion !== 'success') {
-        throw new Error(`Pages deployment for ${sha} completed with ${run.conclusion}: ${run.html_url}`);
-      }
+    const deployment = await pagesDeployment();
+    last = deployment;
+    const status = String(deployment?.status || '').trim().toLowerCase();
+    if (status && status !== lastStatus) {
+      console.log(`Pages deployment ${sha} status: ${status}`);
+      lastStatus = status;
+    }
+    if (successStates.has(status)) {
       return {
-        id: run.id,
-        htmlUrl: run.html_url,
-        headSha: run.head_sha,
-        conclusion: run.conclusion,
-        updatedAt: run.updated_at
+        id: deployment.id || null,
+        url: deployment.url || null,
+        pageUrl: deployment.page_url || deployment.pageUrl || liveUrl,
+        status,
+        commit: deployment.commit || sha,
+        createdAt: deployment.created_at || null,
+        updatedAt: deployment.updated_at || null
       };
     }
-
+    if (failureStates.has(status)) {
+      throw new Error(`Pages deployment for ${sha} completed with ${status}: ${deployment?.url || 'no API record URL'}`);
+    }
     await sleep(pollMs);
   }
-  throw new Error(`Timed out waiting for Pages deployment of ${sha}. Last observed run: ${JSON.stringify(last)}`);
+  throw new Error(`Timed out waiting for terminal Pages deployment of ${sha}. Last observed record: ${JSON.stringify(last)}`);
 }
 
 async function waitForLiveIdentity() {
@@ -83,9 +88,9 @@ async function waitForLiveIdentity() {
     }
     await sleep(pollMs);
   }
-  throw new Error(`Pages reported success for ${sha}, but live version identity never reached ${expectedVersion} / ${expectedBuild}. Last observed: ${JSON.stringify(last)}`);
+  throw new Error(`Pages reported the exact SHA as deployed, but live version identity never reached ${expectedVersion} / ${expectedBuild}. Last observed: ${JSON.stringify(last)}`);
 }
 
-const pages = await waitForExactPagesRun();
+const pages = await waitForExactPagesDeployment();
 const live = await waitForLiveIdentity();
 console.log(JSON.stringify({ ok: true, repository, sha, pages, liveUrl, expectedVersion, expectedBuild, live }, null, 2));
