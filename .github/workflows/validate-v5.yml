@@ -17,6 +17,8 @@ jobs:
           node --check sw.js
           node --check scripts/v5.3-threshold.js
           node --check scripts/v5.4.3-mobile-hardening.js
+          node --check scripts/v5.4.4-signature-book-semantics.js
+          node --check scripts/update-temple-health.mjs
       - name: Validate v5 structural contract
         run: |
           VERSION=$(node -p "require('./version.json').version")
@@ -36,6 +38,7 @@ jobs:
           fi
       - run: node scripts/validate-current-release.mjs
       - run: node scripts/validate-mobile-hardening-v5.4.3.mjs
+      - run: node scripts/validate-quality-gates-v5.4.mjs
       - run: node scripts/validate-chant-web-rendition-v5.2.8.mjs
       - run: node scripts/validate-library-v1.mjs
       - run: node scripts/validate-library-buddha.mjs
