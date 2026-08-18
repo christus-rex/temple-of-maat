@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "repository": "christus-rex/temple-of-maat",
+  "source_branch": "main",
+  "status_branch": "temple-status",
+  "live_url": "https://christus-rex.github.io/temple-of-maat/",
+  "release": {
+    "version": "5.4.0",
+    "build": "2026-08-16-v5.4-canonical-identity"
+  },
+  "ci": {
+    "status": "unknown",
+    "commit": null,
+    "updated_at": null,
+    "run_url": null
+  },
+  "pages": {
+    "status": "unknown",
+    "commit": null,
+    "updated_at": null,
+    "record_url": null
+  },
+  "deployed_visual": {
+    "status": "unknown",
+    "commit": null,
+    "updated_at": null,
+    "run_url": null
+  },
+  "green_release": false,
+  "updated_at": "2026-08-18T21:19:00Z"
+}
