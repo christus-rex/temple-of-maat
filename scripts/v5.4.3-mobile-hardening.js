@@ -4,15 +4,15 @@
 
   const root = document.getElementById('root');
   const STYLE_ID = 'temple-mobile-hardening-v543';
+  const SEMANTICS_SRC = './scripts/v5.4.4-signature-book-semantics.js';
   let queued = false;
+  let semanticsRequested = false;
 
   function installStyles() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      /* Semantic class-based fallback for the Visitor Signature Book. This avoids
-         depending on :has() support or generated utility-class ancestry. */
       @media (max-width: 767px) {
         .temple-signature-book {
           width: 100% !important;
@@ -136,47 +136,23 @@
     document.head.appendChild(style);
   }
 
-  function setAccessibleName(control, label) {
-    if (!control || control.hasAttribute('aria-label') || control.hasAttribute('aria-labelledby')) return;
-    control.setAttribute('aria-label', label);
-  }
-
-  function markSignatureBook() {
-    const sealInput = document.querySelector('form input[placeholder="Seal Phrase"]');
-    const form = sealInput?.closest('form');
-    const section = form?.closest('section');
-    if (!section) return false;
-
-    section.classList.add('temple-signature-book');
-    section.dataset.mobileLayout = 'hardened-v5.4.3';
-
-    const card = section.firstElementChild;
-    const layout = card?.firstElementChild;
-    const formColumn = layout?.children?.[0] || null;
-    const ledgerColumn = layout?.children?.[1] || null;
-    card?.classList.add('temple-signature-book__card');
-    layout?.classList.add('temple-signature-book__layout');
-    formColumn?.classList.add('temple-signature-book__form-column');
-    ledgerColumn?.classList.add('temple-signature-book__ledger-column');
-
-    const filter = ledgerColumn?.querySelector('input[placeholder="Filter ledger…"]') || null;
-    const actions = filter?.parentElement || null;
-    const toolbar = actions?.parentElement || null;
-    actions?.classList.add('temple-signature-book__actions');
-    toolbar?.classList.add('temple-signature-book__toolbar');
-
-    const table = ledgerColumn?.querySelector('table') || null;
-    table?.parentElement?.classList.add('temple-signature-book__table-scroll');
-
-    setAccessibleName(form.querySelector('input[placeholder="Name"]'), 'Visitor name');
-    setAccessibleName(form.querySelector('input[placeholder="Wholesome Name (optional)"]'), 'Wholesome name, optional');
-    setAccessibleName(form.querySelector('select'), 'Temple chamber');
-    setAccessibleName(form.querySelector('input[placeholder="Intention"]'), 'Intention');
-    setAccessibleName(form.querySelector('input[placeholder="Vow"]'), 'Vow');
-    setAccessibleName(sealInput, 'Seal phrase');
-    setAccessibleName(filter, 'Filter visitor signature ledger');
-
-    return true;
+  function ensureSemantics() {
+    if (window.TempleSignatureBookSemantics?.apply) {
+      window.TempleSignatureBookSemantics.apply();
+      return true;
+    }
+    if (semanticsRequested) return false;
+    semanticsRequested = true;
+    let script = document.querySelector('script[data-temple-signature-book-semantics]');
+    if (!script) {
+      script = document.createElement('script');
+      script.src = SEMANTICS_SRC;
+      script.async = false;
+      script.dataset.templeSignatureBookSemantics = 'v5.4.4';
+      document.head.appendChild(script);
+    }
+    script.addEventListener('load', queue, { once: true });
+    return false;
   }
 
   function auditViewport() {
@@ -186,14 +162,15 @@
     const sectionRect = section.getBoundingClientRect();
     const viewport = document.documentElement.clientWidth;
     const safe = sectionRect.left >= -1 && sectionRect.right <= viewport + 1 && document.documentElement.scrollWidth <= viewport + 1;
+    section.dataset.mobileLayout = 'hardened-v5.4.3';
     section.dataset.mobileGeometry = safe ? 'ok' : 'overflow';
   }
 
   function apply() {
     queued = false;
     installStyles();
-    markSignatureBook();
-    auditViewport();
+    const semanticReady = ensureSemantics();
+    if (semanticReady) auditViewport();
   }
 
   function queue() {
@@ -205,11 +182,9 @@
   installStyles();
   queue();
 
-  if (root && window.MutationObserver) {
-    new MutationObserver(queue).observe(root, { childList: true, subtree: true });
-  }
+  if (root && window.MutationObserver) new MutationObserver(queue).observe(root, { childList: true, subtree: true });
   window.addEventListener('resize', queue, { passive: true });
   window.addEventListener('orientationchange', queue, { passive: true });
 
-  window.TempleMobileHardening = Object.freeze({ refresh: apply });
+  window.TempleMobileHardening = Object.freeze({ version: '5.4.3', refresh: apply });
 })();
