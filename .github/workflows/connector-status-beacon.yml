@@ -116,13 +116,15 @@ jobs:
           for value in "$SYNTAX" "$RELEASE" "$MOBILE" "$QUALITY" "$STRUCTURAL"; do
             if [ "$value" != "success" ]; then RESULT=failure; fi
           done
+          VERSION=$(node -p "require('./version.json').version")
+          BUILD=$(node -p "require('./version.json').build")
           export TEMPLE_HEALTH_COMPONENT=ci
           export TEMPLE_HEALTH_STATUS="$RESULT"
           export TEMPLE_HEALTH_COMMIT="$GITHUB_SHA"
           export TEMPLE_HEALTH_RUN_URL="$RUN_URL"
           export TEMPLE_HEALTH_UPDATED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          export TEMPLE_RELEASE_VERSION="$(node -p \"require('./version.json').version\")"
-          export TEMPLE_RELEASE_BUILD="$(node -p \"require('./version.json').build\")"
+          export TEMPLE_RELEASE_VERSION="$VERSION"
+          export TEMPLE_RELEASE_BUILD="$BUILD"
           node scripts/update-temple-health.mjs
 
       - name: Fail workflow when a beacon check failed
