@@ -5,8 +5,10 @@
   const root = document.getElementById('root');
   const STYLE_ID = 'temple-mobile-hardening-v543';
   const SEMANTICS_SRC = './scripts/v5.4.4-signature-book-semantics.js';
+  const RELEASE_STATUS_SRC = './scripts/v5.4.5-release-status.js';
   let queued = false;
   let semanticsRequested = false;
+  let releaseStatusRequested = false;
 
   function installStyles() {
     if (document.getElementById(STYLE_ID)) return;
@@ -155,6 +157,21 @@
     return false;
   }
 
+  function ensureReleaseStatus() {
+    if (window.TempleReleaseStatus?.refresh) return true;
+    if (releaseStatusRequested) return false;
+    releaseStatusRequested = true;
+    let script = document.querySelector('script[data-temple-release-status]');
+    if (!script) {
+      script = document.createElement('script');
+      script.src = RELEASE_STATUS_SRC;
+      script.async = false;
+      script.dataset.templeReleaseStatus = 'v5.4.5';
+      document.head.appendChild(script);
+    }
+    return false;
+  }
+
   function auditViewport() {
     if (innerWidth > 767) return;
     const section = document.querySelector('.temple-signature-book');
@@ -169,6 +186,7 @@
   function apply() {
     queued = false;
     installStyles();
+    ensureReleaseStatus();
     const semanticReady = ensureSemantics();
     if (semanticReady) auditViewport();
   }
