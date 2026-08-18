@@ -18,6 +18,8 @@ jobs:
           node --check scripts/v5.3-threshold.js
           node --check scripts/v5.4.3-mobile-hardening.js
           node --check scripts/v5.4.4-signature-book-semantics.js
+          node --check scripts/v5.4.5-release-status.js
+          node --check scripts/persistent-data.js
           node --check scripts/update-temple-health.mjs
       - name: Validate v5 structural contract
         run: |
