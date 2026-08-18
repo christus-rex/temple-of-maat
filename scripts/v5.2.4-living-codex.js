@@ -5,7 +5,7 @@
   const VERSION = '5.2.4';
   const LAST_CHAMBER_KEY = 'temple_last_chamber';
   const CHANT_VOLUME_KEY = 'temple_maat_chant_volume';
-  const CHANT_SRC = './assets/audio/maat-forty-two-declarations.mp3';
+  const CHANT_SRC = './assets/audio/maat-forty-two-declarations.web.opus';
   const CIPHER_ORDER = ['EO', 'FR', 'RO', 'RFR'];
   const SOURCE = Object.freeze({
     title: 'The 72-Fold Shem HaMephorash — Master Catalogue, Hebrew Triplets, Angelic Names, Gematria & Discernment',
