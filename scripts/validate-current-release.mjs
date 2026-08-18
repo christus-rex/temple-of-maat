@@ -9,12 +9,13 @@ const sw = read('sw.js');
 const threshold = read('scripts/v5.3-threshold.js');
 const css = read('styles/v5.3-threshold.css');
 const mobileHardening = read('scripts/v5.4.3-mobile-hardening.js');
+const signatureSemantics = read('scripts/v5.4.4-signature-book-semantics.js');
 
 if (version.version !== '5.4.0') fail(`Expected current portal version 5.4.0, found ${version.version}`);
 if (version.build !== '2026-08-16-v5.4-canonical-identity') fail(`Unexpected current build: ${version.build}`);
 if (!String(version.source || '').includes('canonical identity')) fail('Current release source must document canonical identity');
 
-for (const [name, source] of [['Service Worker', sw], ['Threshold', threshold], ['Mobile hardening', mobileHardening]]) {
+for (const [name, source] of [['Service Worker', sw], ['Threshold', threshold], ['Mobile hardening', mobileHardening], ['Signature Book semantics', signatureSemantics]]) {
   try { new vm.Script(source, { filename: name }); }
   catch (error) { fail(`${name} JavaScript does not parse: ${error.message}`); }
 }
@@ -55,12 +56,23 @@ for (const marker of [
 }
 
 for (const marker of [
-  "section.classList.add('temple-signature-book')",
-  "section.dataset.mobileLayout = 'hardened-v5.4.3'",
+  "const SEMANTICS_SRC = './scripts/v5.4.4-signature-book-semantics.js'",
+  'window.TempleSignatureBookSemantics?.apply',
   '.temple-signature-book__table-scroll',
-  'window.TempleMobileHardening = Object.freeze({ refresh: apply })'
+  "window.TempleMobileHardening = Object.freeze({ version: '5.4.3', refresh: apply })"
 ]) {
   if (!mobileHardening.includes(marker)) fail(`Mobile hardening invariant missing: ${marker}`);
+}
+
+for (const marker of [
+  "section.classList.add('temple-signature-book')",
+  "section.dataset.templeComponent = 'visitor-signature-book'",
+  "section.dataset.semanticBoundary = 'v5.4.4'",
+  "setAccessibleName(sealInput, 'Seal phrase')",
+  "setAccessibleName(filter, 'Filter visitor signature ledger')",
+  "window.TempleSignatureBookSemantics = Object.freeze({ version: '5.4.4', apply })"
+]) {
+  if (!signatureSemantics.includes(marker)) fail(`Signature Book semantic invariant missing: ${marker}`);
 }
 
 for (const marker of [
@@ -89,5 +101,6 @@ console.log(JSON.stringify({
   iconFallback: true,
   ritualMediaBoundaryPreserved: true,
   manualThresholdPreserved: true,
-  mobileHardeningLoaded: true
+  mobileHardeningLoaded: true,
+  signatureBookSemanticBoundary: 'v5.4.4'
 }, null, 2));
