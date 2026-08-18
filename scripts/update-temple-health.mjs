@@ -1,7 +1,7 @@
 const repository = process.env.GITHUB_REPOSITORY || 'christus-rex/temple-of-maat';
 const token = process.env.GITHUB_TOKEN;
 const component = process.env.TEMPLE_HEALTH_COMPONENT;
-const status = process.env.TEMPLE_HEALTH_STATUS;
+const rawStatus = process.env.TEMPLE_HEALTH_STATUS;
 const commit = process.env.TEMPLE_HEALTH_COMMIT || process.env.GITHUB_SHA || null;
 const runUrl = process.env.TEMPLE_HEALTH_RUN_URL || null;
 const recordUrl = process.env.TEMPLE_HEALTH_RECORD_URL || null;
@@ -13,8 +13,21 @@ const path = process.env.TEMPLE_HEALTH_PATH || 'temple-health.json';
 
 if (!token) throw new Error('GITHUB_TOKEN is required to update the Temple health record.');
 if (!['ci', 'pages', 'deployed_visual'].includes(component)) throw new Error(`Unsupported TEMPLE_HEALTH_COMPONENT: ${component}`);
-if (!status) throw new Error('TEMPLE_HEALTH_STATUS is required.');
+if (!rawStatus) throw new Error('TEMPLE_HEALTH_STATUS is required.');
 
+function normalizeStatus(type, value) {
+  const status = String(value || '').trim().toLowerCase();
+  if (type === 'pages') {
+    if (['success', 'succeed', 'succeeded', 'built', 'deployed'].includes(status)) return 'success';
+    if (['error', 'errored', 'failure', 'failed'].includes(status)) return 'failure';
+    if (['pending', 'queued', 'building', 'in_progress', 'in-progress'].includes(status)) return 'pending';
+  }
+  if (['success', 'succeed', 'succeeded'].includes(status)) return 'success';
+  if (['error', 'errored', 'failure', 'failed'].includes(status)) return 'failure';
+  return status || 'unknown';
+}
+
+const status = normalizeStatus(component, rawStatus);
 const apiBase = `https://api.github.com/repos/${repository}/contents/${path}`;
 const headers = {
   Accept: 'application/vnd.github+json',
@@ -58,8 +71,12 @@ function patchHealth(current) {
     commit,
     updated_at: updatedAt
   };
-  if (component === 'pages') record.record_url = recordUrl;
-  else record.run_url = runUrl;
+  if (component === 'pages') {
+    record.raw_status = rawStatus;
+    record.record_url = recordUrl;
+  } else {
+    record.run_url = runUrl;
+  }
   next[component] = record;
 
   const ciCommit = next.ci?.commit || null;
@@ -69,7 +86,7 @@ function patchHealth(current) {
   next.green_release = Boolean(
     sameCommit &&
     next.ci?.status === 'success' &&
-    ['built', 'success'].includes(next.pages?.status) &&
+    next.pages?.status === 'success' &&
     next.deployed_visual?.status === 'success'
   );
   next.green_release_commit = next.green_release ? ciCommit : null;
@@ -94,7 +111,7 @@ for (let attempt = 1; attempt <= 4; attempt += 1) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
-    console.log(JSON.stringify({ ok: true, component, status, commit, green_release: next.green_release, green_release_commit: next.green_release_commit }, null, 2));
+    console.log(JSON.stringify({ ok: true, component, rawStatus, status, commit, green_release: next.green_release, green_release_commit: next.green_release_commit }, null, 2));
     process.exit(0);
   } catch (error) {
     lastError = error;
