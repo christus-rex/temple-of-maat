@@ -1,12 +1,15 @@
 name: Pages Status Beacon
 
 on:
+  push:
+    branches: [main]
   page_build:
   workflow_dispatch:
 
 permissions:
   contents: read
   issues: write
+  pages: read
 
 jobs:
   publish-pages-status:
@@ -27,19 +30,42 @@ jobs:
           set -u
           UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
+          STATUS=""
+          COMMIT="$SHA"
+          UPDATED="$UTC_NOW"
+          ERROR=""
+          BUILD_URL=""
 
           if [ "$EVENT_NAME" = "page_build" ]; then
             STATUS="$(jq -r '.status // "unknown"' <<<"$EVENT_BUILD")"
             COMMIT="$(jq -r '.commit // empty' <<<"$EVENT_BUILD")"
             UPDATED="$(jq -r '.updated_at // empty' <<<"$EVENT_BUILD")"
             ERROR="$(jq -r '.error.message // empty' <<<"$EVENT_BUILD")"
+            BUILD_URL="$(jq -r '.url // empty' <<<"$EVENT_BUILD")"
             [ -n "$COMMIT" ] || COMMIT="$SHA"
             [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
           else
-            STATUS="manual-check"
-            COMMIT="$SHA"
-            UPDATED="$UTC_NOW"
-            ERROR=""
+            # Push visibility fallback: the ChatGPT GitHub connector currently does
+            # not enumerate push-triggered workflow runs. Poll the official Pages
+            # deployment endpoint by commit SHA and only publish when GitHub returns
+            # a concrete deployment record, so an earlier authoritative page_build
+            # failure cannot be overwritten by an inconclusive 404/pending probe.
+            for attempt in $(seq 1 24); do
+              DEPLOYMENT="$(gh api "repos/$REPO/pages/deployments/$SHA" 2>/dev/null || true)"
+              if [ -n "$DEPLOYMENT" ]; then
+                STATUS="$(jq -r '.status // empty' <<<"$DEPLOYMENT")"
+                UPDATED="$(jq -r '.updated_at // .created_at // empty' <<<"$DEPLOYMENT")"
+                BUILD_URL="$(jq -r '.url // empty' <<<"$DEPLOYMENT")"
+                [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
+                [ -n "$STATUS" ] && break
+              fi
+              sleep 5
+            done
+
+            if [ -z "$STATUS" ]; then
+              echo "No concrete Pages deployment record was available for $SHA; preserving the existing beacon."
+              exit 0
+            fi
           fi
 
           BODY=$(cat <<EOF
@@ -54,6 +80,11 @@ jobs:
           EOF
           )
 
+          if [ -n "$BUILD_URL" ]; then
+            BODY="$BODY
+          - **Pages API record:** $BUILD_URL"
+          fi
+
           if [ -n "$ERROR" ]; then
             BODY="$BODY
 
@@ -63,5 +94,5 @@ jobs:
 
           BODY="$BODY
 
-          This issue is maintained automatically so connector clients can read GitHub Pages build state without relying on push workflow-run enumeration."
+          This issue is maintained automatically so connector clients can read GitHub Pages build/deployment state without relying on push workflow-run enumeration."
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
