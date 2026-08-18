@@ -21,6 +21,26 @@ function isBenignMediaAbort(item) {
   return item.scope === 'same-origin' && item.resourceType === 'media' && /net::ERR_ABORTED/i.test(item.error || '');
 }
 
+function isNavigationRace(error) {
+  return /execution context was destroyed|navigation|net::ERR_ABORTED/i.test(error?.message || String(error || ''));
+}
+
+async function waitForTempleReady(page) {
+  await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {});
+  await page.waitForFunction(
+    () => window.TempleLivingCodex?.records?.().length === 72 && window.TempleLibrary?.open,
+    null,
+    { timeout: 45000 }
+  );
+}
+
+async function enterTemple(page) {
+  const entry = page.locator('[data-temple-entry="continue"]');
+  await entry.waitFor({ state: 'visible', timeout: 15000 });
+  await entry.click({ timeout: 15000 });
+  await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 15000 });
+}
+
 const browser = await chromium.launch({ headless: true });
 const reports = [];
 try {
@@ -32,8 +52,12 @@ try {
     const requestFailures = [];
     const pageErrors = [];
     const consoleErrors = [];
+    const successfulDocuments = [];
 
     page.on('response', (response) => {
+      if (response.request().resourceType() === 'document' && response.status() >= 200 && response.status() < 400) {
+        successfulDocuments.push({ status: response.status(), url: response.url() });
+      }
       if (response.status() < 400) return;
       responses.push({
         status: response.status(),
@@ -58,18 +82,43 @@ try {
     });
 
     let navigationError = '';
+    let navigationRecovered = false;
+    const url = new URL(`?network_diag=${width}-${Date.now()}#chamber-13`, base);
     try {
-      const url = new URL(`?network_diag=${width}-${Date.now()}#chamber-13`, base);
       await page.goto(url.href, { waitUntil: 'domcontentloaded', timeout: 120000 });
-      await page.waitForFunction(() => window.TempleLivingCodex?.records?.().length === 72 && window.TempleLibrary?.open, null, { timeout: 45000 });
-      await page.waitForTimeout(1200);
-      await page.evaluate(() => document.querySelector('[data-temple-entry="continue"]')?.click());
-      await page.waitForTimeout(1200);
+      await waitForTempleReady(page);
+      await page.waitForTimeout(900);
+      await enterTemple(page);
+      await page.waitForTimeout(900);
+      await page.waitForLoadState('networkidle', { timeout: 4000 }).catch(() => {});
     } catch (error) {
-      navigationError = error?.message || String(error);
+      if (isNavigationRace(error)) {
+        try {
+          await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {});
+          await waitForTempleReady(page);
+          await enterTemple(page);
+          await page.waitForTimeout(900);
+          navigationRecovered = true;
+        } catch (retryError) {
+          navigationError = retryError?.message || String(retryError);
+        }
+      } else {
+        navigationError = error?.message || String(error);
+      }
     }
 
-    reports.push({ width, height, navigationError, responses, requestFailures, pageErrors, consoleErrors });
+    const currentUrl = page.url();
+    const finalSameOrigin = classify(currentUrl) === 'same-origin';
+    const finalReady = await page.evaluate(() => ({
+      codex: window.TempleLivingCodex?.records?.().length === 72,
+      library: Boolean(window.TempleLibrary?.open),
+      entered: document.body.classList.contains('temple-app-ready')
+    })).catch(() => ({ codex: false, library: false, entered: false }));
+    if (!navigationError && finalSameOrigin && finalReady.codex && finalReady.library && finalReady.entered && successfulDocuments.length > 0) {
+      navigationRecovered = navigationRecovered || requestFailures.some((item) => item.resourceType === 'document' && /net::ERR_ABORTED/i.test(item.error || ''));
+    }
+
+    reports.push({ width, height, navigationError, navigationRecovered, currentUrl, successfulDocuments, finalReady, responses, requestFailures, pageErrors, consoleErrors });
     await context.close();
   }
 } finally {
@@ -80,7 +129,18 @@ const allResponses = reports.flatMap((report) => report.responses.map((item) => 
 const allFailures = reports.flatMap((report) => report.requestFailures.map((item) => ({ width: report.width, ...item })));
 const sameOriginHttpErrors = allResponses.filter((item) => item.scope === 'same-origin');
 const benignAbortedMedia = allFailures.filter(isBenignMediaAbort);
-const sameOriginRequestFailures = allFailures.filter((item) => item.scope === 'same-origin' && !isBenignMediaAbort(item));
+const recoveredWidths = new Set(reports.filter((report) => report.navigationRecovered && !report.navigationError && report.finalReady?.entered).map((report) => report.width));
+const benignRecoveredNavigationAborts = allFailures.filter((item) =>
+  item.scope === 'same-origin' &&
+  item.resourceType === 'document' &&
+  /net::ERR_ABORTED/i.test(item.error || '') &&
+  recoveredWidths.has(item.width)
+);
+const sameOriginRequestFailures = allFailures.filter((item) =>
+  item.scope === 'same-origin' &&
+  !isBenignMediaAbort(item) &&
+  !benignRecoveredNavigationAborts.includes(item)
+);
 const externalHttpErrors = allResponses.filter((item) => item.scope === 'external');
 const externalRequestFailures = allFailures.filter((item) => item.scope === 'external');
 const navigationErrors = reports.filter((report) => report.navigationError).map((report) => ({ width: report.width, error: report.navigationError }));
@@ -92,6 +152,7 @@ const result = {
   sameOriginHttpErrors,
   sameOriginRequestFailures,
   benignAbortedMedia,
+  benignRecoveredNavigationAborts,
   externalHttpErrors,
   externalRequestFailures,
   navigationErrors,
@@ -104,6 +165,7 @@ console.log(JSON.stringify({
   sameOriginHttpErrors: sameOriginHttpErrors.length,
   sameOriginRequestFailures: sameOriginRequestFailures.length,
   benignAbortedMedia: benignAbortedMedia.length,
+  benignRecoveredNavigationAborts: benignRecoveredNavigationAborts.length,
   externalHttpErrors: externalHttpErrors.length,
   externalRequestFailures: externalRequestFailures.length,
   navigationErrors: navigationErrors.length,
