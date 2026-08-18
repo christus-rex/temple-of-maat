@@ -6,6 +6,7 @@ const files = {
   thresholdJs: 'scripts/v5.3-threshold.js',
   mobileJs: 'scripts/v5.4.3-mobile-hardening.js',
   signatureJs: 'scripts/v5.4.4-signature-book-semantics.js',
+  releaseStatusJs: 'scripts/v5.4.5-release-status.js',
   persistentJs: 'scripts/persistent-data.js'
 };
 
@@ -15,6 +16,7 @@ const budgets = {
   thresholdJs: 48 * 1024,
   mobileJs: 24 * 1024,
   signatureJs: 16 * 1024,
+  releaseStatusJs: 24 * 1024,
   persistentJs: 24 * 1024
 };
 
@@ -33,6 +35,7 @@ const html = fs.readFileSync(files.html, 'utf8');
 const threshold = fs.readFileSync(files.thresholdJs, 'utf8');
 const mobile = fs.readFileSync(files.mobileJs, 'utf8');
 const signature = fs.readFileSync(files.signatureJs, 'utf8');
+const releaseStatus = fs.readFileSync(files.releaseStatusJs, 'utf8');
 const persistent = fs.readFileSync(files.persistentJs, 'utf8');
 const livingCodex = fs.readFileSync('scripts/v5.2.4-living-codex.js', 'utf8');
 const sw = fs.readFileSync('sw.js', 'utf8');
@@ -60,9 +63,21 @@ for (const marker of [
   '.temple-signature-book__actions',
   'grid-template-columns: repeat(3, minmax(0, 1fr))',
   '.temple-signature-book__table-scroll',
-  'overflow-x: auto'
+  'overflow-x: auto',
+  "const RELEASE_STATUS_SRC = './scripts/v5.4.5-release-status.js'",
+  'ensureReleaseStatus()'
 ]) {
-  if (!mobile.includes(marker)) failures.push(`mobile containment invariant missing: ${marker}`);
+  if (!mobile.includes(marker)) failures.push(`mobile/runtime containment invariant missing: ${marker}`);
+}
+
+for (const marker of [
+  "button.textContent = 'UPDATE READY · RELOAD'",
+  "button.setAttribute('aria-label', 'A new Temple version is ready. Reload now.')",
+  "window.TempleReleaseStatus = Object.freeze({ version: '5.4.5'",
+  "fetch(`./version.json?release_status=${Date.now()}`",
+  "fetch(`./sw.js?release_status=${Date.now()}`"
+]) {
+  if (!releaseStatus.includes(marker)) failures.push(`release-status invariant missing: ${marker}`);
 }
 
 for (const marker of [
@@ -88,8 +103,15 @@ if (/data:image\/(?:png|webp);base64,/i.test(html)) failures.push('index.html co
 
 const core = sw.match(/const CORE_ASSETS = \[([\s\S]*?)\];/)?.[1] || '';
 if (/\.(?:mp3|opus|ogg|m4a|wav)['"]/i.test(core)) failures.push('binary ritual media entered the service-worker core shell');
-if (!core.includes("'./scripts/v5.4.4-signature-book-semantics.js'")) failures.push('Signature Book semantic boundary is not precached');
-if (!sw.includes('v5.4.4-signature-book-semantics|persistent-data')) failures.push('critical UI network-first matcher does not include semantics + persistent visitor data');
+for (const asset of [
+  "'./scripts/v5.4.4-signature-book-semantics.js'",
+  "'./scripts/v5.4.5-release-status.js'"
+]) {
+  if (!core.includes(asset)) failures.push(`critical semantic/status asset is not precached: ${asset}`);
+}
+if (!sw.includes('v5.4.4-signature-book-semantics|persistent-data|v5.4.5-release-status')) {
+  failures.push('critical UI network-first matcher does not include semantics, visitor data, and release status');
+}
 
 const report = {
   ok: failures.length === 0,
@@ -98,8 +120,9 @@ const report = {
   accessibility: {
     manualThresholdInert: threshold.includes("root.setAttribute('inert', '')"),
     signatureBookSemanticBoundary: signature.includes("section.dataset.semanticBoundary = 'v5.4.4'"),
-    signatureBookAccessibleForm: signature.includes("Visitor Signature Book entry form"),
-    signatureBookAccessibleLedger: signature.includes("Visitor Signature Book ledger")
+    signatureBookAccessibleForm: signature.includes('Visitor Signature Book entry form'),
+    signatureBookAccessibleLedger: signature.includes('Visitor Signature Book ledger'),
+    updateControlAccessible: releaseStatus.includes('A new Temple version is ready. Reload now.')
   },
   performance: {
     externalizedRasterPayloads: !/data:image\/(?:png|webp);base64,/i.test(html),
@@ -109,7 +132,8 @@ const report = {
     visitorCounterProvider: persistent.includes("provider: 'counterapi.com'") ? 'counterapi.com' : 'unknown',
     legacyCounterV1Absent: !persistent.includes('https://api.counterapi.dev/v1'),
     publishedChantSource: livingCodex.includes('maat-forty-two-declarations.web.opus'),
-    signatureSemanticsPrecached: core.includes("'./scripts/v5.4.4-signature-book-semantics.js'")
+    signatureSemanticsPrecached: core.includes("'./scripts/v5.4.4-signature-book-semantics.js'"),
+    releaseStatusPrecached: core.includes("'./scripts/v5.4.5-release-status.js'")
   },
   failures
 };
