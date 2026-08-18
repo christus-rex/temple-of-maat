@@ -11,19 +11,20 @@
     'temple_unique_flag'
   ]);
 
-  // Global visitor ledger. CounterAPI v1 is intentionally used here because the
-  // Temple is a static GitHub Pages application and v1 can be called from the
-  // browser without embedding a private credential. The counter is public; the
-  // local cache below keeps the last confirmed values available when offline.
+  // Global visitor ledger for the static GitHub Pages Temple. The current
+  // provider exposes a public, credential-free browser API and supports an
+  // anonymized unique-user modifier. Local cache keys intentionally remain
+  // stable so previously confirmed counts are still available offline.
   const GLOBAL_COUNTER = Object.freeze({
-    baseUrl: 'https://api.counterapi.dev/v1',
-    namespace: 'temple-of-sol-om-on-maat-9f3d72c1',
+    baseUrl: 'https://counterapi.com/api',
+    namespace: 'temple-of-sol-om-on-maat',
+    action: 'view',
     totalKey: 'total-visits',
     uniqueKey: 'unique-browsers',
-    uniqueFlagKey: 'temple_global_unique_v1',
     totalCacheKey: 'temple_global_total_cache_v1',
     uniqueCacheKey: 'temple_global_unique_cache_v1',
-    syncedAtKey: 'temple_global_counter_synced_at_v1'
+    syncedAtKey: 'temple_global_counter_synced_at_v1',
+    provider: 'counterapi.com'
   });
 
   let storage = null;
@@ -147,8 +148,6 @@
       },
       clear() {
         storage.clear();
-        // The existing reset control reloads immediately. This tombstone makes
-        // that explicit reset win over any older IndexedDB snapshot.
         storage.setItem('temple_persistence_reset', '1');
         pendingWrite = pendingWrite.then(clearBackup).catch(() => {});
       },
@@ -203,9 +202,7 @@
       payload && payload.value,
       payload && payload.count,
       payload && payload.data && payload.data.value,
-      payload && payload.data && payload.data.count,
-      payload && payload.data && payload.data.up_count,
-      payload && payload.data && payload.data.current_count
+      payload && payload.data && payload.data.count
     ];
     for (const candidate of candidates) {
       const parsed = Number(candidate);
@@ -214,11 +211,14 @@
     return null;
   }
 
-  async function requestCounter(key, increment) {
+  async function requestCounter(key, options = {}) {
     const namespace = encodeURIComponent(GLOBAL_COUNTER.namespace);
+    const action = encodeURIComponent(GLOBAL_COUNTER.action);
     const name = encodeURIComponent(key);
-    const url = `${GLOBAL_COUNTER.baseUrl}/${namespace}/${name}${increment ? '/up' : ''}`;
-    const response = await fetch(url, {
+    const url = new URL(`${GLOBAL_COUNTER.baseUrl}/${namespace}/${action}/${name}`);
+    if (options.unique) url.searchParams.set('unique', 'true');
+    if (options.readOnly) url.searchParams.set('readOnly', 'true');
+    const response = await fetch(url.href, {
       method: 'GET',
       cache: 'no-store',
       credentials: 'omit',
@@ -313,17 +313,14 @@
     let total = cached.total;
     let unique = cached.unique;
     try {
-      total = await requestCounter(GLOBAL_COUNTER.totalKey, true);
+      total = await requestCounter(GLOBAL_COUNTER.totalKey);
     } catch (_) {
-      // Keep the last confirmed global value when offline or rate-limited.
+      // Preserve the last confirmed remote value when offline or unavailable.
     }
-
-    const seenUnique = Boolean(store && store.getItem(GLOBAL_COUNTER.uniqueFlagKey));
     try {
-      unique = await requestCounter(GLOBAL_COUNTER.uniqueKey, !seenUnique);
-      if (!seenUnique && store) store.setItem(GLOBAL_COUNTER.uniqueFlagKey, '1');
+      unique = await requestCounter(GLOBAL_COUNTER.uniqueKey, { unique: true });
     } catch (_) {
-      // A failed first unique increment leaves the flag unset so a later visit can retry.
+      // Unique visitors are provider-deduplicated; cached value is the offline fallback.
     }
 
     if (!Number.isFinite(total) || total < 0) total = cached.total;
@@ -331,7 +328,7 @@
     cacheGlobalCounts(store, { total, unique });
     watchForCounterMount({ total, unique });
     window.dispatchEvent(new CustomEvent('temple:visitor-count', {
-      detail: Object.freeze({ total, unique, persistent: true, provider: 'CounterAPI' })
+      detail: Object.freeze({ total, unique, persistent: true, provider: GLOBAL_COUNTER.provider })
     }));
   }
 
