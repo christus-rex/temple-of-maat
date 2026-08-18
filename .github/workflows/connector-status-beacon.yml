@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 jobs:
@@ -26,6 +26,7 @@ jobs:
           node --check scripts/v5.3-threshold.js
           node --check scripts/v5.4.3-mobile-hardening.js
           node --check scripts/persistent-data.js
+          node --check scripts/update-temple-health.mjs
 
       - name: Validate current release contract
         id: release
@@ -88,6 +89,32 @@ jobs:
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
+
+      - name: Publish CI to machine-readable health record
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          SYNTAX: ${{ steps.syntax.outcome }}
+          RELEASE: ${{ steps.release.outcome }}
+          MOBILE: ${{ steps.mobile.outcome }}
+          STRUCTURAL: ${{ steps.structural.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          RESULT=success
+          for value in "$SYNTAX" "$RELEASE" "$MOBILE" "$STRUCTURAL"; do
+            if [ "$value" != "success" ]; then RESULT=failure; fi
+          done
+          export TEMPLE_HEALTH_COMPONENT=ci
+          export TEMPLE_HEALTH_STATUS="$RESULT"
+          export TEMPLE_HEALTH_COMMIT="$GITHUB_SHA"
+          export TEMPLE_HEALTH_RUN_URL="$RUN_URL"
+          export TEMPLE_HEALTH_UPDATED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          export TEMPLE_RELEASE_VERSION="$(node -p \"require('./version.json').version\")"
+          export TEMPLE_RELEASE_BUILD="$(node -p \"require('./version.json').build\")"
+          node scripts/update-temple-health.mjs
 
       - name: Fail workflow when a beacon check failed
         if: always()
