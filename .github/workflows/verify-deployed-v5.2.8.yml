@@ -69,6 +69,12 @@ jobs:
           npm install --no-save playwright
           npx playwright install --with-deps chromium
 
+      - name: Diagnose deployed resource failures
+        id: network
+        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
+        continue-on-error: true
+        run: node scripts/diagnose-deployed-network-v5.4.mjs
+
       - name: Verify deployed release and responsive visual geometry
         id: visual
         if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
@@ -79,7 +85,7 @@ jobs:
         id: chant
         if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
         continue-on-error: true
-        run: node scripts/smoke-chant-streaming-v5.2.8.mjs
+        run: node scripts/smoke-chant-streaming-v5.4.mjs
 
       - name: Publish deployed verification beacon
         if: always()
@@ -90,6 +96,7 @@ jobs:
           SHA: ${{ github.sha }}
           EVENT_NAME: ${{ github.event_name }}
           PAGES_WAIT: ${{ steps.pages_wait.outcome }}
+          NETWORK: ${{ steps.network.outcome }}
           VISUAL: ${{ steps.visual.outcome }}
           CHANT: ${{ steps.chant.outcome }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -97,7 +104,7 @@ jobs:
         run: |
           RESULT=success
           if [ "$EVENT_NAME" = "push" ] && [ "$PAGES_WAIT" != "success" ]; then RESULT=failure; fi
-          if [ "$VISUAL" != "success" ] || [ "$CHANT" != "success" ]; then RESULT=failure; fi
+          if [ "$NETWORK" != "success" ] || [ "$VISUAL" != "success" ] || [ "$CHANT" != "success" ]; then RESULT=failure; fi
           UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           BODY=$(cat <<EOF
           # Temple Deployed Verification Beacon
@@ -111,10 +118,11 @@ jobs:
 
           ## Checks
           - exact-SHA Pages wait: **$PAGES_WAIT**
+          - same-origin network diagnostics: **$NETWORK**
           - responsive deployed visual regression: **$VISUAL**
           - deployed chant transport: **$CHANT**
 
-          Responsive visual verification covers 320, 360, 412, 430, 768, and desktop widths, including Visitor Signature Book containment, chamber geometry, overlays, broken images, console errors, and screenshot evidence.
+          Responsive visual verification covers 320, 360, 412, 430, 768, and desktop widths, including Visitor Signature Book containment, chamber geometry, overlays, broken images, console errors, and screenshot evidence. Network diagnostics preserve the exact URLs and HTTP statuses for failed resources.
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
@@ -136,7 +144,7 @@ jobs:
           TEMPLE_RELEASE_BUILD: ${{ env.TEMPLE_EXPECTED_BUILD }}
         run: node scripts/update-temple-health.mjs
 
-      - name: Preserve deployed-origin screenshot evidence
+      - name: Preserve deployed-origin screenshot and network evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
