@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
   pages: read
 
@@ -15,7 +15,13 @@ jobs:
   publish-pages-status:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
       - name: Publish connector-readable Pages beacon
+        id: pages
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -45,11 +51,6 @@ jobs:
             [ -n "$COMMIT" ] || COMMIT="$SHA"
             [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
           else
-            # Push visibility fallback: the ChatGPT GitHub connector currently does
-            # not enumerate push-triggered workflow runs. Poll the official Pages
-            # deployment endpoint by commit SHA and only publish when GitHub returns
-            # a concrete deployment record, so an earlier authoritative page_build
-            # failure cannot be overwritten by an inconclusive 404/pending probe.
             for attempt in $(seq 1 24); do
               DEPLOYMENT="$(gh api "repos/$REPO/pages/deployments/$SHA" 2>/dev/null || true)"
               if [ -n "$DEPLOYMENT" ]; then
@@ -64,6 +65,7 @@ jobs:
 
             if [ -z "$STATUS" ]; then
               echo "No concrete Pages deployment record was available for $SHA; preserving the existing beacon."
+              echo "published=false" >> "$GITHUB_OUTPUT"
               exit 0
             fi
           fi
@@ -96,3 +98,20 @@ jobs:
 
           This issue is maintained automatically so connector clients can read GitHub Pages build/deployment state without relying on push workflow-run enumeration."
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
+          echo "published=true" >> "$GITHUB_OUTPUT"
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
+          echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
+          echo "record_url=$BUILD_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Publish Pages to machine-readable health record
+        if: steps.pages.outputs.published == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TEMPLE_HEALTH_COMPONENT: pages
+          TEMPLE_HEALTH_STATUS: ${{ steps.pages.outputs.status }}
+          TEMPLE_HEALTH_COMMIT: ${{ steps.pages.outputs.commit }}
+          TEMPLE_HEALTH_UPDATED_AT: ${{ steps.pages.outputs.updated }}
+          TEMPLE_HEALTH_RECORD_URL: ${{ steps.pages.outputs.record_url }}
+        run: node scripts/update-temple-health.mjs
