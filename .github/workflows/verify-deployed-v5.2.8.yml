@@ -58,34 +58,73 @@ jobs:
       - name: Wait for exact-SHA Pages deployment
         id: pages_wait
         if: github.event_name == 'push'
-        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/wait-for-pages-deployment-v5.2.8.mjs
+        shell: bash
+        run: |
+          if node scripts/wait-for-pages-deployment-v5.2.8.mjs; then
+            RESULT=success
+          else
+            RESULT=failure
+          fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve Pages verification gate
+        id: pages_gate
+        if: always()
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_RESULT: ${{ steps.pages_wait.outputs.result }}
+        shell: bash
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            RESULT=success
+          else
+            RESULT="${PUSH_RESULT:-failure}"
+          fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Install Chromium
-        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
+        if: steps.pages_gate.outputs.result == 'success'
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
 
       - name: Diagnose deployed resource failures
         id: network
-        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
-        continue-on-error: true
-        run: node scripts/diagnose-deployed-network-v5.4.mjs
+        if: steps.pages_gate.outputs.result == 'success'
+        shell: bash
+        run: |
+          if node scripts/diagnose-deployed-network-v5.4.mjs; then
+            RESULT=success
+          else
+            RESULT=failure
+          fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Verify deployed release and responsive visual geometry
         id: visual
-        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
-        continue-on-error: true
-        run: node scripts/verify-deployed-v5.2.8.mjs
+        if: steps.pages_gate.outputs.result == 'success'
+        shell: bash
+        run: |
+          if node scripts/verify-deployed-v5.2.8.mjs; then
+            RESULT=success
+          else
+            RESULT=failure
+          fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Verify deployed chant streaming transport
         id: chant
-        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
-        continue-on-error: true
-        run: node scripts/smoke-chant-streaming-v5.4.mjs
+        if: steps.pages_gate.outputs.result == 'success'
+        shell: bash
+        run: |
+          if node scripts/smoke-chant-streaming-v5.4.mjs; then
+            RESULT=success
+          else
+            RESULT=failure
+          fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Publish deployed verification beacon
         id: deployed_result
@@ -95,17 +134,17 @@ jobs:
           REPO: ${{ github.repository }}
           ISSUE: '71'
           SHA: ${{ github.sha }}
-          EVENT_NAME: ${{ github.event_name }}
-          PAGES_WAIT: ${{ steps.pages_wait.outcome }}
-          NETWORK: ${{ steps.network.outcome }}
-          VISUAL: ${{ steps.visual.outcome }}
-          CHANT: ${{ steps.chant.outcome }}
+          PAGES_WAIT: ${{ steps.pages_gate.outputs.result }}
+          NETWORK: ${{ steps.network.outputs.result }}
+          VISUAL: ${{ steps.visual.outputs.result }}
+          CHANT: ${{ steps.chant.outputs.result }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
         run: |
           RESULT=success
-          if [ "$EVENT_NAME" = "push" ] && [ "$PAGES_WAIT" != "success" ]; then RESULT=failure; fi
-          if [ "$NETWORK" != "success" ] || [ "$VISUAL" != "success" ] || [ "$CHANT" != "success" ]; then RESULT=failure; fi
+          for value in "$PAGES_WAIT" "$NETWORK" "$VISUAL" "$CHANT"; do
+            if [ "$value" != "success" ]; then RESULT=failure; fi
+          done
           UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           BODY=$(cat <<EOF
           # Temple Deployed Verification Beacon
