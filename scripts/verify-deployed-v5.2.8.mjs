@@ -118,7 +118,7 @@ async function inspectResponsive(browser, width, height) {
   await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && location.hash === '#chamber-13', { timeout: 30000 });
   await page.waitForSelector('#tm2-artifact.open', { timeout: 30000 });
   await page.waitForFunction(() => { const image = document.querySelector('#tm2-artifact.open .tm2-parental-section img'); return image?.complete && image.naturalWidth > 0; }, { timeout: 30000 });
-  const chamber = await page.evaluate(() => {
+  const chamber = await page.evaluate((viewportWidth) => {
     const artifact = document.querySelector('#tm2-artifact.open');
     const image = artifact?.querySelector('.tm2-parental-section img');
     const launcher = document.querySelector('[data-temple-library-launcher="artifact-mobile"]');
@@ -133,9 +133,9 @@ async function inspectResponsive(browser, width, height) {
       artifact: a ? { left: a.left, right: a.right, top: a.top, bottom: a.bottom, width: a.width, height: a.height } : null,
       image: i ? { left: i.left, right: i.right, width: i.width, height: i.height } : null,
       launcher: l ? { left: l.left, right: l.right, top: l.top, bottom: l.bottom, width: l.width, height: l.height } : null,
-      launcherClearOfHeader: width > 760 || Boolean(a && l && l.top >= a.top + headerClearance)
+      launcherClearOfHeader: viewportWidth > 760 || Boolean(a && l && l.top >= a.top + headerClearance)
     };
-  });
+  }, width);
   await page.screenshot({ path: path.join(outDir, `deployed-responsive-${width}-chamber-13.png`), fullPage: false });
   await page.keyboard.press('Escape');
 
