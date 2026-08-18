@@ -25,15 +25,31 @@ function writeResult(result) {
 }
 
 async function enterTemple(page) {
-  for (const selector of ['[data-temple-entry="journey"]', '[data-temple-entry="continue"]', '[data-temple-entry="explore"]']) {
-    const node = page.locator(selector);
-    if (await node.count()) {
-      await node.first().click();
-      await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 30000 });
-      return selector;
+  // Only controls inside #temple-static-entry are valid threshold controls. Other
+  // enhancement layers can expose similarly named data attributes but do not own
+  // the threshold click listener.
+  for (const selector of [
+    '#temple-static-entry a[data-temple-entry="continue"]',
+    '#temple-static-entry a[data-temple-entry="journey"]',
+    '#temple-static-entry a[data-temple-entry="explore"]',
+    '#temple-static-entry a[data-temple-entry]'
+  ]) {
+    const candidates = page.locator(selector);
+    const count = await candidates.count();
+    for (let index = 0; index < count; index += 1) {
+      const node = candidates.nth(index);
+      if (!await node.isVisible().catch(() => false)) continue;
+      await node.click({ timeout: 15000 });
+      try {
+        await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 8000 });
+        return selector;
+      } catch (_) {
+        // Try the next canonical threshold link if an enhancement/navigation race
+        // prevented this specific activation from completing.
+      }
     }
   }
-  throw new Error('No Temple entry control was available for chant verification.');
+  throw new Error('No canonical Temple threshold entry control activated the application for chant verification.');
 }
 
 async function transportProbe(page) {
