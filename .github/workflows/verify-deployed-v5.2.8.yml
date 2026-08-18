@@ -54,8 +54,10 @@ jobs:
         if: github.event_name == 'push'
         shell: bash
         run: |
-          echo "TEMPLE_EXPECTED_VERSION=$(node -p \"require('./version.json').version\")" >> "$GITHUB_ENV"
-          echo "TEMPLE_EXPECTED_BUILD=$(node -p \"require('./version.json').build\")" >> "$GITHUB_ENV"
+          VERSION=$(node -p "require('./version.json').version")
+          BUILD=$(node -p "require('./version.json').build")
+          echo "TEMPLE_EXPECTED_VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "TEMPLE_EXPECTED_BUILD=$BUILD" >> "$GITHUB_ENV"
           echo "TEMPLE_LIVE_URL=https://christus-rex.github.io/temple-of-maat/" >> "$GITHUB_ENV"
 
       - name: Resolve manual release identity
