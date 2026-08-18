@@ -17,6 +17,10 @@ function classify(url) {
   }
 }
 
+function isBenignMediaAbort(item) {
+  return item.scope === 'same-origin' && item.resourceType === 'media' && /net::ERR_ABORTED/i.test(item.error || '');
+}
+
 const browser = await chromium.launch({ headless: true });
 const reports = [];
 try {
@@ -75,16 +79,34 @@ try {
 const allResponses = reports.flatMap((report) => report.responses.map((item) => ({ width: report.width, ...item })));
 const allFailures = reports.flatMap((report) => report.requestFailures.map((item) => ({ width: report.width, ...item })));
 const sameOriginHttpErrors = allResponses.filter((item) => item.scope === 'same-origin');
-const sameOriginRequestFailures = allFailures.filter((item) => item.scope === 'same-origin');
+const benignAbortedMedia = allFailures.filter(isBenignMediaAbort);
+const sameOriginRequestFailures = allFailures.filter((item) => item.scope === 'same-origin' && !isBenignMediaAbort(item));
+const externalHttpErrors = allResponses.filter((item) => item.scope === 'external');
+const externalRequestFailures = allFailures.filter((item) => item.scope === 'external');
+const navigationErrors = reports.filter((report) => report.navigationError).map((report) => ({ width: report.width, error: report.navigationError }));
+const pageErrors = reports.flatMap((report) => report.pageErrors.map((error) => ({ width: report.width, error })));
+
 const result = {
-  ok: sameOriginHttpErrors.length === 0 && sameOriginRequestFailures.length === 0 && reports.every((report) => report.pageErrors.length === 0 && !report.navigationError),
+  ok: sameOriginHttpErrors.length === 0 && sameOriginRequestFailures.length === 0 && navigationErrors.length === 0 && pageErrors.length === 0,
   base: base.href,
   sameOriginHttpErrors,
   sameOriginRequestFailures,
-  externalHttpErrors: allResponses.filter((item) => item.scope === 'external'),
-  externalRequestFailures: allFailures.filter((item) => item.scope === 'external'),
+  benignAbortedMedia,
+  externalHttpErrors,
+  externalRequestFailures,
+  navigationErrors,
+  pageErrors,
   reports
 };
 fs.writeFileSync(path.join(outDir, 'network-diagnostics.json'), JSON.stringify(result, null, 2));
-console.log(JSON.stringify(result, null, 2));
+console.log(JSON.stringify({
+  ok: result.ok,
+  sameOriginHttpErrors: sameOriginHttpErrors.length,
+  sameOriginRequestFailures: sameOriginRequestFailures.length,
+  benignAbortedMedia: benignAbortedMedia.length,
+  externalHttpErrors: externalHttpErrors.length,
+  externalRequestFailures: externalRequestFailures.length,
+  navigationErrors: navigationErrors.length,
+  pageErrors: pageErrors.length
+}, null, 2));
 if (!result.ok) process.exitCode = 1;
