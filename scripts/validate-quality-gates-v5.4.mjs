@@ -33,6 +33,8 @@ const html = fs.readFileSync(files.html, 'utf8');
 const threshold = fs.readFileSync(files.thresholdJs, 'utf8');
 const mobile = fs.readFileSync(files.mobileJs, 'utf8');
 const signature = fs.readFileSync(files.signatureJs, 'utf8');
+const persistent = fs.readFileSync(files.persistentJs, 'utf8');
+const livingCodex = fs.readFileSync('scripts/v5.2.4-living-codex.js', 'utf8');
 const sw = fs.readFileSync('sw.js', 'utf8');
 
 for (const marker of [
@@ -63,12 +65,31 @@ for (const marker of [
   if (!mobile.includes(marker)) failures.push(`mobile containment invariant missing: ${marker}`);
 }
 
+for (const marker of [
+  "baseUrl: 'https://counterapi.com/api'",
+  "provider: 'counterapi.com'",
+  "url.searchParams.set('unique', 'true')",
+  "detail: Object.freeze({ total, unique, persistent: true, provider: GLOBAL_COUNTER.provider })"
+]) {
+  if (!persistent.includes(marker)) failures.push(`visitor counter invariant missing: ${marker}`);
+}
+if (persistent.includes('https://api.counterapi.dev/v1')) failures.push('retired CounterAPI v1 browser endpoint reintroduced');
+
+if (!livingCodex.includes("const CHANT_SRC = './assets/audio/maat-forty-two-declarations.web.opus';")) {
+  failures.push('Living Codex is not initialized from the published Opus chant rendition');
+}
+if (livingCodex.includes("const CHANT_SRC = './assets/audio/maat-forty-two-declarations.mp3';")) {
+  failures.push('legacy missing MP3 chant source reintroduced');
+}
+
 if (!html.includes('<meta name="viewport"')) failures.push('viewport meta tag is missing');
 if (!html.includes('<script src="./scripts/persistent-data.js"></script>')) failures.push('persistent data bootstrap is missing');
 if (/data:image\/(?:png|webp);base64,/i.test(html)) failures.push('index.html contains embedded raster payloads; display art should remain externalized');
 
 const core = sw.match(/const CORE_ASSETS = \[([\s\S]*?)\];/)?.[1] || '';
 if (/\.(?:mp3|opus|ogg|m4a|wav)['"]/i.test(core)) failures.push('binary ritual media entered the service-worker core shell');
+if (!core.includes("'./scripts/v5.4.4-signature-book-semantics.js'")) failures.push('Signature Book semantic boundary is not precached');
+if (!sw.includes('v5.4.4-signature-book-semantics|persistent-data')) failures.push('critical UI network-first matcher does not include semantics + persistent visitor data');
 
 const report = {
   ok: failures.length === 0,
@@ -83,6 +104,12 @@ const report = {
   performance: {
     externalizedRasterPayloads: !/data:image\/(?:png|webp);base64,/i.test(html),
     ritualMediaOutsideCoreShell: !/\.(?:mp3|opus|ogg|m4a|wav)['"]/i.test(core)
+  },
+  reliability: {
+    visitorCounterProvider: persistent.includes("provider: 'counterapi.com'") ? 'counterapi.com' : 'unknown',
+    legacyCounterV1Absent: !persistent.includes('https://api.counterapi.dev/v1'),
+    publishedChantSource: livingCodex.includes('maat-forty-two-declarations.web.opus'),
+    signatureSemanticsPrecached: core.includes("'./scripts/v5.4.4-signature-book-semantics.js'")
   },
   failures
 };
