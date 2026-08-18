@@ -109,8 +109,8 @@ for (const asset of [
 ]) {
   if (!core.includes(asset)) failures.push(`critical semantic/status asset is not precached: ${asset}`);
 }
-if (!sw.includes('v5.4.4-signature-book-semantics|persistent-data|v5.4.5-release-status')) {
-  failures.push('critical UI network-first matcher does not include semantics, visitor data, and release status');
+for (const marker of ['v5\\.4\\.4-signature-book-semantics', 'persistent-data', 'v5\\.4\\.5-release-status']) {
+  if (!sw.includes(marker)) failures.push(`critical UI network-first matcher missing: ${marker}`);
 }
 
 const report = {
