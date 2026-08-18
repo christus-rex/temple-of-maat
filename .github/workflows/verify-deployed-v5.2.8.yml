@@ -33,9 +33,10 @@ on:
         default: '2026-08-16-v5.4-canonical-identity'
 
 permissions:
-  contents: read
+  contents: write
   actions: read
   pages: read
+  issues: write
 
 jobs:
   deployed-origin:
@@ -66,21 +67,85 @@ jobs:
           echo "TEMPLE_LIVE_URL=${{ inputs.live_url }}" >> "$GITHUB_ENV"
 
       - name: Wait for exact-SHA Pages deployment
+        id: pages_wait
         if: github.event_name == 'push'
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/wait-for-pages-deployment-v5.2.8.mjs
 
       - name: Install Chromium
+        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
 
       - name: Verify deployed release and responsive visual geometry
+        id: visual
+        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
+        continue-on-error: true
         run: node scripts/verify-deployed-v5.2.8.mjs
 
       - name: Verify deployed chant streaming transport
+        id: chant
+        if: github.event_name == 'workflow_dispatch' || steps.pages_wait.outcome == 'success'
+        continue-on-error: true
         run: node scripts/smoke-chant-streaming-v5.2.8.mjs
+
+      - name: Publish deployed verification beacon
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: '71'
+          SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          PAGES_WAIT: ${{ steps.pages_wait.outcome }}
+          VISUAL: ${{ steps.visual.outcome }}
+          CHANT: ${{ steps.chant.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          RESULT=success
+          if [ "$EVENT_NAME" = "push" ] && [ "$PAGES_WAIT" != "success" ]; then RESULT=failure; fi
+          if [ "$VISUAL" != "success" ] || [ "$CHANT" != "success" ]; then RESULT=failure; fi
+          UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          BODY=$(cat <<EOF
+          # Temple Deployed Verification Beacon
+
+          - **overall:** **$RESULT**
+          - **commit:** \`$SHA\`
+          - **updated:** \`$UTC_NOW\`
+          - **workflow run:** $RUN_URL
+          - **live origin:** $TEMPLE_LIVE_URL
+          - **expected release:** \`$TEMPLE_EXPECTED_VERSION / $TEMPLE_EXPECTED_BUILD\`
+
+          ## Checks
+          - exact-SHA Pages wait: **$PAGES_WAIT**
+          - responsive deployed visual regression: **$VISUAL**
+          - deployed chant transport: **$CHANT**
+
+          Responsive visual verification covers 320, 360, 412, 430, 768, and desktop widths, including Visitor Signature Book containment, chamber geometry, overlays, broken images, console errors, and screenshot evidence.
+          EOF
+          )
+          gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
+          echo "TEMPLE_DEPLOYED_RESULT=$RESULT" >> "$GITHUB_ENV"
+          echo "TEMPLE_DEPLOYED_UPDATED_AT=$UTC_NOW" >> "$GITHUB_ENV"
+
+      - name: Publish deployed state to machine-readable health record
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          TEMPLE_HEALTH_COMPONENT: deployed_visual
+          TEMPLE_HEALTH_STATUS: ${{ env.TEMPLE_DEPLOYED_RESULT }}
+          TEMPLE_HEALTH_COMMIT: ${{ github.sha }}
+          TEMPLE_HEALTH_UPDATED_AT: ${{ env.TEMPLE_DEPLOYED_UPDATED_AT }}
+          TEMPLE_HEALTH_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TEMPLE_RELEASE_VERSION: ${{ env.TEMPLE_EXPECTED_VERSION }}
+          TEMPLE_RELEASE_BUILD: ${{ env.TEMPLE_EXPECTED_BUILD }}
+        run: node scripts/update-temple-health.mjs
 
       - name: Preserve deployed-origin screenshot evidence
         if: always()
@@ -90,3 +155,9 @@ jobs:
           path: work/deployed-verification/
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Fail when deployed release is not green
+        if: always()
+        shell: bash
+        run: |
+          if [ "${TEMPLE_DEPLOYED_RESULT:-failure}" != "success" ]; then exit 1; fi
