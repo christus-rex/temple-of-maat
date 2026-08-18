@@ -1,15 +1,21 @@
+import fs from 'node:fs';
+
+const release = JSON.parse(fs.readFileSync(new URL('../version.json', import.meta.url), 'utf8'));
 const repository = process.env.GITHUB_REPOSITORY;
 const sha = process.env.GITHUB_SHA;
 const token = process.env.GITHUB_TOKEN;
 const liveUrl = process.env.TEMPLE_LIVE_URL || 'https://christus-rex.github.io/temple-of-maat/';
-const expectedVersion = process.env.TEMPLE_EXPECTED_VERSION || '5.2.8';
-const expectedBuild = process.env.TEMPLE_EXPECTED_BUILD || '2026-08-14-v5.2.8-library-journey-offline-hardening';
+const expectedVersion = process.env.TEMPLE_EXPECTED_VERSION || String(release.version || '');
+const expectedBuild = process.env.TEMPLE_EXPECTED_BUILD || String(release.build || '');
 const pagesTimeoutMs = Number(process.env.TEMPLE_PAGES_TIMEOUT_MS || 10 * 60 * 1000);
 const liveTimeoutMs = Number(process.env.TEMPLE_LIVE_TIMEOUT_MS || 3 * 60 * 1000);
 const pollMs = 5000;
 
 if (!repository || !sha || !token) {
   throw new Error('Exact-SHA Pages wait requires GITHUB_REPOSITORY, GITHUB_SHA, and GITHUB_TOKEN.');
+}
+if (!expectedVersion || !expectedBuild) {
+  throw new Error('Current version.json must contain version and build values.');
 }
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -82,4 +88,4 @@ async function waitForLiveIdentity() {
 
 const pages = await waitForExactPagesRun();
 const live = await waitForLiveIdentity();
-console.log(JSON.stringify({ ok: true, repository, sha, pages, liveUrl, live }, null, 2));
+console.log(JSON.stringify({ ok: true, repository, sha, pages, liveUrl, expectedVersion, expectedBuild, live }, null, 2));
