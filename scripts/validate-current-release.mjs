@@ -10,12 +10,25 @@ const threshold = read('scripts/v5.3-threshold.js');
 const css = read('styles/v5.3-threshold.css');
 const mobileHardening = read('scripts/v5.4.3-mobile-hardening.js');
 const signatureSemantics = read('scripts/v5.4.4-signature-book-semantics.js');
+const releaseStatus = read('scripts/v5.4.5-release-status.js');
+const livingArchive = read('scripts/v5.5-living-archive.js');
+const livingArchiveCss = read('styles/v5.5-living-archive.css');
+const livingArchiveManifest = JSON.parse(read('data/living-archive-v5.5.json'));
 
-if (version.version !== '5.4.0') fail(`Expected current portal version 5.4.0, found ${version.version}`);
-if (version.build !== '2026-08-16-v5.4-canonical-identity') fail(`Unexpected current build: ${version.build}`);
-if (!String(version.source || '').includes('canonical identity')) fail('Current release source must document canonical identity');
+if (version.version !== '5.5.0') fail(`Expected current portal version 5.5.0, found ${version.version}`);
+if (version.build !== '2026-08-18-v5.5-living-archive') fail(`Unexpected current build: ${version.build}`);
+if (!String(version.source || '').toLowerCase().includes('living archive')) fail('Current release source must document the Living Archive');
+if (livingArchiveManifest.schema !== 'temple-of-maat/living-archive-v1') fail('Living Archive manifest schema mismatch');
+if (livingArchiveManifest.version !== version.version) fail('Living Archive manifest version does not match portal release');
 
-for (const [name, source] of [['Service Worker', sw], ['Threshold', threshold], ['Mobile hardening', mobileHardening], ['Signature Book semantics', signatureSemantics]]) {
+for (const [name, source] of [
+  ['Service Worker', sw],
+  ['Threshold', threshold],
+  ['Mobile hardening', mobileHardening],
+  ['Signature Book semantics', signatureSemantics],
+  ['Release status', releaseStatus],
+  ['Living Archive', livingArchive]
+]) {
   try { new vm.Script(source, { filename: name }); }
   catch (error) { fail(`${name} JavaScript does not parse: ${error.message}`); }
 }
@@ -23,9 +36,9 @@ for (const [name, source] of [['Service Worker', sw], ['Threshold', threshold], 
 const compatibilityNamespace = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
 if (!sw.includes(`const VERSION = '${compatibilityNamespace}'`)) fail('Legacy PWA compatibility namespace changed unexpectedly');
 const cacheRevision = sw.match(/const CACHE_REVISION = '([^']+)'/)?.[1] || '';
-if (!/^v5\.4-canonical-identity-r\d+(?:-[a-z0-9-]+)?$/.test(cacheRevision)) fail(`Invalid v5.4 cache revision: ${cacheRevision || '(missing)'}`);
-if (!sw.includes('const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`')) fail('Static cache does not include the v5.4 revision');
-if (!sw.includes('const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`')) fail('Runtime cache does not include the v5.4 revision');
+if (!/^v5\.4-canonical-identity-r\d+(?:-[a-z0-9-]+)?$/.test(cacheRevision)) fail(`Invalid compatibility cache revision: ${cacheRevision || '(missing)'}`);
+if (!sw.includes('const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`')) fail('Static cache does not include the compatibility revision');
+if (!sw.includes('const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`')) fail('Runtime cache does not include the compatibility revision');
 if (!sw.includes("'./assets/branding/temple-global-logo-v5.4.webp'")) fail('Canonical v5.4 logo is not part of CORE_ASSETS');
 if (!sw.includes("'./scripts/v5.4.3-mobile-hardening.js'")) fail('Mobile hardening is not part of CORE_ASSETS');
 
@@ -76,6 +89,26 @@ for (const marker of [
 }
 
 for (const marker of [
+  "const LIVING_ARCHIVE_SRC = './scripts/v5.5-living-archive.js'",
+  'ensureLivingArchive()',
+  'window.TempleLivingArchive?.open'
+]) {
+  if (!releaseStatus.includes(marker)) fail(`Living Archive bootstrap invariant missing: ${marker}`);
+}
+
+for (const marker of [
+  "const MANIFEST_URL = './data/living-archive-v5.5.json'",
+  "const LIBRARY_URL = './library/catalog.json'",
+  "const CHAMBERS_URL = './chambers.json'",
+  'window.TempleLivingArchive = Object.freeze',
+  "temple_living_archive_state_v1"
+]) {
+  if (!livingArchive.includes(marker)) fail(`Living Archive runtime invariant missing: ${marker}`);
+}
+if (!livingArchiveCss.includes('@media(max-width:760px)')) fail('Living Archive mobile layout contract is missing');
+if (!livingArchiveCss.includes('min-height:44px')) fail('Living Archive touch target contract is missing');
+
+for (const marker of [
   'body:not(.temple-app-ready) #root',
   'body:not(.temple-app-ready) #tm-commit-deck',
   'assets/branding/temple-global-logo-v5.4.webp',
@@ -91,16 +124,29 @@ if (!fs.existsSync('assets/branding/temple-global-logo-v5.4.webp')) fail('Dedica
 const logoSize = fs.statSync('assets/branding/temple-global-logo-v5.4.webp').size;
 if (logoSize < 10000) fail(`Global logo asset is unexpectedly small: ${logoSize} bytes`);
 
+for (const path of [
+  'data/living-archive-v5.5.json',
+  'styles/v5.5-living-archive.css',
+  'scripts/v5.5-living-archive.js',
+  'scripts/validate-living-archive-v5.5.mjs',
+  'docs/releases/v5.4.0.md',
+  'docs/releases/v5.5.0.md',
+  'docs/releases/ROLLBACK.md'
+]) if (!fs.existsSync(path)) fail(`v5.5 release asset missing: ${path}`);
+
 console.log(JSON.stringify({
   ok: true,
   version: version.version,
   build: version.build,
   cacheRevision,
+  pwaCompatibilityCacheRetained: true,
   logoBytes: logoSize,
   logoPrecached: true,
   iconFallback: true,
   ritualMediaBoundaryPreserved: true,
   manualThresholdPreserved: true,
   mobileHardeningLoaded: true,
-  signatureBookSemanticBoundary: 'v5.4.4'
+  signatureBookSemanticBoundary: 'v5.4.4',
+  livingArchive: true,
+  livingArchiveRecords: livingArchiveManifest.poems.length + (livingArchiveManifest.collections?.length || 0)
 }, null, 2));

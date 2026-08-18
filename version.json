@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
-  "build": "2026-08-16-v5.4-canonical-identity",
-  "source": "Temple v5.4 makes the user-approved SOL-OM-ON / Ma'at artwork the canonical identity for the website and installed app, replaces legacy launcher/icon assets with derivatives of that source, and rotates PWA cache ownership so existing clients receive the new identity."
+  "version": "5.5.0",
+  "build": "2026-08-18-v5.5-living-archive",
+  "source": "Temple v5.5 introduces the Living Archive: unified discovery across chambers, research records, poems, artwork, audio, gematria, and preservation metadata while formalizing Drive-backed preservation, provenance, release verification, and rollback discipline."
 }

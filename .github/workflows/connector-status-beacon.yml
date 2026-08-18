@@ -27,6 +27,7 @@ jobs:
             && node --check scripts/v5.4.3-mobile-hardening.js \
             && node --check scripts/v5.4.4-signature-book-semantics.js \
             && node --check scripts/v5.4.5-release-status.js \
+            && node --check scripts/v5.5-living-archive.js \
             && node --check scripts/persistent-data.js \
             && node --check scripts/update-temple-health.mjs; then
             RESULT=success
@@ -40,6 +41,13 @@ jobs:
         shell: bash
         run: |
           if node scripts/validate-current-release.mjs; then RESULT=success; else RESULT=failure; fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
+
+      - name: Validate Living Archive v5.5 contract
+        id: archive
+        shell: bash
+        run: |
+          if node scripts/validate-living-archive-v5.5.mjs; then RESULT=success; else RESULT=failure; fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Validate mobile hardening contract
@@ -77,6 +85,7 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           SYNTAX: ${{ steps.syntax.outputs.result }}
           RELEASE: ${{ steps.release.outputs.result }}
+          ARCHIVE: ${{ steps.archive.outputs.result }}
           MOBILE: ${{ steps.mobile.outputs.result }}
           QUALITY: ${{ steps.quality.outputs.result }}
           STRUCTURAL: ${{ steps.structural.outputs.result }}
@@ -84,7 +93,7 @@ jobs:
         run: |
           set -u
           RESULT=success
-          for value in "$SYNTAX" "$RELEASE" "$MOBILE" "$QUALITY" "$STRUCTURAL"; do
+          for value in "$SYNTAX" "$RELEASE" "$ARCHIVE" "$MOBILE" "$QUALITY" "$STRUCTURAL"; do
             if [ "$value" != "success" ]; then RESULT=failure; fi
           done
           SHORT_SHA="${SHA:0:12}"
@@ -104,6 +113,7 @@ jobs:
           ## Checks
           - syntax: **$SYNTAX**
           - current release: **$RELEASE**
+          - Living Archive v5.5: **$ARCHIVE**
           - mobile hardening: **$MOBILE**
           - performance/accessibility quality gates: **$QUALITY**
           - v5 structural: **$STRUCTURAL**

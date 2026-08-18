@@ -19,12 +19,13 @@ jobs:
           node --check scripts/v5.4.3-mobile-hardening.js
           node --check scripts/v5.4.4-signature-book-semantics.js
           node --check scripts/v5.4.5-release-status.js
+          node --check scripts/v5.5-living-archive.js
           node --check scripts/persistent-data.js
           node --check scripts/update-temple-health.mjs
       - name: Validate v5 structural contract
         run: |
           VERSION=$(node -p "require('./version.json').version")
-          if [ "$VERSION" = "5.4.0" ]; then
+          if [ "$VERSION" = "5.4.0" ] || [ "$VERSION" = "5.5.0" ]; then
             node scripts/validate-v5.mjs
           else
             node scripts/validate-v5.mjs --release
@@ -32,13 +33,14 @@ jobs:
       - name: Validate legacy v5.2 invariant contracts
         run: |
           VERSION=$(node -p "require('./version.json').version")
-          if [ "$VERSION" = "5.4.0" ]; then
-            echo "v5.4 uses the current-release validator for cache/release identity; dedicated v5.2 browser smoke workflows still verify legacy UX invariants."
+          if [ "$VERSION" = "5.4.0" ] || [ "$VERSION" = "5.5.0" ]; then
+            echo "Current v5.4/v5.5 releases use the current-release validator for cache/release identity; dedicated v5.2 browser smoke workflows still verify legacy UX invariants."
           else
             node scripts/validate-v5.2.4.mjs
             node scripts/validate-v5.2.5.mjs
           fi
       - run: node scripts/validate-current-release.mjs
+      - run: node scripts/validate-living-archive-v5.5.mjs
       - run: node scripts/validate-mobile-hardening-v5.4.3.mjs
       - run: node scripts/validate-quality-gates-v5.4.mjs
       - run: node scripts/validate-chant-web-rendition-v5.2.8.mjs

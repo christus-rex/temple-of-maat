@@ -1,0 +1,153 @@
+{
+  "schema": "temple-of-maat/living-archive-v1",
+  "version": "5.5.0",
+  "updated": "2026-08-18",
+  "title": "Temple v5.5 — Living Archive",
+  "description": "Unified discovery metadata for chambers, research records, poems, artwork collections, ritual audio, gematria archives, and preservation masters.",
+  "provenanceLayers": {
+    "L1": "Primary/historical source or source metadata",
+    "L2": "Scholarly, editorial, or documented explanatory material",
+    "L3": "Comparative interpretation or correspondence analysis",
+    "L4": "Personal, symbolic, contemplative, or original Temple synthesis"
+  },
+  "drive": {
+    "centralArchive": {
+      "id": "1QNUBueJNt9C0ZHoMN3XBEWQTozy_3dQT",
+      "title": "MAʿAT’s Temple of SOL-OM-ON — Central Archive",
+      "url": "https://drive.google.com/drive/folders/1QNUBueJNt9C0ZHoMN3XBEWQTozy_3dQT"
+    },
+    "preservationRoot": {
+      "id": "1VgD2L2qb-hxDaFvL_CyCEZuq0eu8hzle",
+      "title": "Temple v5.5 — Living Archive & Preservation",
+      "url": "https://drive.google.com/drive/folders/1VgD2L2qb-hxDaFvL_CyCEZuq0eu8hzle"
+    },
+    "folders": {
+      "artworkMasters": { "id": "15U1BY6mjD5-nQP54jQ5efZsNrgiNrXdm", "url": "https://drive.google.com/drive/folders/15U1BY6mjD5-nQP54jQ5efZsNrgiNrXdm" },
+      "audioMasters": { "id": "169UycigANCLpVDx55aUkLNjgFQu3XHn0", "url": "https://drive.google.com/drive/folders/169UycigANCLpVDx55aUkLNjgFQu3XHn0" },
+      "textPdfMasters": { "id": "17pZHZsUu_p-AAgMcOS3hgXBZviO2BGrV", "url": "https://drive.google.com/drive/folders/17pZHZsUu_p-AAgMcOS3hgXBZviO2BGrV" },
+      "releaseBackups": { "id": "1m599k09G0125nZvPS6JB2lVji0Ko75Dt", "url": "https://drive.google.com/drive/folders/1m599k09G0125nZvPS6JB2lVji0Ko75Dt" },
+      "manifestsProvenance": { "id": "12-r_wAbJvhMXvq2tGEsVmwoapskCgfIv", "url": "https://drive.google.com/drive/folders/12-r_wAbJvhMXvq2tGEsVmwoapskCgfIv" }
+    },
+    "preservationManifest": {
+      "id": "1X6Fn5F4d4M4RfavI7Px4-KgZPZPkI2Mo14dbAfYZy48",
+      "title": "Temple v5.5 — Living Archive Preservation Manifest",
+      "url": "https://docs.google.com/document/d/1X6Fn5F4d4M4RfavI7Px4-KgZPZPkI2Mo14dbAfYZy48/edit"
+    }
+  },
+  "release": {
+    "knownGoodVersion": "5.4.0",
+    "knownGoodCommit": "ea3c90cb1257e82cd96be480921bf4fdc37dc614",
+    "rollbackBranch": "release/v5.4.0",
+    "greenPolicy": "CI success + exact-SHA Pages success + deployed-origin verification success"
+  },
+  "poems": [
+    {
+      "id": "poem-01",
+      "type": "poem",
+      "title": "The Measure Between Flame and Feather",
+      "date": "2026-08-02T07:09:00-04:00",
+      "subtitle": "An Hourly Soul Poem for Spiritual Advancement and Understanding",
+      "sourceId": "1W9UysgGzcmLd0GTMdXFwl2llaHgLa-QZ",
+      "sourceUrl": "https://drive.google.com/file/d/1W9UysgGzcmLd0GTMdXFwl2llaHgLa-QZ/view",
+      "depictions": ["The Living Solar Measure", "The Lunar Chamber of Discernment"],
+      "tags": ["maat", "discernment", "right-action", "compassion", "hourly-soul-poem"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "poem-02",
+      "type": "poem",
+      "title": "The Feather and the Threshold",
+      "date": "2026-08-02T07:20:00-04:00",
+      "subtitle": "A poem of Ma'at, discernment, compassion, boundaries, and embodied wisdom",
+      "sourceId": "1TQQuig2D1xKooMBj_J8aXVK2B8aHvkZ-",
+      "sourceUrl": "https://drive.google.com/file/d/1TQQuig2D1xKooMBj_J8aXVK2B8aHvkZ-/view",
+      "depictions": ["The Radiant Path", "The Quiet Threshold"],
+      "tags": ["maat", "threshold", "boundaries", "compassion", "embodied-wisdom"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "poem-03",
+      "type": "poem",
+      "title": "The Bridge That Does Not Break",
+      "date": "2026-08-03T13:23:00-04:00",
+      "subtitle": "A poem of Ma'at, discernment, compassion, unity, and embodied wisdom",
+      "sourceId": "1X8_qFOHaZwbL7STgoE_ZUNtMkxeV7_wX",
+      "sourceUrl": "https://drive.google.com/file/d/1X8_qFOHaZwbL7STgoE_ZUNtMkxeV7_wX/view",
+      "depictions": ["The Bridge of Living Ma'at", "The Inner Night"],
+      "tags": ["maat", "bridge", "unity", "discernment", "right-action"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "poem-04",
+      "type": "poem",
+      "title": "The Measure of the Open Hand",
+      "date": "2026-08-04T00:23:00-04:00",
+      "subtitle": "A poem for discernment, compassion, unity, liberation, and embodied wisdom",
+      "sourceId": "1rArvpXPzK49JpqTQYxuOAOIVY-9DgVFw",
+      "sourceUrl": "https://drive.google.com/file/d/1rArvpXPzK49JpqTQYxuOAOIVY-9DgVFw/view",
+      "depictions": ["The Ascension of Ma'at", "The Descent into Wisdom"],
+      "tags": ["maat", "open-hand", "liberation", "compassion", "wisdom"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "poem-05",
+      "type": "poem",
+      "title": "The Open Gate and the Steady Flame",
+      "date": "2026-08-04T01:21:00-04:00",
+      "subtitle": "An original meditation for Marvin Alberto Ramirez-Bonilla",
+      "sourceId": "1hYyV7fTqtUrK4Q268ksfVHDlglB0dH9m",
+      "sourceUrl": "https://drive.google.com/file/d/1hYyV7fTqtUrK4Q268ksfVHDlglB0dH9m/view",
+      "depictions": ["Dawn of Right Action", "Night of Integration"],
+      "tags": ["maat", "ori", "shin-ra", "right-action", "meditation"],
+      "provenanceLayers": ["L4"]
+    }
+  ],
+  "collections": [
+    {
+      "id": "collection.poems-chamber",
+      "type": "poem",
+      "title": "Poems Chamber",
+      "summary": "Living archive of original Temple poetry, recurring creative series, and high-fidelity depiction links.",
+      "href": "#poems-chamber",
+      "tags": ["poems", "art", "depictions", "archive"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "collection.depiction-gallery",
+      "type": "artwork",
+      "title": "Poems Chamber — High-Fidelity Depiction Gallery",
+      "summary": "Drive-backed high-resolution artwork surfaced through large web previews while preserving source masters.",
+      "href": "#poems-chamber",
+      "tags": ["artwork", "gallery", "drive", "high-fidelity"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "collection.ritual-chant",
+      "type": "audio",
+      "title": "Ma'at — Chant of the Forty-Two Declarations",
+      "summary": "Published compact web rendition with preservation masters kept outside Cache Storage and large-media archival storage delegated to Drive.",
+      "href": "./assets/audio/maat-forty-two-declarations.web.opus",
+      "metadata": "./assets/audio/maat-forty-two-declarations.json",
+      "tags": ["maat", "42-declarations", "chant", "audio"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "collection.shem-72",
+      "type": "gematria",
+      "title": "Shem HaMephorash 72 Archive",
+      "summary": "Dedicated 72-name archive and dossier gateway with source-aware gematria and discernment material.",
+      "href": "./shem-hamephorash-72.html",
+      "tags": ["shem-hamephorash", "72", "gematria", "discernment"],
+      "provenanceLayers": ["L2", "L4"]
+    },
+    {
+      "id": "collection.temple-library",
+      "type": "text",
+      "title": "Temple Research Library",
+      "summary": "Structured traditions, sources, studies, discernments, and correspondences with provenance layers and local study tools.",
+      "href": "#temple-library",
+      "tags": ["library", "source", "study", "text", "research"],
+      "provenanceLayers": ["L1", "L2", "L3", "L4"]
+    }
+  ]
+}

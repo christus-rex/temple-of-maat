@@ -6,11 +6,29 @@
   const PANEL_ID = 'temple-release-diagnostics';
   const STYLE_ID = 'temple-release-status-style';
   const HEALTH_KEY = 'temple_release_health_v1';
+  const LIVING_ARCHIVE_SRC = './scripts/v5.5-living-archive.js';
   let hadController = Boolean(navigator.serviceWorker?.controller);
   let diagnosticsState = null;
+  let livingArchiveRequested = false;
 
   function safeStore() {
     try { return window.localStorage; } catch (_) { return null; }
+  }
+
+  function ensureLivingArchive() {
+    if (window.TempleLivingArchive?.open) return true;
+    if (livingArchiveRequested) return false;
+    livingArchiveRequested = true;
+    let script = document.querySelector('script[data-temple-living-archive-runtime]');
+    if (!script) {
+      script = document.createElement('script');
+      script.src = LIVING_ARCHIVE_SRC;
+      script.async = false;
+      script.dataset.templeLivingArchiveRuntime = '5.5.0';
+      script.addEventListener('error', () => { livingArchiveRequested = false; }, { once: true });
+      document.head.appendChild(script);
+    }
+    return false;
   }
 
   function installStyle() {
@@ -176,6 +194,7 @@
   function mount() {
     installStyle();
     bindPortalBadge();
+    ensureLivingArchive();
     readDiagnostics();
   }
 
