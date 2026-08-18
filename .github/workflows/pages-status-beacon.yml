@@ -14,6 +14,7 @@ permissions:
 jobs:
   publish-pages-status:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,6 +43,13 @@ jobs:
           ERROR=""
           BUILD_URL=""
 
+          is_terminal() {
+            case "${1:-}" in
+              success|succeed|succeeded|built|deployed|error|errored|failure|failed) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
+
           if [ "$EVENT_NAME" = "page_build" ]; then
             STATUS="$(jq -r '.status // "unknown"' <<<"$EVENT_BUILD")"
             COMMIT="$(jq -r '.commit // empty' <<<"$EVENT_BUILD")"
@@ -51,20 +59,25 @@ jobs:
             [ -n "$COMMIT" ] || COMMIT="$SHA"
             [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
           else
-            for attempt in $(seq 1 24); do
+            LAST_STATUS=""
+            for attempt in $(seq 1 120); do
               DEPLOYMENT="$(gh api "repos/$REPO/pages/deployments/$SHA" 2>/dev/null || true)"
               if [ -n "$DEPLOYMENT" ]; then
                 STATUS="$(jq -r '.status // empty' <<<"$DEPLOYMENT")"
                 UPDATED="$(jq -r '.updated_at // .created_at // empty' <<<"$DEPLOYMENT")"
                 BUILD_URL="$(jq -r '.url // empty' <<<"$DEPLOYMENT")"
                 [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
-                [ -n "$STATUS" ] && break
+                if [ "$STATUS" != "$LAST_STATUS" ]; then
+                  echo "Pages deployment $SHA is ${STATUS:-unknown} (attempt $attempt)."
+                  LAST_STATUS="$STATUS"
+                fi
+                if is_terminal "$STATUS"; then break; fi
               fi
               sleep 5
             done
 
-            if [ -z "$STATUS" ]; then
-              echo "No concrete Pages deployment record was available for $SHA; preserving the existing beacon."
+            if ! is_terminal "$STATUS"; then
+              echo "No terminal Pages deployment record was available for $SHA; preserving the existing authoritative beacon."
               echo "published=false" >> "$GITHUB_OUTPUT"
               exit 0
             fi
@@ -96,7 +109,7 @@ jobs:
 
           BODY="$BODY
 
-          This issue is maintained automatically so connector clients can read GitHub Pages build/deployment state without relying on push workflow-run enumeration."
+          This issue is maintained automatically so connector clients can read terminal GitHub Pages build/deployment state without relying on push workflow-run enumeration."
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
           echo "published=true" >> "$GITHUB_OUTPUT"
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
