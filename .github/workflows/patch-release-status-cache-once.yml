@@ -1,0 +1,56 @@
+name: One-shot Release Status Cache Promotion
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-release-status-cache-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Precache release diagnostics and rotate PWA shell
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          sw = Path('sw.js')
+          text = sw.read_text()
+
+          old_revision = "const CACHE_REVISION = 'v5.4-canonical-identity-r4-live-green';"
+          new_revision = "const CACHE_REVISION = 'v5.4-canonical-identity-r5-release-status';"
+          if old_revision in text:
+              text = text.replace(old_revision, new_revision)
+          elif new_revision not in text:
+              raise SystemExit('Unexpected service-worker cache revision')
+
+          semantics = "  './scripts/v5.4.4-signature-book-semantics.js',\n"
+          release_status = "  './scripts/v5.4.5-release-status.js',\n"
+          if release_status not in text:
+              if semantics not in text:
+                  raise SystemExit('Unable to locate semantic component CORE_ASSETS entry')
+              text = text.replace(semantics, semantics + release_status)
+
+          old_critical = r"/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data)\.js)$/i"
+          new_critical = r"/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data|v5\.4\.5-release-status)\.js)$/i"
+          if old_critical in text:
+              text = text.replace(old_critical, new_critical)
+          elif new_critical not in text:
+              raise SystemExit('Unable to locate critical UI matcher')
+          sw.write_text(text)
+          PY
+
+          git rm .github/workflows/patch-release-status-cache-once.yml
+          git config user.name 'Temple Release Steward'
+          git config user.email 'actions@users.noreply.github.com'
+          git add sw.js
+          git commit -m 'Precache release diagnostics and rotate PWA shell'
+          git push origin HEAD:main
