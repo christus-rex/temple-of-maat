@@ -20,36 +20,50 @@ jobs:
 
       - name: Syntax check critical runtime scripts
         id: syntax
-        continue-on-error: true
+        shell: bash
         run: |
-          node --check sw.js
-          node --check scripts/v5.3-threshold.js
-          node --check scripts/v5.4.3-mobile-hardening.js
-          node --check scripts/v5.4.4-signature-book-semantics.js
-          node --check scripts/persistent-data.js
-          node --check scripts/update-temple-health.mjs
+          if node --check sw.js \
+            && node --check scripts/v5.3-threshold.js \
+            && node --check scripts/v5.4.3-mobile-hardening.js \
+            && node --check scripts/v5.4.4-signature-book-semantics.js \
+            && node --check scripts/persistent-data.js \
+            && node --check scripts/update-temple-health.mjs; then
+            RESULT=success
+          else
+            RESULT=failure
+          fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Validate current release contract
         id: release
-        continue-on-error: true
-        run: node scripts/validate-current-release.mjs
+        shell: bash
+        run: |
+          if node scripts/validate-current-release.mjs; then RESULT=success; else RESULT=failure; fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Validate mobile hardening contract
         id: mobile
-        continue-on-error: true
-        run: node scripts/validate-mobile-hardening-v5.4.3.mjs
+        shell: bash
+        run: |
+          if node scripts/validate-mobile-hardening-v5.4.3.mjs; then RESULT=success; else RESULT=failure; fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Validate performance and accessibility quality gates
         id: quality
-        continue-on-error: true
-        run: node scripts/validate-quality-gates-v5.4.mjs
+        shell: bash
+        run: |
+          if node scripts/validate-quality-gates-v5.4.mjs; then RESULT=success; else RESULT=failure; fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Validate v5 structural contract
         id: structural
-        continue-on-error: true
-        run: node scripts/validate-v5.mjs
+        shell: bash
+        run: |
+          if node scripts/validate-v5.mjs; then RESULT=success; else RESULT=failure; fi
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Publish connector-readable CI beacon
+        id: ci_result
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
@@ -60,11 +74,11 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           RUN_ATTEMPT: ${{ github.run_attempt }}
           SERVER_URL: ${{ github.server_url }}
-          SYNTAX: ${{ steps.syntax.outcome }}
-          RELEASE: ${{ steps.release.outcome }}
-          MOBILE: ${{ steps.mobile.outcome }}
-          QUALITY: ${{ steps.quality.outcome }}
-          STRUCTURAL: ${{ steps.structural.outcome }}
+          SYNTAX: ${{ steps.syntax.outputs.result }}
+          RELEASE: ${{ steps.release.outputs.result }}
+          MOBILE: ${{ steps.mobile.outputs.result }}
+          QUALITY: ${{ steps.quality.outputs.result }}
+          STRUCTURAL: ${{ steps.structural.outputs.result }}
         shell: bash
         run: |
           set -u
@@ -97,6 +111,8 @@ jobs:
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
+          echo "updated_at=$UTC_NOW" >> "$GITHUB_OUTPUT"
 
       - name: Publish CI to machine-readable health record
         if: always()
@@ -104,25 +120,15 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
-          SYNTAX: ${{ steps.syntax.outcome }}
-          RELEASE: ${{ steps.release.outcome }}
-          MOBILE: ${{ steps.mobile.outcome }}
-          QUALITY: ${{ steps.quality.outcome }}
-          STRUCTURAL: ${{ steps.structural.outcome }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TEMPLE_HEALTH_COMPONENT: ci
+          TEMPLE_HEALTH_STATUS: ${{ steps.ci_result.outputs.result }}
+          TEMPLE_HEALTH_COMMIT: ${{ github.sha }}
+          TEMPLE_HEALTH_UPDATED_AT: ${{ steps.ci_result.outputs.updated_at }}
+          TEMPLE_HEALTH_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
         run: |
-          RESULT=success
-          for value in "$SYNTAX" "$RELEASE" "$MOBILE" "$QUALITY" "$STRUCTURAL"; do
-            if [ "$value" != "success" ]; then RESULT=failure; fi
-          done
           VERSION=$(node -p "require('./version.json').version")
           BUILD=$(node -p "require('./version.json').build")
-          export TEMPLE_HEALTH_COMPONENT=ci
-          export TEMPLE_HEALTH_STATUS="$RESULT"
-          export TEMPLE_HEALTH_COMMIT="$GITHUB_SHA"
-          export TEMPLE_HEALTH_RUN_URL="$RUN_URL"
-          export TEMPLE_HEALTH_UPDATED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           export TEMPLE_RELEASE_VERSION="$VERSION"
           export TEMPLE_RELEASE_BUILD="$BUILD"
           node scripts/update-temple-health.mjs
@@ -130,13 +136,7 @@ jobs:
       - name: Fail workflow when a beacon check failed
         if: always()
         env:
-          SYNTAX: ${{ steps.syntax.outcome }}
-          RELEASE: ${{ steps.release.outcome }}
-          MOBILE: ${{ steps.mobile.outcome }}
-          QUALITY: ${{ steps.quality.outcome }}
-          STRUCTURAL: ${{ steps.structural.outcome }}
+          RESULT: ${{ steps.ci_result.outputs.result }}
         shell: bash
         run: |
-          for value in "$SYNTAX" "$RELEASE" "$MOBILE" "$QUALITY" "$STRUCTURAL"; do
-            if [ "$value" != "success" ]; then exit 1; fi
-          done
+          test "$RESULT" = "success"
