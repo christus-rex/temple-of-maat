@@ -4,19 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'version.json'
-      - 'sw.js'
-      - 'index.html'
-      - 'chambers.json'
-      - 'assets/**'
-      - 'scripts/**'
-      - 'styles/**'
-      - 'library/**'
-      - 'pilgrimages/**'
-      - 'PWA-CHECKLIST.md'
-      - 'docs/RELEASE_VERIFICATION.md'
-      - '.github/workflows/verify-deployed-v5.2.8.yml'
   workflow_dispatch:
     inputs:
       live_url:
