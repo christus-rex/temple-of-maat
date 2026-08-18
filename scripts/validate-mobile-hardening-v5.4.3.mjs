@@ -57,13 +57,16 @@ if (!css.includes('section:has(form input[placeholder="Seal Phrase"])')) {
   fail('existing CSS fallback for the signature book was removed');
 }
 
+const cacheRevision = sw.match(/const CACHE_REVISION = '([^']+)'/)?.[1] || '';
+if (!/^v5\.4-canonical-identity-r\d+(?:-[a-z0-9-]+)?$/.test(cacheRevision)) {
+  fail(`invalid v5.4 service-worker cache revision: ${cacheRevision || '(missing)'}`);
+}
 for (const marker of [
   "'./scripts/v5.4.3-mobile-hardening.js'",
-  'v5.4-canonical-identity-r3-debug-pass',
   'v5\\.4\\.3-mobile-hardening'
 ]) {
   if (!sw.includes(marker)) fail(`service-worker mobile hardening contract missing: ${marker}`);
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log('Validated Signature Book semantic boundary + v5.4.3 mobile hardening: stable semantic classes, accessible labels, narrow-screen containment, local ledger scrolling, loader integration, and PWA delivery.');
+console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, narrow-screen containment, local ledger scrolling, loader integration, and PWA delivery.`);
