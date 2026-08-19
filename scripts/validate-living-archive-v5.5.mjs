@@ -8,6 +8,9 @@ const version = JSON.parse(read('version.json'));
 const script = read('scripts/v5.5-living-archive.js');
 const css = read('styles/v5.5-living-archive.css');
 const releaseStatus = read('scripts/v5.4.5-release-status.js');
+const batch01 = JSON.parse(read('data/preservation-batch-2026-08-18.json'));
+const batch02 = JSON.parse(read('data/preservation-batch-2026-08-18-02.json'));
+const dedupe = JSON.parse(read('data/deduplication-2026-08-18.json'));
 
 if (manifest.schema !== 'temple-of-maat/living-archive-v1') fail('Living Archive schema mismatch');
 if (manifest.version !== '5.5.0') fail(`Living Archive version mismatch: ${manifest.version}`);
@@ -24,6 +27,41 @@ for (const key of ['artworkMasters', 'audioMasters', 'textPdfMasters', 'releaseB
 }
 if (manifest.release?.knownGoodCommit !== 'ea3c90cb1257e82cd96be480921bf4fdc37dc614') fail('v5.4 known-good rollback commit changed unexpectedly');
 if (manifest.release?.rollbackBranch !== 'release/v5.4.0') fail('v5.4 rollback branch is not recorded');
+
+if (batch01.batchId !== '2026-08-18-preservation-batch-01') fail('Batch 01 registry ID changed unexpectedly');
+if (batch02.batchId !== '2026-08-18-preservation-batch-02') fail('Batch 02 registry missing or malformed');
+if (batch02.counts?.resolvedLocalMasters !== 6) fail('Batch 02 must resolve all six previously local-only masters');
+if (batch02.counts?.historicalTextPdfCopies !== 7) fail('Batch 02 historical text/PDF preservation count mismatch');
+if (batch02.counts?.historicalArtworkCopies !== 4) fail('Batch 02 historical artwork preservation count mismatch');
+if (!batch02.drive?.manifest?.documentId || !batch02.drive?.manifest?.pdfId) fail('Batch 02 manifest document/PDF IDs must be recorded');
+
+const collectionIds = new Set((manifest.collections || []).map((item) => item.id));
+for (const id of [
+  'preservation.batch02.manifest',
+  'preservation.audio.natarikailum',
+  'preservation.audio.elderion-osiris',
+  'preservation.audio.light-upon-crown',
+  'preservation.text.dead-sea-scrolls-gematria-docx',
+  'preservation.text.dead-sea-scrolls-analysis-docx',
+  'preservation.gematria.shem-highfidelity-html',
+  'preservation.gematria.numerical-temple-kjv',
+  'preservation.gematria.enochic-codex',
+  'preservation.text.kybalion-personal',
+  'preservation.text.thoth-42-modern',
+  'preservation.text.book-of-dead-concordance',
+  'preservation.text.thoth-concordance',
+  'preservation.text.strategic-evolution-map',
+  'preservation.art.dogen-genjokoan',
+  'preservation.art.pistis-twelfth-visionary',
+  'preservation.art.pistis-twelfth-social',
+  'preservation.art.egypt-gnosis-social'
+]) if (!collectionIds.has(id)) fail(`Batch 02 Living Archive search record missing: ${id}`);
+
+const verifiedDuplicate = dedupe.verifiedDuplicates?.[0];
+if (!verifiedDuplicate) fail('Verified duplicate registry is empty');
+if (verifiedDuplicate.sha256 !== 'fdf1ef62a3e0fcaad2a623763a72e8b79ea3c34ca987c39ff43e1dffbbe92a87') fail('Verified duplicate SHA-256 changed unexpectedly');
+if (verifiedDuplicate.canonical?.driveId !== '1_EF6SgBq3sG8Kho_1QExbMcqN5RLqZ0Q') fail('Verified duplicate canonical Drive record changed unexpectedly');
+if (dedupe.policy?.destructiveCleanup !== false) fail('Deduplication policy must remain non-destructive');
 
 try { new vm.Script(script, { filename: 'v5.5-living-archive.js' }); }
 catch (error) { fail(`Living Archive JavaScript does not parse: ${error.message}`); }
@@ -58,6 +96,9 @@ console.log(JSON.stringify({
   indexedPoems: manifest.poems.length,
   collections: manifest.collections?.length || 0,
   preservationFolders: Object.keys(manifest.drive.folders).length,
+  batch02ResolvedLocalMasters: batch02.counts.resolvedLocalMasters,
+  batch02IndexedRecords: [...collectionIds].filter((id) => id.startsWith('preservation.')).length,
+  verifiedDuplicates: dedupe.verifiedDuplicates.length,
   rollback: manifest.release.rollbackBranch,
   shortcut: 'Ctrl/Cmd+K'
 }, null, 2));
