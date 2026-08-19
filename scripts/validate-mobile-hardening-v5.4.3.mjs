@@ -30,6 +30,19 @@ for (const marker of [
 }
 
 for (const marker of [
+  'body.temple-poems-open .temple-poems-backdrop',
+  'z-index: 9310 !important',
+  'body.temple-living-archive-open .temple-living-archive',
+  'z-index: 9320 !important',
+  'body.temple-poems-open :is(',
+  'body.temple-living-archive-open :is(',
+  '.tm524-dock',
+  'pointer-events: none !important'
+]) {
+  if (!hardening.includes(marker)) fail(`immersive chamber stack invariant missing: ${marker}`);
+}
+
+for (const marker of [
   "const FIRE_FILTER_HEADING = 'Seven Fires • Filterable Flames'",
   '.temple-fire-filter-heading-row',
   '.temple-fire-filter-strip',
@@ -95,4 +108,4 @@ for (const marker of [
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, narrow-screen containment, locally scrollable/focus-revealed Seven Fires selection, 16px mobile form controls, fixed-dock clearance, legacy gateway clearance, local ledger scrolling, loader integration, and PWA delivery.`);
+console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, immersive chamber stack isolation, narrow-screen containment, locally scrollable/focus-revealed Seven Fires selection, 16px mobile form controls, fixed-dock clearance, legacy gateway clearance, local ledger scrolling, loader integration, and PWA delivery.`);
