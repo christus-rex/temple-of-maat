@@ -7,6 +7,7 @@
   const SEMANTICS_SRC = './scripts/v5.4.4-signature-book-semantics.js';
   const RELEASE_STATUS_SRC = './scripts/v5.4.5-release-status.js';
   const FIRE_FILTER_HEADING = 'Seven Fires • Filterable Flames';
+  const EDITABLE_SELECTOR = 'input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select, textarea';
   let queued = false;
   let semanticsRequested = false;
   let releaseStatusRequested = false;
@@ -348,6 +349,17 @@
     return false;
   }
 
+  function normalizeMobileEditableControls() {
+    if (innerWidth > 767) return;
+    document.querySelectorAll(EDITABLE_SELECTOR).forEach((node) => {
+      // Inline !important is deliberate: a few legacy/dynamic components use
+      // higher-specificity !important font shorthands after this stylesheet loads.
+      // Safari's anti-focus-zoom requirement is a runtime invariant, not a theme hint.
+      node.style.setProperty('font-size', '16px', 'important');
+      node.dataset.templeMobileFont = '16px';
+    });
+  }
+
   function auditViewport() {
     if (innerWidth > 767) return;
     const section = document.querySelector('.temple-signature-book');
@@ -362,6 +374,7 @@
   function apply() {
     queued = false;
     installStyles();
+    normalizeMobileEditableControls();
     wireFireFilterStrip();
     ensureReleaseStatus();
     const semanticReady = ensureSemantics();
