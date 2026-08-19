@@ -1,5 +1,5 @@
 {
-  "version": "5.5.0",
-  "build": "2026-08-18-v5.5-living-archive",
-  "source": "Temple v5.5 introduces the Living Archive: unified discovery across chambers, research records, poems, artwork, audio, gematria, and preservation metadata while formalizing Drive-backed preservation, provenance, release verification, and rollback discipline."
+  "version": "5.5.1",
+  "build": "2026-08-19-v5.5.1-stability-observability",
+  "source": "Temple v5.5.1 is the stability and observability checkpoint for the Living Archive release: connector-visible CI, exact-SHA Pages verification, focused production smoke testing, stale-run protection, unified machine-readable health, and a public Temple Health dashboard."
 }
