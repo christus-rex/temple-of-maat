@@ -148,6 +148,168 @@
       "href": "#temple-library",
       "tags": ["library", "source", "study", "text", "research"],
       "provenanceLayers": ["L1", "L2", "L3", "L4"]
+    },
+    {
+      "id": "preservation.batch02.manifest",
+      "type": "text",
+      "title": "Preservation Batch 02 — Manifest",
+      "summary": "Resolves six previously local-only masters, adds a second historical preservation sweep, and records verified duplicate state.",
+      "href": "https://docs.google.com/document/d/11fKOsfe9Jy0CNm87NiMhdVF-C7JmtE4HPZwOnRPivAs/edit",
+      "tags": ["preservation", "batch-02", "provenance", "deduplication", "drive"],
+      "provenanceLayers": ["L2"]
+    },
+    {
+      "id": "preservation.audio.natarikailum",
+      "type": "audio",
+      "title": "Na'Tari'Kai'Lum — The Sovereign Ark Song of the Embodied Gods",
+      "summary": "Preserved high-fidelity Opus audio master from Batch 02.",
+      "href": "https://drive.google.com/file/d/1w-8rPjMcD3Y6u_Z3jmtK1Q24k68TTrLW/view",
+      "tags": ["audio", "ritual", "ark", "embodied-gods", "preservation"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "preservation.audio.elderion-osiris",
+      "type": "audio",
+      "title": "Elderion — Osiris Awakens Life Beneath a Black Basalt Pyramid",
+      "summary": "Preserved high-fidelity Opus audio master for contemplative Egyptian ritual ambience.",
+      "href": "https://drive.google.com/file/d/189fzOi0p6duyRTwq9lbAUfJFQno4c05L/view",
+      "tags": ["audio", "osiris", "egypt", "basalt-pyramid", "preservation"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "preservation.audio.light-upon-crown",
+      "type": "audio",
+      "title": "Light Upon the Crown",
+      "summary": "Preserved MP3 audio master from Batch 02.",
+      "href": "https://drive.google.com/file/d/1JnGu7mrgaFw72mrr5V8vPUuQqVqgffD9/view",
+      "tags": ["audio", "crown", "light", "preservation"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "preservation.text.dead-sea-scrolls-gematria-docx",
+      "type": "text",
+      "title": "The Dead Sea Scrolls — Gematria Discernment Companion (DOCX)",
+      "summary": "Preserved editable source companion for the Dead Sea Scrolls gematria and discernment study.",
+      "href": "https://drive.google.com/file/d/1-s3OTNgcdDMZPtrOZPw98ub5FvxFq1lI/view",
+      "tags": ["dead-sea-scrolls", "gematria", "discernment", "docx", "preservation"],
+      "provenanceLayers": ["L2", "L3", "L4"]
+    },
+    {
+      "id": "preservation.text.dead-sea-scrolls-analysis-docx",
+      "type": "text",
+      "title": "The Dead Sea Scrolls — Comprehensive Analysis and Comparative Relevance (DOCX)",
+      "summary": "Preserved editable source for comprehensive comparative analysis of the Dead Sea Scrolls.",
+      "href": "https://drive.google.com/file/d/1iZkTZhXqwSdjCbL6ousu0usF9ZYv2lae/view",
+      "tags": ["dead-sea-scrolls", "analysis", "comparative", "docx", "preservation"],
+      "provenanceLayers": ["L2", "L3"]
+    },
+    {
+      "id": "preservation.gematria.shem-highfidelity-html",
+      "type": "gematria",
+      "title": "Shem HaMephorash 72 — High-Fidelity Archive HTML",
+      "summary": "Preserved high-fidelity HTML archive source for the 72-fold Shem HaMephorash catalogue.",
+      "href": "https://drive.google.com/file/d/1laFJgOzBCPYcQBMnUSwgCT5It97jYXOR/view",
+      "tags": ["shem-hamephorash", "72", "gematria", "html", "preservation"],
+      "provenanceLayers": ["L2", "L4"]
+    },
+    {
+      "id": "preservation.gematria.numerical-temple-kjv",
+      "type": "gematria",
+      "title": "The Numerical Temple — KJV Gematria",
+      "summary": "Preserved PDF master from the second historical text sweep.",
+      "href": "https://drive.google.com/file/d/1CeOr5Tavdr5RoC2YeBSOw_UDFfvW04_g/view",
+      "tags": ["kjv", "gematria", "numerical-temple", "pdf", "preservation"],
+      "provenanceLayers": ["L2", "L4"]
+    },
+    {
+      "id": "preservation.gematria.enochic-codex",
+      "type": "gematria",
+      "title": "The Enochic Gematria Codex RA",
+      "summary": "Preserved PDF master from the second historical text sweep.",
+      "href": "https://drive.google.com/file/d/1Pmy4vpanJlEnSxwPNv_PrAR8gdgob5b7/view",
+      "tags": ["enoch", "enochic", "gematria", "codex", "preservation"],
+      "provenanceLayers": ["L2", "L4"]
+    },
+    {
+      "id": "preservation.text.kybalion-personal",
+      "type": "text",
+      "title": "The Kybalion — Personal Correspondence Edition",
+      "summary": "Preserved personal correspondence PDF edition in the Living Archive.",
+      "href": "https://drive.google.com/file/d/1TC8P2bL32UC3YKrQMNo_iiZQkRPtIxxK/view",
+      "tags": ["kybalion", "hermetic", "correspondence", "pdf", "preservation"],
+      "provenanceLayers": ["L2", "L3", "L4"]
+    },
+    {
+      "id": "preservation.text.thoth-42-modern",
+      "type": "text",
+      "title": "The Forty-Two Books of Thoth — A Modern Revision",
+      "summary": "Preserved PDF master from the second historical text sweep.",
+      "href": "https://drive.google.com/file/d/1gEUfC_-5-TbsQb53_I0qyHmMeiezmKun/view",
+      "tags": ["thoth", "42", "egypt", "modern-revision", "preservation"],
+      "provenanceLayers": ["L2", "L4"]
+    },
+    {
+      "id": "preservation.text.book-of-dead-concordance",
+      "type": "text",
+      "title": "The Egyptian Book of the Dead — Complete Spell Concordance",
+      "summary": "Preserved PDF concordance master from the second historical text sweep.",
+      "href": "https://drive.google.com/file/d/1t80Pv_C63bysjKBQ7Kr22JVZsSS_DSug/view",
+      "tags": ["book-of-the-dead", "egypt", "spells", "concordance", "preservation"],
+      "provenanceLayers": ["L2", "L3"]
+    },
+    {
+      "id": "preservation.text.thoth-concordance",
+      "type": "text",
+      "title": "The Books of Thoth — Annotated Historical, Hermetic & Gematria Concordance",
+      "summary": "Preserved annotated PDF concordance master.",
+      "href": "https://drive.google.com/file/d/1wcLsEqdaQLQv0got8Iu5FdRZvrkvz_uh/view",
+      "tags": ["thoth", "hermetic", "gematria", "concordance", "preservation"],
+      "provenanceLayers": ["L2", "L3", "L4"]
+    },
+    {
+      "id": "preservation.text.strategic-evolution-map",
+      "type": "text",
+      "title": "Temple of SOL-OM-ON — Strategic Evolution Map",
+      "summary": "Preserved strategic evolution-map PDF for Temple architecture and planning.",
+      "href": "https://drive.google.com/file/d/1NqrxoEKC8AbkswA6_KobrGdqYzyh_0mS/view",
+      "tags": ["temple", "strategy", "architecture", "evolution-map", "preservation"],
+      "provenanceLayers": ["L2", "L4"]
+    },
+    {
+      "id": "preservation.art.dogen-genjokoan",
+      "type": "artwork",
+      "title": "Dogen Genjokoan — Complete Presentation",
+      "summary": "Preserved PNG artwork master from the second historical artwork sweep.",
+      "href": "https://drive.google.com/file/d/11tWZoYDh7XUv69VkBWk4NuNi14IEgZV_/view",
+      "tags": ["dogen", "genjokoan", "buddhism", "artwork", "preservation"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "preservation.art.pistis-twelfth-visionary",
+      "type": "artwork",
+      "title": "Pistis Sophia — Twelfth Repentance — Visionary",
+      "summary": "Preserved visionary PNG master from the second historical artwork sweep.",
+      "href": "https://drive.google.com/file/d/1oOO5nKw0rueOd-b4n4uLNv5WBQKW5Yy3/view",
+      "tags": ["pistis-sophia", "twelfth-repentance", "visionary", "artwork", "preservation"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "preservation.art.pistis-twelfth-social",
+      "type": "artwork",
+      "title": "Pistis Sophia — Twelfth Repentance — Social",
+      "summary": "Preserved social-format PNG master from the second historical artwork sweep.",
+      "href": "https://drive.google.com/file/d/1ij-F_84OP5w0PmIW9MY_K-XidMrtUaPA/view",
+      "tags": ["pistis-sophia", "twelfth-repentance", "social", "artwork", "preservation"],
+      "provenanceLayers": ["L4"]
+    },
+    {
+      "id": "preservation.art.egypt-gnosis-social",
+      "type": "artwork",
+      "title": "Ancient Egypt Gnosis — Social",
+      "summary": "Preserved PNG master from the second historical artwork sweep.",
+      "href": "https://drive.google.com/file/d/13l12Hzy5GaP8XHnEF26bQz11kj3zOJQy/view",
+      "tags": ["ancient-egypt", "gnosis", "social", "artwork", "preservation"],
+      "provenanceLayers": ["L4"]
     }
   ]
 }
