@@ -14,8 +14,9 @@ const batch02 = JSON.parse(read('data/preservation-batch-2026-08-18-02.json'));
 const dedupe = JSON.parse(read('data/deduplication-2026-08-18.json'));
 
 if (manifest.schema !== 'temple-of-maat/living-archive-v1') fail('Living Archive schema mismatch');
-if (manifest.version !== '5.5.0') fail(`Living Archive version mismatch: ${manifest.version}`);
-if (version.version !== '5.5.0') fail(`Portal must be v5.5.0, found ${version.version}`);
+if (manifest.version !== '5.5.0') fail(`Living Archive dataset version mismatch: ${manifest.version}`);
+if (version.version !== '5.5.1') fail(`Portal must be v5.5.1, found ${version.version}`);
+if (!String(version.build || '').includes('v5.5.1')) fail(`Portal build must identify the v5.5.1 checkpoint, found ${version.build}`);
 if (!Array.isArray(manifest.poems) || manifest.poems.length < 5) fail('Living Archive must preserve at least five poem records');
 if (new Set(manifest.poems.map((item) => item.id)).size !== manifest.poems.length) fail('Living Archive poem IDs must be unique');
 for (const poem of manifest.poems) {
@@ -88,6 +89,7 @@ for (const marker of [
 ]) if (!css.includes(marker)) fail(`Living Archive accessibility/mobile style missing: ${marker}`);
 
 if (!releaseStatus.includes("const LIVING_ARCHIVE_SRC = './scripts/v5.5-living-archive.js'")) fail('Release-status bootstrap does not declare the Living Archive runtime');
+if (!releaseStatus.includes("script.dataset.templeLivingArchiveRuntime = '5.5.1'")) fail('Release-status bootstrap does not identify the v5.5.1 portal checkpoint');
 if (!releaseStatus.includes('ensureLivingArchive()')) fail('Release-status bootstrap does not load the Living Archive runtime');
 
 const core = sw.match(/const CORE_ASSETS = \[([\s\S]*?)\];/)?.[1] || '';
@@ -106,13 +108,14 @@ for (const marker of [
   "fetch(request, { cache: 'no-store' })"
 ]) if (!sw.includes(marker)) fail(`Living Archive current-data delivery marker missing: ${marker}`);
 
-for (const path of ['docs/releases/v5.4.0.md', 'docs/releases/v5.5.0.md', 'docs/releases/ROLLBACK.md', '.github/rulesets/main-protection.json']) {
+for (const path of ['docs/releases/v5.4.0.md', 'docs/releases/v5.5.0.md', 'docs/releases/v5.5.1.md', 'docs/releases/ROLLBACK.md', '.github/rulesets/main-protection.json']) {
   if (!fs.existsSync(path)) fail(`Missing release-governance file: ${path}`);
 }
 
 console.log(JSON.stringify({
   ok: true,
-  version: version.version,
+  portalVersion: version.version,
+  archiveDatasetVersion: manifest.version,
   indexedPoems: manifest.poems.length,
   collections: manifest.collections?.length || 0,
   preservationFolders: Object.keys(manifest.drive.folders).length,
