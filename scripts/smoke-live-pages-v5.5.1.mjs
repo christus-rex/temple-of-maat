@@ -1,3 +1,4 @@
+// smoke-live-pages-v5.5.1 — focused production verification for the deployed Temple.
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -20,7 +21,6 @@ async function enterTemple(page) {
     waitUntil: 'domcontentloaded',
     timeout: 120000
   });
-
   await page.waitForSelector('[data-temple-entry="continue"]', { state: 'visible', timeout: 45000 });
   await page.waitForFunction(() => Boolean(window.TempleLivingArchive?.open), { timeout: 45000 });
   await page.locator('[data-temple-entry="continue"]').click();
@@ -28,26 +28,18 @@ async function enterTemple(page) {
 }
 
 async function checkPage(browser, width, height) {
-  const context = await browser.newContext({
-    viewport: { width, height },
-    isMobile: width <= 768,
-    hasTouch: width <= 768
-  });
+  const context = await browser.newContext({ viewport: { width, height }, isMobile: width <= 768, hasTouch: width <= 768 });
   const page = await context.newPage();
   const pageErrors = [];
   const consoleErrors = [];
   const sameOriginFailures = [];
 
   page.on('pageerror', (error) => pageErrors.push(error.message));
-  page.on('console', (message) => {
-    if (message.type() === 'error') consoleErrors.push(message.text());
-  });
+  page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('requestfailed', (request) => {
     try {
       const url = new URL(request.url());
-      if (url.origin === base.origin) {
-        sameOriginFailures.push({ url: request.url(), error: request.failure()?.errorText || 'request failed' });
-      }
+      if (url.origin === base.origin) sameOriginFailures.push({ url: request.url(), error: request.failure()?.errorText || 'request failed' });
     } catch {}
   });
 
@@ -86,11 +78,9 @@ async function checkPage(browser, width, height) {
     };
   });
 
-  if (shell.serviceWorkerSupported) {
-    shell.serviceWorkerRegistrations = await page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length);
-  }
+  if (shell.serviceWorkerSupported) shell.serviceWorkerRegistrations = await page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length);
 
-  let fireFocus = { present: false, visible: false };
+  let fireFocus = { present: false, visible: false, focused: false };
   const fireButtons = page.locator('.temple-fire-filter-strip button');
   if (await fireButtons.count()) {
     const last = fireButtons.last();
@@ -100,11 +90,7 @@ async function checkPage(browser, width, height) {
       const strip = node.closest('.temple-fire-filter-strip');
       const n = node.getBoundingClientRect();
       const s = strip?.getBoundingClientRect();
-      return {
-        present: true,
-        visible: Boolean(s && n.left >= s.left - 2 && n.right <= s.right + 2),
-        focused: document.activeElement === node
-      };
+      return { present: true, visible: Boolean(s && n.left >= s.left - 2 && n.right <= s.right + 2), focused: document.activeElement === node };
     });
   }
 
@@ -118,7 +104,7 @@ async function checkPage(browser, width, height) {
     const rect = layer?.getBoundingClientRect();
     return {
       open: document.body.classList.contains('temple-poems-open'),
-      zIndex: Number.parseInt(getComputedStyle(layer).zIndex || '0', 10),
+      zIndex: layer ? Number.parseInt(getComputedStyle(layer).zIndex || '0', 10) : 0,
       layer: rect ? { left: rect.left, right: rect.right, width: rect.width } : null,
       dockDisplay: dock ? getComputedStyle(dock).display : 'missing'
     };
@@ -136,7 +122,7 @@ async function checkPage(browser, width, height) {
     const search = layer?.querySelector('input[type="search"], input');
     return {
       open: document.body.classList.contains('temple-living-archive-open'),
-      zIndex: Number.parseInt(getComputedStyle(layer).zIndex || '0', 10),
+      zIndex: layer ? Number.parseInt(getComputedStyle(layer).zIndex || '0', 10) : 0,
       layer: rect ? { left: rect.left, right: rect.right, width: rect.width } : null,
       dockDisplay: dock ? getComputedStyle(dock).display : 'missing',
       searchPresent: Boolean(search),
@@ -147,17 +133,18 @@ async function checkPage(browser, width, height) {
   await page.keyboard.press('Escape');
   await page.waitForFunction(() => !document.body.classList.contains('temple-living-archive-open'), { timeout: 15000 });
 
+  const isMobileViewport = width <= 768;
   const checks = {
     releaseIdentity: version.version === expectedVersion && version.build === expectedBuild,
     pageContained: shell.docWidth <= width + 1 && shell.bodyWidth <= width + 1,
-    mobileDock: shell.dockVisible && shell.dockActions >= 4,
-    sevenFires: shell.fireButtons >= 8 && ['auto', 'scroll'].includes(shell.fireOverflow),
-    sevenFiresFocusReveal: fireFocus.present && fireFocus.focused && fireFocus.visible,
-    mobileEditableFont: width > 768 || shell.minEditableFont === null || shell.minEditableFont >= 16,
+    mobileDock: !isMobileViewport || (shell.dockVisible && shell.dockActions >= 4),
+    sevenFires: shell.fireButtons >= 8 && (!isMobileViewport || ['auto', 'scroll'].includes(shell.fireOverflow)),
+    sevenFiresFocusReveal: !isMobileViewport || (fireFocus.present && fireFocus.focused && fireFocus.visible),
+    mobileEditableFont: !isMobileViewport || shell.minEditableFont === null || shell.minEditableFont >= 16,
     serviceWorker: shell.serviceWorkerSupported && shell.serviceWorkerRegistrations >= 1,
     poemsOpenAboveDock: poems.open && poems.zIndex > 8800 && rectInside(poems.layer, width) && poems.dockDisplay === 'none',
     archiveOpenAboveDock: archive.open && archive.zIndex > 8800 && rectInside(archive.layer, width) && archive.dockDisplay === 'none' && archive.searchPresent,
-    archiveMobileSearchFont: width > 768 || archive.searchFont === null || archive.searchFont >= 16,
+    archiveMobileSearchFont: !isMobileViewport || archive.searchFont === null || archive.searchFont >= 16,
     noPageErrors: pageErrors.length === 0,
     noConsoleErrors: consoleErrors.length === 0,
     noSameOriginFailures: sameOriginFailures.length === 0
@@ -166,30 +153,13 @@ async function checkPage(browser, width, height) {
   const failed = Object.entries(checks).filter(([, value]) => !value).map(([name]) => name);
   await page.screenshot({ path: path.join(outDir, `live-smoke-final-${width}.png`), fullPage: false });
   await context.close();
-
-  return {
-    width,
-    height,
-    ok: failed.length === 0,
-    failed,
-    checks,
-    version,
-    shell,
-    fireFocus,
-    poems,
-    archive,
-    pageErrors,
-    consoleErrors,
-    sameOriginFailures
-  };
+  return { width, height, ok: failed.length === 0, failed, checks, version, shell, fireFocus, poems, archive, pageErrors, consoleErrors, sameOriginFailures };
 }
 
 const browser = await chromium.launch({ headless: true });
 try {
   const results = [];
-  for (const [width, height] of [[360, 800], [412, 915], [1280, 900]]) {
-    results.push(await checkPage(browser, width, height));
-  }
+  for (const [width, height] of [[360, 800], [412, 915], [1280, 900]]) results.push(await checkPage(browser, width, height));
   const ok = results.every((entry) => entry.ok);
   const report = {
     ok,
