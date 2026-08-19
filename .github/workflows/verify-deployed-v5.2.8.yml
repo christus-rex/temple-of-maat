@@ -123,12 +123,12 @@ jobs:
           fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
-      - name: Verify deployed release and responsive visual geometry
+      - name: Run production live Pages smoke suite
         id: visual
         if: steps.pages_gate.outputs.result == 'success'
         shell: bash
         run: |
-          if node scripts/verify-deployed-v5.2.8.mjs; then
+          if node scripts/smoke-live-pages-v5.5.1.mjs; then
             RESULT=success
           else
             RESULT=failure
@@ -215,10 +215,10 @@ jobs:
           ## Checks
           - exact-SHA Pages wait: **$PAGES_WAIT**
           - same-origin network diagnostics: **$NETWORK**
-          - responsive deployed visual regression: **$VISUAL**
+          - production live Pages smoke: **$VISUAL**
           - deployed chant transport: **$CHANT**
 
-          Responsive visual verification covers 320, 360, 412, 430, 768, and desktop widths, including Visitor Signature Book containment, chamber geometry, overlays, broken images, console errors, and screenshot evidence. Network diagnostics preserve the exact URLs and HTTP statuses for failed resources.
+          The live Pages smoke suite verifies release identity, horizontal containment, mobile dock behavior, Seven Fires filtering/focus reveal, 16px mobile form controls, service-worker registration, Poems and Living Archive overlay stacking, same-origin request health, console errors, and screenshot evidence across phone and desktop widths.
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
