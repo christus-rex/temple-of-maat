@@ -101,6 +101,53 @@ async function inspect(page, width) {
   });
 }
 
+async function inspectImmersiveStack(page) {
+  await page.setViewportSize({ width: 360, height: 860 });
+  await page.waitForFunction(() => Boolean(window.TempleLivingArchive?.open) && Boolean(document.querySelector('[data-poems-chamber="floating"]')), null, { timeout: 30000 });
+
+  await page.evaluate(() => document.querySelector('[data-poems-chamber="floating"]')?.click());
+  await page.waitForFunction(() => document.body.classList.contains('temple-poems-open'), null, { timeout: 30000 });
+  const poems = await page.evaluate(() => {
+    const backdrop = document.querySelector('.temple-poems-backdrop');
+    const dock = document.getElementById('tm524-dock');
+    const archiveLauncher = document.querySelector('.temple-living-archive-launcher');
+    return {
+      backdropVisible: Boolean(backdrop && getComputedStyle(backdrop).display !== 'none'),
+      backdropZ: Number.parseInt(getComputedStyle(backdrop).zIndex || '0', 10),
+      dockHidden: !dock || getComputedStyle(dock).display === 'none',
+      archiveLauncherHidden: !archiveLauncher || getComputedStyle(archiveLauncher).display === 'none'
+    };
+  });
+  await page.screenshot({ path: path.join(outDir, 'poems-overlay-360.png'), fullPage: false });
+  await page.evaluate(() => document.querySelector('.temple-poems-close')?.click());
+  await page.waitForFunction(() => !document.body.classList.contains('temple-poems-open'), null, { timeout: 30000 });
+
+  await page.evaluate(() => window.TempleLivingArchive.open());
+  await page.waitForFunction(() => document.body.classList.contains('temple-living-archive-open'), null, { timeout: 30000 });
+  const archive = await page.evaluate(() => {
+    const layer = document.getElementById('temple-living-archive');
+    const dock = document.getElementById('tm524-dock');
+    const poemsGateway = document.querySelector('.temple-poems-gateway');
+    return {
+      layerVisible: Boolean(layer && !layer.hidden && getComputedStyle(layer).display !== 'none'),
+      layerZ: Number.parseInt(getComputedStyle(layer).zIndex || '0', 10),
+      dockHidden: !dock || getComputedStyle(dock).display === 'none',
+      poemsGatewayHidden: !poemsGateway || getComputedStyle(poemsGateway).display === 'none'
+    };
+  });
+  await page.screenshot({ path: path.join(outDir, 'archive-overlay-360.png'), fullPage: false });
+  await page.evaluate(() => window.TempleLivingArchive.close(false));
+  await page.waitForFunction(() => !document.body.classList.contains('temple-living-archive-open'), null, { timeout: 30000 });
+
+  const checks = {
+    poemsAboveDock: poems.backdropVisible && poems.backdropZ > 8800,
+    poemsSuppressGlobalDock: poems.dockHidden && poems.archiveLauncherHidden,
+    archiveAboveDock: archive.layerVisible && archive.layerZ > 8800,
+    archiveSuppressGlobalDock: archive.dockHidden && archive.poemsGatewayHidden
+  };
+  return { ok: Object.values(checks).every(Boolean), checks, poems, archive };
+}
+
 try {
   await wait(900);
   const browser = await chromium.launch({ headless: true });
@@ -125,6 +172,7 @@ try {
       await page.screenshot({ path: path.join(outDir, `signature-book-${width}.png`), fullPage: false });
     }
 
+    const immersiveStack = await inspectImmersiveStack(page);
     const checks = Object.fromEntries(widths.map((width) => {
       const item = results[width];
       const passed = item.semanticClassPresent &&
@@ -140,11 +188,12 @@ try {
         item.editableControlCount > 0 && item.editableControlsAtLeast16px && item.rootClearsFixedDock;
       return [`viewport${width}`, passed];
     }));
+    checks.immersiveStack = immersiveStack.ok;
     checks.noPageErrors = pageErrors.length === 0;
 
     const failed = Object.entries(checks).filter(([, passed]) => !passed).map(([name]) => name);
     const ok = failed.length === 0;
-    console.log(JSON.stringify({ ok, failed, checks, results, pageErrors }, null, 2));
+    console.log(JSON.stringify({ ok, failed, checks, results, immersiveStack, pageErrors }, null, 2));
     await context.close();
     if (!ok) process.exitCode = 1;
   } finally {
