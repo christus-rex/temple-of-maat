@@ -1,6 +1,6 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
 // Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates physical caches for current release-critical UI.
-const CACHE_REVISION = 'v5.4-canonical-identity-r6-v55-archive';
+const CACHE_REVISION = 'v5.4-canonical-identity-r7-site-debug';
 const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.4';
 const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
 const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
@@ -70,6 +70,11 @@ function isReleaseIdentity(url) {
 
 function isCriticalUiAsset(url) {
   return url.origin === self.location.origin && /\/(?:styles\/(?:v5\.3-threshold|v5\.5-living-archive)\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data|v5\.4\.5-release-status|v5\.5-living-archive)\.js|data\/living-archive-v5\.5\.json|library\/catalog\.json)$/i.test(url.pathname);
+}
+
+async function runtimeFirstMatch(request) {
+  const runtime = await caches.open(RUNTIME_CACHE);
+  return (await runtime.match(request)) || (await caches.match(request));
 }
 
 async function cacheStrictInBatches(cache, assets, batchSize = 12) {
@@ -352,7 +357,7 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       } catch {
-        return (await caches.match('./index.html')) || (await caches.match('./')) || (await caches.match('./offline.html'));
+        return (await runtimeFirstMatch('./index.html')) || (await caches.match('./')) || (await caches.match('./offline.html'));
       }
     })());
     return;
@@ -370,7 +375,7 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       } catch {
-        return (await caches.match('./version.json')) || new Response('', { status: 504, statusText: 'Offline' });
+        return (await runtimeFirstMatch('./version.json')) || new Response('', { status: 504, statusText: 'Offline' });
       }
     })());
     return;
@@ -378,7 +383,7 @@ self.addEventListener('fetch', (event) => {
 
   // Threshold, mobile hardening, and the current Living Archive are release-critical.
   // Use network-first so UI corrections and archive metadata cannot remain stale behind
-  // an installed-PWA cache; fall back to the precached/current runtime copy offline.
+  // an installed-PWA cache; fall back to the freshest runtime copy before the static shell.
   if (isCriticalUiAsset(url)) {
     event.respondWith((async () => {
       try {
@@ -389,7 +394,7 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       } catch {
-        return (await caches.match(request)) || new Response('', { status: 504, statusText: 'Offline' });
+        return (await runtimeFirstMatch(request)) || new Response('', { status: 504, statusText: 'Offline' });
       }
     })());
     return;
