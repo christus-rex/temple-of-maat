@@ -10,10 +10,15 @@ const base = new URL(process.env.TEMPLE_LIVE_URL || 'https://christus-rex.github
 const expectedVersion = process.env.TEMPLE_EXPECTED_VERSION || String(release.version || '');
 const expectedBuild = process.env.TEMPLE_EXPECTED_BUILD || String(release.build || '');
 const outDir = path.resolve(process.cwd(), 'work', 'deployed-verification');
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 fs.mkdirSync(outDir, { recursive: true });
 
 function rectInside(rect, width) {
   return Boolean(rect) && rect.width > 0 && rect.left >= -2 && rect.right <= width + 2;
+}
+
+function isNavigationRace(error) {
+  return /execution context was destroyed|navigation|net::ERR_ABORTED|frame was detached/i.test(error?.message || String(error || ''));
 }
 
 async function activateThreshold(page) {
@@ -38,12 +43,48 @@ async function activateThreshold(page) {
   throw new Error('No canonical Temple threshold entry control activated the application.');
 }
 
+async function settleTemple(page) {
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {});
+    let ready = await page.evaluate(() => document.body.classList.contains('temple-app-ready') && Boolean(window.TempleLivingArchive?.open)).catch(() => false);
+    if (!ready) {
+      try { await activateThreshold(page); } catch (error) { if (!isNavigationRace(error) && attempt === 4) throw error; }
+      ready = await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && Boolean(window.TempleLivingArchive?.open), { timeout: 20000 }).then(() => true).catch(() => false);
+    }
+    if (!ready) continue;
+    await wait(500);
+    const stable = await page.evaluate(() => document.body.classList.contains('temple-app-ready') && Boolean(window.TempleLivingArchive?.open)).catch(() => false);
+    if (stable) return;
+  }
+  throw new Error('Temple did not reach a stable post-threshold runtime state.');
+}
+
+async function stableEvaluate(page, fn) {
+  let lastError;
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    try { return await page.evaluate(fn); }
+    catch (error) {
+      lastError = error;
+      if (!isNavigationRace(error)) throw error;
+      await settleTemple(page);
+    }
+  }
+  throw lastError;
+}
+
 async function enterTemple(page) {
   await page.goto(new URL(`?live_smoke=${Date.now()}`, base).href, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.waitForSelector('#temple-static-entry a[data-temple-entry]', { state: 'attached', timeout: 45000 });
   const entrySelector = await activateThreshold(page);
-  await page.waitForFunction(() => Boolean(window.TempleLivingArchive?.open), { timeout: 45000 });
+  await settleTemple(page);
   return entrySelector;
+}
+
+async function fetchLiveVersion() {
+  const url = new URL(`version.json?live_smoke=${Date.now()}`, base);
+  const response = await fetch(url, { cache: 'no-store', redirect: 'follow' });
+  if (!response.ok) throw new Error(`Live version.json returned ${response.status}`);
+  return response.json();
 }
 
 async function checkPage(browser, width, height) {
@@ -59,20 +100,16 @@ async function checkPage(browser, width, height) {
     try {
       const url = new URL(request.url());
       const error = request.failure()?.errorText || 'request failed';
-      if (url.origin === base.origin && !(request.resourceType() === 'media' && /net::ERR_ABORTED/i.test(error))) {
-        sameOriginFailures.push({ url: request.url(), resourceType: request.resourceType(), error });
-      }
+      const resourceType = request.resourceType();
+      const benignAbort = /net::ERR_ABORTED/i.test(error) && (resourceType === 'media' || resourceType === 'document');
+      if (url.origin === base.origin && !benignAbort) sameOriginFailures.push({ url: request.url(), resourceType, error });
     } catch {}
   });
 
   const entrySelector = await enterTemple(page);
+  const version = await fetchLiveVersion();
 
-  const version = await page.evaluate(async () => {
-    const response = await fetch(`./version.json?live_smoke=${Date.now()}`, { cache: 'no-store' });
-    return response.json();
-  });
-
-  const shell = await page.evaluate(() => {
+  const shell = await stableEvaluate(page, () => {
     const dock = document.getElementById('tm524-dock');
     const strip = document.querySelector('.temple-fire-filter-strip');
     const editable = [...document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select, textarea')]
@@ -100,7 +137,7 @@ async function checkPage(browser, width, height) {
     };
   });
 
-  if (shell.serviceWorkerSupported) shell.serviceWorkerRegistrations = await page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length);
+  if (shell.serviceWorkerSupported) shell.serviceWorkerRegistrations = await stableEvaluate(page, async () => (await navigator.serviceWorker.getRegistrations()).length);
 
   let fireFocus = { present: false, visible: false, focused: false };
   const fireButtons = page.locator('.temple-fire-filter-strip button');
@@ -117,14 +154,14 @@ async function checkPage(browser, width, height) {
   }
 
   await page.waitForSelector('.temple-poems-gateway[data-poems-chamber]', { state: 'attached', timeout: 30000 });
-  const poemsGatewayActivated = await page.evaluate(() => {
+  const poemsGatewayActivated = await stableEvaluate(page, () => {
     const gateway = document.querySelector('.temple-poems-gateway[data-poems-chamber]');
     if (!gateway) return false;
     gateway.click();
     return true;
   });
   await page.waitForFunction(() => document.body.classList.contains('temple-poems-open'), { timeout: 30000 });
-  const poems = await page.evaluate(() => {
+  const poems = await stableEvaluate(page, () => {
     const layer = document.querySelector('.temple-poems-backdrop');
     const dock = document.getElementById('tm524-dock');
     const rect = layer?.getBoundingClientRect();
@@ -139,9 +176,9 @@ async function checkPage(browser, width, height) {
   await page.keyboard.press('Escape');
   await page.waitForFunction(() => !document.body.classList.contains('temple-poems-open'), { timeout: 15000 });
 
-  await page.evaluate(() => window.TempleLivingArchive.open());
+  await stableEvaluate(page, () => window.TempleLivingArchive.open());
   await page.waitForFunction(() => document.body.classList.contains('temple-living-archive-open'), { timeout: 30000 });
-  const archive = await page.evaluate(() => {
+  const archive = await stableEvaluate(page, () => {
     const layer = document.querySelector('.temple-living-archive');
     const dock = document.getElementById('tm524-dock');
     const rect = layer?.getBoundingClientRect();
