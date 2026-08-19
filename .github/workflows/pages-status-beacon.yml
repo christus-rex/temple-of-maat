@@ -46,6 +46,9 @@ jobs:
           UPDATED="$UTC_NOW"
           ERROR=""
           BUILD_URL=""
+          EVENT_STATUS=""
+          EVENT_ERROR=""
+          DEPLOYMENT_SOURCE="false"
 
           is_terminal() {
             case "${1:-}" in
@@ -54,36 +57,62 @@ jobs:
             esac
           }
 
+          is_success() {
+            case "${1:-}" in
+              success|succeed|succeeded|built|deployed) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
+
           if [ "$EVENT_NAME" = "page_build" ]; then
-            STATUS="$(jq -r '.status // "unknown"' <<<"$EVENT_BUILD")"
+            EVENT_STATUS="$(jq -r '.status // "unknown"' <<<"$EVENT_BUILD")"
             COMMIT="$(jq -r '.commit // empty' <<<"$EVENT_BUILD")"
             UPDATED="$(jq -r '.updated_at // empty' <<<"$EVENT_BUILD")"
-            ERROR="$(jq -r '.error.message // empty' <<<"$EVENT_BUILD")"
+            EVENT_ERROR="$(jq -r '.error.message // empty' <<<"$EVENT_BUILD")"
             BUILD_URL="$(jq -r '.url // empty' <<<"$EVENT_BUILD")"
             [ -n "$COMMIT" ] || COMMIT="$SHA"
             [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
-          else
-            LAST_STATUS=""
-            for attempt in $(seq 1 120); do
-              DEPLOYMENT="$(gh api "repos/$REPO/pages/deployments/$SHA" 2>/dev/null || true)"
-              if [ -n "$DEPLOYMENT" ]; then
-                STATUS="$(jq -r '.status // empty' <<<"$DEPLOYMENT")"
-                UPDATED="$(jq -r '.updated_at // .created_at // empty' <<<"$DEPLOYMENT")"
-                BUILD_URL="$(jq -r '.url // empty' <<<"$DEPLOYMENT")"
-                [ -n "$UPDATED" ] || UPDATED="$UTC_NOW"
-                if [ "$STATUS" != "$LAST_STATUS" ]; then
-                  echo "Pages deployment $SHA is ${STATUS:-unknown} (attempt $attempt)."
-                  LAST_STATUS="$STATUS"
-                fi
-                if is_terminal "$STATUS"; then break; fi
+          fi
+
+          # GitHub can emit a legacy page_build error even when the modern exact-SHA
+          # Pages deployment succeeds and is already serving the release. Treat the
+          # exact-SHA deployment record as the authoritative delivery signal for all
+          # trigger types; retain page_build state only as supplemental diagnostics.
+          LAST_STATUS=""
+          for attempt in $(seq 1 120); do
+            DEPLOYMENT="$(gh api "repos/$REPO/pages/deployments/$COMMIT" 2>/dev/null || true)"
+            if [ -n "$DEPLOYMENT" ]; then
+              DEPLOYMENT_STATUS="$(jq -r '.status // empty' <<<"$DEPLOYMENT")"
+              DEPLOYMENT_UPDATED="$(jq -r '.updated_at // .created_at // empty' <<<"$DEPLOYMENT")"
+              DEPLOYMENT_URL="$(jq -r '.url // empty' <<<"$DEPLOYMENT")"
+              if [ "$DEPLOYMENT_STATUS" != "$LAST_STATUS" ]; then
+                echo "Pages deployment $COMMIT is ${DEPLOYMENT_STATUS:-unknown} (attempt $attempt)."
+                LAST_STATUS="$DEPLOYMENT_STATUS"
               fi
-              sleep 5
-            done
-            if ! is_terminal "$STATUS"; then
-              echo "No terminal Pages deployment record was available for $SHA; preserving the existing authoritative beacon."
+              if is_terminal "$DEPLOYMENT_STATUS"; then
+                STATUS="$DEPLOYMENT_STATUS"
+                [ -n "$DEPLOYMENT_UPDATED" ] && UPDATED="$DEPLOYMENT_UPDATED"
+                [ -n "$DEPLOYMENT_URL" ] && BUILD_URL="$DEPLOYMENT_URL"
+                DEPLOYMENT_SOURCE="true"
+                break
+              fi
+            fi
+            sleep 5
+          done
+
+          if [ "$DEPLOYMENT_SOURCE" != "true" ]; then
+            if [ "$EVENT_NAME" = "page_build" ] && is_terminal "$EVENT_STATUS"; then
+              STATUS="$EVENT_STATUS"
+              ERROR="$EVENT_ERROR"
+              echo "No terminal exact-SHA deployment record; falling back to terminal page_build event $EVENT_STATUS."
+            else
+              echo "No terminal Pages deployment record was available for $COMMIT; preserving the existing authoritative beacon."
               echo "published=false" >> "$GITHUB_OUTPUT"
               exit 0
             fi
+          elif [ -n "$EVENT_STATUS" ] && [ "$EVENT_STATUS" != "$STATUS" ]; then
+            ERROR="Legacy page_build event reported '$EVENT_STATUS'${EVENT_ERROR:+: $EVENT_ERROR}. Exact-SHA deployment '$STATUS' is authoritative."
+            echo "$ERROR"
           fi
 
           CURRENT_HEAD="$(gh api "repos/$REPO/commits/main" --jq '.sha' 2>/dev/null || true)"
@@ -102,17 +131,20 @@ jobs:
           - **updated:** \`$UPDATED\`
           - **beacon refreshed:** \`$UTC_NOW\`
           - **beacon workflow:** $RUN_URL
+          - **authoritative source:** exact-SHA Pages deployment
           EOF
           )
           if [ -n "$BUILD_URL" ]; then BODY="$BODY
           - **Pages API record:** $BUILD_URL"; fi
+          if [ -n "$EVENT_STATUS" ]; then BODY="$BODY
+          - **page_build event status:** $EVENT_STATUS"; fi
           if [ -n "$ERROR" ]; then BODY="$BODY
 
-          ## Pages error
+          ## Pages diagnostic
           $ERROR"; fi
           BODY="$BODY
 
-          This issue is maintained automatically so connector clients can read terminal GitHub Pages build/deployment state without relying on push workflow-run enumeration."
+          This issue is maintained automatically so connector clients can read terminal GitHub Pages deployment state without treating a conflicting legacy page_build event as more authoritative than the exact-SHA deployment record."
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
           echo "published=true" >> "$GITHUB_OUTPUT"
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
