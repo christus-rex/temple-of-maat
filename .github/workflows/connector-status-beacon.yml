@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   issues: write
+  statuses: write
 
 jobs:
   validate-and-publish:
@@ -17,6 +18,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Publish connector-visible pending status
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$REPO/statuses/$SHA" \
+            --raw-field state='pending' \
+            --raw-field context='temple/connector-ci' \
+            --raw-field description='Temple connector validation is running' \
+            --raw-field target_url="$RUN_URL" >/dev/null
 
       - name: Syntax check critical runtime scripts
         id: syntax
@@ -91,7 +107,7 @@ jobs:
           STRUCTURAL: ${{ steps.structural.outputs.result }}
         shell: bash
         run: |
-          set -u
+          set -euo pipefail
           RESULT=success
           for value in "$SYNTAX" "$RELEASE" "$ARCHIVE" "$MOBILE" "$QUALITY" "$STRUCTURAL"; do
             if [ "$value" != "success" ]; then RESULT=failure; fi
@@ -99,6 +115,20 @@ jobs:
           SHORT_SHA="${SHA:0:12}"
           UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
+          if [ "$RESULT" = 'success' ]; then
+            DESCRIPTION='Temple connector validation passed'
+          else
+            DESCRIPTION='Temple connector validation failed'
+          fi
+
+          # Publish a classic commit status because connector clients can read the
+          # statuses API even when GitHub Actions check-run enumeration is unavailable.
+          gh api --method POST "repos/$REPO/statuses/$SHA" \
+            --raw-field state="$RESULT" \
+            --raw-field context='temple/connector-ci' \
+            --raw-field description="$DESCRIPTION" \
+            --raw-field target_url="$RUN_URL" >/dev/null
+
           BODY=$(cat <<EOF
           # Temple CI Status Beacon
 
@@ -109,6 +139,7 @@ jobs:
           - **updated:** \`$UTC_NOW\`
           - **workflow run:** $RUN_URL
           - **run attempt:** $RUN_ATTEMPT
+          - **connector status context:** \`temple/connector-ci\`
 
           ## Checks
           - syntax: **$SYNTAX**
@@ -118,7 +149,7 @@ jobs:
           - performance/accessibility quality gates: **$QUALITY**
           - v5 structural: **$STRUCTURAL**
 
-          This issue is maintained automatically so connector clients can read push-CI state even when workflow-run listing is unavailable.
+          This issue and the classic commit status are maintained automatically so connector clients can read push-CI state even when workflow-run/check-run listing is unavailable.
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
