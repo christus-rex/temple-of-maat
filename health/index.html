@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071a22">
+  <title>Temple Health · SOL-OM-ON</title>
+  <style>
+    :root{color-scheme:dark;--bg:#061016;--panel:#0b1b22;--panel2:#102832;--line:rgba(217,185,104,.22);--gold:#d9b968;--text:#edf7f4;--muted:#9db7b5;--ok:#80d6a6;--warn:#e4c271;--bad:#f08d8d;--pending:#80b9df;--shadow:0 22px 60px rgba(0,0,0,.28)}
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{margin:0;min-height:100vh;font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 50% -20%,#153943 0,#07171d 42%,#061016 76%);padding:max(20px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+    a{color:inherit}
+    .shell{width:min(1120px,100%);margin:0 auto}
+    .top{display:flex;gap:18px;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+    .eyebrow{letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-size:12px;font-weight:800}
+    h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(32px,7vw,58px);line-height:1;margin:.24em 0 .16em}
+    .lede{margin:0;color:var(--muted);max-width:720px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    button,.linkbtn{appearance:none;border:1px solid var(--line);background:rgba(217,185,104,.08);color:var(--text);padding:10px 13px;border-radius:999px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer;min-height:44px}
+    button:hover,.linkbtn:hover{background:rgba(217,185,104,.14)}
+    .summary{border:1px solid var(--line);background:linear-gradient(135deg,rgba(16,40,50,.93),rgba(8,24,31,.92));border-radius:22px;padding:20px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-bottom:16px}
+    .orb{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;border:1px solid currentColor;font-size:25px;box-shadow:inset 0 0 24px rgba(255,255,255,.04)}
+    .summary h2{margin:0;font-size:22px}.summary p{margin:5px 0 0;color:var(--muted)}
+    .status-success{color:var(--ok)}.status-failure{color:var(--bad)}.status-pending{color:var(--pending)}.status-unknown{color:var(--warn)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .card{grid-column:span 4;border:1px solid var(--line);background:rgba(11,27,34,.9);border-radius:18px;padding:17px;min-width:0}
+    .card.wide{grid-column:span 6}.card.full{grid-column:1/-1}
+    .cardhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .card h3{font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin:0;color:var(--muted)}
+    .badge{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;padding:5px 8px;border:1px solid currentColor;border-radius:999px;white-space:nowrap}.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+    dl{margin:0;display:grid;grid-template-columns:minmax(90px,auto) 1fr;gap:8px 12px}dt{color:var(--muted)}dd{margin:0;min-width:0;overflow-wrap:anywhere}
+    code{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(255,255,255,.045);border-radius:6px;padding:2px 5px}
+    .commit{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c9e7df}
+    .muted{color:var(--muted)}
+    .checkrow{display:grid;grid-template-columns:1fr auto;gap:12px;padding:9px 0;border-top:1px solid rgba(217,185,104,.12)}.checkrow:first-child{border-top:0}.yes{color:var(--ok)}.no{color:var(--bad)}
+    .error{margin-top:14px;padding:12px 14px;border:1px solid rgba(240,141,141,.4);border-radius:12px;color:#ffd0d0;background:rgba(150,40,40,.12)}
+    footer{padding:22px 4px 0;color:var(--muted);font-size:13px;text-align:center}
+    @media(max-width:840px){.card,.card.wide{grid-column:span 6}.top{display:block}.actions{justify-content:flex-start;margin-top:16px}}
+    @media(max-width:600px){body{padding-left:12px;padding-right:12px}.summary{grid-template-columns:1fr}.orb{width:56px;height:56px}.card,.card.wide{grid-column:1/-1}dl{grid-template-columns:1fr}dt{margin-top:5px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions>*{text-align:center}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="top">
+      <div>
+        <div class="eyebrow">Temple of SOL-OM-ON · Ma'at</div>
+        <h1>Temple Health</h1>
+        <p class="lede">One live view of release identity, connector CI, GitHub Pages, deployed smoke verification, and the PWA cache shell.</p>
+      </div>
+      <div class="actions">
+        <a class="linkbtn" href="../">Return to Temple</a>
+        <button id="refresh" type="button">Refresh status</button>
+      </div>
+    </div>
+
+    <section class="summary" aria-live="polite">
+      <div id="overallOrb" class="orb status-pending">…</div>
+      <div>
+        <h2 id="overallTitle">Reading the scales…</h2>
+        <p id="overallText">Loading the machine-readable Temple health record.</p>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card" id="releaseCard"><div class="cardhead"><h3>Release</h3><span id="releaseBadge" class="badge status-pending">loading</span></div><dl id="releaseData"></dl></section>
+      <section class="card" id="connectorCard"><div class="cardhead"><h3>Connector / CI</h3><span id="connectorBadge" class="badge status-pending">loading</span></div><dl id="connectorData"></dl></section>
+      <section class="card" id="pagesCard"><div class="cardhead"><h3>GitHub Pages</h3><span id="pagesBadge" class="badge status-pending">loading</span></div><dl id="pagesData"></dl></section>
+      <section class="card wide" id="smokeCard"><div class="cardhead"><h3>Live Pages Smoke</h3><span id="smokeBadge" class="badge status-pending">loading</span></div><dl id="smokeData"></dl></section>
+      <section class="card wide" id="pwaCard"><div class="cardhead"><h3>PWA / Service Worker</h3><span id="pwaBadge" class="badge status-pending">loading</span></div><dl id="pwaData"></dl></section>
+      <section class="card full"><div class="cardhead"><h3>Release Consistency</h3><span id="consistencyBadge" class="badge status-pending">loading</span></div><div id="consistency"></div></section>
+    </div>
+    <div id="error" class="error" hidden></div>
+    <footer id="stamp">Status refreshes automatically every 60 seconds.</footer>
+  </main>
+
+  <script>
+    const REPO = 'christus-rex/temple-of-maat';
+    const HEALTH_RAW = `https://raw.githubusercontent.com/${REPO}/temple-status/temple-health.json`;
+    const HEALTH_API = `https://api.github.com/repos/${REPO}/contents/temple-health.json?ref=temple-status`;
+    const $ = (id) => document.getElementById(id);
+    const esc = (value) => String(value ?? '—').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const short = (sha) => sha ? String(sha).slice(0,12) : '—';
+    const time = (value) => value ? new Date(value).toLocaleString() : '—';
+    const cls = (status) => ['success','failure','pending'].includes(status) ? status : 'unknown';
+    const link = (url, label) => url ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(label)}</a>` : '—';
+    function badge(id,status,label=status){const node=$(id);node.className=`badge status-${cls(status)}`;node.textContent=label||'unknown'}
+    function dl(id,rows){$(id).innerHTML=rows.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}
+
+    async function fetchJson(url){const r=await fetch(`${url}${url.includes('?')?'&':'?'}t=${Date.now()}`,{cache:'no-store'});if(!r.ok)throw new Error(`${r.status} ${r.statusText}`);return r.json()}
+    async function health(){
+      try{return await fetchJson(HEALTH_RAW)}catch(rawError){
+        const meta=await fetchJson(HEALTH_API);const text=atob(String(meta.content||'').replace(/\n/g,''));return JSON.parse(text)
+      }
+    }
+    async function serviceWorkerInfo(){
+      const r=await fetch(`../sw.js?health=${Date.now()}`,{cache:'no-store'});if(!r.ok)throw new Error(`sw.js ${r.status}`);const text=await r.text();
+      const get=(name)=>text.match(new RegExp(`const\\s+${name}\\s*=\\s*['\"]([^'\"]+)['\"]`))?.[1]||null;
+      return {version:get('VERSION'),revision:get('CACHE_REVISION'),releaseNamespace:get('RELEASE_NAMESPACE_MARKER')}
+    }
+
+    async function render(){
+      $('refresh').disabled=true;$('error').hidden=true;
+      try{
+        const [h,v,sw]=await Promise.all([health(),fetchJson('../version.json'),serviceWorkerInfo()]);
+        const connector=h.connector||h.ci||{};const pages=h.pages||{};const smoke=h.live_smoke||h.deployed_visual||{};
+        const liveCommit=smoke.commit||null;const currentCommit=connector.commit||h.ci?.commit||null;
+        const sameCommit=Boolean(currentCommit&&currentCommit===pages.commit&&currentCommit===liveCommit);
+        const green=Boolean(h.green_release&&sameCommit&&connector.status==='success'&&pages.status==='success'&&smoke.status==='success');
+        const overall=green?'success':([connector.status,pages.status,smoke.status].includes('failure')?'failure':'pending');
+        $('overallOrb').className=`orb status-${cls(overall)}`;$('overallOrb').textContent=green?'✓':overall==='failure'?'!':'…';
+        $('overallTitle').textContent=green?'Green release':'Release needs attention';
+        $('overallText').textContent=green?`CI, Pages, and live smoke agree on ${short(currentCommit)}.`:`Current component states are not yet a single verified green release.`;
+
+        const releaseMatch=v.version===h.release?.version&&v.build===h.release?.build;
+        badge('releaseBadge',releaseMatch?'success':'failure',releaseMatch?'current':'mismatch');
+        dl('releaseData',[
+          ['Live version',`<code>${esc(v.version)}</code>`],['Build',`<code>${esc(v.build)}</code>`],['Health record',`<code>${esc(h.release?.version||'—')} / ${esc(h.release?.build||'—')}</code>`],['Updated',esc(time(h.updated_at))]
+        ]);
+
+        badge('connectorBadge',connector.status,connector.status);
+        dl('connectorData',[
+          ['Context',`<code>${esc(connector.context||'temple/connector-ci')}</code>`],['Commit',`<span class="commit">${esc(short(connector.commit))}</span>`],['Updated',esc(time(connector.updated_at))],['Run',link(connector.run_url,'Open workflow')],['Last success',esc(time(h.last_successful_validation?.updated_at))]
+        ]);
+
+        badge('pagesBadge',pages.status,pages.raw_status||pages.status);
+        dl('pagesData',[
+          ['Commit',`<span class="commit">${esc(short(pages.commit))}</span>`],['Updated',esc(time(pages.updated_at))],['Pages record',link(pages.record_url,'Open API record')],['Live origin',link(h.live_url,'Open Temple')]
+        ]);
+
+        badge('smokeBadge',smoke.status,smoke.status);
+        dl('smokeData',[
+          ['Context',`<code>${esc(smoke.context||'temple/live-smoke')}</code>`],['Commit',`<span class="commit">${esc(short(smoke.commit))}</span>`],['Updated',esc(time(smoke.updated_at))],['Run',link(smoke.run_url,'Open workflow')],['Last success',esc(time(h.last_successful_live_smoke?.updated_at))]
+        ]);
+
+        badge('pwaBadge',sw.revision?'success':'failure',sw.revision?'active':'unreadable');
+        dl('pwaData',[
+          ['Compatibility namespace',`<code>${esc(sw.version)}</code>`],['Cache revision',`<code>${esc(sw.revision)}</code>`],['Release marker',`<code>${esc(sw.releaseNamespace)}</code>`],['Live release',`<code>${esc(v.version)} / ${esc(v.build)}</code>`]
+        ]);
+
+        const checks=[['Connector CI is successful',connector.status==='success'],['Pages build is successful',pages.status==='success'],['Live smoke is successful',smoke.status==='success'],['All health components reference one commit',sameCommit],['Live version matches health release',releaseMatch],['Machine record marks a green release',Boolean(h.green_release)]];
+        $('consistency').innerHTML=checks.map(([label,ok])=>`<div class="checkrow"><span>${esc(label)}</span><strong class="${ok?'yes':'no'}">${ok?'PASS':'FAIL'}</strong></div>`).join('');
+        badge('consistencyBadge',green?'success':'failure',green?'aligned':'not aligned');
+        $('stamp').textContent=`Last dashboard refresh: ${new Date().toLocaleString()} · Auto-refresh every 60 seconds.`;
+      }catch(error){
+        $('overallOrb').className='orb status-failure';$('overallOrb').textContent='!';$('overallTitle').textContent='Health feed unavailable';$('overallText').textContent='The dashboard could not load one or more live status sources.';
+        $('error').hidden=false;$('error').textContent=`${error.name||'Error'}: ${error.message||error}`;
+      }finally{$('refresh').disabled=false}
+    }
+    $('refresh').addEventListener('click',render);render();setInterval(render,60000);
+  </script>
+</body>
+</html>
