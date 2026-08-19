@@ -10,6 +10,7 @@ const base = new URL(process.env.TEMPLE_LIVE_URL || 'https://christus-rex.github
 const expectedVersion = process.env.TEMPLE_EXPECTED_VERSION || String(release.version || '');
 const expectedBuild = process.env.TEMPLE_EXPECTED_BUILD || String(release.build || '');
 const outDir = path.resolve(process.cwd(), 'work', 'deployed-verification');
+const entrySelector = '#temple-static-entry a[data-temple-entry="explore"], #temple-static-entry a[data-temple-entry]';
 fs.mkdirSync(outDir, { recursive: true });
 
 function rectInside(rect, width) {
@@ -21,10 +22,10 @@ async function enterTemple(page) {
     waitUntil: 'domcontentloaded',
     timeout: 120000
   });
-  await page.waitForSelector('[data-temple-entry="continue"]', { state: 'visible', timeout: 45000 });
-  await page.waitForFunction(() => Boolean(window.TempleLivingArchive?.open), { timeout: 45000 });
-  await page.locator('[data-temple-entry="continue"]').click();
+  await page.waitForSelector(entrySelector, { state: 'visible', timeout: 45000 });
+  await page.locator(entrySelector).first().click();
   await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 30000 });
+  await page.waitForFunction(() => Boolean(window.TempleLivingArchive?.open), { timeout: 45000 });
 }
 
 async function checkPage(browser, width, height) {
