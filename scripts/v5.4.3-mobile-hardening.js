@@ -17,6 +17,54 @@
     style.id = STYLE_ID;
     style.textContent = `
       @media (max-width: 767px) {
+        /* The two-row Living Codex dock is fixed over the document. Reserve a real
+           scroll landing zone so the footer and final controls can always clear it. */
+        html {
+          scroll-padding-bottom: calc(148px + env(safe-area-inset-bottom)) !important;
+        }
+        body.temple-app-ready #root {
+          box-sizing: border-box !important;
+          padding-bottom: calc(148px + env(safe-area-inset-bottom)) !important;
+        }
+
+        /* iOS Safari zooms the viewport when focusing text-entry controls rendered
+           below 16px. Several legacy/runtime panels intentionally use 13px desktop
+           typography, so normalize only editable/select controls on phones. */
+        :where(
+          input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]),
+          select,
+          textarea
+        ) {
+          font-size: 16px !important;
+        }
+
+        /* Keep late-loaded release controls above the fixed mobile dock rather than
+           letting their low historical z-index/bottom offset tuck beneath it. */
+        #temple-release-update,
+        #temple-release-diagnostics {
+          bottom: calc(max(8px, env(safe-area-inset-bottom)) + 126px) !important;
+          z-index: 8890 !important;
+        }
+        #temple-release-diagnostics { z-index: 8891 !important; }
+
+        /* Legacy direct gateways remain useful on mobile, but their original 14px
+           bottom offsets place them underneath the two-row dock. Stack them clear of
+           the dock while keeping the v5.5 unified Archive launcher unobstructed. */
+        body.temple-app-ready:not(.temple-artifact-open) .temple-shem-gateway {
+          left: max(8px, env(safe-area-inset-left)) !important;
+          bottom: calc(max(8px, env(safe-area-inset-bottom)) + 126px) !important;
+          z-index: 8700 !important;
+          min-height: 44px !important;
+          box-sizing: border-box !important;
+        }
+        body.temple-app-ready:not(.temple-artifact-open) .temple-poems-gateway {
+          right: max(8px, env(safe-area-inset-right)) !important;
+          bottom: calc(max(8px, env(safe-area-inset-bottom)) + 176px) !important;
+          z-index: 8701 !important;
+          min-height: 44px !important;
+          box-sizing: border-box !important;
+        }
+
         /* Seven Fires selector: keep the complete chip rail inside the phone viewport.
            The page itself intentionally hides horizontal overflow, so this local rail
            owns horizontal scrolling and always leaves room for the final selection. */
@@ -202,8 +250,11 @@
 
   function centerFireFilterButton(strip, button) {
     if (!strip || !button || innerWidth > 767) return;
+    const stripRect = strip.getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    const buttonCenterInScroll = (buttonRect.left - stripRect.left) + strip.scrollLeft + (buttonRect.width / 2);
     const maxScroll = Math.max(0, strip.scrollWidth - strip.clientWidth);
-    const target = button.offsetLeft - ((strip.clientWidth - button.offsetWidth) / 2);
+    const target = buttonCenterInScroll - (strip.clientWidth / 2);
     const left = Math.max(0, Math.min(maxScroll, target));
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -219,15 +270,15 @@
     if (!strip || strip.dataset.templeFireFilterWired === 'true') return Boolean(strip);
 
     strip.dataset.templeFireFilterWired = 'true';
-    strip.addEventListener('click', (event) => {
-      const button = event.target.closest('button');
+    const revealButton = (event) => {
+      const button = event.target.closest?.('button');
       if (!button || !strip.contains(button)) return;
-
-      // Let React commit the selected-state paint first, then reveal the whole chip.
       requestAnimationFrame(() => {
         requestAnimationFrame(() => centerFireFilterButton(strip, button));
       });
-    });
+    };
+    strip.addEventListener('click', revealButton);
+    strip.addEventListener('focusin', revealButton);
     return true;
   }
 
