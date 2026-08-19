@@ -6,6 +6,7 @@
   const STYLE_ID = 'temple-mobile-hardening-v543';
   const SEMANTICS_SRC = './scripts/v5.4.4-signature-book-semantics.js';
   const RELEASE_STATUS_SRC = './scripts/v5.4.5-release-status.js';
+  const FIRE_FILTER_HEADING = 'Seven Fires • Filterable Flames';
   let queued = false;
   let semanticsRequested = false;
   let releaseStatusRequested = false;
@@ -16,6 +17,49 @@
     style.id = STYLE_ID;
     style.textContent = `
       @media (max-width: 767px) {
+        /* Seven Fires selector: keep the complete chip rail inside the phone viewport.
+           The page itself intentionally hides horizontal overflow, so this local rail
+           owns horizontal scrolling and always leaves room for the final selection. */
+        .temple-fire-filter-heading-row {
+          display: block !important;
+          width: 100% !important;
+          min-width: 0 !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+        }
+        .temple-fire-filter-heading-row > h3 {
+          margin-bottom: 12px !important;
+        }
+        .temple-fire-filter-strip {
+          display: flex !important;
+          flex-wrap: nowrap !important;
+          align-items: stretch !important;
+          justify-content: flex-start !important;
+          width: 100% !important;
+          min-width: 0 !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+          gap: 10px !important;
+          overflow-x: auto !important;
+          overflow-y: hidden !important;
+          padding: 2px max(20px, env(safe-area-inset-right)) 10px max(1px, env(safe-area-inset-left)) !important;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-inline: contain;
+          scroll-snap-type: x proximity;
+          scroll-padding-inline: 20px;
+          scrollbar-width: none;
+        }
+        .temple-fire-filter-strip::-webkit-scrollbar {
+          display: none;
+        }
+        .temple-fire-filter-strip > button {
+          flex: 0 0 auto !important;
+          min-width: max-content !important;
+          min-height: 44px !important;
+          white-space: nowrap !important;
+          scroll-snap-align: center;
+        }
+
         .temple-signature-book {
           width: 100% !important;
           min-width: 0 !important;
@@ -138,6 +182,55 @@
     document.head.appendChild(style);
   }
 
+  function findFireFilterStrip() {
+    const heading = [...document.querySelectorAll('h3')].find((node) =>
+      (node.textContent || '').replace(/\s+/g, ' ').trim() === FIRE_FILTER_HEADING
+    );
+    if (!heading || !heading.parentElement) return null;
+
+    const row = heading.parentElement;
+    const strip = heading.nextElementSibling;
+    if (!strip || !strip.querySelector('button')) return null;
+
+    row.classList.add('temple-fire-filter-heading-row');
+    strip.classList.add('temple-fire-filter-strip');
+    strip.dataset.templeFireFilter = 'seven-fires';
+    strip.setAttribute('role', 'group');
+    strip.setAttribute('aria-label', 'Seven Fires filter');
+    return strip;
+  }
+
+  function centerFireFilterButton(strip, button) {
+    if (!strip || !button || innerWidth > 767) return;
+    const maxScroll = Math.max(0, strip.scrollWidth - strip.clientWidth);
+    const target = button.offsetLeft - ((strip.clientWidth - button.offsetWidth) / 2);
+    const left = Math.max(0, Math.min(maxScroll, target));
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (typeof strip.scrollTo === 'function') {
+      strip.scrollTo({ left, behavior: reduceMotion ? 'auto' : 'smooth' });
+    } else {
+      strip.scrollLeft = left;
+    }
+  }
+
+  function wireFireFilterStrip() {
+    const strip = findFireFilterStrip();
+    if (!strip || strip.dataset.templeFireFilterWired === 'true') return Boolean(strip);
+
+    strip.dataset.templeFireFilterWired = 'true';
+    strip.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button || !strip.contains(button)) return;
+
+      // Let React commit the selected-state paint first, then reveal the whole chip.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => centerFireFilterButton(strip, button));
+      });
+    });
+    return true;
+  }
+
   function ensureSemantics() {
     if (window.TempleSignatureBookSemantics?.apply) {
       window.TempleSignatureBookSemantics.apply();
@@ -186,6 +279,7 @@
   function apply() {
     queued = false;
     installStyles();
+    wireFireFilterStrip();
     ensureReleaseStatus();
     const semanticReady = ensureSemantics();
     if (semanticReady) auditViewport();
