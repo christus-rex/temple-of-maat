@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: connector-status-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   issues: write
@@ -46,11 +50,7 @@ jobs:
             && node --check scripts/v5.5-living-archive.js \
             && node --check scripts/smoke-live-pages-v5.5.1.mjs \
             && node --check scripts/persistent-data.js \
-            && node --check scripts/update-temple-health.mjs; then
-            RESULT=success
-          else
-            RESULT=failure
-          fi
+            && node --check scripts/update-temple-health.mjs; then RESULT=success; else RESULT=failure; fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Validate current release contract
@@ -109,13 +109,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
+          if [ "$REF_NAME" = 'main' ]; then
+            CURRENT_HEAD="$(gh api "repos/$REPO/commits/main" --jq '.sha')"
+            if [ "$CURRENT_HEAD" != "$SHA" ]; then
+              echo "Superseded CI run for $SHA; current main is $CURRENT_HEAD."
+              gh api --method POST "repos/$REPO/statuses/$SHA" \
+                --raw-field state='error' \
+                --raw-field context='temple/connector-ci' \
+                --raw-field description='Superseded by a newer main commit' \
+                --raw-field target_url="$RUN_URL" >/dev/null || true
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              echo "result=stale" >> "$GITHUB_OUTPUT"
+              echo "updated_at=$UTC_NOW" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
           RESULT=success
           for value in "$SYNTAX" "$RELEASE" "$ARCHIVE" "$MOBILE" "$QUALITY" "$STRUCTURAL"; do
             if [ "$value" != "success" ]; then RESULT=failure; fi
           done
           SHORT_SHA="${SHA:0:12}"
-          UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
           if [ "$RESULT" = 'success' ]; then DESCRIPTION='Temple connector validation passed'; else DESCRIPTION='Temple connector validation failed'; fi
           gh api --method POST "repos/$REPO/statuses/$SHA" \
             --raw-field state="$RESULT" \
@@ -147,11 +163,12 @@ jobs:
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
+          echo "publish=true" >> "$GITHUB_OUTPUT"
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
           echo "updated_at=$UTC_NOW" >> "$GITHUB_OUTPUT"
 
       - name: Publish CI to machine-readable health record
-        if: always()
+        if: always() && steps.ci_result.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -170,7 +187,7 @@ jobs:
           node scripts/update-temple-health.mjs
 
       - name: Fail workflow when a beacon check failed
-        if: always()
+        if: always() && steps.ci_result.outputs.publish == 'true'
         env:
           RESULT: ${{ steps.ci_result.outputs.result }}
         shell: bash
