@@ -22,10 +22,13 @@ function isNavigationRace(error) {
 }
 
 async function activateThreshold(page) {
+  // "Explore" is the canonical entry for base-shell assertions. Journey can
+  // intentionally open an artifact surface, which hides the dock and brings its
+  // own compact form typography into view; that is validated by its own smoke.
   for (const selector of [
+    '#temple-static-entry a[data-temple-entry="explore"]',
     '#temple-static-entry a[data-temple-entry="continue"]',
     '#temple-static-entry a[data-temple-entry="journey"]',
-    '#temple-static-entry a[data-temple-entry="explore"]',
     '#temple-static-entry a[data-temple-entry]'
   ]) {
     const candidates = page.locator(selector);
@@ -46,17 +49,17 @@ async function activateThreshold(page) {
 async function settleTemple(page) {
   for (let attempt = 1; attempt <= 4; attempt += 1) {
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {});
-    let ready = await page.evaluate(() => document.body.classList.contains('temple-app-ready') && Boolean(window.TempleLivingArchive?.open)).catch(() => false);
+    let ready = await page.evaluate(() => document.body.classList.contains('temple-app-ready') && !document.body.classList.contains('temple-artifact-open') && Boolean(window.TempleLivingArchive?.open)).catch(() => false);
     if (!ready) {
       try { await activateThreshold(page); } catch (error) { if (!isNavigationRace(error) && attempt === 4) throw error; }
-      ready = await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && Boolean(window.TempleLivingArchive?.open), { timeout: 20000 }).then(() => true).catch(() => false);
+      ready = await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && !document.body.classList.contains('temple-artifact-open') && Boolean(window.TempleLivingArchive?.open), { timeout: 20000 }).then(() => true).catch(() => false);
     }
     if (!ready) continue;
     await wait(500);
-    const stable = await page.evaluate(() => document.body.classList.contains('temple-app-ready') && Boolean(window.TempleLivingArchive?.open)).catch(() => false);
+    const stable = await page.evaluate(() => document.body.classList.contains('temple-app-ready') && !document.body.classList.contains('temple-artifact-open') && Boolean(window.TempleLivingArchive?.open)).catch(() => false);
     if (stable) return;
   }
-  throw new Error('Temple did not reach a stable post-threshold runtime state.');
+  throw new Error('Temple did not reach a stable base-shell post-threshold runtime state.');
 }
 
 async function stableEvaluate(page, fn) {
@@ -133,7 +136,8 @@ async function checkPage(browser, width, height) {
       minEditableFont: editable.length ? Math.min(...editable) : null,
       serviceWorkerSupported: 'serviceWorker' in navigator,
       serviceWorkerController: navigator.serviceWorker?.controller?.scriptURL || '',
-      serviceWorkerRegistrations: 0
+      serviceWorkerRegistrations: 0,
+      artifactOpen: document.body.classList.contains('temple-artifact-open')
     };
   });
 
@@ -199,6 +203,7 @@ async function checkPage(browser, width, height) {
   const isMobileViewport = width <= 768;
   const checks = {
     releaseIdentity: version.version === expectedVersion && version.build === expectedBuild,
+    baseShellMode: !shell.artifactOpen,
     pageContained: shell.docWidth <= width + 1 && shell.bodyWidth <= width + 1,
     mobileDock: !isMobileViewport || (shell.dockVisible && shell.dockActions >= 4),
     sevenFires: shell.fireButtons >= 8 && (!isMobileViewport || ['auto', 'scroll'].includes(shell.fireOverflow)),
