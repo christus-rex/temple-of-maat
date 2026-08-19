@@ -56,7 +56,7 @@ function encode(content) {
 
 function patchHealth(current) {
   const next = structuredClone(current || {});
-  next.schema = 1;
+  next.schema = 2;
   next.repository = repository;
   next.source_branch = 'main';
   next.status_branch = branch;
@@ -79,15 +79,42 @@ function patchHealth(current) {
   }
   next[component] = record;
 
+  if (component === 'ci') {
+    next.connector = {
+      status,
+      commit,
+      updated_at: updatedAt,
+      context: 'temple/connector-ci',
+      run_url: runUrl
+    };
+    if (status === 'success') {
+      next.last_successful_validation = { commit, updated_at: updatedAt, run_url: runUrl };
+    }
+  }
+
+  if (component === 'deployed_visual') {
+    next.live_smoke = {
+      status,
+      commit,
+      updated_at: updatedAt,
+      context: 'temple/live-smoke',
+      run_url: runUrl
+    };
+    if (status === 'success') {
+      next.last_successful_live_smoke = { commit, updated_at: updatedAt, run_url: runUrl };
+    }
+  }
+
   const ciCommit = next.ci?.commit || null;
   const pagesCommit = next.pages?.commit || null;
-  const deployedCommit = next.deployed_visual?.commit || null;
-  const sameCommit = Boolean(ciCommit && ciCommit === pagesCommit && ciCommit === deployedCommit);
+  const liveSmoke = next.live_smoke || next.deployed_visual || null;
+  const liveCommit = liveSmoke?.commit || null;
+  const sameCommit = Boolean(ciCommit && ciCommit === pagesCommit && ciCommit === liveCommit);
   next.green_release = Boolean(
     sameCommit &&
     next.ci?.status === 'success' &&
     next.pages?.status === 'success' &&
-    next.deployed_visual?.status === 'success'
+    liveSmoke?.status === 'success'
   );
   next.green_release_commit = next.green_release ? ciCommit : null;
   next.updated_at = new Date().toISOString();
