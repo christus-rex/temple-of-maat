@@ -13,11 +13,11 @@ on:
       expected_version:
         description: 'Expected version.json version'
         required: true
-        default: '5.5.0'
+        default: '5.5.1'
       expected_build:
         description: 'Expected version.json build'
         required: true
-        default: '2026-08-18-v5.5-living-archive'
+        default: '2026-08-19-v5.5.1-stability-observability'
 
 concurrency:
   group: verify-deployed-${{ github.ref }}
@@ -83,11 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          if node scripts/wait-for-pages-deployment-v5.2.8.mjs; then
-            RESULT=success
-          else
-            RESULT=failure
-          fi
+          if node scripts/wait-for-pages-deployment-v5.2.8.mjs; then RESULT=success; else RESULT=failure; fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Resolve Pages verification gate
@@ -98,11 +94,7 @@ jobs:
           PUSH_RESULT: ${{ steps.pages_wait.outputs.result }}
         shell: bash
         run: |
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            RESULT=success
-          else
-            RESULT="${PUSH_RESULT:-failure}"
-          fi
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then RESULT=success; else RESULT="${PUSH_RESULT:-failure}"; fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Install Playwright Chromium
@@ -116,11 +108,7 @@ jobs:
         if: steps.pages_gate.outputs.result == 'success'
         shell: bash
         run: |
-          if node scripts/diagnose-deployed-network-v5.4.mjs; then
-            RESULT=success
-          else
-            RESULT=failure
-          fi
+          if node scripts/diagnose-deployed-network-v5.4.mjs; then RESULT=success; else RESULT=failure; fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Run production live Pages smoke suite
@@ -128,11 +116,7 @@ jobs:
         if: steps.pages_gate.outputs.result == 'success'
         shell: bash
         run: |
-          if node scripts/smoke-live-pages-v5.5.1.mjs; then
-            RESULT=success
-          else
-            RESULT=failure
-          fi
+          if node scripts/smoke-live-pages-v5.5.1.mjs; then RESULT=success; else RESULT=failure; fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Verify deployed chant streaming transport
@@ -140,11 +124,7 @@ jobs:
         if: steps.pages_gate.outputs.result == 'success'
         shell: bash
         run: |
-          if node scripts/smoke-chant-streaming-v5.4.mjs; then
-            RESULT=success
-          else
-            RESULT=failure
-          fi
+          if node scripts/smoke-chant-streaming-v5.4.mjs; then RESULT=success; else RESULT=failure; fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
       - name: Publish deployed verification beacon
@@ -165,7 +145,6 @@ jobs:
         run: |
           set -euo pipefail
           UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-
           if [ "$EVENT_NAME" = 'push' ]; then
             CURRENT_HEAD="$(gh api "repos/$REPO/commits/main" --jq '.sha')"
             if [ "$CURRENT_HEAD" != "$SHA" ]; then
@@ -186,13 +165,7 @@ jobs:
           for value in "$PAGES_WAIT" "$NETWORK" "$VISUAL" "$CHANT"; do
             if [ "$value" != "success" ]; then RESULT=failure; fi
           done
-
-          if [ "$RESULT" = 'success' ]; then
-            DESCRIPTION='Live Temple verification passed'
-          else
-            DESCRIPTION='Live Temple verification failed'
-          fi
-
+          if [ "$RESULT" = 'success' ]; then DESCRIPTION='Live Temple verification passed'; else DESCRIPTION='Live Temple verification failed'; fi
           if [ "$EVENT_NAME" = 'push' ]; then
             gh api --method POST "repos/$REPO/statuses/$SHA" \
               --raw-field state="$RESULT" \
