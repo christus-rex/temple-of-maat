@@ -20,6 +20,14 @@ async function inspect(page, width) {
   await page.locator('.temple-signature-book').scrollIntoViewIfNeeded();
   await wait(180);
 
+  // Keyboard focus must reveal the far-right Seven Fires option without relying on a tap.
+  await page.evaluate(() => {
+    const strip = document.querySelector('.temple-fire-filter-strip');
+    const buttons = strip ? [...strip.querySelectorAll('button')] : [];
+    buttons.at(-1)?.focus({ preventScroll: true });
+  });
+  await wait(260);
+
   return await page.evaluate(() => {
     const section = document.querySelector('.temple-signature-book');
     const card = section?.querySelector('.temple-signature-book__card');
@@ -31,6 +39,11 @@ async function inspect(page, width) {
     const title = section?.querySelector('h3');
     const controls = form ? [...form.querySelectorAll('input, select, button')] : [];
     const actionControls = actions ? [...actions.querySelectorAll('input, button')] : [];
+    const fireStrip = document.querySelector('.temple-fire-filter-strip');
+    const fireButtons = fireStrip ? [...fireStrip.querySelectorAll('button')] : [];
+    const lastFire = fireButtons.at(-1) || null;
+    const editableSelector = 'input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select, textarea';
+    const editableControls = [...document.querySelectorAll(editableSelector)];
     const rect = (node) => {
       if (!node) return null;
       const box = node.getBoundingClientRect();
@@ -42,6 +55,13 @@ async function inspect(page, width) {
       const box = node.getBoundingClientRect();
       return box.left >= -1 && box.right <= viewportWidth + 1;
     };
+    const insideStrip = (node, strip) => {
+      if (!node || !strip) return false;
+      const box = node.getBoundingClientRect();
+      const rail = strip.getBoundingClientRect();
+      return box.left >= rail.left - 1 && box.right <= rail.right + 1;
+    };
+    const px = (value) => Number.parseFloat(String(value || '0')) || 0;
 
     return {
       viewportWidth,
@@ -67,7 +87,16 @@ async function inspect(page, width) {
       titleWraps: Boolean(title && getComputedStyle(title).whiteSpace !== 'nowrap'),
       semanticClassPresent: Boolean(section?.classList.contains('temple-signature-book')),
       hardeningVersion: section?.dataset.mobileLayout || '',
-      labelsPresent: controls.filter((node) => node.matches('input,select')).every((node) => Boolean(node.getAttribute('aria-label') || node.getAttribute('aria-labelledby')))
+      labelsPresent: controls.filter((node) => node.matches('input,select')).every((node) => Boolean(node.getAttribute('aria-label') || node.getAttribute('aria-labelledby'))),
+      fireStripPresent: Boolean(fireStrip),
+      fireButtonCount: fireButtons.length,
+      fireStripLocallyScrollable: Boolean(fireStrip && fireStrip.scrollWidth > fireStrip.clientWidth && getComputedStyle(fireStrip).overflowX !== 'visible'),
+      lastFireVisibleAfterFocus: insideStrip(lastFire, fireStrip),
+      lastFireIsFocused: document.activeElement === lastFire,
+      editableControlCount: editableControls.length,
+      editableControlsAtLeast16px: editableControls.every((node) => px(getComputedStyle(node).fontSize) >= 16),
+      rootBottomPadding: px(getComputedStyle(document.getElementById('root')).paddingBottom),
+      rootClearsFixedDock: px(getComputedStyle(document.getElementById('root')).paddingBottom) >= 140
     };
   });
 }
@@ -87,6 +116,7 @@ try {
     await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 30000 });
     await page.waitForFunction(() => Boolean(document.querySelector('form input[placeholder="Seal Phrase"]')), null, { timeout: 30000 });
     await page.waitForFunction(() => Boolean(document.querySelector('.temple-signature-book')) && window.TempleMobileHardening, null, { timeout: 30000 });
+    await page.waitForFunction(() => Boolean(document.querySelector('.temple-fire-filter-strip')), null, { timeout: 30000 });
 
     const widths = [320, 360, 412];
     const results = {};
@@ -104,7 +134,10 @@ try {
         item.sectionInside && item.cardInside && item.layoutInside &&
         item.toolbarInside && item.actionsInside && item.tableViewportInside &&
         item.formControlsInside && item.actionControlsInside &&
-        item.tableIsLocallyScrollable && item.titleWraps && item.labelsPresent;
+        item.tableIsLocallyScrollable && item.titleWraps && item.labelsPresent &&
+        item.fireStripPresent && item.fireButtonCount === 8 && item.fireStripLocallyScrollable &&
+        item.lastFireIsFocused && item.lastFireVisibleAfterFocus &&
+        item.editableControlCount > 0 && item.editableControlsAtLeast16px && item.rootClearsFixedDock;
       return [`viewport${width}`, passed];
     }));
     checks.noPageErrors = pageErrors.length === 0;
