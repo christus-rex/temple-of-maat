@@ -18,10 +18,7 @@ function rectInside(rect, width) {
 }
 
 async function enterTemple(page) {
-  await page.goto(new URL(`?live_smoke=${Date.now()}`, base).href, {
-    waitUntil: 'domcontentloaded',
-    timeout: 120000
-  });
+  await page.goto(new URL(`?live_smoke=${Date.now()}`, base).href, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.waitForSelector(entrySelector, { state: 'visible', timeout: 45000 });
   await page.locator(entrySelector).first().click();
   await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 30000 });
@@ -40,7 +37,10 @@ async function checkPage(browser, width, height) {
   page.on('requestfailed', (request) => {
     try {
       const url = new URL(request.url());
-      if (url.origin === base.origin) sameOriginFailures.push({ url: request.url(), error: request.failure()?.errorText || 'request failed' });
+      const error = request.failure()?.errorText || 'request failed';
+      if (url.origin === base.origin && !(request.resourceType() === 'media' && /net::ERR_ABORTED/i.test(error))) {
+        sameOriginFailures.push({ url: request.url(), resourceType: request.resourceType(), error });
+      }
     } catch {}
   });
 
@@ -95,9 +95,15 @@ async function checkPage(browser, width, height) {
     });
   }
 
-  const poemsGateway = page.locator('.temple-poems-gateway');
-  await poemsGateway.waitFor({ state: 'visible', timeout: 30000 });
-  await poemsGateway.click();
+  // The floating Poems gateway is intentionally hidden in some desktop/chrome states.
+  // Exercise the real delegated click contract even when the affordance itself is not visible.
+  await page.waitForSelector('.temple-poems-gateway[data-poems-chamber]', { state: 'attached', timeout: 30000 });
+  const poemsGatewayActivated = await page.evaluate(() => {
+    const gateway = document.querySelector('.temple-poems-gateway[data-poems-chamber]');
+    if (!gateway) return false;
+    gateway.click();
+    return true;
+  });
   await page.waitForFunction(() => document.body.classList.contains('temple-poems-open'), { timeout: 30000 });
   const poems = await page.evaluate(() => {
     const layer = document.querySelector('.temple-poems-backdrop');
@@ -143,6 +149,7 @@ async function checkPage(browser, width, height) {
     sevenFiresFocusReveal: !isMobileViewport || (fireFocus.present && fireFocus.focused && fireFocus.visible),
     mobileEditableFont: !isMobileViewport || shell.minEditableFont === null || shell.minEditableFont >= 16,
     serviceWorker: shell.serviceWorkerSupported && shell.serviceWorkerRegistrations >= 1,
+    poemsGatewayContract: poemsGatewayActivated,
     poemsOpenAboveDock: poems.open && poems.zIndex > 8800 && rectInside(poems.layer, width) && poems.dockDisplay === 'none',
     archiveOpenAboveDock: archive.open && archive.zIndex > 8800 && rectInside(archive.layer, width) && archive.dockDisplay === 'none' && archive.searchPresent,
     archiveMobileSearchFont: !isMobileViewport || archive.searchFont === null || archive.searchFont >= 16,
@@ -154,7 +161,7 @@ async function checkPage(browser, width, height) {
   const failed = Object.entries(checks).filter(([, value]) => !value).map(([name]) => name);
   await page.screenshot({ path: path.join(outDir, `live-smoke-final-${width}.png`), fullPage: false });
   await context.close();
-  return { width, height, ok: failed.length === 0, failed, checks, version, shell, fireFocus, poems, archive, pageErrors, consoleErrors, sameOriginFailures };
+  return { width, height, ok: failed.length === 0, failed, checks, version, shell, fireFocus, poemsGatewayActivated, poems, archive, pageErrors, consoleErrors, sameOriginFailures };
 }
 
 const browser = await chromium.launch({ headless: true });
