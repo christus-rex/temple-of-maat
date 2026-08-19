@@ -10,19 +10,40 @@ const base = new URL(process.env.TEMPLE_LIVE_URL || 'https://christus-rex.github
 const expectedVersion = process.env.TEMPLE_EXPECTED_VERSION || String(release.version || '');
 const expectedBuild = process.env.TEMPLE_EXPECTED_BUILD || String(release.build || '');
 const outDir = path.resolve(process.cwd(), 'work', 'deployed-verification');
-const entrySelector = '#temple-static-entry a[data-temple-entry="explore"], #temple-static-entry a[data-temple-entry]';
 fs.mkdirSync(outDir, { recursive: true });
 
 function rectInside(rect, width) {
   return Boolean(rect) && rect.width > 0 && rect.left >= -2 && rect.right <= width + 2;
 }
 
+async function activateThreshold(page) {
+  for (const selector of [
+    '#temple-static-entry a[data-temple-entry="continue"]',
+    '#temple-static-entry a[data-temple-entry="journey"]',
+    '#temple-static-entry a[data-temple-entry="explore"]',
+    '#temple-static-entry a[data-temple-entry]'
+  ]) {
+    const candidates = page.locator(selector);
+    const count = await candidates.count();
+    for (let index = 0; index < count; index += 1) {
+      const node = candidates.nth(index);
+      if (!await node.isVisible().catch(() => false)) continue;
+      await node.click({ timeout: 15000 });
+      try {
+        await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 8000 });
+        return selector;
+      } catch (_) {}
+    }
+  }
+  throw new Error('No canonical Temple threshold entry control activated the application.');
+}
+
 async function enterTemple(page) {
   await page.goto(new URL(`?live_smoke=${Date.now()}`, base).href, { waitUntil: 'domcontentloaded', timeout: 120000 });
-  await page.waitForSelector(entrySelector, { state: 'visible', timeout: 45000 });
-  await page.locator(entrySelector).first().click();
-  await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), { timeout: 30000 });
+  await page.waitForSelector('#temple-static-entry a[data-temple-entry]', { state: 'attached', timeout: 45000 });
+  const entrySelector = await activateThreshold(page);
   await page.waitForFunction(() => Boolean(window.TempleLivingArchive?.open), { timeout: 45000 });
+  return entrySelector;
 }
 
 async function checkPage(browser, width, height) {
@@ -44,7 +65,7 @@ async function checkPage(browser, width, height) {
     } catch {}
   });
 
-  await enterTemple(page);
+  const entrySelector = await enterTemple(page);
 
   const version = await page.evaluate(async () => {
     const response = await fetch(`./version.json?live_smoke=${Date.now()}`, { cache: 'no-store' });
@@ -95,8 +116,6 @@ async function checkPage(browser, width, height) {
     });
   }
 
-  // The floating Poems gateway is intentionally hidden in some desktop/chrome states.
-  // Exercise the real delegated click contract even when the affordance itself is not visible.
   await page.waitForSelector('.temple-poems-gateway[data-poems-chamber]', { state: 'attached', timeout: 30000 });
   const poemsGatewayActivated = await page.evaluate(() => {
     const gateway = document.querySelector('.temple-poems-gateway[data-poems-chamber]');
@@ -161,7 +180,7 @@ async function checkPage(browser, width, height) {
   const failed = Object.entries(checks).filter(([, value]) => !value).map(([name]) => name);
   await page.screenshot({ path: path.join(outDir, `live-smoke-final-${width}.png`), fullPage: false });
   await context.close();
-  return { width, height, ok: failed.length === 0, failed, checks, version, shell, fireFocus, poemsGatewayActivated, poems, archive, pageErrors, consoleErrors, sameOriginFailures };
+  return { width, height, ok: failed.length === 0, failed, checks, version, entrySelector, shell, fireFocus, poemsGatewayActivated, poems, archive, pageErrors, consoleErrors, sameOriginFailures };
 }
 
 const browser = await chromium.launch({ headless: true });
@@ -180,6 +199,4 @@ try {
   fs.writeFileSync(path.join(outDir, 'live-smoke-v5.5.1.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.log(JSON.stringify(report, null, 2));
   if (!ok) process.exitCode = 1;
-} finally {
-  await browser.close();
-}
+} finally { await browser.close(); }
