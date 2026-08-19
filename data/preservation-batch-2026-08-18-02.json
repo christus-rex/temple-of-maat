@@ -1,0 +1,110 @@
+{
+  "schema": "temple-of-maat/preservation-batch-v1",
+  "batchId": "2026-08-18-preservation-batch-02",
+  "date": "2026-08-18",
+  "release": {
+    "version": "5.5.0",
+    "build": "2026-08-18-v5.5-living-archive"
+  },
+  "policy": {
+    "mode": "non-destructive-copy",
+    "sourceOriginalsMoved": false,
+    "sourceOriginalsDeleted": false,
+    "dedupeRule": "Title/size equality is only a duplicate candidate; consolidation requires hash or byte-level equivalence."
+  },
+  "drive": {
+    "preservationRootId": "1VgD2L2qb-hxDaFvL_CyCEZuq0eu8hzle",
+    "batchFolders": {
+      "artwork": "13WLDuciDeHB4N-Amrdve3M5oZhavxYUE",
+      "audio": "1YuKlCmM9xqPUa1zc29Bl4vlm8O4rAiiA",
+      "textPdf": "1SDwksUjToMUcCfPsSfqztwGXcmtMNet9",
+      "releaseBackups": "1JEZgadyEoh9jxGL8d9A-_wAj2DyqcngK",
+      "manifestsProvenance": "1O1igVQ1VCKoLddu2owW5q11xhX5Szb19"
+    },
+    "manifest": {
+      "documentId": "11fKOsfe9Jy0CNm87NiMhdVF-C7JmtE4HPZwOnRPivAs",
+      "pdfId": "1GOb2JPFH1i2oqio-dVkbeO2ZYIHxHzuA"
+    }
+  },
+  "resolvedLocalMasters": {
+    "audio": [
+      {
+        "title": "Na'Tari'Kai'Lum - The Sovereign Ark Song of the Embodied Gods.opus",
+        "sourceFileId": "file_00000000e57c81f7b39a4c5dfa3b4467",
+        "preservationId": "1w-8rPjMcD3Y6u_Z3jmtK1Q24k68TTrLW",
+        "bytes": 4917960,
+        "sha256": "69cbbe390ace615c5445e59e60a0b35ad33b54aa539ac99fb1635638f8cf7267"
+      },
+      {
+        "title": "Elderion - Sacred Egyptian Chant ｜ Osiris Awakens Life Beneath a Black Basalt Pyramid for Inner Stillness.opus",
+        "sourceFileId": "file_00000000ee60820c8664438085c23cc7",
+        "preservationId": "189fzOi0p6duyRTwq9lbAUfJFQno4c05L",
+        "bytes": 86107298,
+        "sha256": "89bd7acd94a171225f319bde1950c0074a7fb41c64bbad744baee981169c4d89"
+      },
+      {
+        "title": "light_upon_the_crown.mp3",
+        "sourceFileId": "file_000000000f2c81f798178352ca58cba9",
+        "preservationId": "1JnGu7mrgaFw72mrr5V8vPUuQqVqgffD9",
+        "bytes": 743355,
+        "sha256": "bd95a0aa87c073fbd02e026c082b5f5e7f95393a976894975fcc4e7773f07be8"
+      }
+    ],
+    "textArchive": [
+      {
+        "title": "The Dead Sea Scrolls - Gematria Discernment Companion.docx",
+        "sourceFileId": "file_00000000267081f59441593045db81d0",
+        "preservationId": "1-s3OTNgcdDMZPtrOZPw98ub5FvxFq1lI",
+        "bytes": 4649195,
+        "sha256": "43c783b00f667c76207273a75377541af7577a7a98aae4e587861a08a5ea1e3e"
+      },
+      {
+        "title": "The Dead Sea Scrolls - Comprehensive Analysis and Comparative Relevance.docx",
+        "sourceFileId": "file_000000000168822fa1e43b6e26aba761",
+        "preservationId": "1iZkTZhXqwSdjCbL6ousu0usF9ZYv2lae",
+        "bytes": 5809341,
+        "sha256": "bfbfba6ac80320a996995824bfbb05295c2fa42d0594231563ef8268dfa0f92b"
+      },
+      {
+        "title": "Shem_HaMephorash_72_HighFidelity.zip.html",
+        "sourceFileId": "file_0000000036f081f7b147b77598715997",
+        "preservationId": "1laFJgOzBCPYcQBMnUSwgCT5It97jYXOR",
+        "bytes": 14401,
+        "sha256": "b8c1a8daabe0b5cc7bedd3f083b9678bfa4c00f4924061e153044dc2d43e46bb"
+      }
+    ]
+  },
+  "records": {
+    "textPdf": [
+      {"title":"The_Numerical_Temple_KJV_Gematria.pdf","sourceId":"13zPGdMG7H692UhLt_OeJBqXNO2e4PzNo","preservationId":"1CeOr5Tavdr5RoC2YeBSOw_UDFfvW04_g"},
+      {"title":"The_Enochic_Gematria_Codex_RA.pdf","sourceId":"1hkBgWtymd8NjYODlDkJ4K3HtorDeuuQI","preservationId":"1Pmy4vpanJlEnSxwPNv_PrAR8gdgob5b7"},
+      {"title":"The Kybalion - Personal Correspondence Edition - Marvin Alberto Ramirez-Bonilla.pdf","sourceId":"1KVobjxeo5P4Rzf5kgd8QTzh_AMssuUPM","preservationId":"1TC8P2bL32UC3YKrQMNo_iiZQkRPtIxxK"},
+      {"title":"The Forty-Two Books of Thoth — A Modern Revision.pdf","sourceId":"1pJeTMgygiEw0tDfqQhHUa15Ptb-ofHBs","preservationId":"1gEUfC_-5-TbsQb53_I0qyHmMeiezmKun"},
+      {"title":"The Egyptian Book of the Dead - Complete Spell Concordance.pdf","sourceId":"15r84f2UBkJ8xLOWkxBUToISIY2tv--Ml","preservationId":"1t80Pv_C63bysjKBQ7Kr22JVZsSS_DSug"},
+      {"title":"The Books of Thoth — Annotated Historical, Hermetic & Gematria Concordance.pdf","sourceId":"1GSmNXoYL6c4aAtUN4Bc3LdLR1vkW3RI1","preservationId":"1wcLsEqdaQLQv0got8Iu5FdRZvrkvz_uh"},
+      {"title":"Temple_of_SOL-OM-ON_Strategic_Evolution_Map.pdf","sourceId":"1_HTCw7BC0uvM2UsNwu4jvnhL_o-g_bUs","preservationId":"1NqrxoEKC8AbkswA6_KobrGdqYzyh_0mS"}
+    ],
+    "artwork": [
+      {"title":"Dogen_Genjokoan_Complete_Presentation.png","sourceId":"15UrlAVwK-_Gc1rFmZDBepjVY6sbNji3s","preservationId":"11tWZoYDh7XUv69VkBWk4NuNi14IEgZV_"},
+      {"title":"Pistis Sophia — Twelfth Repentance — Visionary.png","sourceId":"19MClou1uRKZfN6fJHvETz2bd6xui6cym","preservationId":"1oOO5nKw0rueOd-b4n4uLNv5WBQKW5Yy3"},
+      {"title":"Pistis Sophia — Twelfth Repentance — Social.png","sourceId":"1AvhcoWPSp1ues9BXiL1F4msQKqB5dlPJ","preservationId":"1ij-F_84OP5w0PmIW9MY_K-XidMrtUaPA"},
+      {"title":"2026-08-02 Ancient Egypt Gnosis - Social.png","sourceId":"1yC752wf7FhaCWPR-1Wxqmu7bbpoLDsDV","preservationId":"13l12Hzy5GaP8XHnEF26bQz11kj3zOJQy"}
+    ]
+  },
+  "duplicateCandidates": [
+    {
+      "reason": "same title and same reported size; content hash not yet verified",
+      "title": "_OceanofPDF.com_The_hearth_book_-_Julio_castro.pdf",
+      "reportedBytes": 21462784,
+      "ids": ["1Me3wsAoUOjreQuWyhAPBujeFz46udIGb", "1_EF6SgBq3sG8Kho_1QExbMcqN5RLqZ0Q"],
+      "action": "recorded-only; neither source was deleted or consolidated"
+    }
+  ],
+  "counts": {
+    "resolvedLocalMasters": 6,
+    "historicalTextPdfCopies": 7,
+    "historicalArtworkCopies": 4,
+    "duplicateCandidates": 1,
+    "newPreservationRecords": 17
+  }
+}
