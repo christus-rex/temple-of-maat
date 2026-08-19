@@ -1,6 +1,6 @@
 const VERSION = 'temple-maat-pwa-v5.2.8-library-journey-offline-2026-08-14-r4';
-// Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates physical caches for the v5.4 canonical website/app identity rollout.
-const CACHE_REVISION = 'v5.4-canonical-identity-r5-release-status';
+// Shell revision r4 remains the compatibility namespace; CACHE_REVISION rotates physical caches for current release-critical UI.
+const CACHE_REVISION = 'v5.4-canonical-identity-r6-v55-archive';
 const RELEASE_NAMESPACE_MARKER = 'temple-maat-pwa-v5.4';
 const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`;
 const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`;
@@ -20,6 +20,8 @@ const CORE_ASSETS = [
   './assets/branding/temple-app-icon-maskable-512-v5.4.png',
   './assets/branding/temple-app-icon-180-v5.4.png',
   './chambers.json',
+  './library/catalog.json',
+  './data/living-archive-v5.5.json',
   './offline.html',
   './version.json',
   './styles/v5.3-threshold.css',
@@ -28,6 +30,7 @@ const CORE_ASSETS = [
   './styles/v5.2.8-temple-library.css',
   './styles/v5.2.8-journey-import.css',
   './styles/v5.2.8-offline-controls.css',
+  './styles/v5.5-living-archive.css',
   './scripts/persistent-data.js',
   './scripts/parental-powers.js',
   './scripts/parental-powers-assets.json',
@@ -36,6 +39,7 @@ const CORE_ASSETS = [
   './scripts/v5.4.3-mobile-hardening.js',
   './scripts/v5.4.4-signature-book-semantics.js',
   './scripts/v5.4.5-release-status.js',
+  './scripts/v5.5-living-archive.js',
   './scripts/v5.2.4-living-codex.js',
   './scripts/v5.2.4-chant-fallback.js',
   './scripts/v5.2.5-living-temple.js',
@@ -65,7 +69,7 @@ function isReleaseIdentity(url) {
 }
 
 function isCriticalUiAsset(url) {
-  return url.origin === self.location.origin && /\/(?:styles\/v5\.3-threshold\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data|v5\.4\.5-release-status)\.js)$/i.test(url.pathname);
+  return url.origin === self.location.origin && /\/(?:styles\/(?:v5\.3-threshold|v5\.5-living-archive)\.css|scripts\/(?:v5\.3-threshold|v5\.4\.3-mobile-hardening|v5\.4\.4-signature-book-semantics|persistent-data|v5\.4\.5-release-status|v5\.5-living-archive)\.js|data\/living-archive-v5\.5\.json|library\/catalog\.json)$/i.test(url.pathname);
 }
 
 async function cacheStrictInBatches(cache, assets, batchSize = 12) {
@@ -280,6 +284,8 @@ self.addEventListener('install', (event) => {
       // UI hotfixes should take control without waiting for every existing tab to close.
       await self.skipWaiting();
     } catch (error) {
+      // CACHE_REVISION changes for release-critical shell updates, so a failed install
+      // only removes its new cache and cannot erase the active worker's known-good shell.
       await caches.delete(STATIC_CACHE);
       throw error;
     }
@@ -370,8 +376,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Threshold and mobile-hardening assets are release-critical UI. Use network-first
-  // so layout corrections do not remain hidden behind an installed-PWA cache.
+  // Threshold, mobile hardening, and the current Living Archive are release-critical.
+  // Use network-first so UI corrections and archive metadata cannot remain stale behind
+  // an installed-PWA cache; fall back to the precached/current runtime copy offline.
   if (isCriticalUiAsset(url)) {
     event.respondWith((async () => {
       try {
