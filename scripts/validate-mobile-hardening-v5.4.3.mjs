@@ -60,6 +60,10 @@ for (const marker of [
   'scroll-padding-bottom: calc(148px + env(safe-area-inset-bottom))',
   'padding-bottom: calc(148px + env(safe-area-inset-bottom))',
   'font-size: 16px !important',
+  'function normalizeMobileEditableControls()',
+  "node.style.setProperty('font-size', '16px', 'important')",
+  "node.dataset.templeMobileFont = '16px'",
+  'normalizeMobileEditableControls();',
   '#temple-release-update',
   '#temple-release-diagnostics',
   '.temple-shem-gateway',
@@ -108,4 +112,4 @@ for (const marker of [
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, immersive chamber stack isolation, narrow-screen containment, locally scrollable/focus-revealed Seven Fires selection, 16px mobile form controls, fixed-dock clearance, legacy gateway clearance, local ledger scrolling, loader integration, and PWA delivery.`);
+console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, immersive chamber stack isolation, narrow-screen containment, locally scrollable/focus-revealed Seven Fires selection, CSS + inline runtime 16px mobile form controls, fixed-dock clearance, legacy gateway clearance, local ledger scrolling, loader integration, and PWA delivery.`);
