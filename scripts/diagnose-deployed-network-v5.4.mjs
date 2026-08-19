@@ -8,7 +8,6 @@ const base = new URL(process.env.TEMPLE_LIVE_URL || 'https://christus-rex.github
 const outDir = path.resolve(process.cwd(), 'work', 'deployed-verification');
 fs.mkdirSync(outDir, { recursive: true });
 const widths = [[1280, 900], [320, 740], [360, 800], [412, 915], [430, 932], [768, 1024]];
-const entrySelector = '#temple-static-entry a[data-temple-entry="explore"], #temple-static-entry a[data-temple-entry]';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function classify(url) {
@@ -30,10 +29,25 @@ async function waitForTempleReady(page) {
 }
 
 async function enterTemple(page) {
-  const entry = page.locator(entrySelector).first();
-  await entry.waitFor({ state: 'visible', timeout: 15000 });
-  await entry.click({ timeout: 15000 });
-  await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 15000 });
+  for (const selector of [
+    '#temple-static-entry a[data-temple-entry="continue"]',
+    '#temple-static-entry a[data-temple-entry="journey"]',
+    '#temple-static-entry a[data-temple-entry="explore"]',
+    '#temple-static-entry a[data-temple-entry]'
+  ]) {
+    const candidates = page.locator(selector);
+    const count = await candidates.count();
+    for (let index = 0; index < count; index += 1) {
+      const node = candidates.nth(index);
+      if (!await node.isVisible().catch(() => false)) continue;
+      await node.click({ timeout: 15000 });
+      try {
+        await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 8000 });
+        return selector;
+      } catch (_) {}
+    }
+  }
+  throw new Error('No canonical Temple threshold entry control activated the application for network diagnostics.');
 }
 
 async function recheckTransientHttpError(item) {
@@ -81,12 +95,13 @@ try {
 
     let navigationError = '';
     let navigationRecovered = false;
+    let entrySelector = '';
     const url = new URL(`?network_diag=${width}-${Date.now()}#chamber-13`, base);
     try {
       await page.goto(url.href, { waitUntil: 'domcontentloaded', timeout: 120000 });
       await waitForTempleReady(page);
       await page.waitForTimeout(900);
-      await enterTemple(page);
+      entrySelector = await enterTemple(page);
       await page.waitForTimeout(900);
       await page.waitForLoadState('networkidle', { timeout: 4000 }).catch(() => {});
     } catch (error) {
@@ -94,7 +109,7 @@ try {
         try {
           await page.waitForLoadState('domcontentloaded', { timeout: 30000 }).catch(() => {});
           await waitForTempleReady(page);
-          await enterTemple(page);
+          entrySelector = await enterTemple(page);
           await page.waitForTimeout(900);
           navigationRecovered = true;
         } catch (retryError) { navigationError = retryError?.message || String(retryError); }
@@ -112,7 +127,7 @@ try {
       navigationRecovered = navigationRecovered || requestFailures.some((item) => item.resourceType === 'document' && /net::ERR_ABORTED/i.test(item.error || ''));
     }
 
-    reports.push({ width, height, navigationError, navigationRecovered, currentUrl, successfulDocuments, finalReady, responses, requestFailures, pageErrors, consoleErrors });
+    reports.push({ width, height, entrySelector, navigationError, navigationRecovered, currentUrl, successfulDocuments, finalReady, responses, requestFailures, pageErrors, consoleErrors });
     await context.close();
   }
 } finally { await browser.close(); }
