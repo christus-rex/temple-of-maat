@@ -30,6 +30,19 @@ for (const marker of [
 }
 
 for (const marker of [
+  "const FIRE_FILTER_HEADING = 'Seven Fires • Filterable Flames'",
+  '.temple-fire-filter-heading-row',
+  '.temple-fire-filter-strip',
+  'overflow-x: auto !important',
+  'scroll-snap-type: x proximity',
+  'function centerFireFilterButton(strip, button)',
+  'function wireFireFilterStrip()',
+  'wireFireFilterStrip();'
+]) {
+  if (!hardening.includes(marker)) fail(`Seven Fires mobile filter invariant missing: ${marker}`);
+}
+
+for (const marker of [
   "section.classList.add('temple-signature-book')",
   "section.dataset.templeComponent = 'visitor-signature-book'",
   "section.dataset.semanticBoundary = 'v5.4.4'",
@@ -69,4 +82,4 @@ for (const marker of [
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, narrow-screen containment, local ledger scrolling, loader integration, and PWA delivery.`);
+console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, narrow-screen containment, locally scrollable Seven Fires selection, local ledger scrolling, loader integration, and PWA delivery.`);
