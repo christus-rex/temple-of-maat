@@ -13,22 +13,27 @@ on:
       expected_version:
         description: 'Expected version.json version'
         required: true
-        default: '5.4.0'
+        default: '5.5.0'
       expected_build:
         description: 'Expected version.json build'
         required: true
-        default: '2026-08-16-v5.4-canonical-identity'
+        default: '2026-08-18-v5.5-living-archive'
+
+concurrency:
+  group: verify-deployed-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
   actions: read
   pages: read
   issues: write
+  statuses: write
 
 jobs:
   deployed-origin:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -54,6 +59,22 @@ jobs:
           echo "TEMPLE_EXPECTED_VERSION=${{ inputs.expected_version }}" >> "$GITHUB_ENV"
           echo "TEMPLE_EXPECTED_BUILD=${{ inputs.expected_build }}" >> "$GITHUB_ENV"
           echo "TEMPLE_LIVE_URL=${{ inputs.live_url }}" >> "$GITHUB_ENV"
+
+      - name: Publish live-smoke pending status
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$REPO/statuses/$SHA" \
+            --raw-field state='pending' \
+            --raw-field context='temple/live-smoke' \
+            --raw-field description='Waiting for deployed Temple verification' \
+            --raw-field target_url="$RUN_URL" >/dev/null
 
       - name: Wait for exact-SHA Pages deployment
         id: pages_wait
@@ -84,11 +105,11 @@ jobs:
           fi
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
 
-      - name: Install Chromium
+      - name: Install Playwright Chromium
         if: steps.pages_gate.outputs.result == 'success'
         run: |
           npm install --no-save playwright
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
 
       - name: Diagnose deployed resource failures
         id: network
@@ -134,6 +155,7 @@ jobs:
           REPO: ${{ github.repository }}
           ISSUE: '71'
           SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
           PAGES_WAIT: ${{ steps.pages_gate.outputs.result }}
           NETWORK: ${{ steps.network.outputs.result }}
           VISUAL: ${{ steps.visual.outputs.result }}
@@ -141,11 +163,44 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
         run: |
+          set -euo pipefail
+          UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          if [ "$EVENT_NAME" = 'push' ]; then
+            CURRENT_HEAD="$(gh api "repos/$REPO/commits/main" --jq '.sha')"
+            if [ "$CURRENT_HEAD" != "$SHA" ]; then
+              echo "Superseded deployment verification for $SHA; current main is $CURRENT_HEAD."
+              gh api --method POST "repos/$REPO/statuses/$SHA" \
+                --raw-field state='error' \
+                --raw-field context='temple/live-smoke' \
+                --raw-field description='Superseded by a newer main commit' \
+                --raw-field target_url="$RUN_URL" >/dev/null || true
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              echo "result=stale" >> "$GITHUB_OUTPUT"
+              echo "updated_at=$UTC_NOW" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
           RESULT=success
           for value in "$PAGES_WAIT" "$NETWORK" "$VISUAL" "$CHANT"; do
             if [ "$value" != "success" ]; then RESULT=failure; fi
           done
-          UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          if [ "$RESULT" = 'success' ]; then
+            DESCRIPTION='Live Temple verification passed'
+          else
+            DESCRIPTION='Live Temple verification failed'
+          fi
+
+          if [ "$EVENT_NAME" = 'push' ]; then
+            gh api --method POST "repos/$REPO/statuses/$SHA" \
+              --raw-field state="$RESULT" \
+              --raw-field context='temple/live-smoke' \
+              --raw-field description="$DESCRIPTION" \
+              --raw-field target_url="$RUN_URL" >/dev/null
+          fi
+
           BODY=$(cat <<EOF
           # Temple Deployed Verification Beacon
 
@@ -155,6 +210,7 @@ jobs:
           - **workflow run:** $RUN_URL
           - **live origin:** $TEMPLE_LIVE_URL
           - **expected release:** \`$TEMPLE_EXPECTED_VERSION / $TEMPLE_EXPECTED_BUILD\`
+          - **connector status context:** \`temple/live-smoke\`
 
           ## Checks
           - exact-SHA Pages wait: **$PAGES_WAIT**
@@ -166,11 +222,12 @@ jobs:
           EOF
           )
           gh api --method PATCH "repos/$REPO/issues/$ISSUE" --raw-field body="$BODY" >/dev/null
+          echo "publish=true" >> "$GITHUB_OUTPUT"
           echo "result=$RESULT" >> "$GITHUB_OUTPUT"
           echo "updated_at=$UTC_NOW" >> "$GITHUB_OUTPUT"
 
       - name: Publish deployed state to machine-readable health record
-        if: always()
+        if: always() && steps.deployed_result.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -194,7 +251,7 @@ jobs:
           retention-days: 30
 
       - name: Fail when deployed release is not green
-        if: always()
+        if: always() && steps.deployed_result.outputs.publish == 'true'
         env:
           RESULT: ${{ steps.deployed_result.outputs.result }}
         shell: bash
