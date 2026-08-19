@@ -14,12 +14,17 @@ const releaseStatus = read('scripts/v5.4.5-release-status.js');
 const livingArchive = read('scripts/v5.5-living-archive.js');
 const livingArchiveCss = read('styles/v5.5-living-archive.css');
 const livingArchiveManifest = JSON.parse(read('data/living-archive-v5.5.json'));
+const liveSmoke = read('scripts/smoke-live-pages-v5.5.1.mjs');
+const healthDashboard = read('health/index.html');
 
-if (version.version !== '5.5.0') fail(`Expected current portal version 5.5.0, found ${version.version}`);
-if (version.build !== '2026-08-18-v5.5-living-archive') fail(`Unexpected current build: ${version.build}`);
-if (!String(version.source || '').toLowerCase().includes('living archive')) fail('Current release source must document the Living Archive');
+if (version.version !== '5.5.1') fail(`Expected current portal version 5.5.1, found ${version.version}`);
+if (version.build !== '2026-08-19-v5.5.1-stability-observability') fail(`Unexpected current build: ${version.build}`);
+if (!String(version.source || '').toLowerCase().includes('living archive')) fail('Current release source must document the Living Archive line');
+if (!String(version.source || '').toLowerCase().includes('observability')) fail('Current release source must document the observability checkpoint');
 if (livingArchiveManifest.schema !== 'temple-of-maat/living-archive-v1') fail('Living Archive manifest schema mismatch');
-if (livingArchiveManifest.version !== version.version) fail('Living Archive manifest version does not match portal release');
+const archiveLine = String(livingArchiveManifest.version || '').split('.').slice(0, 2).join('.');
+const portalLine = String(version.version || '').split('.').slice(0, 2).join('.');
+if (archiveLine !== portalLine) fail(`Living Archive manifest release line ${archiveLine || '(missing)'} does not match portal line ${portalLine}`);
 
 for (const [name, source] of [
   ['Service Worker', sw],
@@ -105,10 +110,12 @@ for (const marker of [
 
 for (const marker of [
   "const LIVING_ARCHIVE_SRC = './scripts/v5.5-living-archive.js'",
+  "script.dataset.templeLivingArchiveRuntime = '5.5.1'",
   'ensureLivingArchive()',
-  'window.TempleLivingArchive?.open'
+  'window.TempleLivingArchive?.open',
+  'href="./health/"'
 ]) {
-  if (!releaseStatus.includes(marker)) fail(`Living Archive bootstrap invariant missing: ${marker}`);
+  if (!releaseStatus.includes(marker)) fail(`Release diagnostics/Living Archive invariant missing: ${marker}`);
 }
 
 for (const marker of [
@@ -135,6 +142,28 @@ for (const marker of [
   if (!css.includes(marker)) fail(`Logo/threshold styling invariant missing: ${marker}`);
 }
 
+for (const marker of [
+  'smoke-live-pages-v5.5.1',
+  '.temple-fire-filter-strip',
+  'temple-poems-open',
+  'temple-living-archive-open',
+  'serviceWorker.getRegistrations()',
+  'noSameOriginFailures'
+]) {
+  if (!liveSmoke.includes(marker)) fail(`Live Pages smoke invariant missing: ${marker}`);
+}
+
+for (const marker of [
+  '<title>Temple Health · SOL-OM-ON</title>',
+  'temple-status/temple-health.json',
+  'temple/connector-ci',
+  'temple/live-smoke',
+  'CACHE_REVISION',
+  'Auto-refresh every 60 seconds'
+]) {
+  if (!healthDashboard.includes(marker)) fail(`Temple Health dashboard invariant missing: ${marker}`);
+}
+
 if (!fs.existsSync('assets/branding/temple-global-logo-v5.4.webp')) fail('Dedicated global logo asset is missing');
 const logoSize = fs.statSync('assets/branding/temple-global-logo-v5.4.webp').size;
 if (logoSize < 10000) fail(`Global logo asset is unexpectedly small: ${logoSize} bytes`);
@@ -143,11 +172,14 @@ for (const path of [
   'data/living-archive-v5.5.json',
   'styles/v5.5-living-archive.css',
   'scripts/v5.5-living-archive.js',
+  'scripts/smoke-live-pages-v5.5.1.mjs',
   'scripts/validate-living-archive-v5.5.mjs',
+  'health/index.html',
   'docs/releases/v5.4.0.md',
   'docs/releases/v5.5.0.md',
+  'docs/releases/v5.5.1.md',
   'docs/releases/ROLLBACK.md'
-]) if (!fs.existsSync(path)) fail(`v5.5 release asset missing: ${path}`);
+]) if (!fs.existsSync(path)) fail(`v5.5.1 release asset missing: ${path}`);
 
 console.log(JSON.stringify({
   ok: true,
@@ -163,7 +195,10 @@ console.log(JSON.stringify({
   mobileHardeningLoaded: true,
   signatureBookSemanticBoundary: 'v5.4.4',
   livingArchive: true,
+  livingArchiveReleaseLine: archiveLine,
   livingArchiveOfflineShell: true,
   livingArchiveNetworkFirst: true,
+  productionLiveSmoke: true,
+  templeHealthDashboard: true,
   livingArchiveRecords: livingArchiveManifest.poems.length + (livingArchiveManifest.collections?.length || 0)
 }, null, 2));
