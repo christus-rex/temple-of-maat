@@ -24,7 +24,7 @@
       script = document.createElement('script');
       script.src = LIVING_ARCHIVE_SRC;
       script.async = false;
-      script.dataset.templeLivingArchiveRuntime = '5.5.0';
+      script.dataset.templeLivingArchiveRuntime = '5.5.1';
       script.addEventListener('error', () => { livingArchiveRequested = false; }, { once: true });
       document.head.appendChild(script);
     }
@@ -44,8 +44,8 @@
       #${PANEL_ID} dl{display:grid;grid-template-columns:minmax(104px,.8fr) minmax(0,1.2fr);gap:8px 12px;margin:0}
       #${PANEL_ID} dt{opacity:.68} #${PANEL_ID} dd{margin:0;overflow-wrap:anywhere}
       #${PANEL_ID} .temple-release-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-      #${PANEL_ID} button{border:1px solid rgba(212,175,55,.35);border-radius:999px;background:rgba(255,255,255,.05);color:inherit;padding:8px 11px;font:inherit;cursor:pointer}
-      #${PANEL_ID} button:focus-visible{outline:2px solid #d4af37;outline-offset:2px}
+      #${PANEL_ID} button,#${PANEL_ID} .temple-release-link{border:1px solid rgba(212,175,55,.35);border-radius:999px;background:rgba(255,255,255,.05);color:inherit;padding:8px 11px;font:inherit;cursor:pointer;text-decoration:none}
+      #${PANEL_ID} button:focus-visible,#${PANEL_ID} .temple-release-link:focus-visible{outline:2px solid #d4af37;outline-offset:2px}
       @media(max-width:520px){#${UPDATE_ID}{right:10px;bottom:max(104px,calc(env(safe-area-inset-bottom) + 92px));font-size:10px;padding:9px 11px}#${PANEL_ID}{right:10px;bottom:max(104px,calc(env(safe-area-inset-bottom) + 92px));width:calc(100vw - 20px);padding:15px}#${PANEL_ID} dl{grid-template-columns:1fr;gap:3px}#${PANEL_ID} dd{margin-bottom:7px}}
     `;
     document.head.appendChild(style);
@@ -127,6 +127,7 @@
         <dt>Last good check</dt><dd>${remembered?.checkedAt || 'none recorded on this device'}</dd>
       </dl>
       <div class="temple-release-actions">
+        <a class="temple-release-link" href="./health/">Temple Health</a>
         <button type="button" data-temple-release-refresh>Refresh status</button>
         <button type="button" data-temple-release-reload>Reload Temple</button>
         <button type="button" data-temple-release-close>Close</button>
