@@ -16,6 +16,38 @@
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
+      /* Modal stack guard. Legacy Poems and v5.5 Archive originally used two-digit
+         z-index values while the Living Codex dock lives in the 8800 range. Keep
+         immersive chambers above global chrome and suppress controls that would
+         otherwise intercept taps through the modal surface. */
+      body.temple-poems-open .temple-poems-backdrop {
+        z-index: 9310 !important;
+      }
+      body.temple-living-archive-open .temple-living-archive {
+        z-index: 9320 !important;
+      }
+      body.temple-poems-open :is(
+        .tm524-dock,
+        .tm524-chamber-tools,
+        .temple-shem-gateway,
+        .temple-living-archive-launcher,
+        .tm528-launcher,
+        #temple-release-update,
+        #temple-release-diagnostics
+      ),
+      body.temple-living-archive-open :is(
+        .tm524-dock,
+        .tm524-chamber-tools,
+        .temple-shem-gateway,
+        .temple-poems-gateway,
+        .tm528-launcher,
+        #temple-release-update,
+        #temple-release-diagnostics
+      ) {
+        display: none !important;
+        pointer-events: none !important;
+      }
+
       @media (max-width: 767px) {
         /* The two-row Living Codex dock is fixed over the document. Reserve a real
            scroll landing zone so the footer and final controls can always clear it. */
