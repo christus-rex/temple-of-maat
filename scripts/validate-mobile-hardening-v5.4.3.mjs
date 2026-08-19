@@ -36,10 +36,23 @@ for (const marker of [
   'overflow-x: auto !important',
   'scroll-snap-type: x proximity',
   'function centerFireFilterButton(strip, button)',
+  "strip.addEventListener('focusin', revealButton)",
   'function wireFireFilterStrip()',
   'wireFireFilterStrip();'
 ]) {
   if (!hardening.includes(marker)) fail(`Seven Fires mobile filter invariant missing: ${marker}`);
+}
+
+for (const marker of [
+  'scroll-padding-bottom: calc(148px + env(safe-area-inset-bottom))',
+  'padding-bottom: calc(148px + env(safe-area-inset-bottom))',
+  'font-size: 16px !important',
+  '#temple-release-update',
+  '#temple-release-diagnostics',
+  '.temple-shem-gateway',
+  '.temple-poems-gateway'
+]) {
+  if (!hardening.includes(marker)) fail(`site-wide mobile safety invariant missing: ${marker}`);
 }
 
 for (const marker of [
@@ -82,4 +95,4 @@ for (const marker of [
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, narrow-screen containment, locally scrollable Seven Fires selection, local ledger scrolling, loader integration, and PWA delivery.`);
+console.log(`Validated Signature Book semantic boundary + v5.4.3 mobile hardening under cache revision ${cacheRevision}: stable semantic classes, accessible labels, narrow-screen containment, locally scrollable/focus-revealed Seven Fires selection, 16px mobile form controls, fixed-dock clearance, legacy gateway clearance, local ledger scrolling, loader integration, and PWA delivery.`);
