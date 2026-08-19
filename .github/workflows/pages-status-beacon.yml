@@ -6,6 +6,10 @@ on:
   page_build:
   workflow_dispatch:
 
+concurrency:
+  group: pages-status-${{ github.repository }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   issues: write
@@ -75,12 +79,18 @@ jobs:
               fi
               sleep 5
             done
-
             if ! is_terminal "$STATUS"; then
               echo "No terminal Pages deployment record was available for $SHA; preserving the existing authoritative beacon."
               echo "published=false" >> "$GITHUB_OUTPUT"
               exit 0
             fi
+          fi
+
+          CURRENT_HEAD="$(gh api "repos/$REPO/commits/main" --jq '.sha' 2>/dev/null || true)"
+          if [ -n "$CURRENT_HEAD" ] && [ "$COMMIT" != "$CURRENT_HEAD" ]; then
+            echo "Ignoring stale Pages result for $COMMIT; current main is $CURRENT_HEAD."
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
           BODY=$(cat <<EOF
@@ -94,19 +104,12 @@ jobs:
           - **beacon workflow:** $RUN_URL
           EOF
           )
-
-          if [ -n "$BUILD_URL" ]; then
-            BODY="$BODY
-          - **Pages API record:** $BUILD_URL"
-          fi
-
-          if [ -n "$ERROR" ]; then
-            BODY="$BODY
+          if [ -n "$BUILD_URL" ]; then BODY="$BODY
+          - **Pages API record:** $BUILD_URL"; fi
+          if [ -n "$ERROR" ]; then BODY="$BODY
 
           ## Pages error
-          $ERROR"
-          fi
-
+          $ERROR"; fi
           BODY="$BODY
 
           This issue is maintained automatically so connector clients can read terminal GitHub Pages build/deployment state without relying on push workflow-run enumeration."
