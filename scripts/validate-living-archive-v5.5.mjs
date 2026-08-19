@@ -8,6 +8,7 @@ const version = JSON.parse(read('version.json'));
 const script = read('scripts/v5.5-living-archive.js');
 const css = read('styles/v5.5-living-archive.css');
 const releaseStatus = read('scripts/v5.4.5-release-status.js');
+const sw = read('sw.js');
 const batch01 = JSON.parse(read('data/preservation-batch-2026-08-18.json'));
 const batch02 = JSON.parse(read('data/preservation-batch-2026-08-18-02.json'));
 const dedupe = JSON.parse(read('data/deduplication-2026-08-18.json'));
@@ -65,6 +66,8 @@ if (dedupe.policy?.destructiveCleanup !== false) fail('Deduplication policy must
 
 try { new vm.Script(script, { filename: 'v5.5-living-archive.js' }); }
 catch (error) { fail(`Living Archive JavaScript does not parse: ${error.message}`); }
+try { new vm.Script(sw, { filename: 'sw.js' }); }
+catch (error) { fail(`Service worker JavaScript does not parse: ${error.message}`); }
 
 for (const marker of [
   "const MANIFEST_URL = './data/living-archive-v5.5.json'",
@@ -86,6 +89,23 @@ for (const marker of [
 
 if (!releaseStatus.includes("const LIVING_ARCHIVE_SRC = './scripts/v5.5-living-archive.js'")) fail('Release-status bootstrap does not declare the Living Archive runtime');
 if (!releaseStatus.includes('ensureLivingArchive()')) fail('Release-status bootstrap does not load the Living Archive runtime');
+
+const core = sw.match(/const CORE_ASSETS = \[([\s\S]*?)\];/)?.[1] || '';
+for (const asset of [
+  "'./scripts/v5.5-living-archive.js'",
+  "'./styles/v5.5-living-archive.css'",
+  "'./data/living-archive-v5.5.json'",
+  "'./library/catalog.json'",
+  "'./chambers.json'"
+]) if (!core.includes(asset)) fail(`Living Archive offline shell asset missing: ${asset}`);
+for (const marker of [
+  'function isCriticalUiAsset(url)',
+  'v5\\.5-living-archive',
+  'data\\/living-archive-v5\\.5\\.json',
+  'library\\/catalog\\.json',
+  "fetch(request, { cache: 'no-store' })"
+]) if (!sw.includes(marker)) fail(`Living Archive current-data delivery marker missing: ${marker}`);
+
 for (const path of ['docs/releases/v5.4.0.md', 'docs/releases/v5.5.0.md', 'docs/releases/ROLLBACK.md', '.github/rulesets/main-protection.json']) {
   if (!fs.existsSync(path)) fail(`Missing release-governance file: ${path}`);
 }
@@ -99,6 +119,8 @@ console.log(JSON.stringify({
   batch02ResolvedLocalMasters: batch02.counts.resolvedLocalMasters,
   batch02IndexedRecords: [...collectionIds].filter((id) => id.startsWith('preservation.')).length,
   verifiedDuplicates: dedupe.verifiedDuplicates.length,
+  offlineShell: true,
+  currentDataNetworkFirst: true,
   rollback: manifest.release.rollbackBranch,
   shortcut: 'Ctrl/Cmd+K'
 }, null, 2));
