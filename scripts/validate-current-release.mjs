@@ -39,13 +39,28 @@ const cacheRevision = sw.match(/const CACHE_REVISION = '([^']+)'/)?.[1] || '';
 if (!/^v5\.4-canonical-identity-r\d+(?:-[a-z0-9-]+)?$/.test(cacheRevision)) fail(`Invalid compatibility cache revision: ${cacheRevision || '(missing)'}`);
 if (!sw.includes('const STATIC_CACHE = `${VERSION}-${CACHE_REVISION}-static`')) fail('Static cache does not include the compatibility revision');
 if (!sw.includes('const RUNTIME_CACHE = `${VERSION}-${CACHE_REVISION}-runtime`')) fail('Runtime cache does not include the compatibility revision');
-if (!sw.includes("'./assets/branding/temple-global-logo-v5.4.webp'")) fail('Canonical v5.4 logo is not part of CORE_ASSETS');
-if (!sw.includes("'./scripts/v5.4.3-mobile-hardening.js'")) fail('Mobile hardening is not part of CORE_ASSETS');
+
+const core = sw.match(/const CORE_ASSETS = \[([\s\S]*?)\];/);
+if (!core) fail('Unable to inspect CORE_ASSETS');
+if (/\.(?:mp3|opus|ogg|m4a|wav)['"]/.test(core[1])) fail('Binary ritual media must not be part of CORE_ASSETS');
+for (const asset of [
+  "'./assets/branding/temple-global-logo-v5.4.webp'",
+  "'./scripts/v5.4.3-mobile-hardening.js'",
+  "'./scripts/v5.5-living-archive.js'",
+  "'./styles/v5.5-living-archive.css'",
+  "'./data/living-archive-v5.5.json'",
+  "'./library/catalog.json'"
+]) {
+  if (!core[1].includes(asset)) fail(`Current release core asset missing: ${asset}`);
+}
 
 for (const marker of [
   'function isBinaryRitualMedia(url)',
   'function isReleaseIdentity(url)',
   'function isCriticalUiAsset(url)',
+  'v5\\.5-living-archive',
+  'data\\/living-archive-v5\\.5\\.json',
+  'library\\/catalog\\.json',
   'await cacheStrictInBatches(cache, CORE_ASSETS)',
   "data.type === 'CACHE_FULL_TEMPLE'",
   "data.type === 'CLEAR_OPTIONAL_VISUAL_CACHE'",
@@ -53,9 +68,6 @@ for (const marker of [
 ]) {
   if (!sw.includes(marker)) fail(`Service-worker invariant missing: ${marker}`);
 }
-const core = sw.match(/const CORE_ASSETS = \[([\s\S]*?)\];/);
-if (!core) fail('Unable to inspect CORE_ASSETS');
-if (/\.(?:mp3|opus|ogg|m4a|wav)['"]/.test(core[1])) fail('Binary ritual media must not be part of CORE_ASSETS');
 
 for (const marker of [
   "root.setAttribute('inert', '')",
@@ -72,6 +84,9 @@ for (const marker of [
   "const SEMANTICS_SRC = './scripts/v5.4.4-signature-book-semantics.js'",
   'window.TempleSignatureBookSemantics?.apply',
   '.temple-signature-book__table-scroll',
+  'font-size: 16px !important',
+  'scroll-padding-bottom: calc(148px + env(safe-area-inset-bottom))',
+  "strip.addEventListener('focusin', revealButton)",
   "window.TempleMobileHardening = Object.freeze({ version: '5.4.3', refresh: apply })"
 ]) {
   if (!mobileHardening.includes(marker)) fail(`Mobile hardening invariant missing: ${marker}`);
@@ -148,5 +163,7 @@ console.log(JSON.stringify({
   mobileHardeningLoaded: true,
   signatureBookSemanticBoundary: 'v5.4.4',
   livingArchive: true,
+  livingArchiveOfflineShell: true,
+  livingArchiveNetworkFirst: true,
   livingArchiveRecords: livingArchiveManifest.poems.length + (livingArchiveManifest.collections?.length || 0)
 }, null, 2));
