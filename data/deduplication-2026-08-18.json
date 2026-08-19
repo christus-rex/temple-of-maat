@@ -1,0 +1,27 @@
+{
+  "schema": "temple-of-maat/deduplication-v1",
+  "date": "2026-08-18",
+  "policy": {
+    "destructiveCleanup": false,
+    "canonicalizationRule": "When byte-identical duplicates are verified, the earliest-created Drive record is designated canonical for provenance indexing unless a stronger source-of-record signal exists.",
+    "deletionRule": "Verified duplicates remain retained unless destructive cleanup is explicitly authorized."
+  },
+  "verifiedDuplicates": [
+    {
+      "title": "_OceanofPDF.com_The_hearth_book_-_Julio_castro.pdf",
+      "sizeBytes": 21462784,
+      "sha256": "fdf1ef62a3e0fcaad2a623763a72e8b79ea3c34ca987c39ff43e1dffbbe92a87",
+      "md5": "72cba510c95c3e030ae5de1339398a92",
+      "canonical": {
+        "driveId": "1_EF6SgBq3sG8Kho_1QExbMcqN5RLqZ0Q",
+        "createdTime": "2026-05-12T05:17:26.503Z"
+      },
+      "redundant": {
+        "driveId": "1Me3wsAoUOjreQuWyhAPBujeFz46udIGb",
+        "createdTime": "2026-05-12T05:18:13.505Z"
+      },
+      "verification": "Both Drive files were independently downloaded; SHA-256 and MD5 matched exactly.",
+      "action": "Canonicalized in provenance metadata only; neither Drive record was moved or deleted."
+    }
+  ]
+}
