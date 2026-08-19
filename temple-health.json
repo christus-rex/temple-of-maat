@@ -10,9 +10,9 @@
   },
   "ci": {
     "status": "success",
-    "commit": "4452fa670a6af7c1caa62fcbc077cf08921786e4",
-    "updated_at": "2026-08-19T03:10:27Z",
-    "run_url": "https://github.com/christus-rex/temple-of-maat/actions/runs/32211183594"
+    "commit": "549509e7e6732cf58fed70710fa86cd270f0250d",
+    "updated_at": "2026-08-19T03:20:55Z",
+    "run_url": "https://github.com/christus-rex/temple-of-maat/actions/runs/32211805919"
   },
   "pages": {
     "status": "success",
@@ -27,7 +27,7 @@
     "updated_at": "2026-08-19T03:18:34Z",
     "run_url": "https://github.com/christus-rex/temple-of-maat/actions/runs/32211183543"
   },
-  "green_release": true,
-  "updated_at": "2026-08-19T03:18:35.878Z",
-  "green_release_commit": "4452fa670a6af7c1caa62fcbc077cf08921786e4"
+  "green_release": false,
+  "updated_at": "2026-08-19T03:20:57.590Z",
+  "green_release_commit": null
 }
