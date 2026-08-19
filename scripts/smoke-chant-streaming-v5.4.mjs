@@ -24,14 +24,18 @@ function writeResult(result) {
   console.log(JSON.stringify(result, null, 2));
 }
 
+function isNavigationRace(error) {
+  return /execution context was destroyed|navigation|frame was detached|net::ERR_ABORTED/i.test(error?.message || String(error || ''));
+}
+
 async function enterTemple(page) {
-  // Only controls inside #temple-static-entry are valid threshold controls. Other
-  // enhancement layers can expose similarly named data attributes but do not own
-  // the threshold click listener.
+  // Explore establishes the neutral shell. Journey intentionally opens a richer
+  // artifact flow, which can replace dock nodes while the Chant smoke is locating
+  // controls and is therefore not the correct baseline for transport verification.
   for (const selector of [
+    '#temple-static-entry a[data-temple-entry="explore"]',
     '#temple-static-entry a[data-temple-entry="continue"]',
     '#temple-static-entry a[data-temple-entry="journey"]',
-    '#temple-static-entry a[data-temple-entry="explore"]',
     '#temple-static-entry a[data-temple-entry]'
   ]) {
     const candidates = page.locator(selector);
@@ -39,17 +43,20 @@ async function enterTemple(page) {
     for (let index = 0; index < count; index += 1) {
       const node = candidates.nth(index);
       if (!await node.isVisible().catch(() => false)) continue;
-      await node.click({ timeout: 15000 });
       try {
-        await page.waitForFunction(() => document.body.classList.contains('temple-app-ready'), null, { timeout: 8000 });
+        await node.click({ timeout: 15000 });
+        await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && !document.body.classList.contains('temple-artifact-open'), null, { timeout: 12000 });
+        await wait(400);
         return selector;
-      } catch (_) {
-        // Try the next canonical threshold link if an enhancement/navigation race
-        // prevented this specific activation from completing.
+      } catch (error) {
+        if (!isNavigationRace(error)) {
+          // Continue to another canonical entry only when this candidate did not
+          // settle the base shell; final failure is reported below.
+        }
       }
     }
   }
-  throw new Error('No canonical Temple threshold entry control activated the application for chant verification.');
+  throw new Error('No canonical Temple threshold entry control activated the base application for chant verification.');
 }
 
 async function transportProbe(page) {
@@ -73,11 +80,27 @@ async function transportProbe(page) {
 }
 
 async function openChant(page) {
-  const button = page.getByRole('button', { name: 'Chant', exact: true }).first();
-  await button.waitFor({ state: 'visible', timeout: 30000 });
-  await button.click();
-  await page.waitForSelector('#tm524-chant:not([hidden])', { timeout: 30000 });
-  await wait(350);
+  let lastError = null;
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    try {
+      await page.waitForFunction(() => document.body.classList.contains('temple-app-ready') && !document.body.classList.contains('temple-artifact-open') && Boolean(document.getElementById('tm524-dock')), null, { timeout: 15000 });
+      const activated = await page.evaluate(() => {
+        const dock = document.getElementById('tm524-dock');
+        const button = [...(dock?.querySelectorAll('button') || [])].find((node) => (node.textContent || '').replace(/\s+/g, ' ').trim() === 'Chant');
+        if (!button) return false;
+        button.click();
+        return true;
+      });
+      if (!activated) throw new Error('Chant dock control was not available.');
+      await page.waitForSelector('#tm524-chant:not([hidden])', { timeout: 15000 });
+      await wait(350);
+      return;
+    } catch (error) {
+      lastError = error;
+      await wait(attempt * 250);
+    }
+  }
+  throw lastError || new Error('Unable to open Chant surface.');
 }
 
 async function readChantState(page) {
