@@ -44,6 +44,7 @@ jobs:
             && node --check scripts/v5.4.4-signature-book-semantics.js \
             && node --check scripts/v5.4.5-release-status.js \
             && node --check scripts/v5.5-living-archive.js \
+            && node --check scripts/smoke-live-pages-v5.5.1.mjs \
             && node --check scripts/persistent-data.js \
             && node --check scripts/update-temple-health.mjs; then
             RESULT=success
@@ -115,14 +116,7 @@ jobs:
           SHORT_SHA="${SHA:0:12}"
           UTC_NOW="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
-          if [ "$RESULT" = 'success' ]; then
-            DESCRIPTION='Temple connector validation passed'
-          else
-            DESCRIPTION='Temple connector validation failed'
-          fi
-
-          # Publish a classic commit status because connector clients can read the
-          # statuses API even when GitHub Actions check-run enumeration is unavailable.
+          if [ "$RESULT" = 'success' ]; then DESCRIPTION='Temple connector validation passed'; else DESCRIPTION='Temple connector validation failed'; fi
           gh api --method POST "repos/$REPO/statuses/$SHA" \
             --raw-field state="$RESULT" \
             --raw-field context='temple/connector-ci' \
