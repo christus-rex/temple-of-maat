@@ -22,6 +22,7 @@ jobs:
           node --check scripts/v5.5-living-archive.js
           node --check scripts/persistent-data.js
           node --check scripts/update-temple-health.mjs
+          node --check scripts/validate-chamber-canon-maturity-v1.mjs
       - name: Validate v5 structural contract
         run: |
           VERSION=$(node -p "require('./version.json').version")
@@ -67,3 +68,4 @@ jobs:
       - run: node scripts/validate-pair-authority-audit-v1.mjs
       - run: node scripts/validate-living-temple-map-v5.3.3.mjs
       - run: node scripts/validate-living-correspondence-engine-v5.3.4.mjs
+      - run: node scripts/validate-chamber-canon-maturity-v1.mjs
