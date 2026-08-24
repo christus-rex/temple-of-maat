@@ -25,7 +25,7 @@ jobs:
       - name: Validate v5 structural contract
         run: |
           VERSION=$(node -p "require('./version.json').version")
-          if [ "$VERSION" = "5.4.0" ] || [ "$VERSION" = "5.5.0" ]; then
+          if [ "$VERSION" = "5.4.0" ] || [ "$VERSION" = "5.5.0" ] || [ "$VERSION" = "5.5.1" ]; then
             node scripts/validate-v5.mjs
           else
             node scripts/validate-v5.mjs --release
@@ -33,7 +33,7 @@ jobs:
       - name: Validate legacy v5.2 invariant contracts
         run: |
           VERSION=$(node -p "require('./version.json').version")
-          if [ "$VERSION" = "5.4.0" ] || [ "$VERSION" = "5.5.0" ]; then
+          if [ "$VERSION" = "5.4.0" ] || [ "$VERSION" = "5.5.0" ] || [ "$VERSION" = "5.5.1" ]; then
             echo "Current v5.4/v5.5 releases use the current-release validator for cache/release identity; dedicated v5.2 browser smoke workflows still verify legacy UX invariants."
           else
             node scripts/validate-v5.2.4.mjs
