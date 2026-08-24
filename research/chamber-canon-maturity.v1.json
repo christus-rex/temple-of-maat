@@ -7,7 +7,8 @@
     "core": "chambers.json",
     "codex": "scripts/v5.2.4-living-codex.js",
     "dossier": "scripts/v5.2.5-living-temple.js",
-    "relationshipGraph": "research/relationship-graph.json"
+    "relationshipGraph": "research/relationship-graph.json",
+    "pairAuthority": "research/pair-authority.json"
   },
   "provenanceLayers": {
     "L1": "Primary / historical source",
@@ -22,7 +23,8 @@
   },
   "baseline": {
     "status": "CORE_CANON_PRESENT",
-    "expandedCanonStatus": "PENDING_REVIEW",
+    "expandedCanonStatus": "IN_REVIEW",
+    "expandedReviewedCount": 24,
     "measuredFrom": "chambers.json"
   },
   "requiredCoreFields": [
@@ -65,7 +67,13 @@
     "fabricatedProvenanceAllowed": false
   },
   "batchPlan": [
-    { "id": "A", "first": 1, "last": 24, "status": "PENDING_REVIEW" },
+    {
+      "id": "A",
+      "first": 1,
+      "last": 24,
+      "status": "REVIEWED",
+      "manifest": "research/chamber-canon/batch-a.v1.json"
+    },
     { "id": "B", "first": 25, "last": 48, "status": "PENDING_REVIEW" },
     { "id": "C", "first": 49, "last": 72, "status": "PENDING_REVIEW" }
   ]
