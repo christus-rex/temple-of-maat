@@ -1,0 +1,72 @@
+{
+  "schema": "temple-of-maat/chamber-canon-maturity-v1",
+  "version": "1.0.0",
+  "updated": "2026-08-24",
+  "purpose": "Measure 72-chamber Canon 1.0 readiness without duplicating canonical chamber content or inventing missing provenance.",
+  "sourceOfTruth": {
+    "core": "chambers.json",
+    "codex": "scripts/v5.2.4-living-codex.js",
+    "dossier": "scripts/v5.2.5-living-temple.js",
+    "relationshipGraph": "research/relationship-graph.json"
+  },
+  "provenanceLayers": {
+    "L1": "Primary / historical source",
+    "L2": "Scholarly / computational analysis",
+    "L3": "Comparative interpretation",
+    "L4": "Temple / personal symbolism"
+  },
+  "chamberRange": {
+    "first": 1,
+    "last": 72,
+    "expectedCount": 72
+  },
+  "baseline": {
+    "status": "CORE_CANON_PRESENT",
+    "expandedCanonStatus": "PENDING_REVIEW",
+    "measuredFrom": "chambers.json"
+  },
+  "requiredCoreFields": [
+    "number",
+    "id",
+    "thirdName",
+    "angel",
+    "daemon",
+    "office",
+    "fire",
+    "pillar",
+    "law",
+    "thresholdSealName",
+    "recurrence",
+    "tetrad"
+  ],
+  "expandedCanonFields": [
+    "numericalField",
+    "sacredLimitation",
+    "antiDistortionMechanism",
+    "maatTest",
+    "invocation",
+    "sealProvenance",
+    "historicalProvenance",
+    "symbolicProvenance",
+    "review"
+  ],
+  "allowedCompletionStates": [
+    "REVIEWED",
+    "UNMAPPED",
+    "WITHHELD",
+    "NOT_APPLICABLE"
+  ],
+  "policy": {
+    "missingHistoricalEvidence": "UNMAPPED",
+    "historicalIdentityDefault": false,
+    "metaphysicalIdentityDefault": false,
+    "appendOnlyCanon": true,
+    "blankFieldsCountAsComplete": false,
+    "fabricatedProvenanceAllowed": false
+  },
+  "batchPlan": [
+    { "id": "A", "first": 1, "last": 24, "status": "PENDING_REVIEW" },
+    { "id": "B", "first": 25, "last": 48, "status": "PENDING_REVIEW" },
+    { "id": "C", "first": 49, "last": 72, "status": "PENDING_REVIEW" }
+  ]
+}
