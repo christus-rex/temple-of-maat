@@ -67,3 +67,4 @@ jobs:
       - run: node scripts/validate-pair-authority-audit-v1.mjs
       - run: node scripts/validate-living-temple-map-v5.3.3.mjs
       - run: node scripts/validate-living-correspondence-engine-v5.3.4.mjs
+      - run: node scripts/validate-forty-two-hall-v5.4.1.mjs
