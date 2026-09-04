@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "temple-of-maat/visual-canon-v1.schema.json",
+  "title": "Temple of SOL-OM-ON (Ma’at) Visual Canon Asset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "chamberNumber",
+    "chamberId",
+    "displayName",
+    "assetType",
+    "version",
+    "status",
+    "createdAt",
+    "provenanceLayers",
+    "historicalModernNote",
+    "canonicalPath"
+  ],
+  "properties": {
+    "chamberNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 72
+    },
+    "chamberId": {
+      "type": "string",
+      "pattern": "^(0[1-9]|[1-6][0-9]|7[0-2])$"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assetType": {
+      "type": "string",
+      "enum": [
+        "FINAL_SEAL",
+        "INVOCATION_SEAL",
+        "ENTITY_DEPICTION",
+        "CHAMBER_ARTWORK"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v[0-9]+\\.[0-9]+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "REVIEW",
+        "REJECTED_NONCANONICAL",
+        "CANONICAL",
+        "SUPERSEDED"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "provenanceLayers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "HISTORICAL_SOURCE",
+          "TRADITIONAL_INTERPRETATION",
+          "COMPARATIVE_CORRESPONDENCE",
+          "MODERN_TEMPLE_SYNTHESIS",
+          "PERSONAL_SYMBOLISM"
+        ]
+      }
+    },
+    "sourceReferences": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "default": []
+    },
+    "symbolicDescription": {
+      "type": "string"
+    },
+    "historicalModernNote": {
+      "type": "string",
+      "minLength": 1
+    },
+    "creatorCredit": {
+      "type": ["string", "null"]
+    },
+    "canonicalPath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "driveFileId": {
+      "type": ["string", "null"]
+    },
+    "supersedes": {
+      "type": ["string", "null"]
+    },
+    "supersededBy": {
+      "type": ["string", "null"]
+    },
+    "mobileLegibilityChecked": {
+      "type": "boolean",
+      "default": false
+    },
+    "metadataAuditPassed": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
