@@ -1,0 +1,140 @@
+{
+  "schema": "temple-of-maat/grand-atlas-pilot-v1",
+  "version": "0.1.0-pilot",
+  "generatedAt": "2026-09-04T19:08:00Z",
+  "scope": {
+    "firstChamber": 1,
+    "lastChamber": 6,
+    "count": 6,
+    "purpose": "Validate the structured Grand Atlas contract before scaling visual-canon production to all 72 chambers."
+  },
+  "assetStatusNote": "All listed visual paths are reserved canonical targets. No visual is marked CANONICAL until the actual file exists, mobile legibility is checked, provenance is audited, and archive synchronization succeeds.",
+  "chambers": [
+    {
+      "number": 1,
+      "id": "01",
+      "angel": "Vehuiah",
+      "daemon": "Bifrons",
+      "synthesisName": "Bifruiah",
+      "office": "Keeper of Remembered Beginnings",
+      "fire": {"id": 1, "name": "Fire of Remembering", "color": "#2563eb"},
+      "pillar": "Jachin",
+      "coreTeaching": "INITIATE WITHOUT ERASURE",
+      "thresholdSealName": "First Stone",
+      "provenanceLayers": ["TRADITIONAL_INTERPRETATION", "MODERN_TEMPLE_SYNTHESIS"],
+      "sourceReferences": ["chambers.json", "docs/PAIR_AUTHORITY.md"],
+      "assets": {
+        "finalSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch001/CH001_VEHUIAH_FINAL-SEAL_v1.0.png"},
+        "invocationSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch001/CH001_VEHUIAH_INVOCATION-SEAL_v1.0.png"},
+        "entityDepiction": {"status": "DRAFT", "path": "assets/visual-canon/ch001/CH001_VEHUIAH_ENTITY_v1.0.png"},
+        "chamberArtwork": {"status": "DRAFT", "path": "assets/visual-canon/ch001/CH001_VEHUIAH_CHAMBER-ART_v1.0.png"}
+      },
+      "completionState": "PILOT_METADATA_READY"
+    },
+    {
+      "number": 2,
+      "id": "02",
+      "angel": "Jeliel",
+      "daemon": "Orias",
+      "synthesisName": "Orialiel",
+      "office": "Steward of Concordant Authority",
+      "fire": {"id": 2, "name": "Fire of Concord", "color": "#40e0d0"},
+      "pillar": "Middle",
+      "coreTeaching": "AUTHORITY SERVES HARMONY",
+      "thresholdSealName": "Second Binding",
+      "provenanceLayers": ["TRADITIONAL_INTERPRETATION", "MODERN_TEMPLE_SYNTHESIS"],
+      "sourceReferences": ["chambers.json", "docs/PAIR_AUTHORITY.md"],
+      "assets": {
+        "finalSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch002/CH002_JELIEL_FINAL-SEAL_v1.0.png"},
+        "invocationSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch002/CH002_JELIEL_INVOCATION-SEAL_v1.0.png"},
+        "entityDepiction": {"status": "DRAFT", "path": "assets/visual-canon/ch002/CH002_JELIEL_ENTITY_v1.0.png"},
+        "chamberArtwork": {"status": "DRAFT", "path": "assets/visual-canon/ch002/CH002_JELIEL_CHAMBER-ART_v1.0.png"}
+      },
+      "completionState": "PILOT_METADATA_READY"
+    },
+    {
+      "number": 3,
+      "id": "03",
+      "angel": "Sitael",
+      "daemon": "Andras",
+      "synthesisName": "Andritael",
+      "office": "Warden of Necessary Endings",
+      "fire": {"id": 3, "name": "Fire of Severance", "color": "#ef4444"},
+      "pillar": "Boaz",
+      "coreTeaching": "END WHAT DEVOURS LIFE",
+      "thresholdSealName": "Third Severance",
+      "provenanceLayers": ["TRADITIONAL_INTERPRETATION", "MODERN_TEMPLE_SYNTHESIS"],
+      "sourceReferences": ["chambers.json", "docs/PAIR_AUTHORITY.md"],
+      "assets": {
+        "finalSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch003/CH003_SITAEL_FINAL-SEAL_v1.0.png"},
+        "invocationSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch003/CH003_SITAEL_INVOCATION-SEAL_v1.0.png"},
+        "entityDepiction": {"status": "DRAFT", "path": "assets/visual-canon/ch003/CH003_SITAEL_ENTITY_v1.0.png"},
+        "chamberArtwork": {"status": "DRAFT", "path": "assets/visual-canon/ch003/CH003_SITAEL_CHAMBER-ART_v1.0.png"}
+      },
+      "completionState": "PILOT_METADATA_READY"
+    },
+    {
+      "number": 4,
+      "id": "04",
+      "angel": "Elemiah",
+      "daemon": "Berith",
+      "synthesisName": "Berelmiah",
+      "office": "Keeper of Revalued Direction",
+      "fire": {"id": 4, "name": "Fire of Healing", "color": "#10b981"},
+      "pillar": "Jachin",
+      "coreTeaching": "POWER BOWS TO RIGHT ORDER",
+      "thresholdSealName": "Fourth Compass",
+      "provenanceLayers": ["TRADITIONAL_INTERPRETATION", "MODERN_TEMPLE_SYNTHESIS"],
+      "sourceReferences": ["chambers.json", "docs/PAIR_AUTHORITY.md"],
+      "assets": {
+        "finalSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch004/CH004_ELEMIAH_FINAL-SEAL_v1.0.png"},
+        "invocationSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch004/CH004_ELEMIAH_INVOCATION-SEAL_v1.0.png"},
+        "entityDepiction": {"status": "DRAFT", "path": "assets/visual-canon/ch004/CH004_ELEMIAH_ENTITY_v1.0.png"},
+        "chamberArtwork": {"status": "DRAFT", "path": "assets/visual-canon/ch004/CH004_ELEMIAH_CHAMBER-ART_v1.0.png"}
+      },
+      "completionState": "PILOT_METADATA_READY"
+    },
+    {
+      "number": 5,
+      "id": "05",
+      "angel": "Mahasiah",
+      "daemon": "Gamigin",
+      "synthesisName": "Gamiasiah",
+      "office": "Curator of Healing Memory",
+      "fire": {"id": 4, "name": "Fire of Healing", "color": "#10b981"},
+      "pillar": "Jachin",
+      "coreTeaching": "MEMORY HEALS WHEN WITNESSED",
+      "thresholdSealName": "Fifth Archive",
+      "provenanceLayers": ["TRADITIONAL_INTERPRETATION", "MODERN_TEMPLE_SYNTHESIS"],
+      "sourceReferences": ["chambers.json", "docs/PAIR_AUTHORITY.md"],
+      "assets": {
+        "finalSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch005/CH005_MAHASIAH_FINAL-SEAL_v1.0.png"},
+        "invocationSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch005/CH005_MAHASIAH_INVOCATION-SEAL_v1.0.png"},
+        "entityDepiction": {"status": "DRAFT", "path": "assets/visual-canon/ch005/CH005_MAHASIAH_ENTITY_v1.0.png"},
+        "chamberArtwork": {"status": "DRAFT", "path": "assets/visual-canon/ch005/CH005_MAHASIAH_CHAMBER-ART_v1.0.png"}
+      },
+      "completionState": "PILOT_METADATA_READY"
+    },
+    {
+      "number": 6,
+      "id": "06",
+      "angel": "Lelahel",
+      "daemon": "Vapula",
+      "synthesisName": "Vapulahel",
+      "office": "Artificer of Beneficent Craft",
+      "fire": {"id": 5, "name": "Fire of Craft", "color": "#d4af37"},
+      "pillar": "Middle",
+      "coreTeaching": "CRAFT WITHOUT DOMINION",
+      "thresholdSealName": "Sixth Hammer",
+      "provenanceLayers": ["TRADITIONAL_INTERPRETATION", "MODERN_TEMPLE_SYNTHESIS"],
+      "sourceReferences": ["chambers.json", "docs/PAIR_AUTHORITY.md"],
+      "assets": {
+        "finalSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch006/CH006_LELAHEL_FINAL-SEAL_v1.0.png"},
+        "invocationSeal": {"status": "DRAFT", "path": "assets/visual-canon/ch006/CH006_LELAHEL_INVOCATION-SEAL_v1.0.png"},
+        "entityDepiction": {"status": "DRAFT", "path": "assets/visual-canon/ch006/CH006_LELAHEL_ENTITY_v1.0.png"},
+        "chamberArtwork": {"status": "DRAFT", "path": "assets/visual-canon/ch006/CH006_LELAHEL_CHAMBER-ART_v1.0.png"}
+      },
+      "completionState": "PILOT_METADATA_READY"
+    }
+  ]
+}
